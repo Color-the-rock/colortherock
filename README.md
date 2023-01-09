@@ -54,3 +54,13 @@
 ## 프로젝트 상세 설명
 
 // 개발 환경, 기술 스택, 시스템 구성도, ERD, 기능 상세 설명 등
+
+### 기술 스택
+
+* Front-end
+
+React, Redux Saga, Styled Components
+
+* Back-end
+
+Spring Boot, JDK 11, JPA, mysql
