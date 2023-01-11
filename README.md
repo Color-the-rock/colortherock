@@ -69,3 +69,23 @@ React, Redux Saga, Styled Components
 * Back-end
 
 Spring Boot, JDK 11, JPA, mysql
+
+
+
+## CI / CD 파이프라인
+
+![Frame 1](./assets/Frame 1.png)
+
+
+
+1. GitLab에서 Push나 PR시 Webhook이 감지해서 Jenkins에 요청을 보낸다.
+2. 젠킨스에서 요청을 받으면 git을 pull해서 repository를 업데이트 한다.
+3. 젠킨스에서 업데이트한 git code를 바탕으로 gradle을 통해서 jar 파일을 빌드한다.
+4. Jenkins에서 jar 파일을 기반으로 docker image를 생성해서 docker hub에 푸시한다.
+5. Jenkins에서 Spring Woker Server에 SSH 통신을 해서 쉘 스크립트를 실행시킨다.
+6. Spring Worker Server에서는 Shell Script를 통해서 Docker Image를 pull한다.
+7. 현재 포트가 8081(Green) 포트이거나 켜져 있지 않은경우 8080(Blue)포트에다가 서버를 실행시킨다.
+8. 현재 포트가 8080일경우에는 8081번 포트에다가 서버를 실행시킨다.
+9. Nginx에서 현재 설정되어 있는 포트를 확인한다.
+10. Nginx에서 각 worker서버와 SSH 통신을 해서 현재 설정되어 있는 포트와 반대 포트에 서버가 실행되고 있는지 확인한다.
+11. 모든 서버에 반대 포트가 실행 중일때 NGINX에서 설정을 Blue - > Green ( Green -> Blue)로 포트를 스위칭 하고 리로드한다.
