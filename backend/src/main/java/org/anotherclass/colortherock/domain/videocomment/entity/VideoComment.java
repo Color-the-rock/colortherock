@@ -4,6 +4,7 @@ import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "video_comment")
@@ -15,6 +16,9 @@ public class VideoComment {
 
     @Column(name = "content", length = 500)
     private String content;
+
+    @Column(name = "written_time")
+    private LocalDateTime writtenTime;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
