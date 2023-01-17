@@ -1,5 +1,8 @@
 package org.anotherclass.colortherock.domain.member.entity;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.live.entity.Live;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
@@ -9,6 +12,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
+@Getter
 @Entity
 @Table(name = "member")
 public class Member {
@@ -38,4 +43,9 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VideoComment> videoComments = new ArrayList<>();
 
+    @Builder
+    public Member(String email, String nickname) {
+        this.email = email;
+        this.nickname = nickname;
+    }
 }
