@@ -47,10 +47,15 @@ const Header = () => {
           <S.NavBar isShowNav>
             <S.CancelButton size="36px" onClick={handleSetShowNav} />
             <S.SideMenu isShowNav>
-              <S.SideMenuItem>실시간 도전</S.SideMenuItem>
-              <S.SideMenuItem>완등 영상 모음</S.SideMenuItem>
-              <S.SideMenuItem>운동 기록</S.SideMenuItem>
-              <S.SideMenuItem>로그인/회원가입</S.SideMenuItem>
+              {menuItems &&
+                menuItems.length > 0 &&
+                menuItems.map((item, index) => (
+                  <S.SideMenuItem key={index}>
+                    <S.SLink to={item.path} onClick={handleSetShowNav}>
+                      {item.name}
+                    </S.SLink>
+                  </S.SideMenuItem>
+                ))}
             </S.SideMenu>
           </S.NavBar>
         ) : null}
