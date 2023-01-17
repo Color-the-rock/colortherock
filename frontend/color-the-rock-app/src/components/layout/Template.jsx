@@ -1,14 +1,15 @@
-import React from "react";
-import styled from "styled-components";
-
-const Template = ({ children }) => {
-  return <Container>{children}</Container>;
+import { useMediaQuery } from "react-responsive";
+export const Mobile = ({ children }) => {
+  const isMobile = useMediaQuery({ maxWidth: 991 });
+  return isMobile ? children : null;
 };
 
-export default Template;
+// export const Tablet = ({ children }) => {
+//   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
+//   return isTablet ? children : null;
+// };
 
-const Container = styled.div`
-  width: 100%;
-  height: calc(100vh - 96px);
-  background-color: #fff;
-`;
+export const Desktop = ({ children }) => {
+  const isDesktop = useMediaQuery({ minWidth: 992 });
+  return isDesktop ? children : null;
+};

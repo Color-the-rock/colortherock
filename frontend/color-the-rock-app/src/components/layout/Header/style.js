@@ -2,6 +2,7 @@ import styled, { keyframes } from "styled-components";
 import AppLogo from "../../../assets/common/app-logo.png";
 import WebLogo from "../../../assets/common/web-logo.png";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
+import { Link } from "react-router-dom";
 const slideIn = keyframes`
 from {
       margin-left: 100%;
@@ -20,7 +21,7 @@ export const Container = styled.header`
   width: 100%;
   height: 6rem;
   background-color: var(--color-dark);
-  padding: 1rem;
+  padding: 1rem 2rem;
   justify-content: space-between;
   align-items: center;
 `;
@@ -50,7 +51,6 @@ export const HeaderMenu = styled(HiOutlineMenu)`
 export const Menu = styled.ul`
   background-color: transparent;
   line-height: 28px;
-  height: 28px;
   @media (max-width: 1070px) {
     display: none;
   }
@@ -58,7 +58,10 @@ export const Menu = styled.ul`
 
 export const MenuItem = styled.li`
   display: inline-block;
-  font-size: 1.5rem;
+`;
+
+export const SLink = styled(Link)`
+  font-size: 1.4rem;
   margin: auto 18px;
   font-weight: 700;
   &:last-child {
