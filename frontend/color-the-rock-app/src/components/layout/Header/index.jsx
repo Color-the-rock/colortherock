@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Mobile, Desktop } from "../Template";
 import * as S from "./style";
 const menuItems = [
@@ -22,6 +23,7 @@ const menuItems = [
 
 const Header = () => {
   const [isShowNav, setShowNav] = useState(false);
+  const location = useLocation();
   const handleSetShowNav = () => {
     setShowNav((prev) => !prev);
   };
@@ -35,7 +37,12 @@ const Header = () => {
               menuItems.length > 0 &&
               menuItems.map((item, index) => (
                 <S.MenuItem key={index}>
-                  <S.SLink to={item.path}>{item.name}</S.SLink>
+                  <S.SLink
+                    to={item.path}
+                    current={item.path === location.pathname}
+                  >
+                    {item.name}
+                  </S.SLink>
                 </S.MenuItem>
               ))}
           </S.Menu>

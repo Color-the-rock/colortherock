@@ -64,6 +64,8 @@ export const SLink = styled(Link)`
   font-size: 1.4rem;
   margin: auto 18px;
   font-weight: 700;
+  color: ${(props) =>
+    props.current ? "var(--color-brand-primary)" : "var(--color-primary)"};
   &:last-child {
     margin-right: 0px;
   }
