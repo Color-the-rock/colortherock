@@ -15,6 +15,27 @@ html {
   --color-primary: #F7F8FA;
   --color-white: #ffffff;
   --color-brand-primary : #C250D6;
+  --color-brand-gradient-start: #FF6CAB;
+  --color-brand-gradient-end: #8533FF;
+  --color-level-v0-start: #FFFFFF;
+  --color-level-v0-end: #B1B1B1;
+  --color-level-v1-start: #FF4E36;
+  --color-level-v1-end: #9D2038;
+  --color-level-v2-start: #FFA62E;
+  --color-level-v2-end: #EA4D2C;
+  --color-level-v3-start: #FFCF1B;
+  --color-level-v3-end: #FF881B;
+  --color-level-v4-start: #C0FA87;
+  --color-level-v4-middle: #3BB2B8;
+  --color-level-v4-end: #ADF99A;
+  --color-level-v5-start: #6EE2F5;
+  --color-level-v5-end: #6454F0;
+  --color-level-v6-start: #3C5DD3;
+  --color-level-v6-end: #090E82;
+  --color-level-v7-start: #FF6CAB;
+  --color-level-v7-end: #8533FF;
+  --color-level-v8-start: #695F54;
+  --color-level-v8-end: #403121;
   /* font-size: 62.5%;  */
 }
 
