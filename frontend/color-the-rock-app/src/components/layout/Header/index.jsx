@@ -39,7 +39,7 @@ const Header = () => {
                 <S.MenuItem key={index}>
                   <S.SLink
                     to={item.path}
-                    current={item.path === location.pathname}
+                    current={item.path === location.pathname ? "true" : "false"}
                   >
                     {item.name}
                   </S.SLink>
