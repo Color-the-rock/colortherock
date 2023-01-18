@@ -5,6 +5,7 @@ import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
 import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
 import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatDTO;
+import org.anotherclass.colortherock.domain.memberrecord.response.VideoListDTO;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatDTO;
 import org.anotherclass.colortherock.domain.video.entity.Video;
@@ -54,8 +55,18 @@ public class RecordService {
         return list;
     }
 
+
     public TotalStatDTO getTotalRecords(Member member) {
         MemberRecord memberRecord = recordRepository.findByMember(member);
         return memberRecord.toTotalDTO();
+    }
+
+    public List<VideoListDTO> getSuccessVideos(Member member, LocalDate videoDate) {
+        List<Video> successVideos = videoRepository.findAllByMemberAndShootingDateAndIsSuccessIsTrue(member, videoDate);
+        List<VideoListDTO> successDTOs = new ArrayList<>();
+        for (Video video : successVideos) {
+            successDTOs.add(video.toVideoListDTO());
+        }
+        return successDTOs;
     }
 }
