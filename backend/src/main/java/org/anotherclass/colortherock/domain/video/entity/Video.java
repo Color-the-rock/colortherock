@@ -1,5 +1,7 @@
 package org.anotherclass.colortherock.domain.video.entity;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 
@@ -7,6 +9,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Getter
+@RequiredArgsConstructor
 @Table(name = "video")
 public class Video {
     @Id
@@ -34,6 +38,9 @@ public class Video {
 
     @Column(name = "color", length = 20)
     private String color;
+
+    @Column(name = "video_name", length = 100)
+    private String videoName;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
