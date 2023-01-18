@@ -29,17 +29,16 @@ public class VideoBoardService {
      */
     @Transactional
     public List<VideoBoardSummaryDto> getSuccessVideoList(Pageable pageable) {
-        Slice<VideoBoard> slices = videoBoardRepository.findAllBy(pageable);
-
+        Slice<VideoBoard> slices = videoBoardRepository.findSliceBy(pageable);
         if (slices.isEmpty()) {
             return new ArrayList<>();
         }
 
         return slices.toList().stream()
                 .map(vb -> {
-                    Optional<Video> video = videoRepository.findById(vb.getId());
+                    Optional<Video> video = videoRepository.findById(vb.getVideo().getId());
                     return VideoBoardSummaryDto.builder()
-                            .videoBoardId(video.get().getId())
+                            .videoBoardId(vb.getId())
                             .title(vb.getTitle())
                             .thumbnailURL(video.get().getThumbnailURL())
                             .color(video.get().getColor())
