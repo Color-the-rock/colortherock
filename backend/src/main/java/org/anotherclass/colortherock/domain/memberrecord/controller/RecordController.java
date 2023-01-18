@@ -6,6 +6,7 @@ import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
 import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatDTO;
 import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatDTO;
+import org.anotherclass.colortherock.domain.memberrecord.response.VideoListDTO;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
@@ -45,11 +46,7 @@ public class RecordController {
         if(!date.matches("\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")) {
             throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
         }
-        String[] dateNum = date.split("-");
-        int year = Integer.parseInt(dateNum[0]);
-        int month = Integer.parseInt(dateNum[1]);
-        int day = Integer.parseInt(dateNum[2]);
-        LocalDate videoDate = LocalDate.of(year, month, day);
+        LocalDate videoDate = LocalDate.parse(date);
         List<LevelStatDTO> dateRecords = recordService.getDateRecords(member, videoDate);
         return new BaseResponse<>(dateRecords);
     }
@@ -57,10 +54,25 @@ public class RecordController {
     /**
      * 전체 운동 기록 누적 통계 조회
      */
-    @GetMapping("/record/total")
+    @GetMapping("/total")
     public BaseResponse<TotalStatDTO> recordsTotal(@AuthenticationPrincipal MemberDetails memberDetails) {
         Member member = memberDetails.getMember();
         TotalStatDTO totalStatDTO = recordService.getTotalRecords(member);
         return new BaseResponse<>(totalStatDTO);
+    }
+
+    /**
+     * 날짜별 운동 영상 목록 조회(성공 영상)
+     */
+    @GetMapping("/videos/success/{date}")
+    public BaseResponse<List<VideoListDTO>> successVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String date) {
+        Member member = memberDetails.getMember();
+        // 날짜 형식이 YYYY-MM-DD 이 아닌 경우 예외 발생
+        if(!date.matches("\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")) {
+            throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
+        }
+        LocalDate videoDate = LocalDate.parse(date);
+        List<VideoListDTO> successDTOs = recordService.getSuccessVideos(member, videoDate);
+        return new BaseResponse<>(successDTOs);
     }
 }
