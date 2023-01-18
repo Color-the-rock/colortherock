@@ -1,10 +1,12 @@
 package org.anotherclass.colortherock.global.security.config;
 
 import lombok.RequiredArgsConstructor;
+import org.anotherclass.colortherock.global.security.oAuth2.CustomOAuthUserService;
 import org.anotherclass.colortherock.domain.member.service.MemberDetailsServiceImpl;
 import org.anotherclass.colortherock.global.security.jwt.JwtAuthenticationProvider;
 import org.anotherclass.colortherock.global.security.jwt.JwtAuthorizeFilter;
 import org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils;
+import org.anotherclass.colortherock.global.security.oAuth2.OAuth2AuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,6 +14,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.OAuth2AuthorizationSuccessHandler;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -21,6 +25,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final CustomOAuthUserService oAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final MemberDetailsServiceImpl memberDetailsService;
@@ -42,6 +48,9 @@ public class SecurityConfig {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/login/test").authenticated()
                 .anyRequest().permitAll();
+        http.oauth2Login()
+                .successHandler(oAuth2AuthenticationSuccessHandler);
+
         http.userDetailsService(memberDetailsService);
         return http.build();
     }
