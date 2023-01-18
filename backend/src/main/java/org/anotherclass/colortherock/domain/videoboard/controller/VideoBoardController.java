@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.videoboard.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchDto;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryDto;
 import org.anotherclass.colortherock.domain.videoboard.service.VideoBoardService;
 import org.springframework.data.domain.Pageable;
@@ -24,9 +25,10 @@ public class VideoBoardController {
 
     @GetMapping("/board")
     public ResponseEntity<List<VideoBoardSummaryDto>> getVideoTemp
-            (@PageableDefault(size=2, sort="id", direction = Sort.Direction.DESC) Pageable pageable, Long lastStoreId) {
+            (@PageableDefault(size=2, sort="id", direction = Sort.Direction.DESC) Pageable pageable, VideoBoardSearchDto cond) {
+        System.out.println(cond.toString());
         return ResponseEntity.ok()
-                .body(videoBoardService.getSuccessVideos(lastStoreId, pageable));
+                .body(videoBoardService.getSuccessVideos(cond, pageable));
     }
 
 
