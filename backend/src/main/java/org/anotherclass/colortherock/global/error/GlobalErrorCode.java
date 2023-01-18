@@ -19,7 +19,8 @@ public enum GlobalErrorCode {
 
 
     // 멤버와 관련된 Exception
-    DUPLICATE_NICKNAME(400, "M100", "중복 닉네임 입니다");
+    DUPLICATE_NICKNAME(400, "M100", "중복 닉네임 입니다"),
+    ;
 
     private final String code;
     private final String message;
