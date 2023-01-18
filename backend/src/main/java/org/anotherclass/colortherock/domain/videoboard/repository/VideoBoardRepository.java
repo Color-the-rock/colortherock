@@ -8,5 +8,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface VideoBoardRepository extends PagingAndSortingRepository<VideoBoard, Long> {
 
     // 비디오 영상 가져오기
-    Slice<VideoBoard> findAllBy(Pageable pageable);
+    Slice<VideoBoard> findSliceBy(Pageable pageable);
 }
