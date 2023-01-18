@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
-import AppLogo from "../../../assets/common/app-logo.png";
-import WebLogo from "../../../assets/common/web-logo.png";
+import AppLogo from "../../../assets/img/common/app-logo.png";
+import WebLogo from "../../../assets/img/common/web-logo.png";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { Link } from "react-router-dom";
 const slideIn = keyframes`
