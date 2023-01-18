@@ -1,11 +1,13 @@
 package org.anotherclass.colortherock.domain.member.entity;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
+@Getter
 public class MemberDetails implements UserDetails {
     private final Member member;
 

@@ -1,14 +1,16 @@
 package org.anotherclass.colortherock.global.error;
 
+import com.nimbusds.jwt.JWT;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice(annotations = RestController.class)
 @Slf4j
 public class GlobalExControllerAdvice {
 
@@ -45,7 +47,7 @@ public class GlobalExControllerAdvice {
 
     @ExceptionHandler(GlobalBaseException.class)
     protected BaseResponse<?> handleGlobalBaseException(final GlobalBaseException e) {
-        log.error("handleEntityNotFoundException", e);
+        log.error("{} Exception {}: {}", e.getErrorCode(), e.getErrorCode().getCode(), e.getErrorCode().getMessage());
         return new BaseResponse<>(e.getErrorCode());
     }
 
