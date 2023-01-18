@@ -8,6 +8,10 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
   security:
     oauth2:
       client:
@@ -33,8 +37,6 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-
-
   redis:
     host: localhost
     port: 6379
