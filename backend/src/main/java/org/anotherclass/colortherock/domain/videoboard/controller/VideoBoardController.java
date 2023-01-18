@@ -17,16 +17,17 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/video")
+@RequestMapping("/api/video")
 public class VideoBoardController {
 
     private final VideoBoardService videoBoardService;
 
     @GetMapping("/board")
-    public ResponseEntity<List<VideoBoardSummaryDto>> getVideoBoardList
-            (@PageableDefault(size=15, sort="videoBoardId", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<List<VideoBoardSummaryDto>> getVideoTemp
+            (@PageableDefault(size=2, sort="id", direction = Sort.Direction.DESC) Pageable pageable, Long lastStoreId) {
         return ResponseEntity.ok()
-                .body(videoBoardService.getSuccessVideoList(pageable));
+                .body(videoBoardService.getSuccessVideos(lastStoreId, pageable));
     }
+
 
 }
