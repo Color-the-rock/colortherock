@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
-import org.anotherclass.colortherock.domain.memberrecord.response.StatisticsDTO;
+import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatDTO;
+import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatDTO;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
@@ -28,9 +29,9 @@ public class RecordController {
      * 전체 운동 영상 색상 별 통계 조회
      */
     @GetMapping("/color")
-    public BaseResponse<List<StatisticsDTO>> recordsByColor(@AuthenticationPrincipal MemberDetails memberDetails) {
+    public BaseResponse<List<LevelStatDTO>> recordsByColor(@AuthenticationPrincipal MemberDetails memberDetails) {
         Member member = memberDetails.getMember();
-        List<StatisticsDTO> colorRecords = recordService.getColorRecords(member);
+        List<LevelStatDTO> colorRecords = recordService.getColorRecords(member);
         return new BaseResponse<>(colorRecords);
     }
 
@@ -38,7 +39,7 @@ public class RecordController {
      * 날짜별 운동 기록 색상 별 조회
      */
     @GetMapping("/color/{date}")
-    public BaseResponse<List<StatisticsDTO>> recordsByColorAndDate(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String date) throws MalformedDateException {
+    public BaseResponse<List<LevelStatDTO>> recordsByColorAndDate(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String date) throws MalformedDateException {
         Member member = memberDetails.getMember();
         // 날짜 형식이 YYYY-MM-DD 이 아닌 경우 예외 발생
         if(!date.matches("\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")) {
@@ -49,7 +50,17 @@ public class RecordController {
         int month = Integer.parseInt(dateNum[1]);
         int day = Integer.parseInt(dateNum[2]);
         LocalDate videoDate = LocalDate.of(year, month, day);
-        List<StatisticsDTO> dateRecords = recordService.getDateRecords(member, videoDate);
+        List<LevelStatDTO> dateRecords = recordService.getDateRecords(member, videoDate);
         return new BaseResponse<>(dateRecords);
+    }
+
+    /**
+     * 전체 운동 기록 누적 통계 조회
+     */
+    @GetMapping("/record/total")
+    public BaseResponse<TotalStatDTO> recordsTotal(@AuthenticationPrincipal MemberDetails memberDetails) {
+        Member member = memberDetails.getMember();
+        TotalStatDTO totalStatDTO = recordService.getTotalRecords(member);
+        return new BaseResponse<>(totalStatDTO);
     }
 }
