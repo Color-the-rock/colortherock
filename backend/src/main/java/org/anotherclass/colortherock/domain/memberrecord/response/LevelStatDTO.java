@@ -6,12 +6,12 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @Getter @Setter
-public class StatisticsDTO {
+public class LevelStatDTO {
     int level;
     long total;
     long success;
 
-    public StatisticsDTO(int level) {
+    public LevelStatDTO(int level) {
         this.level = level;
     }
 
