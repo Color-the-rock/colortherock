@@ -1,5 +1,12 @@
 package org.anotherclass.colortherock.domain.memberrecord.exception;
 
-public class MalformedDateException extends Exception{
-    // Custom Exception 상속 필요
+import org.anotherclass.colortherock.global.error.GlobalBaseException;
+import org.anotherclass.colortherock.global.error.GlobalErrorCode;
+
+public class MalformedDateException extends GlobalBaseException{
+
+    public MalformedDateException(GlobalErrorCode errorCode) {
+        super(errorCode);
+    }
+
 }
