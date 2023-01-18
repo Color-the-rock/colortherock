@@ -8,6 +8,7 @@ import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,4 +34,19 @@ public class RecordService {
         return list;
     }
 
+    @Transactional
+    public List<StatisticsDTO> getDateRecords(Member member, LocalDate videoDate) {
+        List<StatisticsDTO> list = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            list.add(new StatisticsDTO(i + 1));
+        }
+        List<Video> videos = recordRepository.findAllByMemberAndShootingDate(member, videoDate);
+        videos.forEach(video -> {
+            Integer videoLevel = video.getLevel();
+            StatisticsDTO dto = list.get(videoLevel - 1);
+            dto.totalIncrement();
+            if(video.getIsSuccess()) dto.successIncrement();
+        });
+        return list;
+    }
 }

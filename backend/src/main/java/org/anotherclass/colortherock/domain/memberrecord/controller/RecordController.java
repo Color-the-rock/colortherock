@@ -3,14 +3,17 @@ package org.anotherclass.colortherock.domain.memberrecord.controller;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
+import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
 import org.anotherclass.colortherock.domain.memberrecord.response.StatisticsDTO;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -30,4 +33,23 @@ public class RecordController {
         return ResponseEntity.ok().body(colorRecords);
     }
 
+    /**
+     * 날짜별 운동 기록 색상 별 조회
+     */
+    @GetMapping("/color/{date}")
+    public ResponseEntity<List<StatisticsDTO>> recordsByColorAndDate(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String date) throws MalformedDateException {
+        Member member = memberDetails.getMember();
+        // 날짜 형식이 YYYY-MM-DD 이 아닌 경우 예외 발생
+        if(!date.matches("\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")) {
+            throw new MalformedDateException();
+        }
+        String[] dateNum = date.split("-");
+        int year = Integer.parseInt(dateNum[0]);
+        int month = Integer.parseInt(dateNum[1]);
+        int day = Integer.parseInt(dateNum[2]);
+        LocalDate videoDate = LocalDate.of(year, month, day);
+        List<StatisticsDTO> dateRecords = recordService.getDateRecords(member, videoDate);
+        return ResponseEntity.ok().body(dateRecords);
+
+    }
 }
