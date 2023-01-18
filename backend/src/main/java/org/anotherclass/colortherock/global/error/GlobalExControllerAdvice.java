@@ -1,5 +1,6 @@
 package org.anotherclass.colortherock.global.error;
 
+import com.nimbusds.jwt.JWT;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.springframework.validation.BindException;
@@ -46,7 +47,7 @@ public class GlobalExControllerAdvice {
 
     @ExceptionHandler(GlobalBaseException.class)
     protected BaseResponse<?> handleGlobalBaseException(final GlobalBaseException e) {
-        log.error("handleEntityNotFoundException", e);
+        log.error("{} Exception {}: {}", e.getErrorCode(), e.getErrorCode().getCode(), e.getErrorCode().getMessage());
         return new BaseResponse<>(e.getErrorCode());
     }
 

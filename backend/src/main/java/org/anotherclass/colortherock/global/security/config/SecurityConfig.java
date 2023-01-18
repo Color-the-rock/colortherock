@@ -1,6 +1,10 @@
 package org.anotherclass.colortherock.global.security.config;
 
 import lombok.RequiredArgsConstructor;
+import org.anotherclass.colortherock.domain.member.service.MemberDetailsServiceImpl;
+import org.anotherclass.colortherock.global.security.jwt.JwtAuthenticationProvider;
+import org.anotherclass.colortherock.global.security.jwt.JwtAuthorizeFilter;
+import org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -9,6 +13,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -17,19 +22,27 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
+    private final MemberDetailsServiceImpl memberDetailsService;
+    private final JwtTokenUtils jwtTokenUtils;
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        http.authenticationProvider(jwtAuthenticationProvider);
         http.cors().configurationSource(corsConfigurationSource());
+        http.userDetailsService(memberDetailsService);
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(new JwtAuthorizeFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtTokenUtils), BasicAuthenticationFilter.class);
         http.authorizeRequests()
                 .antMatchers("/test")
                 .authenticated();
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/login/test").authenticated()
                 .anyRequest().permitAll();
+        http.userDetailsService(memberDetailsService);
         return http.build();
     }
 
