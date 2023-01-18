@@ -19,7 +19,8 @@ public enum GlobalErrorCode {
     NOT_VIDEO_OWNER(400, "V200", "영상의 주인과 요청한 멤버가 다릅니다."),
     // 멤버와 관련된 Exception
     DUPLICATE_NICKNAME(400, "M100", "중복 닉네임 입니다"),
-    ;
+
+    MALFORMED_DATE(400, "R100", "잘못된 날짜 형식입니다.");
 
     private final String code;
     private final String message;
