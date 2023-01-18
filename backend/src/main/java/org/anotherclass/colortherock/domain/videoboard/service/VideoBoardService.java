@@ -21,15 +21,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VideoBoardService {
 
-    private final VideoBoardRepository videoBoardRepository;
     private final VideoRepository videoRepository;
+    private final VideoBoardRepository videoBoardRepository;
 
     /**
      * 완등 영상 전체 리스트 조회
+     * @param lastStoreId 프론트에서 갖고 있는 마지막 videoBoardId
+     * @param pageable Pageable 객체 (컨트롤러에서 생성)
      */
     @Transactional
-    public List<VideoBoardSummaryDto> getSuccessVideoList(Pageable pageable) {
-        Slice<VideoBoard> slices = videoBoardRepository.findSliceBy(pageable);
+    public List<VideoBoardSummaryDto> getSuccessVideos(Long lastStoreId, Pageable pageable) {
+        Slice<VideoBoard> slices = videoBoardRepository.searchBySlice(lastStoreId, pageable);
+
         if (slices.isEmpty()) {
             return new ArrayList<>();
         }
@@ -42,6 +45,7 @@ public class VideoBoardService {
                             .title(vb.getTitle())
                             .thumbnailURL(video.get().getThumbnailURL())
                             .color(video.get().getColor())
+                            .writtenTime(vb.getWrittenTime())
                             .build();
                 }).collect(Collectors.toList());
 

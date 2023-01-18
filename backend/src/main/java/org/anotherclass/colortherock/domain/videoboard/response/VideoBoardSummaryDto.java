@@ -13,5 +13,4 @@ public class VideoBoardSummaryDto {
     private String thumbnailURL;
     private String color;
     private LocalDateTime writtenTime;
-
 }

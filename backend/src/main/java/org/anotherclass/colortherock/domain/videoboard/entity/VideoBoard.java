@@ -7,6 +7,7 @@ import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.videocomment.entity.VideoComment;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,9 @@ public class VideoBoard {
 
     @OneToMany(mappedBy = "videoBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VideoComment> videoComments = new ArrayList<>();
+
+    @Column(name = "written_time")
+    private LocalDateTime writtenTime;
 
     public List<VideoComment> getVideoComments() {
         return videoComments;
