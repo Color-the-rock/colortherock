@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.memberrecord.entity;
 
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import lombok.Getter;
+import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatDTO;
 
 import javax.persistence.*;
 
@@ -26,4 +27,7 @@ public class MemberRecord {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    public TotalStatDTO toTotalDTO() {
+        return new TotalStatDTO(this.videoCount, this.videoLengthSum, this.successCount);
+    }
 }
