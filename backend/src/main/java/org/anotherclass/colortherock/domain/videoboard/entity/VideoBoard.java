@@ -1,5 +1,7 @@
 package org.anotherclass.colortherock.domain.videoboard.entity;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.videocomment.entity.VideoComment;
@@ -9,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@RequiredArgsConstructor
 @Table(name = "video_board")
 public class VideoBoard {
     @Id
