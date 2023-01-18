@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
 import org.anotherclass.colortherock.domain.memberrecord.response.StatisticsDTO;
+import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,12 +20,17 @@ public class RecordService {
     @Transactional
     public List<StatisticsDTO> getColorRecords(Member member) {
         List<StatisticsDTO> list = new ArrayList<>();
-        for (int level = 1; level < 9; level++) {
-            Long success = recordRepository.countByMemberAndLevelAndIsSuccessIsTrue(member, level);
-            Long total = recordRepository.countByMemberAndLevel(member, level);
-            StatisticsDTO dto = new StatisticsDTO(level, total, success);
-            list.add(dto);
+        for (int i = 0; i < 9; i++) {
+            list.add(new StatisticsDTO(i + 1));
         }
+        List<Video> videos = recordRepository.findAllByMember(member);
+        videos.forEach(video -> {
+            Integer videoLevel = video.getLevel();
+            StatisticsDTO dto = list.get(videoLevel - 1);
+            dto.totalIncrement();
+            if(video.getIsSuccess()) dto.successIncrement();
+        });
         return list;
     }
+
 }
