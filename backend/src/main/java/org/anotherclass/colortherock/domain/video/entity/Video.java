@@ -1,5 +1,6 @@
 package org.anotherclass.colortherock.domain.video.entity;
 
+import lombok.Getter;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 
@@ -7,7 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "video")
+@Table(name = "video") @Getter
 public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
