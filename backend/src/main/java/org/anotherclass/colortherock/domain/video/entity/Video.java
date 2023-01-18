@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.video.entity;
 
 import lombok.Getter;
 import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.memberrecord.response.VideoListDTO;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 
 import javax.persistence.*;
@@ -40,8 +41,10 @@ public class Video {
     @JoinColumn(name = "member_id")
     private Member member;
 
-
     @OneToOne(mappedBy = "video", orphanRemoval = true)
     private VideoBoard videoBoard;
 
+    public VideoListDTO toVideoListDTO() {
+        return new VideoListDTO(this.id, this.thumbnailURL, this.gymName, this.level, this.color);
+    }
 }
