@@ -1,12 +1,14 @@
 package org.anotherclass.colortherock.domain.videoboard.response;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Builder
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class VideoBoardSummaryResponse {
 
     private Long videoBoardId;

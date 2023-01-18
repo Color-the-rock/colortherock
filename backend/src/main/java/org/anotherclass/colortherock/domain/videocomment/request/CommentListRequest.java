@@ -1,12 +1,13 @@
 package org.anotherclass.colortherock.domain.videocomment.request;
 
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
-@Data
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommentListRequest {
 
     private Long storeId;
