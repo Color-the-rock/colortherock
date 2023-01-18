@@ -6,7 +6,8 @@ import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
 import org.anotherclass.colortherock.domain.memberrecord.response.StatisticsDTO;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
-import org.springframework.http.ResponseEntity;
+import org.anotherclass.colortherock.global.common.BaseResponse;
+import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,21 +28,21 @@ public class RecordController {
      * 전체 운동 영상 색상 별 통계 조회
      */
     @GetMapping("/color")
-    public ResponseEntity<List<StatisticsDTO>> recordsByColor(@AuthenticationPrincipal MemberDetails memberDetails) {
+    public BaseResponse<List<StatisticsDTO>> recordsByColor(@AuthenticationPrincipal MemberDetails memberDetails) {
         Member member = memberDetails.getMember();
         List<StatisticsDTO> colorRecords = recordService.getColorRecords(member);
-        return ResponseEntity.ok().body(colorRecords);
+        return new BaseResponse<>(colorRecords);
     }
 
     /**
      * 날짜별 운동 기록 색상 별 조회
      */
     @GetMapping("/color/{date}")
-    public ResponseEntity<List<StatisticsDTO>> recordsByColorAndDate(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String date) throws MalformedDateException {
+    public BaseResponse<List<StatisticsDTO>> recordsByColorAndDate(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String date) throws MalformedDateException {
         Member member = memberDetails.getMember();
         // 날짜 형식이 YYYY-MM-DD 이 아닌 경우 예외 발생
         if(!date.matches("\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")) {
-            throw new MalformedDateException();
+            throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
         }
         String[] dateNum = date.split("-");
         int year = Integer.parseInt(dateNum[0]);
@@ -49,7 +50,6 @@ public class RecordController {
         int day = Integer.parseInt(dateNum[2]);
         LocalDate videoDate = LocalDate.of(year, month, day);
         List<StatisticsDTO> dateRecords = recordService.getDateRecords(member, videoDate);
-        return ResponseEntity.ok().body(dateRecords);
-
+        return new BaseResponse<>(dateRecords);
     }
 }
