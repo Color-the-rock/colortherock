@@ -2,8 +2,10 @@ package org.anotherclass.colortherock.domain.videoboard.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.anotherclass.colortherock.domain.video.entity.QVideo;
 import org.anotherclass.colortherock.domain.videoboard.entity.QVideoBoard;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
+import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -24,14 +26,24 @@ public class VideoBoardRepository {
         this.query = new JPAQueryFactory(em);
     }
 
+    QVideo video = QVideo.video;
     QVideoBoard videoBoard = QVideoBoard.videoBoard;
 
-    public Slice<VideoBoard> searchBySlice(Long lastStoreId, Pageable pageable) {
+    public Slice<VideoBoard> searchBySlice(VideoBoardSearchDto condition, Pageable pageable) {
+
+        Long lastStoreId = condition.getStoreId();
+        String gymNameCond = condition.getGymName();
+        String colorCond = condition.getColor();
 
         List<VideoBoard> results = query.selectFrom(videoBoard)
+                .join(videoBoard.video, video)
                 .where(
                         // no-offset 페이징 처리
-                        ltStoreId(lastStoreId)
+                        checkStoreId(lastStoreId),
+                        // 암장 검색
+                        checkGymName(gymNameCond),
+                        // 색상 검색
+                        checkColor(colorCond)
                 )
                 .orderBy(videoBoard.id.desc())
                 .limit(pageable.getPageSize() + 1)
@@ -41,13 +53,29 @@ public class VideoBoardRepository {
         return checkLastPage(pageable, results);
     }
 
-    // no-offset 방식 처리하는 메서드
-    private BooleanExpression ltStoreId(Long storeId) {
+    // no-offset 방식 처리하는 메서드 (storeId가 없을 경우, 있을 경우)
+    private BooleanExpression checkStoreId(Long storeId) {
         if (storeId == null) {
             return null;
         }
 
         return videoBoard.id.lt(storeId);
+    }
+
+    // 암장 검색을 처리하는 메서드
+    private BooleanExpression checkGymName(String gymNameCond) {
+        if (gymNameCond.equals("")) {
+            return null;
+        }
+        return videoBoard.video.gymName.eq(gymNameCond);
+    }
+
+    // 레벨 검색을 처리하는 메서드
+    private BooleanExpression checkColor(String colorCond) {
+        if (colorCond.equals("")) {
+            return null;
+        }
+        return videoBoard.video.color.eq(colorCond);
     }
 
     // 무한 스크롤 방식 처리하는 메서드
