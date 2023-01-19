@@ -7,7 +7,7 @@ import lombok.ToString;
 @Data
 @Getter
 @ToString
-public class VideoBoardSearchDto {
+public class VideoBoardSearchRequest {
     private Long storeId;
     private String color;
     private String gymName;

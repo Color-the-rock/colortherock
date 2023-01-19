@@ -5,7 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.anotherclass.colortherock.domain.video.entity.QVideo;
 import org.anotherclass.colortherock.domain.videoboard.entity.QVideoBoard;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
-import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchDto;
+import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -29,7 +29,7 @@ public class VideoBoardRepository {
     QVideo video = QVideo.video;
     QVideoBoard videoBoard = QVideoBoard.videoBoard;
 
-    public Slice<VideoBoard> searchBySlice(VideoBoardSearchDto condition, Pageable pageable) {
+    public Slice<VideoBoard> searchBySlice(VideoBoardSearchRequest condition, Pageable pageable) {
 
         Long lastStoreId = condition.getStoreId();
         String gymNameCond = condition.getGymName();
