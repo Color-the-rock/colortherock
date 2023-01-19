@@ -7,6 +7,7 @@ import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils;
 import org.anotherclass.colortherock.global.security.jwt.RefreshToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -33,7 +34,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        MemberInfo memberInfo = MemberInfoFactory.getMemberInfo(attributes);
+        MemberInfo memberInfo = MemberInfoFactory.getMemberInfo(attributes,(OAuth2AuthenticationToken)authentication);
 
         Optional<Member> optionalMember = memberRepository.findByRegistrationIdAndEmail(memberInfo.getRegistrationId(), memberInfo.getEmail());
         String targetUrl;
@@ -44,7 +45,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             response.setHeader(AUTHORIZATION, tokens);
             targetUrl = UriComponentsBuilder.newInstance()
                     .scheme("http")
-                    .host("localhost:3000")
+                    .host("localhost:8080")
                     .path("/oauth2")
                     .queryParam("refresh", token.getRefreshToken())
                     .queryParam("access", token.getAccessToken())
@@ -54,14 +55,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         } else {
             targetUrl = UriComponentsBuilder.newInstance()
                     .scheme("http")
-                    .host("localhost:3000")
+                    .host("localhost:8080")
                     .path("/oauth2")
                     .queryParam("email", memberInfo.getEmail())
                     .queryParam("registrationId", memberInfo.getRegistrationId()).toUriString();
         }
         response.sendRedirect(targetUrl);
 
-        super.onAuthenticationSuccess(request, response, authentication);
+//        super.onAuthenticationSuccess(request, response, authentication);
     }
 }
 
