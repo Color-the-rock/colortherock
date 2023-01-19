@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
 import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
-import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatDTO;
-import org.anotherclass.colortherock.domain.memberrecord.response.VideoListDTO;
+import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatResponse;
+import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
-import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatDTO;
+import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatResponse;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.springframework.stereotype.Service;
 
@@ -24,15 +24,15 @@ public class RecordService {
     private final RecordRepository recordRepository;
 
     @Transactional
-    public List<LevelStatDTO> getColorRecords(Member member) {
-        List<LevelStatDTO> list = new ArrayList<>();
+    public List<LevelStatResponse> getColorRecords(Member member) {
+        List<LevelStatResponse> list = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
-            list.add(new LevelStatDTO(i + 1));
+            list.add(new LevelStatResponse(i + 1));
         }
         List<Video> videos = videoRepository.findAllByMember(member);
         videos.forEach(video -> {
             Integer videoLevel = video.getLevel();
-            LevelStatDTO dto = list.get(videoLevel - 1);
+            LevelStatResponse dto = list.get(videoLevel - 1);
             dto.totalIncrement();
             if(video.getIsSuccess()) dto.successIncrement();
         });
@@ -40,15 +40,15 @@ public class RecordService {
     }
 
     @Transactional
-    public List<LevelStatDTO> getDateRecords(Member member, LocalDate videoDate) {
-        List<LevelStatDTO> list = new ArrayList<>();
+    public List<LevelStatResponse> getDateRecords(Member member, LocalDate videoDate) {
+        List<LevelStatResponse> list = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
-            list.add(new LevelStatDTO(i + 1));
+            list.add(new LevelStatResponse(i + 1));
         }
         List<Video> videos = videoRepository.findAllByMemberAndShootingDate(member, videoDate);
         videos.forEach(video -> {
             Integer videoLevel = video.getLevel();
-            LevelStatDTO dto = list.get(videoLevel - 1);
+            LevelStatResponse dto = list.get(videoLevel - 1);
             dto.totalIncrement();
             if(video.getIsSuccess()) dto.successIncrement();
         });
@@ -56,14 +56,14 @@ public class RecordService {
     }
 
 
-    public TotalStatDTO getTotalRecords(Member member) {
+    public TotalStatResponse getTotalRecords(Member member) {
         MemberRecord memberRecord = recordRepository.findByMember(member);
-        return memberRecord.toTotalDTO();
+        return new TotalStatResponse(memberRecord.getVideoCount(), memberRecord.getVideoLengthSum(), memberRecord.getSuccessCount());
     }
 
-    public List<VideoListDTO> getSuccessVideos(Member member, LocalDate videoDate) {
+    public List<VideoListResponse> getSuccessVideos(Member member, LocalDate videoDate) {
         List<Video> successVideos = videoRepository.findAllByMemberAndShootingDateAndIsSuccessIsTrue(member, videoDate);
-        List<VideoListDTO> successDTOs = new ArrayList<>();
+        List<VideoListResponse> successDTOs = new ArrayList<>();
         for (Video video : successVideos) {
             successDTOs.add(video.toVideoListDTO());
         }
