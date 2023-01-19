@@ -10,8 +10,8 @@ import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatResponse;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class RecordService {
     private final VideoRepository videoRepository;
     private final RecordRepository recordRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<LevelStatResponse> getColorRecords(Member member) {
         List<LevelStatResponse> list = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
@@ -39,7 +39,7 @@ public class RecordService {
         return list;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<LevelStatResponse> getDateRecords(Member member, LocalDate videoDate) {
         List<LevelStatResponse> list = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
@@ -55,12 +55,13 @@ public class RecordService {
         return list;
     }
 
-
+    @Transactional(readOnly = true)
     public TotalStatResponse getTotalRecords(Member member) {
         MemberRecord memberRecord = recordRepository.findByMember(member);
         return new TotalStatResponse(memberRecord.getVideoCount(), memberRecord.getVideoLengthSum(), memberRecord.getSuccessCount());
     }
 
+    @Transactional(readOnly = true)
     public List<VideoListResponse> getSuccessVideos(Member member, LocalDate videoDate) {
         List<Video> successVideos = videoRepository.findAllByMemberAndShootingDateAndIsSuccessIsTrue(member, videoDate);
         List<VideoListResponse> successDTOs = new ArrayList<>();
