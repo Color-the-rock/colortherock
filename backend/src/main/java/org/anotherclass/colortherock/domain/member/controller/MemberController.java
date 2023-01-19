@@ -36,4 +36,11 @@ public class MemberController {
         MemberSignUpResponse signup = memberService.signup(request);
         return new BaseResponse<>(signup);
     }
+
+    @PostMapping("/api/duplicateNickname")
+    public BaseResponse<?> duplicateNickname(@RequestBody String email) {
+        memberService.duplicateNickname(email);
+        return new BaseResponse<>(true);
+    }
+
 }

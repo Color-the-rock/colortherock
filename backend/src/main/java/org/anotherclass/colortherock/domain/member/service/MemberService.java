@@ -3,6 +3,7 @@ package org.anotherclass.colortherock.domain.member.service;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.exception.AccessDeniedException;
+import org.anotherclass.colortherock.domain.member.exception.DuplicateNicknameException;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.member.request.MemberSignUpRequest;
 import org.anotherclass.colortherock.domain.member.response.MemberSignUpResponse;
@@ -31,5 +32,11 @@ public class MemberService {
         Member member = request.toEntity();
         Member save = memberRepository.save(member);
         return new MemberSignUpResponse(save.getId(), save.getEmail(), save.getRegistrationId(), save.getNickname());
+    }
+
+    public void duplicateNickname(String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new DuplicateNicknameException();
+        }
     }
 }
