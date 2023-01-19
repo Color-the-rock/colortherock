@@ -51,6 +51,6 @@ export const SubTitle = styled.h2`
   font-size: 0.875rem;
   line-height: 1.5rem;
   /* or 171% */
-
+  margin-bottom: 8px;
   letter-spacing: -0.01em;
 `;
