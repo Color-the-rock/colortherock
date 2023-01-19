@@ -1,6 +1,5 @@
 package org.anotherclass.colortherock.domain.member.entity;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,10 +50,12 @@ public class Member {
         this.nickname = nickname;
         this.registrationId = registrationId;
     }
+
     @Enumerated(EnumType.STRING)
     @Column(name = "registration_id")
     private RegistrationId registrationId;
-    private enum RegistrationId {
+
+    public enum RegistrationId {
         kakao, google
 
     }
