@@ -53,7 +53,8 @@ public class MemberLoginTest extends IntegrationTest {
 
     @BeforeEach
     public void setMember() {
-        member = new Member("suker800@gmail.com", "태규");
+        member = new Member("suker800@gmail.com", "태규", Member.RegistrationId.google);
+
         em.persist(member);
 
         em.flush();
@@ -111,6 +112,7 @@ public class MemberLoginTest extends IntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(jsonPath("$.status", Matchers.is(HttpStatus.UNAUTHORIZED.value())));
     }
+
     @Test
     @DisplayName("Refresh로 다시 토큰 재발급")
     public void 토큰재발급성공() throws Exception {
@@ -135,7 +137,6 @@ public class MemberLoginTest extends IntegrationTest {
         ReGenerateAccessTokenResponse response = objectMapper.readValue(contentAsString, ReGenerateAccessTokenResponse.class);
         String accessToken = response.getAccessToken();
         Assertions.assertNotEquals(accessToken, tokens);
-
     }
 
 }
