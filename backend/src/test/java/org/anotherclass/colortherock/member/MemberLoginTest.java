@@ -137,4 +137,5 @@ public class MemberLoginTest extends IntegrationTest {
         Assertions.assertNotEquals(accessToken, tokens);
 
     }
+
 }
