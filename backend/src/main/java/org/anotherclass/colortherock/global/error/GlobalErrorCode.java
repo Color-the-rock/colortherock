@@ -22,7 +22,8 @@ public enum GlobalErrorCode {
     // 멤버와 관련된 Exception
     DUPLICATE_NICKNAME(400, "M100", "중복 닉네임 입니다"),
 
-    MALFORMED_DATE(400, "R100", "잘못된 날짜 형식입니다.");
+    MALFORMED_DATE(400, "R100", "잘못된 날짜 형식입니다."),
+    VIDEO_NOT_FOUND(404, "V100", "해당 id에 해당하는 영상이 없습니다.");
 
     private final String code;
     private final String message;
