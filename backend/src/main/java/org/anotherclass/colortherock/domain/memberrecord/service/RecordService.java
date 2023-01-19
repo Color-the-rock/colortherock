@@ -64,10 +64,30 @@ public class RecordService {
     @Transactional(readOnly = true)
     public List<VideoListResponse> getSuccessVideos(Member member, LocalDate videoDate) {
         List<Video> successVideos = videoRepository.findAllByMemberAndShootingDateAndIsSuccessIsTrue(member, videoDate);
-        List<VideoListResponse> successDTOs = new ArrayList<>();
+        List<VideoListResponse> successResponses = new ArrayList<>();
         for (Video video : successVideos) {
-            successDTOs.add(video.toVideoListDTO());
+            successResponses.add(VideoListResponse.builder()
+                            .id(video.getId())
+                            .color(video.getColor())
+                            .gymName(video.getGymName())
+                            .level(video.getLevel())
+                            .thumbnailURL(video.getThumbnailURL()).build());
         }
-        return successDTOs;
+        return successResponses;
+    }
+
+    @Transactional(readOnly = true)
+    public List<VideoListResponse> getFailVideos(Member member, LocalDate videoDate) {
+        List<Video> failVideos = videoRepository.findAllByMemberAndShootingDateAndIsSuccessIsFalse(member, videoDate);
+        List<VideoListResponse> failResponses = new ArrayList<>();
+        for (Video video : failVideos) {
+            failResponses.add(VideoListResponse.builder()
+                    .id(video.getId())
+                    .color(video.getColor())
+                    .gymName(video.getGymName())
+                    .level(video.getLevel())
+                    .thumbnailURL(video.getThumbnailURL()).build());
+        }
+        return failResponses;
     }
 }
