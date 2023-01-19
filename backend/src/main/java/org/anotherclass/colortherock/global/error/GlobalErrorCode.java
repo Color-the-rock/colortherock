@@ -14,7 +14,8 @@ public enum GlobalErrorCode {
     OTHER(500, "G100", "서버에 오류가 발생했습니다"),
     METHOD_NOT_ALLOWED(405, "G200", "허용되지 않은 메서드입니다"),
     VALID_EXCEPTION(400, "G300", ""),
-    MALFORMED_DATE(400, "R100", "잘못된 날짜 형식입니다.");
+    MALFORMED_DATE(400, "R100", "잘못된 날짜 형식입니다."),
+    VIDEO_NOT_FOUND(404, "V100", "해당 id에 해당하는 영상이 없습니다.");
 
     private final String code;
     private final String message;
