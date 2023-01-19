@@ -3,7 +3,7 @@ package org.anotherclass.colortherock.domain.memberrecord.response;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class VideoListDTO {
+public class VideoListResponse {
     Long id;
     String thumbnailURL;
     String gymName;
