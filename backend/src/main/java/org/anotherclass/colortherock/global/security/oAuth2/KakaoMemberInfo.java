@@ -2,16 +2,19 @@ package org.anotherclass.colortherock.global.security.oAuth2;
 
 import org.anotherclass.colortherock.domain.member.entity.Member.RegistrationId;
 
-public class KakaoMemberInfo implements MemberInfo {
-    private final String email;
+import java.util.Map;
 
-    public KakaoMemberInfo(String email) {
-        this.email = email;
+public class KakaoMemberInfo implements MemberInfo {
+    private final Map<String, Object> attributes;
+
+    public KakaoMemberInfo(Map<String, Object> attributes) {
+        this.attributes = attributes;
     }
 
     @Override
     public String getEmail() {
-        return email;
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+        return (String) kakaoAccount.get("email");
     }
 
     @Override
