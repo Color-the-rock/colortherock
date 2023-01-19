@@ -8,8 +8,8 @@ import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchR
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +25,7 @@ public class VideoBoardService {
      * @param condition 현재 페이지의 마지막 아이디, 암장, 색상 검색 조건을 담고 있는 객체
      * @param pageable Pageable 객체 (컨트롤러에서 생성)
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public List<VideoBoardSummaryResponse> getSuccessVideos(VideoBoardSearchRequest condition, Pageable pageable) {
         Slice<VideoBoard> slices = videoBoardRepository.searchBySlice(condition, pageable);
 
