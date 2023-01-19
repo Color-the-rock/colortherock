@@ -24,6 +24,9 @@ export const Container = styled.header`
   padding: 1rem 2rem;
   justify-content: space-between;
   align-items: center;
+  @media (max-width: 1070px) {
+    padding: 1rem 16px;
+  }
 `;
 
 export const LogoImg = styled.div`
@@ -94,9 +97,9 @@ export const SideMenu = styled.ul`
 `;
 
 export const SideMenuItem = styled.li`
-  font-size: 18px;
+  font-size: 1.125rem;
   font-style: normal;
   font-weight: 700;
   line-height: 28px;
-  margin: 16px;
+  margin: 1rem 0.5rem;
 `;
