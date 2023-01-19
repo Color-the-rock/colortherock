@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/record")
+@RequestMapping("/api/record")
 public class RecordController {
 
     private final RecordService recordService;
@@ -72,7 +72,22 @@ public class RecordController {
             throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
         }
         LocalDate videoDate = LocalDate.parse(date);
-        List<VideoListResponse> successDTOs = recordService.getSuccessVideos(member, videoDate);
-        return new BaseResponse<>(successDTOs);
+        List<VideoListResponse> successResponse = recordService.getSuccessVideos(member, videoDate);
+        return new BaseResponse<>(successResponse);
+    }
+
+    /**
+     * 날짜별 운동 영상 목록 조회(실패 영상)
+     */
+    @GetMapping("/videos/fail/{date}")
+    public BaseResponse<List<VideoListResponse>> failVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String date) {
+        Member member = memberDetails.getMember();
+        // 날짜 형식이 YYYY-MM-DD 이 아닌 경우 예외 발생
+        if(!date.matches("\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")) {
+            throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
+        }
+        LocalDate videoDate = LocalDate.parse(date);
+        List<VideoListResponse> failResponses = recordService.getFailVideos(member, videoDate);
+        return new BaseResponse<>(failResponses);
     }
 }
