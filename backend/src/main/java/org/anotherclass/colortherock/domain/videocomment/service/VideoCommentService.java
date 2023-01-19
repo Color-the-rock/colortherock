@@ -22,12 +22,6 @@ public class VideoCommentService {
 
     private final VideoCommentReadRepository videoCommentReadRepository;
 
-    /**
-     * 영상 댓글 조회
-     * @param condition 현재 페이지의 마지막 아이디, 조회하고자 하는 게시판 아이디 값
-     * @param pageable Pageable 객체(컨트롤러에서 생성)
-     */
-
     @Transactional(readOnly = true)
     public List<CommentListResponse> getCommentList(CommentListRequest condition, Pageable pageable) {
         Slice<VideoComment> slices = videoCommentReadRepository.searchBySlice(condition, pageable);

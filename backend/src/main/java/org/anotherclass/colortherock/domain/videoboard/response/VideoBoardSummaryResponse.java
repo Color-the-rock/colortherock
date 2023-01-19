@@ -10,11 +10,8 @@ import java.time.LocalDateTime;
 public class VideoBoardSummaryResponse {
 
     private Long videoBoardId;
-
     private String title;
     private String thumbnailURL;
-
     private String color;
-
     private LocalDateTime writtenTime;
 }

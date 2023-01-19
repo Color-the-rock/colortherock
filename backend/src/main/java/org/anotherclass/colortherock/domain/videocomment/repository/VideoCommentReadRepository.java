@@ -38,7 +38,7 @@ public class VideoCommentReadRepository {
                         videoComment.videoBoard.id.eq(videoBoardId)
                 )
                 .orderBy(videoComment.id.desc())
-                .limit(pageable.getPageSize()+1)
+                .limit(pageable.getPageSize() + 1)
                 .fetch();
         return checkLastPage(pageable, results);
     }
