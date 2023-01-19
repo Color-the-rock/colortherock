@@ -24,10 +24,16 @@ public class VideoCommentController {
 
     private final VideoCommentService videoCommentService;
 
+    /**
+     * 영상 댓글 조회
+     *
+     * @param condition 현재 페이지의 마지막 아이디, 조회하고자 하는 게시판 아이디 값
+     * @param pageable  Pageable 객체(컨트롤러에서 생성)
+     */
     @GetMapping("/comment")
     public BaseResponse<List<CommentListResponse>> getCommentList
-            (@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, CommentListRequest cond) {
-        List<CommentListResponse> commentList = videoCommentService.getCommentList(cond, pageable);
+    (CommentListRequest condition, @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        List<CommentListResponse> commentList = videoCommentService.getCommentList(condition, pageable);
         return new BaseResponse<>(commentList);
     }
 
