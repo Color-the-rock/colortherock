@@ -6,16 +6,16 @@ import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
 import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatResponse;
 import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatResponse;
+import org.anotherclass.colortherock.domain.memberrecord.response.VideoDetailResponse;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -90,4 +90,18 @@ public class RecordController {
         List<VideoListResponse> failResponses = recordService.getFailVideos(member, videoDate);
         return new BaseResponse<>(failResponses);
     }
+
+    /**
+     * 영상 재생을 위한 영상 상세 조회
+     */
+    @GetMapping("/video/{id}")
+    public BaseResponse<VideoDetailResponse> videoDetail(@PathVariable @NotNull @Min(value=0, message="videoId는 0이상의 정수입니다.") Long id) {
+        VideoDetailResponse videoDetail = recordService.getVideoDetail(id);
+        return new BaseResponse<>(videoDetail);
+    }
+
+//    /**
+//     * 개인 로컬 영상 업로드
+//     */
+//    @PostMapping("/video")
 }
