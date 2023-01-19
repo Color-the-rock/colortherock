@@ -1,15 +1,15 @@
 package org.anotherclass.colortherock.domain.video.entity;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.anotherclass.colortherock.domain.member.entity.Member;
-import org.anotherclass.colortherock.domain.memberrecord.response.VideoListDTO;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "video") @Getter
+@Table(name = "video") @Getter @Setter
 public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,7 +44,4 @@ public class Video {
     @OneToOne(mappedBy = "video", orphanRemoval = true)
     private VideoBoard videoBoard;
 
-    public VideoListDTO toVideoListDTO() {
-        return new VideoListDTO(this.id, this.thumbnailURL, this.gymName, this.level, this.color);
-    }
 }
