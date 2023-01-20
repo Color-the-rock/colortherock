@@ -9,13 +9,19 @@ import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatRespo
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoDetailResponse;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
+import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
+import org.anotherclass.colortherock.domain.video.service.S3Service;
+import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,6 +31,8 @@ import java.util.List;
 public class RecordController {
 
     private final RecordService recordService;
+    private final S3Service s3Service;
+    private final VideoService videoService;
 
     /**
      * 전체 운동 영상 색상 별 통계 조회
@@ -37,7 +45,7 @@ public class RecordController {
     }
 
     /**
-     * 날짜별 운동 기록 색상 별 조회
+     * 날짜별 운동 기록 색상 별 통계 조회
      */
     @GetMapping("/color/{date}")
     public BaseResponse<List<LevelStatResponse>> recordsByColorAndDate(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String date) throws MalformedDateException {
@@ -100,8 +108,18 @@ public class RecordController {
         return new BaseResponse<>(videoDetail);
     }
 
-//    /**
-//     * 개인 로컬 영상 업로드
-//     */
-//    @PostMapping("/video")
+    /**
+     * 개인 로컬 영상 업로드
+     * @param uploadVideoRequest 업로드 영상 50MB 이상 시, 예외 발생
+     */
+    @PostMapping("/video")
+    public BaseResponse uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid UploadVideoRequest uploadVideoRequest) throws IOException {
+        Member member = memberDetails.getMember();
+        // S3 영상 저장 후 URL 얻어오기
+        MultipartFile newVideo = uploadVideoRequest.getNewVideo();
+        String s3URL = s3Service.upload(newVideo);
+        // request와 URL을 통해 DB에 저장
+        videoService.uploadVideo(member, s3URL, uploadVideoRequest);
+        return new BaseResponse(GlobalErrorCode.SUCCESS);
+    }
 }
