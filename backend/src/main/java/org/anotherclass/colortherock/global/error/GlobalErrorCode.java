@@ -22,7 +22,8 @@ public enum GlobalErrorCode {
     // 영상과 관련된 Exception
     VIDEO_NOT_FOUND(404, "V100", "해당 id에 해당하는 영상이 없습니다."),
     NOT_VIDEO_OWNER(400, "V200", "영상의 주인과 요청한 멤버가 다릅니다."),
-    ;
+    NO_SUCH_COMMENT(404, "C100", "해당하는 댓글을 찾을 수 없습니다."),
+    WRITER_MISMATCH(403, "C200", "사용자와 작성자가 일치하지 않습니다.");
 
     private final String code;
     private final String message;
