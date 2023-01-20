@@ -1,9 +1,11 @@
-package org.anotherclass.colortherock.member;
+package org.anotherclass.colortherock.domain.member;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.anotherclass.colortherock.IntegrationTest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.member.request.MemberSignUpRequest;
 import org.anotherclass.colortherock.domain.member.request.ReGenerateAccessTokenRequest;
 import org.anotherclass.colortherock.domain.member.response.ReGenerateAccessTokenResponse;
 import org.anotherclass.colortherock.global.redis.RefreshTokenRepository;
@@ -25,6 +27,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -110,7 +113,7 @@ public class MemberLoginTest extends IntegrationTest {
                 post("/refresh")
                         .content(this.objectMapper.writeValueAsBytes(request))
                         .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(jsonPath("$.status", Matchers.is(HttpStatus.UNAUTHORIZED.value())));
+        ).andExpect(jsonPath("$.status", is(HttpStatus.UNAUTHORIZED.value())));
     }
 
     @Test
@@ -139,4 +142,35 @@ public class MemberLoginTest extends IntegrationTest {
         Assertions.assertNotEquals(accessToken, tokens);
     }
 
+
+    @Test
+    @DisplayName("회원 가입 API 테스트")
+    public void 회원가입() throws Exception {
+        MemberSignUpRequest request = new MemberSignUpRequest("a@a.com", Member.RegistrationId.kakao, "이름");
+
+        mockMvc.perform(
+                        post(url + "/api/member/signup")
+                                .content(objectMapper.writeValueAsBytes(request))
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(jsonPath("$.status", is(200)))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("이메일 중복검사 API")
+    public void 이메일이_중복일_경우() throws Exception {
+
+        mockMvc.perform(post(url + "/api/duplicateNickname").content("태규").contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(jsonPath("$.status", is(400)));
+
+    }
+
+    @Test
+    @DisplayName("이메일 중복검사 API")
+    public void 이메일이_중복이_아닐_경우() throws Exception {
+
+        mockMvc.perform(post(url + "/api/duplicateNickname").content("태규123").contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(jsonPath("$.status", is(200)));
+
+    }
 }
