@@ -32,7 +32,7 @@ public class Live {
     @Column(name = "is_live")
     private Boolean isLive;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

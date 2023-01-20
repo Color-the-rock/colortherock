@@ -42,12 +42,12 @@ public class Video {
     @Column(name = "video_name", length = 100)
     private String videoName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
 
-    @OneToOne(mappedBy = "video", orphanRemoval = true)
+    @OneToOne(mappedBy = "video", orphanRemoval = true, fetch = FetchType.LAZY)
     private VideoBoard videoBoard;
 
 }
