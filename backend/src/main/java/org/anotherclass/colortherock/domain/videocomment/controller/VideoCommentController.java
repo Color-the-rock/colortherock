@@ -19,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
@@ -67,5 +68,14 @@ public class VideoCommentController {
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 
+    /**
+     * 영상 댓글 삭제
+     */
+    @DeleteMapping("/comment")
+    public BaseResponse<?> deleteComment(@AuthenticationPrincipal MemberDetails memberDetails, @NotNull Long commentId) {
+        Member member = memberDetails.getMember();
+        videoCommentService.deleteComment(member.getId(), commentId);
+        return new BaseResponse<>(GlobalErrorCode.SUCCESS);
+    }
 
 }
