@@ -72,9 +72,17 @@ public class VideoCommentService {
         comment.update(commentUpdateRequest.getContent(), commentUpdateRequest.getWrittenTime());
     }
 
+    @Transactional
+    public void deleteComment(Long memberId, Long commentId) {
+        VideoComment comment = videoCommentRepository.findById(commentId)
+                .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_COMMENT));
+        checkAuth(memberId, comment);
+        videoCommentRepository.delete(comment);
+    }
+
     // 받은 멤버가 수정권한이 있는지 확인하는 메서드
     private void checkAuth(Long memberId, VideoComment comment) {
-        if (comment.getMember().getId().equals(memberId)) {
+        if (!comment.getMember().getId().equals(memberId)) {
             throw new GlobalBaseException(GlobalErrorCode.WRITER_MISMATCH);
         }
     }
