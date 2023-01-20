@@ -39,4 +39,8 @@ public class VideoComment {
         this.videoBoard = videoBoard;
     }
 
+    public void update(String content, LocalDateTime writtenTime) {
+        this.content = content;
+        this.writtenTime = writtenTime;
+    }
 }
