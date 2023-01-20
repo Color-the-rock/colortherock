@@ -22,6 +22,10 @@ const authApi = (url, option) => {
     },
     ...option,
   });
+
+  // if(accessToken == null) 
+  //   instance.defaults.headers.common['Authorization'] = accessToken;
+
   return instance;
 };
 
