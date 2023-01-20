@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.videocomment.request.CommentListRequest;
+import org.anotherclass.colortherock.domain.videocomment.request.CommentUpdateRequest;
 import org.anotherclass.colortherock.domain.videocomment.request.NewCommentRequest;
 import org.anotherclass.colortherock.domain.videocomment.response.CommentListResponse;
 import org.anotherclass.colortherock.domain.videocomment.service.VideoCommentService;
@@ -54,5 +55,17 @@ public class VideoCommentController {
         videoCommentService.insertComment(member.getId(), newCommentRequest);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
+
+    /**
+     * 영상 댓글 수정
+     */
+
+    @PutMapping("/comment")
+    public BaseResponse<?> updateComment(@AuthenticationPrincipal MemberDetails memberDetails, @Valid CommentUpdateRequest commentUpdateRequest) {
+        Member member = memberDetails.getMember();
+        videoCommentService.updateComment(member.getId(), commentUpdateRequest);
+        return new BaseResponse<>(GlobalErrorCode.SUCCESS);
+    }
+
 
 }
