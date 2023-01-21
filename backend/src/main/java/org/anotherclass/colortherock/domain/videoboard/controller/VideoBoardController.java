@@ -1,5 +1,10 @@
 package org.anotherclass.colortherock.domain.videoboard.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
@@ -30,6 +35,10 @@ public class VideoBoardController {
      * @param pageable  Pageable 객체 (컨트롤러에서 생성)
      */
     @GetMapping("/board")
+    @Operation(description = "완등 영상 전체 리스트 조회 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "완등 영상 목록 조회 성공", content = @Content(schema = @Schema(implementation = VideoBoardSummaryResponse.class)))
+    })
     public BaseResponse<List<VideoBoardSummaryResponse>> getVideoTemp
     (VideoBoardSearchRequest condition, @PageableDefault(size = 16, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         List<VideoBoardSummaryResponse> successVideoList = videoBoardService.getSuccessVideos(condition, pageable);
