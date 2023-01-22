@@ -14,11 +14,11 @@ import org.anotherclass.colortherock.domain.videocomment.request.CommentListRequ
 import org.anotherclass.colortherock.domain.videocomment.request.CommentUpdateRequest;
 import org.anotherclass.colortherock.domain.videocomment.request.NewCommentRequest;
 import org.anotherclass.colortherock.domain.videocomment.response.CommentListResponse;
+import org.anotherclass.colortherock.domain.videocomment.response.MyCommentListResponse;
 import org.anotherclass.colortherock.domain.videocomment.service.VideoCommentService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -37,24 +37,16 @@ public class VideoCommentController {
 
     private final VideoCommentService videoCommentService;
 
-    /**
-     * 영상 댓글 조회
-     */
-
     @GetMapping("/comment")
     @Operation(description = "영상 댓글 조회 API")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "댓글 조회 성공", content = @Content(schema = @Schema(implementation = CommentListResponse.class)))
     })
     public BaseResponse<List<CommentListResponse>> getCommentList
-    (CommentListRequest condition, @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+            (CommentListRequest condition, @PageableDefault(size = 15, sort = "id") Pageable pageable) {
         List<CommentListResponse> commentList = videoCommentService.getCommentList(condition, pageable);
         return new BaseResponse<>(commentList);
     }
-
-    /**
-     * 영상 댓글 작성
-     */
 
     @PostMapping("/comment")
     @Operation(description = "영상 댓글 작성 API")
@@ -66,10 +58,6 @@ public class VideoCommentController {
         videoCommentService.insertComment(member.getId(), newCommentRequest);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
-
-    /**
-     * 영상 댓글 수정
-     */
 
     @PutMapping("/comment")
     @Operation(description = "영상 댓글 수정 API")
@@ -84,9 +72,6 @@ public class VideoCommentController {
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 
-    /**
-     * 영상 댓글 삭제
-     */
     @DeleteMapping("/comment")
     @Operation(description = "영상 댓글 삭제 API")
     @ApiResponses({
@@ -99,5 +84,18 @@ public class VideoCommentController {
         videoCommentService.deleteComment(member.getId(), commentId);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
+
+    @GetMapping("/mycomment")
+    @Operation(description = "내 영상 댓글 조회 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "나의 댓글 조회 완료")
+    })
+    public BaseResponse<List<MyCommentListResponse>> getMyCommentList
+            (@AuthenticationPrincipal MemberDetails memberDetails, Long storeId, @PageableDefault(size = 15, sort = "id") Pageable pageable) {
+        Member member = memberDetails.getMember();
+        List<MyCommentListResponse> myCommentList = videoCommentService.getMyCommentList(member.getId(), storeId, pageable);
+        return new BaseResponse<>(myCommentList);
+    }
+
 
 }

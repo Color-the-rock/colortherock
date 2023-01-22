@@ -13,6 +13,7 @@ import org.anotherclass.colortherock.domain.videocomment.request.CommentListRequ
 import org.anotherclass.colortherock.domain.videocomment.request.CommentUpdateRequest;
 import org.anotherclass.colortherock.domain.videocomment.request.NewCommentRequest;
 import org.anotherclass.colortherock.domain.videocomment.response.CommentListResponse;
+import org.anotherclass.colortherock.domain.videocomment.response.MyCommentListResponse;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.data.domain.Pageable;
@@ -35,9 +36,10 @@ public class VideoCommentService {
     private final VideoCommentReadRepository videoCommentReadRepository;
     private final VideoCommentRepository videoCommentRepository;
 
+
     @Transactional(readOnly = true)
     public List<CommentListResponse> getCommentList(CommentListRequest condition, Pageable pageable) {
-        Slice<VideoComment> slices = videoCommentReadRepository.searchBySlice(condition, pageable);
+        Slice<VideoComment> slices = videoCommentReadRepository.searchByCond(condition, pageable);
         if (slices.isEmpty()) {
             return new ArrayList<>();
         }
@@ -78,6 +80,23 @@ public class VideoCommentService {
                 .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_COMMENT));
         checkAuth(memberId, comment);
         videoCommentRepository.delete(comment);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MyCommentListResponse> getMyCommentList(Long memberId, Long storeId, Pageable pageable) {
+        Slice<VideoComment> slices = videoCommentReadRepository.getMyComments(memberId, storeId, pageable);
+        if (slices.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return slices.toList().stream()
+                        .map(vc -> MyCommentListResponse.builder()
+                                .commentId(vc.getId())
+                                .videoBoardId(vc.getVideoBoard().getId())
+                                .nickname(vc.getMember().getNickname())
+                                .content(vc.getContent())
+                                .writtenTime(vc.getWrittenTime())
+                                .build()).collect(Collectors.toList());
     }
 
     // 받은 멤버가 수정권한이 있는지 확인하는 메서드
