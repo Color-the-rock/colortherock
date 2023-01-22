@@ -32,7 +32,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/video/board")
+@RequestMapping("/api/videoboard")
 public class VideoCommentController {
 
     private final VideoCommentService videoCommentService;

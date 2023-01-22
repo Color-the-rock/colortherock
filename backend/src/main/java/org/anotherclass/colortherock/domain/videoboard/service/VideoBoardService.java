@@ -37,7 +37,7 @@ public class VideoBoardService {
     // 완등 영상 전체 리스트 조회
     @Transactional(readOnly = true)
     public List<VideoBoardSummaryResponse> getSuccessVideos(VideoBoardSearchRequest condition, Pageable pageable) {
-        Slice<VideoBoard> slices = videoBoardReadRepository.searchBySlice(condition, pageable);
+        Slice<VideoBoard> slices = videoBoardReadRepository.searchBySearchCond(condition, pageable);
 
         if (slices.isEmpty()) {
             return new ArrayList<>();
@@ -103,11 +103,29 @@ public class VideoBoardService {
         videoBoardRepository.delete(vb);
     }
 
+    // 내가 작성한 완등 게시글 조회
+    public List<VideoBoardSummaryResponse> getMySuccessVideoPosts(Long memberId, Long storeId, Pageable pageable) {
+        Slice<VideoBoard> slices = videoBoardReadRepository.getMySuccessPosts(memberId, storeId, pageable);
+
+        if (slices.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return slices.toList().stream()
+                .map(vb -> VideoBoardSummaryResponse.builder()
+                        .videoBoardId(vb.getId())
+                        .title(vb.getTitle())
+                        .thumbnailURL(vb.getVideo().getThumbnailURL())
+                        .color(vb.getVideo().getColor())
+                        .writtenTime(vb.getWrittenTime())
+                        .build()).collect(Collectors.toList());
+    }
+
+
     // 받은 멤버가 수정권한이 있는지 확인하는 메서드
     private void checkAuth(Long memberId, VideoBoard videoBoard) {
         if (!videoBoard.getMember().getId().equals(memberId)) {
             throw new GlobalBaseException(GlobalErrorCode.WRITER_MISMATCH);
         }
     }
-
 }

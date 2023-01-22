@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.videoboard.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.anotherclass.colortherock.domain.member.entity.QMember;
 import org.anotherclass.colortherock.domain.video.entity.QVideo;
 import org.anotherclass.colortherock.domain.videoboard.entity.QVideoBoard;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
@@ -28,8 +29,9 @@ public class VideoBoardReadRepository {
 
     QVideo video = QVideo.video;
     QVideoBoard videoBoard = QVideoBoard.videoBoard;
+    QMember member = QMember.member;
 
-    public Slice<VideoBoard> searchBySlice(VideoBoardSearchRequest condition, Pageable pageable) {
+    public Slice<VideoBoard> searchBySearchCond(VideoBoardSearchRequest condition, Pageable pageable) {
 
         Long lastStoreId = condition.getStoreId();
         String gymNameCond = condition.getGymName();
@@ -50,6 +52,23 @@ public class VideoBoardReadRepository {
                 .fetch();
 
         // 무한 스크롤 처리
+        return checkLastPage(pageable, results);
+    }
+
+    public Slice<VideoBoard> getMySuccessPosts(Long memberId, Long storeId, Pageable pageable) {
+
+        List<VideoBoard> results = query.selectFrom(videoBoard)
+                .join(videoBoard.member, member)
+                .where(
+                        // no-offset 페이징 처리
+                        checkStoreId(storeId),
+                        // 유저 검색
+                        videoBoard.member.id.eq(memberId)
+                )
+                .orderBy(videoBoard.id.desc())
+                .limit(pageable.getPageSize() + 1)
+                .fetch();
+
         return checkLastPage(pageable, results);
     }
 
