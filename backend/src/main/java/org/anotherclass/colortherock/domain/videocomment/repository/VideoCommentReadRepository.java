@@ -28,7 +28,7 @@ public class VideoCommentReadRepository {
     QMember member = QMember.member;
     QVideoComment videoComment = QVideoComment.videoComment;
 
-    public Slice<VideoComment> searchBySlice(CommentListRequest condition, Pageable pageable) {
+    public Slice<VideoComment> searchByCond(CommentListRequest condition, Pageable pageable) {
         Long lastStoreId = condition.getStoreId();
         Long videoBoardId = condition.getVideoBoardId();
         List<VideoComment> results = query.selectFrom(videoComment)
@@ -41,6 +41,20 @@ public class VideoCommentReadRepository {
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
         return checkLastPage(pageable, results);
+    }
+
+    public Slice<VideoComment> getMyComments(Long memberId, Long storeId, Pageable pageable) {
+        List<VideoComment> results = query.selectFrom(videoComment)
+                .join(videoComment.member, member)
+                .where(
+                        checkStoreId(storeId),
+                        videoComment.member.id.eq(memberId)
+                )
+                .orderBy(videoComment.id.desc())
+                .limit(pageable.getPageSize() + 1)
+                .fetch();
+        return checkLastPage(pageable, results);
+
     }
 
     // no-offset 방식 처리하는 메서드 (storeId가 없을 경우, 있을 경우)
