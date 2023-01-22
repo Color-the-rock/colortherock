@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessPostUpdateRequest;
+import org.anotherclass.colortherock.domain.videoboard.request.SuccessVideoUploadRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetailResponse;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
@@ -49,6 +50,22 @@ public class VideoBoardController {
     (VideoBoardSearchRequest condition, @PageableDefault(size = 16, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         List<VideoBoardSummaryResponse> successVideoList = videoBoardService.getSuccessVideos(condition, pageable);
         return new BaseResponse<>(successVideoList);
+    }
+
+    /**
+     * 내 운동기록 영상에서 가져와 완등 영상 게시판에 글 올리기
+     */
+    @PostMapping("/board")
+    @Operation(description = "완등 영상 게시글 올리기(내 운동기록 동영상에서 영상 가져오기)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "운동 영상 올리기 성공", content = @Content(schema = @Schema(implementation = Long.class))),
+            @ApiResponse(responseCode = "404", description = "유저 정보를 찾을 수 없음"),
+            @ApiResponse(responseCode = "404", description = "해당하는 영상을 찾을 수 없음")
+    })
+    public BaseResponse<Long> uploadMySuccessVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid SuccessVideoUploadRequest successVideoUploadRequest) {
+        Member member = memberDetails.getMember();
+        Long videoBoardId = videoBoardService.uploadMySuccessVideo(member.getId(), successVideoUploadRequest);
+        return new BaseResponse<>(videoBoardId);
     }
 
     /**

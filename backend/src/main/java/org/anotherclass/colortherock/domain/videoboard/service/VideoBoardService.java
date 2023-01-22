@@ -2,11 +2,16 @@ package org.anotherclass.colortherock.domain.videoboard.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.video.entity.Video;
+import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundException;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardReadRepository;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessPostUpdateRequest;
+import org.anotherclass.colortherock.domain.videoboard.request.SuccessVideoUploadRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetailResponse;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
@@ -24,6 +29,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class VideoBoardService {
+    private final VideoRepository videoRepository;
+    private final MemberRepository memberRepository;
     private final VideoBoardRepository videoBoardRepository;
     private final VideoBoardReadRepository videoBoardReadRepository;
 
@@ -45,6 +52,25 @@ public class VideoBoardService {
                         .writtenTime(vb.getWrittenTime())
                         .build()).collect(Collectors.toList());
 
+    }
+
+    @Transactional
+    public Long uploadMySuccessVideo(Long memberId, SuccessVideoUploadRequest successVideoUploadRequest) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_USER));
+        Video video = videoRepository.findById(successVideoUploadRequest.getVideoId())
+                .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_VIDEO));
+
+        System.out.println("되니?");
+        VideoBoard newVideoBoard = videoBoardRepository.save(VideoBoard.builder()
+                .title(successVideoUploadRequest.getTitle())
+                .video(video)
+                .member(member)
+                .writtenTime(successVideoUploadRequest.getWrittenTime())
+                .build());
+
+        System.out.println("여기까진 됨~");
+        return newVideoBoard.getId();
     }
 
     // 완등 영상 게시글 상세 조회

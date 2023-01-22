@@ -1,7 +1,6 @@
 package org.anotherclass.colortherock.domain.videoboard.entity;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.videocomment.entity.VideoComment;
@@ -13,11 +12,11 @@ import java.util.List;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "video_board")
 public class VideoBoard {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -37,6 +36,14 @@ public class VideoBoard {
 
     @Column(name = "written_time")
     private LocalDateTime writtenTime;
+
+    @Builder
+    public VideoBoard(String title, Video video, Member member, LocalDateTime writtenTime) {
+        this.title = title;
+        this.video = video;
+        this.member = member;
+        this.writtenTime = writtenTime;
+    }
 
     public void update(String title, LocalDateTime writtenTime) {
         this.title = title;
