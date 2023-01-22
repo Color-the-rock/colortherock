@@ -31,7 +31,7 @@ public class VideoBoardReadRepository {
     QVideoBoard videoBoard = QVideoBoard.videoBoard;
     QMember member = QMember.member;
 
-    public Slice<VideoBoard> searchBySearchCond(VideoBoardSearchRequest condition, Pageable pageable) {
+    public Slice<VideoBoard> searchByCond(VideoBoardSearchRequest condition, Pageable pageable) {
 
         Long lastStoreId = condition.getStoreId();
         String gymNameCond = condition.getGymName();
