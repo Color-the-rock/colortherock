@@ -53,7 +53,7 @@ public class VideoBoardService {
         return VideoBoardDetailResponse.builder()
                 .nickname(vb.getMember().getNickname())
                 .title(vb.getTitle())
-                .written_time(vb.getWrittenTime())
+                .writtenTime(vb.getWrittenTime())
                 .build();
     }
 
