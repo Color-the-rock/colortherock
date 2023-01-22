@@ -68,6 +68,15 @@ public class VideoBoardService {
         vb.update(successPostUpdateRequest.getTitle(), successPostUpdateRequest.getWrittenTime());
     }
 
+    // 완등 영상 게시글 삭제
+    @Transactional
+    public void deleteSuccessPost(Long memberId, Long videoBoardId) {
+        VideoBoard vb = videoBoardRepository.findById(videoBoardId)
+                .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.NO_SUCH_POST));
+        checkAuth(memberId, vb);
+        videoBoardRepository.delete(vb);
+    }
+
     // 받은 멤버가 수정권한이 있는지 확인하는 메서드
     private void checkAuth(Long memberId, VideoBoard videoBoard) {
         if (!videoBoard.getMember().getId().equals(memberId)) {
