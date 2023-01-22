@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
+import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetailResponse;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
 import org.anotherclass.colortherock.domain.videoboard.service.VideoBoardService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -39,10 +41,25 @@ public class VideoBoardController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "완등 영상 목록 조회 성공", content = @Content(schema = @Schema(implementation = VideoBoardSummaryResponse.class)))
     })
-    public BaseResponse<List<VideoBoardSummaryResponse>> getVideoTemp
+    public BaseResponse<List<VideoBoardSummaryResponse>> getVideoList
     (VideoBoardSearchRequest condition, @PageableDefault(size = 16, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         List<VideoBoardSummaryResponse> successVideoList = videoBoardService.getSuccessVideos(condition, pageable);
         return new BaseResponse<>(successVideoList);
+    }
+
+    /**
+     * 완등 영상 상세 보기
+     */
+
+    @GetMapping("/board/detail")
+    @Operation(description = "완등 영상 내용 상세보기 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "완등 영상 상세 조회 성공", content = @Content(schema = @Schema(implementation = VideoBoardDetailResponse.class))),
+            @ApiResponse(responseCode = "404", description = "해당하는 영상을 찾을 수 없음")
+    })
+    public BaseResponse<VideoBoardDetailResponse> getVideoDetail(@NotNull Long videoBoardId) {
+        VideoBoardDetailResponse videoDetail = videoBoardService.getVideoDetail(videoBoardId);
+        return new BaseResponse<>(videoDetail);
     }
 
 
