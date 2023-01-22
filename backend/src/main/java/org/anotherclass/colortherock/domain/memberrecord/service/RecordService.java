@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -80,6 +79,7 @@ public class RecordService {
         return successResponses;
     }
 
+    @Transactional(readOnly = true)
     public List<VideoListResponse> getFailVideos(Member member, LocalDate videoDate) {
         List<Video> failVideos = videoRepository.findAllByMemberAndShootingDateAndIsSuccessIsFalse(member, videoDate);
         List<VideoListResponse> failResponses = new ArrayList<>();
@@ -96,19 +96,16 @@ public class RecordService {
 
     @Transactional(readOnly = true)
     public VideoDetailResponse getVideoDetail(Long id) {
-        Optional<Video> optional = videoRepository.findById(id);
-        if(optional.isEmpty()) {
-            throw new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND);
-        } else {
-            Video video = optional.get();
-            return VideoDetailResponse.builder()
-                    .s3URL(video.getS3URL())
-                    .isSuccess(video.getIsSuccess())
-                    .shootingDate(video.getShootingDate().toString())
-                    .level(video.getLevel())
-                    .color(video.getColor())
-                    .gymName(video.getGymName())
-                    .id(video.getId()).build();
-        }
+        Video video = videoRepository.findById(id)
+                .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND));
+
+        return VideoDetailResponse.builder()
+                .s3URL(video.getS3URL())
+                .isSuccess(video.getIsSuccess())
+                .shootingDate(video.getShootingDate().toString())
+                .level(video.getLevel())
+                .color(video.getColor())
+                .gymName(video.getGymName())
+                .id(video.getId()).build();
     }
 }
