@@ -38,11 +38,9 @@ public class VideoBoard {
     @Column(name = "written_time")
     private LocalDateTime writtenTime;
 
-    public List<VideoComment> getVideoComments() {
-        return videoComments;
+    public void update(String title, LocalDateTime writtenTime) {
+        this.title = title;
+        this.writtenTime = writtenTime;
     }
 
-    public void setVideoComments(List<VideoComment> videoComments) {
-        this.videoComments = videoComments;
-    }
 }

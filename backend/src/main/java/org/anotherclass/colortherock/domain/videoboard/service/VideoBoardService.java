@@ -6,9 +6,11 @@ import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundException;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardReadRepository;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
+import org.anotherclass.colortherock.domain.videoboard.request.SuccessPostUpdateRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetailResponse;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
+import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -45,7 +47,7 @@ public class VideoBoardService {
 
     }
 
-    // 완등 영상 상세 조회
+    // 완등 영상 게시글 상세 조회
     @Transactional(readOnly = true)
     public VideoBoardDetailResponse getVideoDetail(Long videoBoardId) {
         VideoBoard vb = videoBoardRepository.findById(videoBoardId)
@@ -55,6 +57,22 @@ public class VideoBoardService {
                 .title(vb.getTitle())
                 .writtenTime(vb.getWrittenTime())
                 .build();
+    }
+
+    // 완등 영상 게시글 수정
+    @Transactional
+    public void updateSuccessPost(Long memberId, SuccessPostUpdateRequest successPostUpdateRequest) {
+        VideoBoard vb = videoBoardRepository.findById(successPostUpdateRequest.getVideoBoardId())
+                .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.NO_SUCH_POST));
+        checkAuth(memberId, vb);
+        vb.update(successPostUpdateRequest.getTitle(), successPostUpdateRequest.getWrittenTime());
+    }
+
+    // 받은 멤버가 수정권한이 있는지 확인하는 메서드
+    private void checkAuth(Long memberId, VideoBoard videoBoard) {
+        if (!videoBoard.getMember().getId().equals(memberId)) {
+            throw new GlobalBaseException(GlobalErrorCode.WRITER_MISMATCH);
+        }
     }
 
 }
