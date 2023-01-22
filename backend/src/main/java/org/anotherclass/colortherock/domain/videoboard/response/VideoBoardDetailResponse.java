@@ -11,7 +11,6 @@ public class VideoBoardDetailResponse {
 
     private String nickname;
     private String title;
-    private LocalDateTime written_time;
-
+    private LocalDateTime writtenTime;
 
 }
