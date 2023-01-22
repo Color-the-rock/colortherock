@@ -4,12 +4,10 @@ import io.openvidu.java.client.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -40,7 +38,9 @@ public class OpenviduController {
         return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
     }
 
-    /**R
+    /**
+     * R
+     *
      * @param sessionId The Session in which to create the Connection
      * @param params    The Connection properties
      * @return The Token associated to the Connection
@@ -56,5 +56,12 @@ public class OpenviduController {
         ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
         Connection connection = session.createConnection(properties);
         return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/sessions")
+    public ResponseEntity<List<Session>> getAllSession() throws OpenViduJavaClientException, OpenViduHttpException {
+        openvidu.fetch();
+        List<Session> activeSessions = openvidu.getActiveSessions();
+        return ResponseEntity.ok(activeSessions);
     }
 }
