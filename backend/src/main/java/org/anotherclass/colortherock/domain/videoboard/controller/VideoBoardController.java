@@ -20,10 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -84,5 +81,22 @@ public class VideoBoardController {
         videoBoardService.updateSuccessPost(member.getId(), successPostUpdateRequest);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
+
+    /**
+     * 완등 영상 게시글 삭제하기
+     */
+    @DeleteMapping("board/detail")
+    @Operation(description = "완등 영상 내용 삭제하기 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "완등 영상 게시글 삭제 성공"),
+            @ApiResponse(responseCode = "404", description = "해당하는 영상 게시글을 찾을 수 없음"),
+            @ApiResponse(responseCode = "403", description = "작성자와 유저 정보가 일치하지 않음")
+    })
+    public BaseResponse<?> deleteSuccessPost(@AuthenticationPrincipal MemberDetails memberDetails, @Valid Long videoBoardId) {
+        Member member = memberDetails.getMember();
+        videoBoardService.deleteSuccessPost(member.getId(), videoBoardId);
+        return new BaseResponse<>(GlobalErrorCode.SUCCESS);
+    }
+
 
 }
