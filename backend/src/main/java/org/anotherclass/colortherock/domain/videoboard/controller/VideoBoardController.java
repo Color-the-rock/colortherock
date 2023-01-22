@@ -18,7 +18,6 @@ import org.anotherclass.colortherock.domain.videoboard.service.VideoBoardService
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +46,7 @@ public class VideoBoardController {
             @ApiResponse(responseCode = "200", description = "완등 영상 목록 조회 성공", content = @Content(schema = @Schema(implementation = VideoBoardSummaryResponse.class)))
     })
     public BaseResponse<List<VideoBoardSummaryResponse>> getVideoList
-    (VideoBoardSearchRequest condition, @PageableDefault(size = 16, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    (VideoBoardSearchRequest condition, @PageableDefault(size = 16, sort = "id") Pageable pageable) {
         List<VideoBoardSummaryResponse> successVideoList = videoBoardService.getSuccessVideos(condition, pageable);
         return new BaseResponse<>(successVideoList);
     }
@@ -68,12 +67,8 @@ public class VideoBoardController {
         return new BaseResponse<>(videoBoardId);
     }
 
-    /**
-     * 완등 영상 게시글 상세 보기
-     */
-
     @GetMapping("/board/detail")
-    @Operation(description = "완등 영상 내용 상세보기 API")
+    @Operation(description = "완등 영상 게시글 상세보기 API")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "완등 영상 상세 조회 성공", content = @Content(schema = @Schema(implementation = VideoBoardDetailResponse.class))),
             @ApiResponse(responseCode = "404", description = "해당하는 영상 게시글을 찾을 수 없음")
@@ -83,15 +78,12 @@ public class VideoBoardController {
         return new BaseResponse<>(videoDetail);
     }
 
-    /**
-     * 완등 영상 게시글 수정하기
-     */
     @PutMapping("/board/detail")
-    @Operation(description = "완등 영상 내용 수정하기 API")
+    @Operation(description = "완등 영상 게시글 수정하기 API")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "완등 영상 게시글 수정 성공"),
             @ApiResponse(responseCode = "404", description = "해당하는 영상 게시글을 찾을 수 없음"),
-            @ApiResponse(responseCode = "403", description = "작성자와 유저 정보가 일치하지 않음")
+            @ApiResponse(responseCode = "404", description = "작성자와 유저 정보가 일치하지 않음")
     })
     public BaseResponse<?> updateSuccessPost(@AuthenticationPrincipal MemberDetails memberDetails, @Valid SuccessPostUpdateRequest successPostUpdateRequest) {
         Member member = memberDetails.getMember();
@@ -99,20 +91,29 @@ public class VideoBoardController {
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 
-    /**
-     * 완등 영상 게시글 삭제하기
-     */
     @DeleteMapping("board/detail")
-    @Operation(description = "완등 영상 내용 삭제하기 API")
+    @Operation(description = "완등 영상 게시글 삭제하기 API")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "완등 영상 게시글 삭제 성공"),
             @ApiResponse(responseCode = "404", description = "해당하는 영상 게시글을 찾을 수 없음"),
-            @ApiResponse(responseCode = "403", description = "작성자와 유저 정보가 일치하지 않음")
+            @ApiResponse(responseCode = "404", description = "작성자와 유저 정보가 일치하지 않음")
     })
     public BaseResponse<?> deleteSuccessPost(@AuthenticationPrincipal MemberDetails memberDetails, @Valid Long videoBoardId) {
         Member member = memberDetails.getMember();
         videoBoardService.deleteSuccessPost(member.getId(), videoBoardId);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
+    }
+
+    @GetMapping("board/mypost")
+    @Operation(description = "내 완등 영상 게시글 목록 조회하기 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "내 완등 영상 글 목록 불러오기 성공")
+    })
+    public BaseResponse<List<VideoBoardSummaryResponse>> getMySuccessVideoPosts
+            (@AuthenticationPrincipal MemberDetails memberDetails, Long storeId, @PageableDefault(size = 8, sort = "id") Pageable pageable) {
+        Member member = memberDetails.getMember();
+        List<VideoBoardSummaryResponse> mySuccessPosts = videoBoardService.getMySuccessVideoPosts(member.getId(), storeId, pageable);
+        return new BaseResponse<>(mySuccessPosts);
     }
 
 
