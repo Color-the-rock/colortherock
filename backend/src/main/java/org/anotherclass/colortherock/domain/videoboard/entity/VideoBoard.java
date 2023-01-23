@@ -23,7 +23,7 @@ public class VideoBoard {
     @Column(name = "title", length = 30)
     private String title;
 
-    @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "video_id")
     private Video video;
 
