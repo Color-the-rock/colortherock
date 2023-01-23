@@ -8,6 +8,7 @@ import org.anotherclass.colortherock.domain.videocomment.request.CommentListRequ
 import org.anotherclass.colortherock.domain.videocomment.request.CommentUpdateRequest;
 import org.anotherclass.colortherock.domain.videocomment.request.NewCommentRequest;
 import org.anotherclass.colortherock.domain.videocomment.response.CommentListResponse;
+import org.anotherclass.colortherock.domain.videocomment.response.MyCommentListResponse;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -161,11 +162,44 @@ class VideoCommentServiceTest {
         }
     }
 
-    @Test
-    void deleteComment() {
-    }
+    @Nested
+    @DisplayName("deleteComment 메소드는")
+    class DeleteComment {
+        @Nested
+        @DisplayName("유효한 commentId, 유효한 권한을 가졌을 경우")
+        class All_Exception_Pass {
 
-    @Test
-    void getMyCommentList() {
+            @Test
+            @DisplayName("해당 댓글 삭제")
+            void deleteComment() {
+                Long memberId = 0L;
+                Long commentId = 7L;
+
+                videoCommentService.deleteComment(memberId, commentId);
+                assertThrows(CommentNotFoundException.class, () ->{
+                    videoCommentService.deleteComment(memberId, commentId);
+                });
+            }
+        }
+    }
+    @Nested
+    @DisplayName("getMyCommentList 메소드는")
+    class GetMyCommentList {
+        @Nested
+        @DisplayName("storeId가 null일 경우")
+        class Store_Id_Null {
+            @Test
+            @DisplayName("해당 멤버의 댓글 리스트를 id 값이 큰 순서대로 페이지 사이즈만큼 반환")
+            void getMyCommentList() {
+                Long memberId = 0L;
+                Long storeId = null;
+                Pageable pageable = Pageable.ofSize(2);
+
+                List<MyCommentListResponse> result = videoCommentService.getMyCommentList(memberId, storeId, pageable);
+
+                assertTrue(result.get(0).getCommentId() > result.get(1).getCommentId());
+                assertEquals(result.size(), 2);
+            }
+        }
     }
 }
