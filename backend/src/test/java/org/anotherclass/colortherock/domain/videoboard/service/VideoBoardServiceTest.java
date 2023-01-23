@@ -3,9 +3,11 @@ package org.anotherclass.colortherock.domain.videoboard.service;
 import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
 import org.anotherclass.colortherock.domain.video.exception.VideoUserMismatchException;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
+import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundException;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessVideoUploadRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
+import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetailResponse;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.junit.jupiter.api.DisplayName;
@@ -193,7 +195,7 @@ class VideoBoardServiceTest {
 
 
     @Nested
-    @DisplayName("uploadMySuccessVideoPost메소드는")
+    @DisplayName("uploadMySuccessVideoPost 메소드는")
     class UploadMySuccessVideoPost {
         @Nested
         @DisplayName("유저 정보를 찾을 수 없을 경우")
@@ -270,12 +272,35 @@ class VideoBoardServiceTest {
                 assertEquals(videoBoard.get().getTitle(), request.getTitle());
             }
         }
-
-
     }
 
-    @Test
-    void getVideoDetail() {
+    @Nested
+    @DisplayName("getVideoDetail 메소드는")
+    class GetVideoDetail {
+        @Nested
+        @DisplayName("없는 videoBoardId일 경우")
+        class No_Such_Post {
+            @Test
+            @DisplayName("PostNotFound예외를 발생시킨다")
+            void postNotFoundException() {
+                Long videoBoardId = 10L;
+                assertThrows(PostNotFoundException.class, () -> {
+                    videoBoardService.getVideoDetail(videoBoardId);
+                });
+            }
+        }
+
+        @Nested
+        @DisplayName("videoBoardId가 있을 경우")
+        class Post_Exist {
+            @Test
+            @DisplayName("비디오의 상세 정보를 반환")
+            void getVideoDetail() {
+                Long videoBoardId = 0L;
+                VideoBoardDetailResponse videoBoardDetail = videoBoardService.getVideoDetail(videoBoardId);
+                assertEquals(videoBoardId, videoBoardDetail.getVideoBoardId());
+            }
+        }
     }
 
     @Test
