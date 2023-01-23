@@ -20,6 +20,7 @@ import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
+import org.joda.time.DateTime;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -147,9 +148,14 @@ public class RecordController {
         Member member = memberDetails.getMember();
         // S3 영상 저장 후 URL 얻어오기
         MultipartFile newVideo = uploadVideoRequest.getNewVideo();
-        String s3URL = s3Service.upload(newVideo);
+        // 영상 식별을 위해 파일 앞에 현재 시각 추가
+        String videoName = DateTime.now() + newVideo.getOriginalFilename();
+        String s3URL = s3Service.upload(newVideo, videoName);
+        uploadVideoRequest.setVideoName(videoName);
         // request와 URL을 통해 DB에 저장
         videoService.uploadVideo(member, s3URL, uploadVideoRequest);
+        // 영상의 길이를 사용자별 누적 기록에 추가
+        // 영상 길이를 확인하는 방법 고민 중..
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 }
