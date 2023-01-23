@@ -2,8 +2,10 @@ package org.anotherclass.colortherock.domain.videocomment.service;
 
 import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundException;
 import org.anotherclass.colortherock.domain.videocomment.entity.VideoComment;
+import org.anotherclass.colortherock.domain.videocomment.exception.CommentNotFoundException;
 import org.anotherclass.colortherock.domain.videocomment.repository.VideoCommentRepository;
 import org.anotherclass.colortherock.domain.videocomment.request.CommentListRequest;
+import org.anotherclass.colortherock.domain.videocomment.request.CommentUpdateRequest;
 import org.anotherclass.colortherock.domain.videocomment.request.NewCommentRequest;
 import org.anotherclass.colortherock.domain.videocomment.response.CommentListResponse;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
@@ -53,7 +55,7 @@ class VideoCommentServiceTest {
     @DisplayName("insertComment 메소드는")
     class InsertComment {
         @Nested
-        @DisplayName("예외가 발생할 경우")
+        @DisplayName("매개변수가 유효하지 않을 경우")
         class Exception_Occurs {
             @Test
             @DisplayName("유효하지 않은 멤버는 No Such User 예외 발생")
@@ -104,8 +106,59 @@ class VideoCommentServiceTest {
 
     }
 
-    @Test
-    void updateComment() {
+    @Nested
+    @DisplayName("updateComment 메소드는")
+    class UpdateComment {
+        @Nested
+        @DisplayName("매개변수가 유효하지 않을 경우")
+        class Exception_Occurs {
+            @Test
+            @DisplayName("commentId가 잘못되었으면 Commment Not Found 예외 발생")
+            void commentNotFoundException() {
+                Long memberId = 0L;
+                CommentUpdateRequest request = new CommentUpdateRequest();
+                request.setCommentId(10L); // DB에 없는 commentId
+                request.setContent("수정했어요");
+                request.setWrittenTime(LocalDateTime.of(2023,1,23,23,25));
+
+                assertThrows(CommentNotFoundException.class, () ->{
+                    videoCommentService.updateComment(memberId, request);
+                });
+            }
+
+            @Test
+            @DisplayName("comment작성자와 유저가 일치하지 않으면 Writer Mismatch 예외 발생")
+            void writerMismatchException() {
+                Long memberId = 1L; // 작성자는 0L
+                CommentUpdateRequest request = new CommentUpdateRequest();
+                request.setCommentId(7L);
+                request.setContent("수정했어요");
+                request.setWrittenTime(LocalDateTime.of(2023,1,23,23,25));
+
+                assertThrows(GlobalBaseException.class, () ->{
+                    videoCommentService.updateComment(memberId, request);
+                });
+            }
+        }
+
+        @Nested
+        @DisplayName("유효한 commentId, 유효한 수정권한을 가졌을 경우")
+        class All_Exception_Pass {
+            @Test
+            @DisplayName("댓글 수정 성공")
+            void updateComment() {
+                Long memberId = 0L;
+                CommentUpdateRequest request = new CommentUpdateRequest();
+                request.setCommentId(7L);
+                request.setContent("수정했어요");
+                request.setWrittenTime(LocalDateTime.of(2023,1,23,23,25));
+
+                videoCommentService.updateComment(memberId, request);
+                VideoComment comment = videoCommentRepository.findById(request.getCommentId()).get();
+
+                assertEquals(request.getContent(), comment.getContent());
+            }
+        }
     }
 
     @Test
