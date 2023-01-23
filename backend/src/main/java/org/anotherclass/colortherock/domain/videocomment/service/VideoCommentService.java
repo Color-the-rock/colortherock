@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
+import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundException;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
 import org.anotherclass.colortherock.domain.videocomment.entity.VideoComment;
+import org.anotherclass.colortherock.domain.videocomment.exception.CommentNotFoundException;
 import org.anotherclass.colortherock.domain.videocomment.repository.VideoCommentReadRepository;
 import org.anotherclass.colortherock.domain.videocomment.repository.VideoCommentRepository;
 import org.anotherclass.colortherock.domain.videocomment.request.CommentListRequest;
@@ -23,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -55,21 +56,23 @@ public class VideoCommentService {
 
     @Transactional
     public void insertComment(Long memberId, NewCommentRequest newCommentRequest) {
-        Optional<Member> member = memberRepository.findById(memberId);
-        Optional<VideoBoard> videoBoard = videoBoardRepository.findById(newCommentRequest.getVideoBoardId());
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_USER));
+        VideoBoard videoBoard = videoBoardRepository.findById(newCommentRequest.getVideoBoardId())
+                .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.NO_SUCH_POST));
 
         videoCommentRepository.save(VideoComment.builder()
                 .content(newCommentRequest.getContent())
                 .writtenTime(newCommentRequest.getWrittenTime())
-                .member(member.get())
-                .videoBoard(videoBoard.get())
+                .member(member)
+                .videoBoard(videoBoard)
                 .build());
     }
 
     @Transactional
     public void updateComment(Long memberId, CommentUpdateRequest commentUpdateRequest) {
         VideoComment comment = videoCommentRepository.findById(commentUpdateRequest.getCommentId())
-                .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_COMMENT));
+                .orElseThrow(() -> new CommentNotFoundException(GlobalErrorCode.NO_SUCH_COMMENT));
         checkAuth(memberId, comment);
         comment.update(commentUpdateRequest.getContent(), commentUpdateRequest.getWrittenTime());
     }
@@ -77,7 +80,7 @@ public class VideoCommentService {
     @Transactional
     public void deleteComment(Long memberId, Long commentId) {
         VideoComment comment = videoCommentRepository.findById(commentId)
-                .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_COMMENT));
+                .orElseThrow(() -> new CommentNotFoundException(GlobalErrorCode.NO_SUCH_COMMENT));
         checkAuth(memberId, comment);
         videoCommentRepository.delete(comment);
     }
