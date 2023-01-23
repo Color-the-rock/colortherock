@@ -366,8 +366,25 @@ class VideoBoardServiceTest {
 
     }
 
-    @Test
-    void deleteSuccessPost() {
+    @Nested
+    @DisplayName("deleteSuccessPost 메소드는")
+    class DeleteSuccessPost {
+
+        @Nested
+        @DisplayName("게시글이 있고 작성자가 유저와 일치할 경우")
+        class Exception_All_Pass {
+            @Test
+            @DisplayName("해당 게시글을 삭제")
+            void deleteSuccessPost() {
+                Long memberId = 0L;
+                Long videoBoardId = 1L;
+                videoBoardService.deleteSuccessPost(memberId, videoBoardId);
+                // 삭제 후에 해당 데이터를 한번 더 삭제할 경우 No Such Post 예외 발생
+                assertThrows(PostNotFoundException.class, () -> {
+                    videoBoardService.deleteSuccessPost(memberId, videoBoardId);
+                });
+            }
+        }
     }
 
     @Test
