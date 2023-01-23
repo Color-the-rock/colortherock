@@ -23,7 +23,9 @@ public enum GlobalErrorCode {
     // 영상과 관련된 Exception
     VIDEO_NOT_FOUND(404, "V100", "해당 id에 해당하는 영상이 없습니다."),
     NOT_VIDEO_OWNER(400, "V200", "영상의 주인과 요청한 멤버가 다릅니다."),
-    ;
+    // 라이브와 관련된 Exception
+    SESSION_NOT_FOUND(400, "L100", "세션을 찾을 수 없습니다."),
+    RECORDING_START_BAD_REQUEST(400, "L101", "잘못된 녹화 요청입니다");
 
     private final String code;
     private final String message;
@@ -35,3 +37,4 @@ public enum GlobalErrorCode {
         this.message = message;
     }
 }
+

@@ -2,9 +2,11 @@ package org.anotherclass.colortherock.domain.live.service;
 
 import io.openvidu.java.client.*;
 import org.anotherclass.colortherock.domain.live.entity.Live;
+import org.anotherclass.colortherock.domain.live.exception.RecordingStartBadRequestException;
 import org.anotherclass.colortherock.domain.live.exception.SessionNotFountException;
 import org.anotherclass.colortherock.domain.live.repository.LiveRepository;
 import org.anotherclass.colortherock.domain.live.request.CreateLiveRequest;
+import org.anotherclass.colortherock.domain.live.request.RecordingStartRequest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
@@ -63,5 +65,25 @@ public class LiveService {
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void recordingStart(MemberDetails memberDetails, String sessionId, RecordingStartRequest request) {
+
+        Session activeSession = openVidu.getActiveSession(sessionId);
+        if (activeSession == null) {
+            throw new SessionNotFountException();
+        }
+        String token = request.getToken();
+        Connection connection = activeSession.getConnection(token);
+        OpenViduRole role = connection.getRole();
+
+        if (role.equals(OpenViduRole.PUBLISHER)) {
+            try {
+                openVidu.startRecording(sessionId);
+            } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        throw new RecordingStartBadRequestException();
     }
 }
