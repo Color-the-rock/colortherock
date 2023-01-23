@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.video.entity.Video;
+import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
+import org.anotherclass.colortherock.domain.video.exception.VideoUserMismatchException;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundException;
@@ -56,11 +58,14 @@ public class VideoBoardService {
     }
 
     @Transactional
-    public Long uploadMySuccessVideo(Long memberId, SuccessVideoUploadRequest successVideoUploadRequest) {
+    public Long uploadMySuccessVideoPost(Long memberId, SuccessVideoUploadRequest successVideoUploadRequest) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_USER));
         Video video = videoRepository.findById(successVideoUploadRequest.getVideoId())
-                .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_VIDEO));
+                .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.NO_SUCH_VIDEO));
+        if(!video.getMember().getId().equals(memberId)){
+            throw new VideoUserMismatchException(GlobalErrorCode.VIDEO_OWNER_MISMATCH);
+        }
 
         VideoBoard newVideoBoard = videoBoardRepository.save(VideoBoard.builder()
                 .title(successVideoUploadRequest.getTitle())
