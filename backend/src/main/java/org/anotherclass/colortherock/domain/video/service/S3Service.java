@@ -9,7 +9,6 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,11 +45,9 @@ public class S3Service {
         log.log(Level.INFO, "s3Client 생성완료");
     }
 
-    public String upload(MultipartFile file) throws IOException {
-        // 중복 방지를 위해 기존 파일명앞에 시간을 추가한다.
-        String fileName = DateTime.now() + file.getOriginalFilename();
-        s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
+    public String upload(MultipartFile file, String videoName) throws IOException {
+        s3Client.putObject(new PutObjectRequest(bucket, videoName, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-        return s3Client.getUrl(bucket, fileName).toString();
+        return s3Client.getUrl(bucket, videoName).toString();
     }
 }
