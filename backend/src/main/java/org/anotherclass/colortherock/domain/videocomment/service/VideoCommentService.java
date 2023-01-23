@@ -55,18 +55,19 @@ public class VideoCommentService {
     }
 
     @Transactional
-    public void insertComment(Long memberId, NewCommentRequest newCommentRequest) {
+    public Long insertComment(Long memberId, NewCommentRequest newCommentRequest) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_USER));
         VideoBoard videoBoard = videoBoardRepository.findById(newCommentRequest.getVideoBoardId())
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.NO_SUCH_POST));
 
-        videoCommentRepository.save(VideoComment.builder()
+        VideoComment videoComment = videoCommentRepository.save(VideoComment.builder()
                 .content(newCommentRequest.getContent())
                 .writtenTime(newCommentRequest.getWrittenTime())
                 .member(member)
                 .videoBoard(videoBoard)
                 .build());
+        return videoComment.getId();
     }
 
     @Transactional
