@@ -26,6 +26,7 @@ public class UploadVideoRequest {
     private MultipartFile newVideo;
     private Member member;
     private String s3URL;
+    private String videoName;
 
     public UploadVideoRequest(LocalDate shootingDate, Integer level, String gymName, Boolean isSuccess, String color, Member member) {
         this.shootingDate = shootingDate;
@@ -44,6 +45,7 @@ public class UploadVideoRequest {
         video.setIsSuccess(this.isSuccess);
         video.setColor(this.color);
         video.setMember(this.member);
+        video.setVideoName(this.videoName);
         return video;
     }
 
