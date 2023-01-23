@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.live.cotroller;
 
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.live.request.CreateLiveRequest;
+import org.anotherclass.colortherock.domain.live.request.RecordingSaveRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStartRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStopRequest;
 import org.anotherclass.colortherock.domain.live.service.LiveService;
@@ -43,11 +44,16 @@ public class LiveController {
     }
 
     @PostMapping("/live/{sessionId}/recording/stop")
-
     public BaseResponse<?> recordingStop(@RequestBody RecordingStopRequest request) {
 
         liveService.recordingStop(request);
 
+        return new BaseResponse<>(GlobalErrorCode.SUCCESS);
+    }
+
+    @PostMapping("/live/{sessionId}/recording/save")
+    public BaseResponse<?> recordingSave(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String sessionId,@RequestBody RecordingSaveRequest request) {
+        liveService.recordingSave(memberDetails,sessionId,request);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 }

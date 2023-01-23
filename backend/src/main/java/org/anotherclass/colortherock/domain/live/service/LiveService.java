@@ -6,11 +6,14 @@ import org.anotherclass.colortherock.domain.live.exception.RecordingStartBadRequ
 import org.anotherclass.colortherock.domain.live.exception.SessionNotFountException;
 import org.anotherclass.colortherock.domain.live.repository.LiveRepository;
 import org.anotherclass.colortherock.domain.live.request.CreateLiveRequest;
+import org.anotherclass.colortherock.domain.live.request.RecordingSaveRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStartRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStopRequest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.video.entity.Video;
+import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +22,18 @@ public class LiveService {
 
     private final LiveRepository liveRepository;
     private final MemberRepository memberRepository;
+    private final VideoRepository videoRepository;
 
     private final OpenVidu openVidu;
 
     public LiveService(LiveRepository liveRepository,
                        MemberRepository memberRepository,
+                       VideoRepository videoRepository,
                        @Value("${OPENVIDU_URL}") String OPENVIDU_URL,
                        @Value("${OPENVIDU_SECRET}") String OPENVIDU_SECRET) {
         this.liveRepository = liveRepository;
         this.memberRepository = memberRepository;
+        this.videoRepository = videoRepository;
         this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
@@ -96,5 +102,12 @@ public class LiveService {
             throw new RuntimeException(e);
         }
         throw new RecordingStartBadRequestException();
+    }
+
+    public void recordingSave(MemberDetails memberDetails, String sessionId, RecordingSaveRequest request) {
+        // TODO S3 저장 로직
+        Member member = memberRepository.findById(memberDetails.getMember().getId()).orElseThrow();
+        Video video = request.toEntity("대충 s3url", "섬네일 url", member);
+        videoRepository.save(video);
     }
 }
