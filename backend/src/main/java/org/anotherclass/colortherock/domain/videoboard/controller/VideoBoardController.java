@@ -46,7 +46,7 @@ public class VideoBoardController {
             @ApiResponse(responseCode = "200", description = "완등 영상 목록 조회 성공", content = @Content(schema = @Schema(implementation = VideoBoardSummaryResponse.class)))
     })
     public BaseResponse<List<VideoBoardSummaryResponse>> getVideoList
-    (VideoBoardSearchRequest condition, @PageableDefault(size = 16, sort = "id") Pageable pageable) {
+    (VideoBoardSearchRequest condition, @PageableDefault(size = 16) Pageable pageable) {
         List<VideoBoardSummaryResponse> successVideoList = videoBoardService.getSuccessVideos(condition, pageable);
         return new BaseResponse<>(successVideoList);
     }

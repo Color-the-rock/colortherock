@@ -1,5 +1,6 @@
 package org.anotherclass.colortherock.domain.video.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
@@ -46,8 +47,18 @@ public class Video {
     @JoinColumn(name = "member_id")
     private Member member;
 
-
     @OneToOne(mappedBy = "video", orphanRemoval = true, fetch = FetchType.LAZY)
     private VideoBoard videoBoard;
+
+    @Builder
+    public Video(LocalDate shootingDate, Integer level, String gymName, String s3URL, Boolean isSuccess, String thumbnailURL, String color) {
+        this.shootingDate = shootingDate;
+        this.level = level;
+        this.gymName = gymName;
+        this.s3URL = s3URL;
+        this.isSuccess = isSuccess;
+        this.thumbnailURL= thumbnailURL;
+        this.color = color;
+    }
 
 }
