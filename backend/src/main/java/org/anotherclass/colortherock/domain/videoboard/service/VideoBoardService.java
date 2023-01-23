@@ -10,6 +10,7 @@ import org.anotherclass.colortherock.domain.video.exception.VideoUserMismatchExc
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundException;
+import org.anotherclass.colortherock.domain.videoboard.exception.WriterMismatchException;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardReadRepository;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessPostUpdateRequest;
@@ -131,7 +132,7 @@ public class VideoBoardService {
     // 받은 멤버가 수정권한이 있는지 확인하는 메서드
     private void checkAuth(Long memberId, VideoBoard videoBoard) {
         if (!videoBoard.getMember().getId().equals(memberId)) {
-            throw new GlobalBaseException(GlobalErrorCode.WRITER_MISMATCH);
+            throw new WriterMismatchException(GlobalErrorCode.WRITER_MISMATCH);
         }
     }
 }
