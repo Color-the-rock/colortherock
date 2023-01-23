@@ -36,6 +36,8 @@ public class Video {
 
     @Column(name = "color", length = 20)
     private String color;
+    @Column(name = "video_name", length = 100)
+    private String videoName;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
