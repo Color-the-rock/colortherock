@@ -1,8 +1,13 @@
 package org.anotherclass.colortherock.domain.videoboard.service;
 
+import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
+import org.anotherclass.colortherock.domain.video.exception.VideoUserMismatchException;
+import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
+import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
+import org.anotherclass.colortherock.domain.videoboard.request.SuccessVideoUploadRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
-import org.junit.jupiter.api.Assertions;
+import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,13 +15,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class VideoBoardServiceTest {
 
     @Autowired
     private VideoBoardService videoBoardService;
+    @Autowired
+    private VideoBoardRepository videoBoardRepository;
 
     @Nested
     @DisplayName("getSuccessVideo 메소드는")
@@ -44,8 +55,8 @@ class VideoBoardServiceTest {
                     List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond, pageable);
 
                     // then
-                    Assertions.assertTrue(successVideos.get(0).getVideoBoardId() > successVideos.get(1).getVideoBoardId());
-                    Assertions.assertEquals(successVideos.size(), 2);
+                    assertTrue(successVideos.get(0).getVideoBoardId() > successVideos.get(1).getVideoBoardId());
+                    assertEquals(successVideos.size(), 2);
                 }
             }
 
@@ -67,8 +78,8 @@ class VideoBoardServiceTest {
                     List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond, pageable);
 
                     // then
-                    Assertions.assertTrue(cond.getStoreId() > successVideos.get(0).getVideoBoardId());
-                    Assertions.assertEquals(successVideos.size(), 2);
+                    assertTrue(cond.getStoreId() > successVideos.get(0).getVideoBoardId());
+                    assertEquals(successVideos.size(), 2);
                 }
             }
 
@@ -89,7 +100,7 @@ class VideoBoardServiceTest {
                     List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond, pageable);
 
                     // then
-                    Assertions.assertEquals(successVideos.size(), 0);
+                    assertEquals(successVideos.size(), 0);
                 }
             }
 
@@ -115,8 +126,8 @@ class VideoBoardServiceTest {
                     List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond, pageable);
 
                     // then
-                    Assertions.assertEquals(successVideos.get(0).getColor(), cond.getColor());
-                    Assertions.assertEquals(successVideos.size(), 2);
+                    assertEquals(successVideos.get(0).getColor(), cond.getColor());
+                    assertEquals(successVideos.size(), 2);
                 }
 
             }
@@ -142,8 +153,8 @@ class VideoBoardServiceTest {
                     List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond, pageable);
 
                     // then
-                    Assertions.assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
-                    Assertions.assertEquals(successVideos.size(), 2);
+                    assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
+                    assertEquals(successVideos.size(), 2);
                 }
             }
         }
@@ -170,9 +181,9 @@ class VideoBoardServiceTest {
                     List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond, pageable);
 
                     // then
-                    Assertions.assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
-                    Assertions.assertEquals(successVideos.get(0).getColor(), cond.getColor());
-                    Assertions.assertEquals(successVideos.size(), 2);
+                    assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
+                    assertEquals(successVideos.get(0).getColor(), cond.getColor());
+                    assertEquals(successVideos.size(), 2);
                 }
             }
 
@@ -181,8 +192,86 @@ class VideoBoardServiceTest {
     }
 
 
-    @Test
-    void uploadMySuccessVideo() {
+    @Nested
+    @DisplayName("uploadMySuccessVideoPost메소드는")
+    class UploadMySuccessVideoPost {
+        @Nested
+        @DisplayName("유저 정보를 찾을 수 없을 경우")
+        class No_Such_User {
+            @Test
+            @DisplayName("NO_SUCH_USER 예외를 발생시킴")
+            void noSuchUserException() {
+                // given
+                Long memberId = 2L; //DB에 없는 id
+                SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
+                request.setVideoId(1L);
+                request.setTitle("성공했습니다.");
+                request.setWrittenTime(LocalDateTime.of(2023, 01, 23, 18, 30));
+
+                assertThrows(GlobalBaseException.class, () -> {
+                    videoBoardService.uploadMySuccessVideoPost(memberId, request);
+                });
+            }
+        }
+
+        @Nested
+        @DisplayName("비디오를 찾을 수 없을 경우")
+        class No_Such_Video {
+            @Test
+            @DisplayName("NO_SUCH_VIDEO 예외를 발생시킴")
+            void noSuchVideoException() {
+                Long memberId = 0L;
+                SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
+                request.setVideoId(10L); // DB에 없는 ID
+                request.setTitle("성공했습니다.");
+                request.setWrittenTime(LocalDateTime.of(2023, 01, 23, 18, 30));
+
+                assertThrows(VideoNotFoundException.class, () -> {
+                    videoBoardService.uploadMySuccessVideoPost(memberId, request);
+                });
+            }
+        }
+
+        @Nested
+        @DisplayName("유저 정보와 비디오의 소유자가 일치하지 않을 경우")
+        class Video_User_Mismatch {
+            @Test
+            @DisplayName("Video_User_Mismatch 예외를 발생시킴")
+            void videoUserMismatchException() {
+                Long memberId = 1L;
+                SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
+                request.setVideoId(1L); // 해당 비디오의 memberId는 0L
+                request.setTitle("성공했습니다.");
+                request.setWrittenTime(LocalDateTime.of(2023, 01, 23, 18, 30));
+
+                assertThrows(VideoUserMismatchException.class, () -> {
+                    videoBoardService.uploadMySuccessVideoPost(memberId, request);
+                });
+            }
+        }
+
+        @Nested
+        @DisplayName("memberId/videoId/video, member간 유효성 확인을 통과할 경우")
+        class All_Exception_pass {
+            @Test
+            @DisplayName("영상 게시글을 DB에 저장한 후 id값을 반환")
+            void uploadSuccessVideoPost() {
+                // given
+                Long memberId = 0L;
+                SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
+                request.setVideoId(1L);
+                request.setTitle("성공했습니다.");
+                request.setWrittenTime(LocalDateTime.of(2023, 01, 23, 18, 30));
+                // when
+                Long videoBoardId = videoBoardService.uploadMySuccessVideoPost(memberId, request);
+                Optional<VideoBoard> videoBoard = videoBoardRepository.findById(videoBoardId);
+                // then
+                assertEquals(videoBoardId, videoBoard.get().getId());
+                assertEquals(videoBoard.get().getTitle(), request.getTitle());
+            }
+        }
+
+
     }
 
     @Test
