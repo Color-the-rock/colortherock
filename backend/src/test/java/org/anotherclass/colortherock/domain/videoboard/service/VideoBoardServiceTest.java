@@ -387,7 +387,24 @@ class VideoBoardServiceTest {
         }
     }
 
-    @Test
-    void getMySuccessVideoPosts() {
+    @Nested
+    @DisplayName("getMySuccessVideoPosts 메소드는")
+    class GetMySuccessVideoPosts {
+        @Nested
+        @DisplayName("storeId가 null일 경우")
+        class Store_Id_Null {
+            @Test
+            @DisplayName("멤버의 성공 영상 게시글의 id값이 큰 순서대로 사이즈만큼 반환")
+            void getMySuccessVideoPosts() {
+                Long memberId = 0L;
+                Long storeId = null;
+                Pageable pageable = Pageable.ofSize(2);
+
+                List<VideoBoardSummaryResponse> result = videoBoardService.getMySuccessVideoPosts(memberId, storeId, pageable);
+
+                assertTrue(result.get(0).getVideoBoardId() > result.get(1).getVideoBoardId());
+                assertEquals(result.size(), 2);
+            }
+        }
     }
 }
