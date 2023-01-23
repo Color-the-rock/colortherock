@@ -4,7 +4,9 @@ import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundExcepti
 import org.anotherclass.colortherock.domain.video.exception.VideoUserMismatchException;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundException;
+import org.anotherclass.colortherock.domain.videoboard.exception.WriterMismatchException;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
+import org.anotherclass.colortherock.domain.videoboard.request.SuccessPostUpdateRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessVideoUploadRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetailResponse;
@@ -208,7 +210,7 @@ class VideoBoardServiceTest {
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
                 request.setVideoId(1L);
                 request.setTitle("성공했습니다.");
-                request.setWrittenTime(LocalDateTime.of(2023, 01, 23, 18, 30));
+                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 18, 30));
 
                 assertThrows(GlobalBaseException.class, () -> {
                     videoBoardService.uploadMySuccessVideoPost(memberId, request);
@@ -226,7 +228,7 @@ class VideoBoardServiceTest {
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
                 request.setVideoId(10L); // DB에 없는 ID
                 request.setTitle("성공했습니다.");
-                request.setWrittenTime(LocalDateTime.of(2023, 01, 23, 18, 30));
+                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 18, 30));
 
                 assertThrows(VideoNotFoundException.class, () -> {
                     videoBoardService.uploadMySuccessVideoPost(memberId, request);
@@ -244,7 +246,7 @@ class VideoBoardServiceTest {
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
                 request.setVideoId(1L); // 해당 비디오의 memberId는 0L
                 request.setTitle("성공했습니다.");
-                request.setWrittenTime(LocalDateTime.of(2023, 01, 23, 18, 30));
+                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 18, 30));
 
                 assertThrows(VideoUserMismatchException.class, () -> {
                     videoBoardService.uploadMySuccessVideoPost(memberId, request);
@@ -263,7 +265,7 @@ class VideoBoardServiceTest {
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
                 request.setVideoId(1L);
                 request.setTitle("성공했습니다.");
-                request.setWrittenTime(LocalDateTime.of(2023, 01, 23, 18, 30));
+                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 18, 30));
                 // when
                 Long videoBoardId = videoBoardService.uploadMySuccessVideoPost(memberId, request);
                 Optional<VideoBoard> videoBoard = videoBoardRepository.findById(videoBoardId);
@@ -303,8 +305,65 @@ class VideoBoardServiceTest {
         }
     }
 
-    @Test
-    void updateSuccessPost() {
+    @Nested
+    @DisplayName("updateSuccessPost 메소드는")
+    class updateSuccessPost {
+
+        @Nested
+        @DisplayName("게시글 Id를 찾을 수 없는 경우")
+        class No_Such_Post {
+            @Test
+            @DisplayName("Post Not Found 예외를 발생시킴")
+            void PostNotFoundException() {
+                Long memberId = 1L;
+                SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
+                request.setVideoBoardId(10L); // 없는 게시글 번호
+                request.setTitle("수정했습니다.");
+                request.setWrittenTime(LocalDateTime.of(2023,1,23,19,50));
+
+                assertThrows(PostNotFoundException.class, () -> {
+                    videoBoardService.updateSuccessPost(memberId, request);
+                });
+            }
+        }
+
+        @Nested
+        @DisplayName("멤버가 해당 게시글 작성자와 일치하지 않는 경우")
+        class User_Mismatch {
+            @Test
+            @DisplayName("Writer Mismatch 예외를 발생시킴")
+            void WriterMismatchException() {
+                Long memberId = 1L;
+                SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
+                request.setVideoBoardId(5L); // 해당 게시글의 작성자는 0L
+                request.setTitle("수정했습니다.");
+                request.setWrittenTime(LocalDateTime.of(2023,1,23,19,50));
+
+                assertThrows(WriterMismatchException.class, () -> {
+                    videoBoardService.updateSuccessPost(memberId, request);
+                });
+            }
+        }
+
+        @Nested
+        @DisplayName("게시글이 있고 수정 권한이 있을 경우")
+        class Exception_All_Pass {
+            @Test
+            @DisplayName("수정이 정상적으로 완료")
+            void updateSuccessPost() {
+                Long memberId = 0L;
+                SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
+                request.setVideoBoardId(5L);
+                request.setTitle("수정했습니다.");
+                request.setWrittenTime(LocalDateTime.of(2023,1,23,19,50));
+
+                videoBoardService.updateSuccessPost(memberId, request);
+                VideoBoard videoBoard = videoBoardRepository.findById(request.getVideoBoardId()).get();
+
+                assertEquals(request.getTitle(), videoBoard.getTitle());
+            }
+        }
+
     }
 
     @Test
