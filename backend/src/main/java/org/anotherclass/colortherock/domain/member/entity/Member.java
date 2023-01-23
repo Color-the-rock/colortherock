@@ -28,7 +28,7 @@ public class Member {
     @Column(name = "nickname", length = 50)
     private String nickname;
 
-    @OneToMany(mappedBy = "member", orphanRemoval = true,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Live> lives = new ArrayList<>();
 
 
@@ -44,8 +44,20 @@ public class Member {
     private List<VideoComment> videoComments = new ArrayList<>();
 
     @Builder
-    public Member(String email, String nickname) {
+    public Member(String email, String nickname, RegistrationId registrationId) {
+
         this.email = email;
         this.nickname = nickname;
+        this.registrationId = registrationId;
     }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "registration_id")
+    private RegistrationId registrationId;
+
+    public enum RegistrationId {
+        kakao, google
+
+    }
+
 }
