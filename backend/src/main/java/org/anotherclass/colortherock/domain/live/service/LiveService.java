@@ -7,6 +7,7 @@ import org.anotherclass.colortherock.domain.live.exception.SessionNotFountExcept
 import org.anotherclass.colortherock.domain.live.repository.LiveRepository;
 import org.anotherclass.colortherock.domain.live.request.CreateLiveRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStartRequest;
+import org.anotherclass.colortherock.domain.live.request.RecordingStopRequest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
@@ -44,7 +45,7 @@ public class LiveService {
 
         // TODO 섬네일 어떻게 받을지?
         Live live = request.toEntity(sessionId, "대충 섬네일", member);
-        Live save = liveRepository.save(live);
+        liveRepository.save(live);
         try {
             Connection connection = session.createConnection(new ConnectionProperties.Builder().role(OpenViduRole.PUBLISHER).build());
             return connection.getToken();
@@ -53,8 +54,7 @@ public class LiveService {
         }
     }
 
-    public String joinLiveRoom(MemberDetails memberDetails, String sessionId) {
-        Long userId = memberDetails.getMember().getId();
+    public String joinLiveRoom(String sessionId) {
         Session activeSession = openVidu.getActiveSession(sessionId);
         if (activeSession == null) {
             throw new SessionNotFountException();
@@ -67,7 +67,7 @@ public class LiveService {
         }
     }
 
-    public void recordingStart(MemberDetails memberDetails, String sessionId, RecordingStartRequest request) {
+    public String recordingStart(String sessionId, RecordingStartRequest request) {
 
         Session activeSession = openVidu.getActiveSession(sessionId);
         if (activeSession == null) {
@@ -79,10 +79,21 @@ public class LiveService {
 
         if (role.equals(OpenViduRole.PUBLISHER)) {
             try {
-                openVidu.startRecording(sessionId);
+                Recording recording = openVidu.startRecording(sessionId);
+                return recording.getId();
             } catch (OpenViduJavaClientException | OpenViduHttpException e) {
                 throw new RuntimeException(e);
             }
+        }
+        throw new RecordingStartBadRequestException();
+    }
+
+    public void recordingStop(RecordingStopRequest request) {
+
+        try {
+            openVidu.stopRecording(request.getRecordingId());
+        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+            throw new RuntimeException(e);
         }
         throw new RecordingStartBadRequestException();
     }
