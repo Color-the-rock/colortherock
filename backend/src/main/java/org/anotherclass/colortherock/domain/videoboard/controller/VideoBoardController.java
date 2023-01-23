@@ -63,7 +63,7 @@ public class VideoBoardController {
     })
     public BaseResponse<Long> uploadMySuccessVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid SuccessVideoUploadRequest successVideoUploadRequest) {
         Member member = memberDetails.getMember();
-        Long videoBoardId = videoBoardService.uploadMySuccessVideo(member.getId(), successVideoUploadRequest);
+        Long videoBoardId = videoBoardService.uploadMySuccessVideoPost(member.getId(), successVideoUploadRequest);
         return new BaseResponse<>(videoBoardId);
     }
 
