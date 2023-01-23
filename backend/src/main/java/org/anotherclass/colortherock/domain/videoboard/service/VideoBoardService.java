@@ -61,7 +61,6 @@ public class VideoBoardService {
         Video video = videoRepository.findById(successVideoUploadRequest.getVideoId())
                 .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_VIDEO));
 
-        System.out.println("되니?");
         VideoBoard newVideoBoard = videoBoardRepository.save(VideoBoard.builder()
                 .title(successVideoUploadRequest.getTitle())
                 .video(video)
@@ -69,7 +68,6 @@ public class VideoBoardService {
                 .writtenTime(successVideoUploadRequest.getWrittenTime())
                 .build());
 
-        System.out.println("여기까진 됨~");
         return newVideoBoard.getId();
     }
 
