@@ -47,6 +47,7 @@ dependencies {
 	//querydsl 추가
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.14'
 }
 
 tasks.named('test') {
