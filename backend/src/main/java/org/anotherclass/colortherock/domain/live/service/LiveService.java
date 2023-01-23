@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.live.service;
 
 import io.openvidu.java.client.*;
 import org.anotherclass.colortherock.domain.live.entity.Live;
+import org.anotherclass.colortherock.domain.live.exception.SessionNotFountException;
 import org.anotherclass.colortherock.domain.live.repository.LiveRepository;
 import org.anotherclass.colortherock.domain.live.request.CreateLiveRequest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
@@ -27,7 +28,7 @@ public class LiveService {
         this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
-    public void createLiveRoom(MemberDetails memberDetails, CreateLiveRequest request) {
+    public String createLiveRoom(MemberDetails memberDetails, CreateLiveRequest request) {
         Long id = memberDetails.getMember().getId();
         Member member = memberRepository.findById(id).orElseThrow();
         Session session;
@@ -44,7 +45,21 @@ public class LiveService {
         Live save = liveRepository.save(live);
         try {
             Connection connection = session.createConnection(new ConnectionProperties.Builder().role(OpenViduRole.PUBLISHER).build());
-            String connectionId = connection.getConnectionId();
+            return connection.getToken();
+        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String joinLiveRoom(MemberDetails memberDetails, String sessionId) {
+        Long userId = memberDetails.getMember().getId();
+        Session activeSession = openVidu.getActiveSession(sessionId);
+        if (activeSession == null) {
+            throw new SessionNotFountException();
+        }
+        try {
+            Connection connection = activeSession.createConnection(new ConnectionProperties.Builder().role(OpenViduRole.SUBSCRIBER).build());
+            return connection.getToken();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             throw new RuntimeException(e);
         }

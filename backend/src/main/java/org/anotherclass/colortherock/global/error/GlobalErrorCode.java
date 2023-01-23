@@ -13,12 +13,16 @@ public enum GlobalErrorCode {
     SUCCESS(200, "G000", "요청에 성공하였습니다."),
     OTHER(500, "G100", "서버에 오류가 발생했습니다"),
     METHOD_NOT_ALLOWED(405, "G200", "허용되지 않은 메서드입니다"),
-    ACCESS_DENIED(401, "G400", "허용되지 않은 사용자입니다"),
     VALID_EXCEPTION(400, "G300", ""),
-
-
+    ACCESS_DENIED(401, "G400", "허용되지 않은 사용자입니다"),
     // 멤버와 관련된 Exception
     DUPLICATE_NICKNAME(400, "M100", "중복 닉네임 입니다"),
+    SESSION_NOT_FOUND(400, "L100", "세션을 찾을 수 없습니다."),
+    // 기록과 관련된 Exception
+    MALFORMED_DATE(400, "R100", "잘못된 날짜 형식입니다."),
+    // 영상과 관련된 Exception
+    VIDEO_NOT_FOUND(404, "V100", "해당 id에 해당하는 영상이 없습니다."),
+    NOT_VIDEO_OWNER(400, "V200", "영상의 주인과 요청한 멤버가 다릅니다."),
     ;
 
     private final String code;

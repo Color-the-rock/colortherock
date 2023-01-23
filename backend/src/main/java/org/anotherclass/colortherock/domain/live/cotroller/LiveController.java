@@ -6,10 +6,7 @@ import org.anotherclass.colortherock.domain.live.service.LiveService;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,9 +17,17 @@ public class LiveController {
     private final LiveService liveService;
 
     @GetMapping("/live")
-    public BaseResponse<?> createLive(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody CreateLiveRequest request) {
-        liveService.createLiveRoom(memberDetails, request);
+    public BaseResponse<String> createLive(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody CreateLiveRequest request) {
+        String token = liveService.createLiveRoom(memberDetails, request);
+        return new BaseResponse<>(token);
 
-        return new BaseResponse<>();
     }
+
+    @GetMapping("/live/{sessionId}")
+    public BaseResponse<String> joinLive(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String sessionId) {
+
+        String token = liveService.joinLiveRoom(memberDetails, sessionId);
+        return new BaseResponse<>(token);
+    }
+
 }
