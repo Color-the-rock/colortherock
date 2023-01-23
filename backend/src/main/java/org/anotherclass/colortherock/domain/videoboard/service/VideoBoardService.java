@@ -50,6 +50,7 @@ public class VideoBoardService {
                         .thumbnailURL(vb.getVideo().getThumbnailURL())
                         .color(vb.getVideo().getColor())
                         .writtenTime(vb.getWrittenTime())
+                        .gymName(vb.getVideo().getGymName())
                         .build()).collect(Collectors.toList());
 
     }
