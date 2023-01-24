@@ -1,0 +1,19 @@
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #fff;
+}
+
+.react-calendar__month-view__days button {
+  color: #fff;
+}
+
+.react-calendar__month-view__days__day--weekend {
+  color: red !important;
+}
+
+.react-calendar__navigation__label {
+  color: #fff;
+}
+
+.react-calendar__navigation__arrow {
+  color: #fff;
+}
