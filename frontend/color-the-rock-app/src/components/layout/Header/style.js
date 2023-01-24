@@ -25,7 +25,7 @@ export const Container = styled.header`
   justify-content: space-between;
   align-items: center;
   @media (max-width: 1070px) {
-    padding: 1rem 16px;
+    padding: 0.5rem 0.5rem 0rem 0rem;
   }
 `;
 
