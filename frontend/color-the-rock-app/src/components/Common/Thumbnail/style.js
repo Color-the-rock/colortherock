@@ -27,7 +27,6 @@ export const VideoText = styled.div`
   @media (max-width: 1070px) {
     font-size: 0.75rem;
     line-height: 0.75rem;
-    margin-bottom: 0.25rem;
   }
 `;
 
@@ -51,4 +50,5 @@ export const Tag = styled.label`
   letter-spacing: -0.005em;
   padding: 0.25rem 0.75rem;
   margin: 0.5rem 0px;
+  margin-right: 4px;
 `;

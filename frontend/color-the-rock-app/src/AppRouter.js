@@ -8,10 +8,9 @@ import {
 import Intro from "./pages/Intro";
 import Login from "./pages/Login";
 import Streaming from "./pages/Streaming";
-import BoardList from "./pages/Board/BoardList";
+import BoardList from "./pages/Board";
 import Record from "./pages/Record";
 import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
 import Oauth from "./components/LogIn/index";
 const Layout = () => {
   return (
