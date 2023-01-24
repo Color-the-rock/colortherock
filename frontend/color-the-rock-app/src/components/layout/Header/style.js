@@ -67,10 +67,10 @@ export const SLink = styled(Link)`
   font-size: 1.4rem;
   margin: auto 18px;
   font-weight: 700;
-  color: ${(props) =>
-    props.current === "true"
-      ? "var(--color-brand-primary)"
-      : "var(--color-primary)"};
+  text-decoration: ${(props) =>
+    props.current === "true" ? "underline" : "none"};
+  text-decoration-thickness: 5px;
+  text-decoration-color: var(--color-brand-primary);
   &:last-child {
     margin-right: 0px;
   }
