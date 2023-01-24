@@ -15,12 +15,15 @@ import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatRespo
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoDetailResponse;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
+import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.joda.time.DateTime;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -94,15 +97,11 @@ public class RecordController {
         @ApiResponse(responseCode = "200", description = "해당 날짜 영상 조회 성공", content = @Content(schema = @Schema(implementation = VideoListResponse.class))),
         @ApiResponse(responseCode = "400", description = "잘못된 날짜 형식으로 인한 영상 조회 실패")
     })
-    @GetMapping("/videos/success/{date}")
-    public BaseResponse<List<VideoListResponse>> successVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String date) {
+    @GetMapping("/videos/success")
+    public BaseResponse<List<VideoListResponse>> successVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody MyVideoRequest myVideoRequest, @PageableDefault(size = 6)Pageable pageable) {
         Member member = memberDetails.getMember();
-        // 날짜 형식이 YYYY-MM-DD 이 아닌 경우 예외 발생
-        if(!date.matches("\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")) {
-            throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
-        }
-        LocalDate videoDate = LocalDate.parse(date);
-        List<VideoListResponse> successResponse = recordService.getSuccessVideos(member, videoDate);
+        myVideoRequest.setMember(member);
+        List<VideoListResponse> successResponse = recordService.getSuccessVideos(pageable, myVideoRequest);
         return new BaseResponse<>(successResponse);
     }
 
