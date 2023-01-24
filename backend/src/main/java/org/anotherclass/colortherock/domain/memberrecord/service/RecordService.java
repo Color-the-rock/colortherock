@@ -8,16 +8,21 @@ import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatRespo
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoDetailResponse;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
+import org.anotherclass.colortherock.domain.video.repository.VideoReadRepository;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatResponse;
 import org.anotherclass.colortherock.domain.video.entity.Video;
+import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +30,7 @@ public class RecordService {
 
     private final VideoRepository videoRepository;
     private final RecordRepository recordRepository;
+    private final VideoReadRepository videoReadRepository;
 
     @Transactional(readOnly = true)
     public List<LevelStatResponse> getColorRecords(Member member) {
@@ -65,18 +71,20 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public List<VideoListResponse> getSuccessVideos(Member member, LocalDate videoDate) {
-        List<Video> successVideos = videoRepository.findAllByMemberAndShootingDateAndIsSuccessIsTrue(member, videoDate);
-        List<VideoListResponse> successResponses = new ArrayList<>();
-        for (Video video : successVideos) {
-            successResponses.add(VideoListResponse.builder()
+    public List<VideoListResponse> getSuccessVideos(Pageable pageable, MyVideoRequest request) {
+        Slice<Video> slices = videoReadRepository.searchBySlice(pageable, request);
+
+        if(slices.isEmpty()) return new ArrayList<>();
+
+        return slices.toList().stream()
+                .map(video ->
+                    VideoListResponse.builder()
+                            .thumbnailURL(video.getThumbnailURL())
                             .id(video.getId())
                             .color(video.getColor())
                             .gymName(video.getGymName())
-                            .level(video.getLevel())
-                            .thumbnailURL(video.getThumbnailURL()).build());
-        }
-        return successResponses;
+                            .level(video.getLevel()).build())
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
