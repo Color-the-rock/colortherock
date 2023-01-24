@@ -21,7 +21,7 @@ export const Container = styled.header`
   width: 100%;
   height: 6rem;
   background-color: var(--color-dark);
-  padding: 1rem 2rem;
+  padding: 1rem 1rem 0rem 0rem;
   justify-content: space-between;
   align-items: center;
   @media (max-width: 1070px) {
