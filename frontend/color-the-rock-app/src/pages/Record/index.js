@@ -4,6 +4,7 @@ import "react-calendar/dist/Calendar.css";
 import "./calendar.css";
 
 import * as S from "./style";
+import RecordVideo from "../../components/Record/RecordVideo";
 const Record = () => {
   const [value, onChange] = useState(new Date());
 
@@ -32,8 +33,9 @@ const Record = () => {
       <S.RecordCalendar onChange={onChange} value={value} />
 
       <S.SubTitle>성공 영상</S.SubTitle>
-
+      <RecordVideo />
       <S.SubTitle>실패 영상</S.SubTitle>
+      <RecordVideo />
     </S.Container>
   );
 };

@@ -13,6 +13,8 @@ export const Title = styled.h1`
   font-weight: 700;
   line-height: 2.125rem;
   letter-spacing: -0.01em;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid #272727;
 `;
 
 export const TextWrapper = styled.div`
