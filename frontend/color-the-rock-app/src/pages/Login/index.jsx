@@ -5,44 +5,73 @@ import GoogleBtn from "../../assets/img/LogIn/google-login.png";
 import { Mobile, Desktop } from "../../components/layout/Template"
 import { KAKAO_AUTH_URL } from "./Kakao";
 import { GOOGLE_AUTH_URL } from "./Google";
+import AppLogo from "../../assets/img/common/app-logo.png"
 import Header from "../../components/layout/Header"
+import { useNavigate } from "react-router-dom";
+import { VscChromeClose } from "react-icons/vsc";
 
 const Login = () => {
-
-  
+  const navigate = useNavigate();
+  const onClickHandler = () => {
+    navigate("/");
+  }
 
   return (
     <div>
-    <Desktop>
-      <Header></Header>
+      <Desktop>
+        <Header></Header>
         <S.Container>
-          <S.Title>로그인</S.Title>
-          <S.ContentWrap>
-              <S.LoginWrap href={KAKAO_AUTH_URL} >
-                <img src={KakaoBtn} alt="Kakao login Btn" />  
-              </S.LoginWrap>
-              <S.LoginWrap href={GOOGLE_AUTH_URL} >
-                <img src={GoogleBtn} alt="Google Loin Btn" />  
-              </S.LoginWrap>
-          </S.ContentWrap>
+        <S.ContentWrap>
+          <S.CloseBtnContainer>
+            <S.CloseBtn></S.CloseBtn>
+          </S.CloseBtnContainer>              
+          <S.LogoContainer>
+            <S.LogoImg src={AppLogo} alt="app logo"></S.LogoImg>
+            <S.SecondLogo>
+              {`Color the Rock,
+              Color your Rock!`}
+              </S.SecondLogo>
+          </S.LogoContainer>
+                
+          <S.LoginContainer>
+            <S.LoginWrap href={KAKAO_AUTH_URL} >
+              <img src={KakaoBtn} alt="Kakao login Btn" />  
+            </S.LoginWrap>
+            <S.LoginWrap href={GOOGLE_AUTH_URL} >
+              <img src={GoogleBtn} alt="Google Loin Btn" />  
+            </S.LoginWrap>
+          </S.LoginContainer>  
+        </S.ContentWrap>
         </S.Container>
       </Desktop>
       
       <Mobile>
-        <S.Container>
-          <S.Title>로그인</S.Title>
-          <S.LogoImg></S.LogoImg>
-          <S.ContentWrap>
-              <S.LoginWrap href={KAKAO_AUTH_URL} >
-                  <img src={KakaoBtn} alt="Kakao login Btn" />  
-              </S.LoginWrap>
-              <S.LoginWrap href={GOOGLE_AUTH_URL} >
-                  <img src={GoogleBtn} alt="Google Loin Btn" />  
-              </S.LoginWrap>
-          </S.ContentWrap>
-        </S.Container>
+      <S.Container>
+          <S.CloseBtnContainer>
+            <S.CloseBtn>
+            <VscChromeClose
+              onClick={onClickHandler}/>
+            </S.CloseBtn>
+          </S.CloseBtnContainer>
+        <S.ContentWrap>
+          <S.LogoContainer>
+            <S.LogoImg src={AppLogo} alt="app logo"></S.LogoImg>
+            <S.SecondLogo>
+              {`Color the Rock,\nColor your Rock!`}
+              </S.SecondLogo>
+          </S.LogoContainer>
+              
+          <S.LoginContainer>
+            <S.LoginWrap href={GOOGLE_AUTH_URL} >
+                <img src={GoogleBtn} alt="Google Loin Btn" />  
+            </S.LoginWrap>
+            <S.LoginWrap href={KAKAO_AUTH_URL} >
+                <img src={KakaoBtn} alt="Kakao login Btn" />  
+            </S.LoginWrap>
+          </S.LoginContainer>  
+        </S.ContentWrap>
+      </S.Container>
       </Mobile>
     </div>
-  );
-};
+)};
 export default Login;

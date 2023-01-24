@@ -1,5 +1,5 @@
 /*
-  BoardRegist style.js
+  Streaming style.js
 */
 
 import styled from "styled-components";
