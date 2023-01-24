@@ -6,7 +6,7 @@ const SearchBar = () => {
   return (
     <S.Wrapper>
       <S.InputBar
-        type="search"
+        type="text"
         placeholder="암장을 검색해주세요."
         value={searchValue}
         onChange={onChangeSearchValue}

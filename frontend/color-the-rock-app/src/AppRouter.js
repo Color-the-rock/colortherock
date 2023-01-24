@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, Outlet } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Outlet,
+} from "react-router-dom";
 import Intro from "./pages/Intro";
 import Login from "./pages/Login";
 import Streaming from "./pages/Streaming";
@@ -14,10 +19,9 @@ const Layout = () => {
       <Header />
 
       <Outlet />
-
     </div>
-  )
-}
+  );
+};
 
 const AppRouter = () => {
   // 로그인 여부에 따라 router 설정
@@ -25,18 +29,16 @@ const AppRouter = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Intro />}/>
+          <Route index element={<Intro />} />
           <Route path="/board" element={<BoardList />} />
           <Route path="/record" element={<Record />} />
           <Route path="/streaming" element={<Streaming />} />
         </Route>
 
-        <Route path="/login" element={<Login />}/>
-        <Route path="/oauth" element={<Oauth />} />  
+        <Route path="/login" element={<Login />} />
+        <Route path="/oauth" element={<Oauth />} />
         <Route path="/streaming/:streamingId" element={<Streaming />} />
-      
       </Routes>
-      <Footer />
     </Router>
   );
 };

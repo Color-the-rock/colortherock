@@ -5,6 +5,9 @@ export const Container = styled.div`
   height: 100vh;
   background-color: transparent;
   padding: 0px 16px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 `;
 
 export const Title = styled.h1`
@@ -38,4 +41,34 @@ export const Description = styled.div`
   letter-spacing: -0.01em;
   margin: 1.25rem 0px;
   color: var(--color-tertiary);
+`;
+
+export const ThumbnailList = styled.div`
+  align-self: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-top: 20px;
+  @media (max-width: 1070px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`;
+export const LiveButton = styled.button`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background-color: pink;
+  border: 3px solid transparent;
+  background-image: linear-gradient(var(--color-dark), var(--color-dark)),
+    linear-gradient(
+      to right,
+      var(--color-brand-gradient-start) 0%,
+      var(--color-brand-gradient-end) 100%
+    );
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 `;
