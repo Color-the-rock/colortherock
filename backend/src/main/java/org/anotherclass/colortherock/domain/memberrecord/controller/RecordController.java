@@ -90,7 +90,7 @@ public class RecordController {
     }
 
     /**
-     * 날짜별 운동 영상 목록 조회(성공 영상)
+     * 날짜별 운동 영상 목록 조회(성공 / 실패 영상)
      */
     @Operation(description = "사용자별 날짜별 성공 영상 조회")
     @ApiResponses({
@@ -101,29 +101,10 @@ public class RecordController {
     public BaseResponse<List<VideoListResponse>> successVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody MyVideoRequest myVideoRequest, @PageableDefault(size = 6)Pageable pageable) {
         Member member = memberDetails.getMember();
         myVideoRequest.setMember(member);
-        List<VideoListResponse> successResponse = recordService.getSuccessVideos(pageable, myVideoRequest);
+        List<VideoListResponse> successResponse = recordService.getMyVideos(pageable, myVideoRequest);
         return new BaseResponse<>(successResponse);
     }
 
-    /**
-     * 날짜별 운동 영상 목록 조회(실패 영상)
-     */
-    @Operation(description = "사용자별 날짜별 실패 영상 조회")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "해당 날짜 영상 조회 성공", content = @Content(schema = @Schema(implementation = VideoListResponse.class))),
-            @ApiResponse(responseCode = "400", description = "잘못된 날짜 형식으로 인한 영상 조회 실패")
-    })
-    @GetMapping("/videos/fail/{date}")
-    public BaseResponse<List<VideoListResponse>> failVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String date) {
-        Member member = memberDetails.getMember();
-        // 날짜 형식이 YYYY-MM-DD 이 아닌 경우 예외 발생
-        if(!date.matches("\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")) {
-            throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
-        }
-        LocalDate videoDate = LocalDate.parse(date);
-        List<VideoListResponse> failResponses = recordService.getFailVideos(member, videoDate);
-        return new BaseResponse<>(failResponses);
-    }
 
     /**
      * 영상 재생을 위한 영상 상세 조회
