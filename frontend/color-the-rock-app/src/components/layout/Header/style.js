@@ -21,11 +21,11 @@ export const Container = styled.header`
   width: 100%;
   height: 6rem;
   background-color: var(--color-dark);
-  padding: 1rem 2rem;
+  padding: 1rem 1rem 0rem 0rem;
   justify-content: space-between;
   align-items: center;
   @media (max-width: 1070px) {
-    padding: 1rem 16px;
+    padding: 0.5rem 0.5rem 0rem 0rem;
   }
 `;
 
@@ -67,10 +67,10 @@ export const SLink = styled(Link)`
   font-size: 1.4rem;
   margin: auto 18px;
   font-weight: 700;
-  color: ${(props) =>
-    props.current === "true"
-      ? "var(--color-brand-primary)"
-      : "var(--color-primary)"};
+  text-decoration: ${(props) =>
+    props.current === "true" ? "underline" : "none"};
+  text-decoration-thickness: 5px;
+  text-decoration-color: var(--color-brand-primary);
   &:last-child {
     margin-right: 0px;
   }

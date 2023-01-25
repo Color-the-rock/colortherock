@@ -5,6 +5,14 @@ export const FooterContainer = styled.footer`
   justify-content: center;
   align-items: center;
   width: 100%;
-  min-height: 216px;
+  min-height: 120px;
   background-color: var(--color-background);
+`;
+
+export const CopyRight = styled.label`
+  color: var(--color-tertiary);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5rem;
 `;
