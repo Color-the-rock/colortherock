@@ -16,4 +16,9 @@ public class VideoService {
     public void uploadVideo(Member member, String s3URL, UploadVideoRequest request) {
         videoRepository.save(request.toEntity(member, s3URL));
     }
+
+    @Transactional
+    public void deleteVideo(Long videoId) {
+        videoRepository.deleteById(videoId);
+    }
 }
