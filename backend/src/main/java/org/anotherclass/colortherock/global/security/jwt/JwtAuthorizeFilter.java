@@ -3,6 +3,7 @@ package org.anotherclass.colortherock.global.security.jwt;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -11,6 +12,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+
 import static org.aspectj.util.LangUtil.isEmpty;
 
 public class JwtAuthorizeFilter extends BasicAuthenticationFilter {
@@ -32,11 +35,13 @@ public class JwtAuthorizeFilter extends BasicAuthenticationFilter {
             return;
         }
         String token = header.substring(7);
-        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(null, token);
+        JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(List.of(new SimpleGrantedAuthority("ROLE_USER")), token);
         Authentication authenticate = this.getAuthenticationManager().authenticate(authenticationToken);
         if (authenticate.isAuthenticated()) {
             SecurityContextHolder.getContext().setAuthentication(authenticate);
         }
+        chain.doFilter(request, response);
+
     }
 }
 
