@@ -44,8 +44,8 @@ public class Member {
     private List<VideoComment> videoComments = new ArrayList<>();
 
     @Builder
-    public Member(String email, String nickname, RegistrationId registrationId) {
-
+    public Member(Long id,String email, String nickname, RegistrationId registrationId) {
+        this.id = id;
         this.email = email;
         this.nickname = nickname;
         this.registrationId = registrationId;
@@ -54,6 +54,12 @@ public class Member {
     @Enumerated(EnumType.STRING)
     @Column(name = "registration_id")
     private RegistrationId registrationId;
+
+    public Member(String email, String nickname, RegistrationId registrationId) {
+        this.email = email;
+        this.nickname = nickname;
+        this.registrationId = registrationId;
+    }
 
     public enum RegistrationId {
         kakao, google
