@@ -56,8 +56,9 @@ class RecordServiceTest {
         List<LevelStatResponse> list = recordService.getColorRecords(member);
         // then
         assertEquals(9, list.size());
-        assertEquals(1, list.get(0).getTotal());
-        assertEquals(1, list.get(1).getTotal());
+        assertEquals(2, list.get(0).getTotal());
+        assertEquals(2, list.get(1).getLevel());
+        assertEquals(1, list.get(1).getSuccess());
     }
 
     @Test
