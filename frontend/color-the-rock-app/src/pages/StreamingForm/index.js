@@ -1,20 +1,22 @@
 import React, {useState} from 'react'
-import { Mobile, Desktop } from "../../../components/layout/Template"
+import {Desktop, Mobile} from "../../components/layout/Template";
 import * as S from "./style";
 import  { FiArrowLeft } from "react-icons/fi";
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
-import SubTitleForm from "../../../components/Board/SubTitleForm"
-import UploadForm from "../../../components/Board/UploadForm"
-import InputComp from '../../../components/Board/InputComp';
-import SelectButton from '../../../components/Board/SelectButton';
-import DatePickBtn from '../../../components/Board/DatePickBtn';
-import KakaoMapBtn from '../../../components/Board/KakaoMapBtn';
-import RegistBtn from '../../../components/Board/RegistBtn' 
-import { useNavigate } from 'react-router-dom'  
+import SubTitleForm from "../../components/Board/SubTitleForm"
+import UploadForm from "../../components/Board/UploadForm"
+import InputComp from '../../components/Board/InputComp';
+import SelectButton from '../../components/Board/SelectButton';
+import DatePickBtn from '../../components/Board/DatePickBtn';
+// import KakaoMapBtn from '../../components/Board/KakaoMapBtn';
+import RegistBtn from '../../components/Board/RegistBtn' 
+import { useNavigate } from 'react-router-dom';
 
-export default function BoardRegist() {
+export default function StreamingForm() {
+  
   const navigate = useNavigate();
+
   const [startDate, setStartDate] = useState();
   const [title, setTitle] = useState("");
   const [level, setLevel] = useState("");
@@ -41,20 +43,17 @@ export default function BoardRegist() {
           
            <S.ContentWrap>
             <S.Content>
-              <SubTitleForm title="동영상"></SubTitleForm>
+              <SubTitleForm title="미리보기"></SubTitleForm>
               <UploadForm></UploadForm>
-              <SubTitleForm title="글등록"></SubTitleForm>
+              <SubTitleForm title="방송 설정"></SubTitleForm>
               <InputComp placeholder="제목을 입력해주세요."></InputComp>
               <S.SelectWrap>
                   <SelectButton></SelectButton>
                   <SelectButton></SelectButton>
               </S.SelectWrap>
-              <KakaoMapBtn location={location} setLocation={setLocation}/>
-              <DatePickBtn
-                startDate={startDate}
-                setStartDate={setStartDate}
-              ></DatePickBtn>
-              <RegistBtn btnName="등록하기"></RegistBtn>
+              <InputComp placeholder="암장을 입력해주세요."></InputComp>
+              {/* <KakaoMapBtn location ={location} setLocation={setLocation}/> */}
+              <RegistBtn btnName="방송 시작"></RegistBtn>
             </S.Content>
           </S.ContentWrap>
           
@@ -81,4 +80,3 @@ export default function BoardRegist() {
     </div>
   )
 }
-

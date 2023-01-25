@@ -12,11 +12,13 @@ import BoardList from "./pages/Board";
 import Record from "./pages/Record";
 import Header from "./components/layout/Header";
 import Oauth from "./components/LogIn/index";
+import Signup from "./pages/Signup/index"
+import BoardRegist from "./pages/Board/BoardRegist/index"
+import StreamingForm from "./pages/StreamingForm"
 const Layout = () => {
   return (
     <div>
       <Header />
-
       <Outlet />
     </div>
   );
@@ -34,10 +36,14 @@ const AppRouter = () => {
           <Route path="/streaming" element={<Streaming />} />
         </Route>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/oauth" element={<Oauth />} />
+        <Route path="/login" element={<Login />}/>
+        <Route path="/signup" element={<Signup />}/>
+        <Route path="/regist" element={<BoardRegist/>}/>
+        <Route path="/oauth" element={<Oauth />} />  
         <Route path="/streaming/:streamingId" element={<Streaming />} />
+        <Route path="/streamingform" element={<StreamingForm />} />
       </Routes>
+      {/* <Footer /> */}
     </Router>
   );
 };

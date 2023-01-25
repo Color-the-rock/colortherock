@@ -1,69 +1,147 @@
+/*
+  Login style.js
+*/
+
 import styled from "styled-components"
-import WebLogo from "../../assets/img/common/web-logo.png"
-
-export const LoginContainer = styled.div`
-  padding: 16px;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  align-content: center;
-  @media (min-width: 480px) {
-    margin-top: 100px;
-  }
-
-`;
 
 export const Container = styled.div`
-      
-  height: 80vh;
-  display: flex;
-  flex-direction: column;
-    
-  @media (min-width: 992px) {
-    justify-content: center;
-    align-content: center;
-  }
+  width: 100vw;
   
-  @media (max-width: 991px) {
+  @media(min-width: 992px) {
     height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 16px;
   }
   
+  @media(max-width: 991px) {
+    /* position: fixed; */
+    height: 100vh;
+  }
+`
+
+export const CloseBtnContainer = styled.div`
+@media(min-width: 992px) {
+  
+}
+
+@media(max-width: 991px) {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 10vh;
+}
+`
+
+export const CloseBtn = styled.div`
+
+  @media(min-width: 992px) {
+
+  }
+
+  @media(max-width: 991px) {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+    font-weight: 500;
+    color: var(--color-secondary);
+    /* margin-left: 1rem; */
+    font-size: 2rem;
+  }
 `;
 
-export const Title = styled.div`
-  margin-bottom: 50px;
-  text-align: center;
-  font-size: 20px;
-  `
 
+export const ContentWrap = styled.div`
+  @media(min-width: 992px) {
+    height: 80vh;
+  }
   
-  export const ContentWrap = styled.div`
+  @media(max-width: 991px) {
     display: flex;
-    text-align: center;
     flex-direction: column;
     justify-content: space-around;
-    align-content: center;
-  `;
+    width: 100vw;
+    height: 85vh;
+  }
+`
+
+
+
+export const LogoContainer = styled.div`
   
+  @media(min-width: 992px) {
+
+  }
+
+  @media(max-width: 991px) {
+    margin: 0 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+`
+
+export const LogoImg = styled.img`
   
-  export const LoginWrap = styled.a`
-  display: flex;
-  text-align: center;
-  margin-bottom: 20px;
-  `
-  
-  export const LogoImg = styled.div`
-  display: flex;
-  width: 250px;
-  min-height: 42px;
-  margin-bottom: 20px;
-  text-align: center;
-  background-image: url(${WebLogo});
-  background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;
-  `
+  @media(min-width: 992px) {
+
+  }
+
+  @media(max-width: 991px) {
+    width: 176px;
+    height: 101px;
+    margin: 0 16px;
+  }
+`
+
+export const SecondLogo = styled.div`
+
+
+
+  @media(min-width: 992px) {
+
+  }
+
+  @media(max-width: 991px) {
+    display: flex;
+    justify-content: center;
+    
+    margin-top: 10px;
+
+    white-space: pre-wrap;
+
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 34px;
+
+  }
+`
+
+export const LoginContainer = styled.div`
+
+  @media(min-width: 992px) {
+
+  }
+
+  @media(max-width: 991px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+`
+export const LoginWrap = styled.a`
+
+  @media(min-width: 992px) {
+
+  }
+
+  @media(max-width: 991px) {
+    display: flex;
+    justify-content: center;
+    margin: 8px 16px;
+    padding: 0;
+    width: 100%;
+    height: 50px;
+
+  }
+`
