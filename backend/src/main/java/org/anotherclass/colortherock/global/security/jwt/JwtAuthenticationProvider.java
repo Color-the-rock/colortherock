@@ -28,15 +28,16 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         Collection<? extends GrantedAuthority> grantedAuthorities = createGrantedAuthorities(claims);
 
         MemberDetails memberDetails = new MemberDetails(Member.builder().email((String) claims.get("email")).build());
-        JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(grantedAuthorities, "");
+        JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(grantedAuthorities, ((JwtAuthenticationToken) authentication).getToken());
         jwtAuthenticationToken.setDetails(memberDetails);
+        jwtAuthenticationToken.setAuthenticated(true);
         return jwtAuthenticationToken;
     }
 
     private Collection<? extends GrantedAuthority> createGrantedAuthorities(Claims claims) {
-        List<Map<String,String>> roles = (List<Map<String, String>>) claims.get(KEY_ROLES);
+        List<Map<String, String>> roles = (List<Map<String, String>>) claims.get(KEY_ROLES);
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        for (Map<String,String> role : roles) {
+        for (Map<String, String> role : roles) {
             grantedAuthorities.add(() -> role.get("authority"));
 
         }
