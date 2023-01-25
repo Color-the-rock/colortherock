@@ -63,8 +63,7 @@ const MyPage = () => {
           내 댓글
         </S.RadioLabel>
       </S.RadioGroup>
-      {/* 게시글 목록 OR 댓글 목록 */}
-      {radioValue === "post" ? <MyPost></MyPost> : <MyCommentList />}
+      {radioValue === "post" ? <MyPost /> : <MyCommentList />}
     </S.Container>
   );
 };

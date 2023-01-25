@@ -7,7 +7,6 @@ export const Container = styled.div`
   padding: 0px 16px;
   display: flex;
   flex-direction: column;
-  align-items: center;
   overflow-x: hidden;
 `;
 
@@ -97,6 +96,5 @@ export const RadioButton = styled.input`
 
 export const RadioGroup = styled.div`
   display: flex;
-  justify-content: flex-start;
   margin-top: 1rem;
 `;
