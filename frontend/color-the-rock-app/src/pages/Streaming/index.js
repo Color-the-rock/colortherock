@@ -1,6 +1,7 @@
 import React from "react";
 import Thumbnail from "../../components/Common/Thumbnail";
 import SearchBar from "../../components/Common/Search";
+import Title from "../../components/Common/Title";
 import * as S from "./style";
 import { HiOutlineVideoCamera } from "react-icons/hi";
 const dummy = [
@@ -44,9 +45,9 @@ const dummy = [
 const Streaming = () => {
   return (
     <S.Container>
-      <S.Title>
-        실시간 도전 <S.LiveTag>LIVE</S.LiveTag>
-      </S.Title>
+      <Title text="실시간 도전">
+        <S.LiveTag>LIVE</S.LiveTag>
+      </Title>
       <S.Description>
         도전 중인 등반을 보고 실시간으로 피드백해줘요!
       </S.Description>

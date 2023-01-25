@@ -10,15 +10,6 @@ export const Container = styled.div`
   position: relative;
 `;
 
-export const Title = styled.h1`
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 2.125rem;
-  letter-spacing: -0.01em;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid #272727;
-`;
-
 export const LiveTag = styled.span`
   width: 3.25rem;
   height: 1.75rem;
@@ -30,6 +21,7 @@ export const LiveTag = styled.span`
   font-size: 1.125rem;
   line-height: 1.75rem;
   text-align: center;
+  margin-left: 4px;
 `;
 
 export const Description = styled.div`

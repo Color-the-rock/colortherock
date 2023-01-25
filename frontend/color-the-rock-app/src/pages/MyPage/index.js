@@ -1,9 +1,10 @@
 import React from "react";
 import * as S from "./style";
+import Title from "../../components/Common/Title";
 const MyPage = () => {
   return (
     <S.Container>
-      <S.Title>마이페이지</S.Title>
+      <Title>마이페이지</Title>
     </S.Container>
   );
 };

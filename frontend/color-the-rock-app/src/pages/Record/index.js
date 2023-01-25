@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import StackedGraph from "../../components/Record/StackedGraph";
+import Title from "../../components/Common/Title";
 import "react-calendar/dist/Calendar.css";
 import "./calendar.css";
 
@@ -10,7 +11,7 @@ const Record = () => {
 
   return (
     <S.Container>
-      <S.Title>나의 운동 기록</S.Title>
+      <Title>나의 운동 기록</Title>
       {/* 모바일 버전 */}
       <S.TextWrapper>
         <S.Text>

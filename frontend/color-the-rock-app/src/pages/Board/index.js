@@ -1,6 +1,6 @@
 import React from "react";
 import Thumbnail from "../../components/Common/Thumbnail";
-import SearchBar from "../../components/Board/BoardSearch";
+import Title from "../../components/Common/Title";
 import * as S from "./style";
 import { HiPencil } from "react-icons/hi";
 import BoardSearchBar from "../../components/Board/BoardSearch";
@@ -50,7 +50,7 @@ const dummy = [
 const Board = () => {
   return (
     <S.Container>
-      <S.Title>완등 영상 보기</S.Title>
+      <Title>완등 영상 보기</Title>
       <S.Description>완등 영상을 게시하고 피드백을 받아보세요!</S.Description>
       <BoardSearchBar />
       {/* list */}
