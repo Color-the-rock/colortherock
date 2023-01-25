@@ -124,7 +124,7 @@ public class RecordController {
     @Operation(description = "로컬 영상 개인 기록용 업로드")
     @ApiResponse(responseCode = "200", description = "영상 업로드 성공")
     @PostMapping("/video")
-    public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid UploadVideoRequest uploadVideoRequest) throws IOException {
+    public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody UploadVideoRequest uploadVideoRequest) throws IOException {
         Member member = memberDetails.getMember();
         // S3 영상 저장 후 URL 얻어오기
         MultipartFile newVideo = uploadVideoRequest.getNewVideo();
