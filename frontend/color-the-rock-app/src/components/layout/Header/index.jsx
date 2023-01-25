@@ -29,7 +29,9 @@ const Header = () => {
   };
   return (
     <S.Container>
-      <S.LogoImg />
+      <S.SLink to="/">
+        <S.LogoImg />
+      </S.SLink>
       <Desktop>
         <nav>
           <S.Menu>
@@ -58,7 +60,13 @@ const Header = () => {
                 menuItems.length > 0 &&
                 menuItems.map((item, index) => (
                   <S.SideMenuItem key={index}>
-                    <S.SLink to={item.path} onClick={handleSetShowNav}>
+                    <S.SLink
+                      to={item.path}
+                      onClick={handleSetShowNav}
+                      current={
+                        item.path === location.pathname ? "true" : "false"
+                      }
+                    >
                       {item.name}
                     </S.SLink>
                   </S.SideMenuItem>
