@@ -1,3 +1,4 @@
+import { Calendar } from "react-calendar";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -12,10 +13,17 @@ export const Title = styled.h1`
   font-weight: 700;
   line-height: 2.125rem;
   letter-spacing: -0.01em;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid #272727;
 `;
 
 export const TextWrapper = styled.div`
   margin: 32px 0px;
+`;
+
+export const GraphWrapper = styled.div`
+  height: 300px;
+  background-color: var(--color-background);
 `;
 
 export const Text = styled.p`
@@ -48,9 +56,17 @@ export const GradientText = styled.label`
 export const SubTitle = styled.h2`
   font-style: normal;
   font-weight: 700;
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  /* or 171% */
-  margin-bottom: 8px;
-  letter-spacing: -0.01em;
+  font-size: 1.125rem;
+  line-height: 1.625rem;
+  margin-top: 2.25rem;
+  margin-bottom: 1rem;
+`;
+
+export const RecordCalendar = styled(Calendar)`
+  width: 100% !important;
+  font-family: "Noto Sans KR";
+  background-color: var(--color-background) !important;
+  border: none !important;
+  border-radius: 10px;
+  color: #fff !important;
 `;
