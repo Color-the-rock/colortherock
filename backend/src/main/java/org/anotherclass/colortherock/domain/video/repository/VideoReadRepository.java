@@ -30,22 +30,21 @@ public class VideoReadRepository {
         List<Video> results = queryFactory.selectFrom(video)
                 .where(
                         // no-offset 페이지 처리
-                        ltVideoId(request.getVideoId()),
+                        gtVideoId(request.getVideoId()),
                         // 다른 조건
                         video.member.eq(request.getMember()),
                         video.shootingDate.eq(request.getShootingDate()),
                         video.isSuccess.eq(request.isSuccess())
                 )
-                .orderBy(video.id.desc())
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
         return checkLastPage(pageable, results);
     }
 
     // videoId를 통한 no-offset 처리 메소드
-    private BooleanExpression ltVideoId(Long videoId) {
+    private BooleanExpression gtVideoId(Long videoId) {
         if(videoId == null) return null;
-        return video.id.lt(videoId);
+        return video.id.gt(videoId);
     }
 
     // 무한 스크롤 방식을 처리하는 메소드

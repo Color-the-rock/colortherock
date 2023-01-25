@@ -71,7 +71,7 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public List<VideoListResponse> getSuccessVideos(Pageable pageable, MyVideoRequest request) {
+    public List<VideoListResponse> getMyVideos(Pageable pageable, MyVideoRequest request) {
         Slice<Video> slices = videoReadRepository.searchBySlice(pageable, request);
 
         if(slices.isEmpty()) return new ArrayList<>();
@@ -85,21 +85,6 @@ public class RecordService {
                             .gymName(video.getGymName())
                             .level(video.getLevel()).build())
                 .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<VideoListResponse> getFailVideos(Member member, LocalDate videoDate) {
-        List<Video> failVideos = videoRepository.findAllByMemberAndShootingDateAndIsSuccessIsFalse(member, videoDate);
-        List<VideoListResponse> failResponses = new ArrayList<>();
-        for (Video video : failVideos) {
-            failResponses.add(VideoListResponse.builder()
-                    .id(video.getId())
-                    .color(video.getColor())
-                    .gymName(video.getGymName())
-                    .level(video.getLevel())
-                    .thumbnailURL(video.getThumbnailURL()).build());
-        }
-        return failResponses;
     }
 
     @Transactional(readOnly = true)
