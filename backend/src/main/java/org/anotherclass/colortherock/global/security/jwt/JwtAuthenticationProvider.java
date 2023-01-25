@@ -27,7 +27,12 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         Claims claims = jwtTokenUtils.getAllClaims(((JwtAuthenticationToken) authentication).getToken());
         Collection<? extends GrantedAuthority> grantedAuthorities = createGrantedAuthorities(claims);
 
-        MemberDetails memberDetails = new MemberDetails(Member.builder().email((String) claims.get("email")).build());
+        MemberDetails memberDetails = new MemberDetails(Member.builder()
+                .email((String) claims.get("email"))
+                .id(Long.valueOf((Integer) claims.get("id")))
+                .registrationId(Member.RegistrationId.valueOf((String) claims.get("registrationId")))
+                .build());
+
         JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(grantedAuthorities, ((JwtAuthenticationToken) authentication).getToken());
         jwtAuthenticationToken.setDetails(memberDetails);
         jwtAuthenticationToken.setAuthenticated(true);
