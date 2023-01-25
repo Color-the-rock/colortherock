@@ -24,7 +24,7 @@ export default function BoardRegist() {
   const onClickHandler = () => {
     navigate("/");
   };
-
+  
   return (
     <div>
       <Desktop></Desktop>

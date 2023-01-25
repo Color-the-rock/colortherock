@@ -41,7 +41,6 @@ export const InputContent = styled.input`
     color: var(--color-tertiary); 
     margin: 0 10px;
     letter-spacing: -0.01em;
-    font-family: 'Noto Sans KR';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
