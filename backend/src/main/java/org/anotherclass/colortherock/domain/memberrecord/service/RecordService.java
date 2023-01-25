@@ -64,6 +64,8 @@ public class RecordService {
         return list;
     }
 
+
+    // 향후 데이터 읽는 것으로 변환해야함@@@@
     @Transactional(readOnly = true)
     public TotalStatResponse getTotalRecords(Member member) {
         MemberRecord memberRecord = recordRepository.findByMember(member);
