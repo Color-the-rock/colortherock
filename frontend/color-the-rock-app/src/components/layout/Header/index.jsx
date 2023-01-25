@@ -51,10 +51,10 @@ const Header = () => {
         </nav>
       </Desktop>
       <Mobile>
-        <S.HeaderMenu size="36px" onClick={handleSetShowNav} />
+        <S.HeaderMenu size="32px" onClick={handleSetShowNav} />
         {isShowNav ? (
           <S.NavBar isShowNav>
-            <S.CancelButton size="36px" onClick={handleSetShowNav} />
+            <S.CancelButton size="28px" onClick={handleSetShowNav} />
             <S.SideMenu isShowNav>
               {menuItems &&
                 menuItems.length > 0 &&
