@@ -1,8 +1,9 @@
 import React from "react";
 import Thumbnail from "../../components/Common/Thumbnail";
-import SearchBar from "../../components/Common/Search";
+import SearchBar from "../../components/Board/BoardSearch";
 import * as S from "./style";
-import { HiOutlineVideoCamera } from "react-icons/hi";
+import { HiPencil } from "react-icons/hi";
+import BoardSearchBar from "../../components/Board/BoardSearch";
 const dummy = [
   {
     id: 1,
@@ -10,6 +11,7 @@ const dummy = [
     userNickname: "공싸피",
     gymName: "강남 더 클라이밍",
     imgUrl: "",
+    color: "빨강",
   },
   {
     id: 2,
@@ -17,6 +19,7 @@ const dummy = [
     userNickname: "김싸피",
     gymName: "역삼 더 클라이밍",
     imgUrl: "",
+    color: "노랑",
   },
   {
     id: 3,
@@ -24,6 +27,7 @@ const dummy = [
     userNickname: "송싸피",
     gymName: "홍대 더 클라이밍",
     imgUrl: "",
+    color: "초록",
   },
   {
     id: 4,
@@ -31,6 +35,7 @@ const dummy = [
     userNickname: "최싸피",
     gymName: "인천 더 클라이밍",
     imgUrl: "",
+    color: "파랑",
   },
   {
     id: 5,
@@ -38,19 +43,16 @@ const dummy = [
     userNickname: "허싸피",
     gymName: "신림 더 클라이밍",
     imgUrl: "",
+    color: "보라",
   },
 ];
 
-const Streaming = () => {
+const Board = () => {
   return (
     <S.Container>
-      <S.Title>
-        실시간 도전 <S.LiveTag>LIVE</S.LiveTag>
-      </S.Title>
-      <S.Description>
-        도전 중인 등반을 보고 실시간으로 피드백해줘요!
-      </S.Description>
-      <SearchBar />
+      <S.Title>완등 영상 보기</S.Title>
+      <S.Description>완등 영상을 게시하고 피드백을 받아보세요!</S.Description>
+      <BoardSearchBar />
       {/* list */}
       {dummy && dummy.length > 0 ? (
         <S.ThumbnailList>
@@ -62,7 +64,8 @@ const Streaming = () => {
               userNickname={item.userNickname}
               gymName={item.gymName}
               imgUrl={item.imgUrl}
-              isLive={true}
+              isLive={false}
+              color={item.color}
             />
           ))}
         </S.ThumbnailList>
@@ -70,9 +73,9 @@ const Streaming = () => {
         <label>진행중인 방송이 없어요!</label>
       )}
       <S.LiveButton>
-        <HiOutlineVideoCamera size="24px" color="#C250D6" />
+        <HiPencil size="24px" color="#C250D6" />
       </S.LiveButton>
     </S.Container>
   );
 };
-export default Streaming;
+export default Board;

@@ -74,6 +74,10 @@ export const SLink = styled(Link)`
   &:last-child {
     margin-right: 0px;
   }
+
+  @media (max-width: 1070px) {
+    font-size: 1.125rem;
+  }
 `;
 
 export const NavBar = styled.div`
@@ -82,13 +86,15 @@ export const NavBar = styled.div`
   right: 0px;
   width: 48%;
   height: 100vh;
+  z-index: 100;
+  filter: drop-shadow(-4px 4px 4px rgba(0, 0, 0, 0.25));
   background-color: var(--color-background);
   animation-duration: 1s;
   animation-name: ${slideIn};
 `;
 
 export const CancelButton = styled(HiOutlineX)`
-  margin: 16px;
+  margin: 1rem;
 `;
 
 export const SideMenu = styled.ul`
@@ -97,7 +103,6 @@ export const SideMenu = styled.ul`
 `;
 
 export const SideMenuItem = styled.li`
-  font-size: 1.125rem;
   font-style: normal;
   font-weight: 700;
   line-height: 28px;
