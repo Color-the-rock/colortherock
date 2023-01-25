@@ -10,11 +10,15 @@ import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
+import org.anotherclass.colortherock.domain.memberrecord.exception.WrongMemberException;
 import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatResponse;
 import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatResponse;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoDetailResponse;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
+import org.anotherclass.colortherock.domain.video.entity.Video;
+import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
+import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
@@ -31,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -44,6 +49,7 @@ public class RecordController {
     private final RecordService recordService;
     private final S3Service s3Service;
     private final VideoService videoService;
+    private final VideoRepository videoRepository;
 
     /**
      * 전체 운동 영상 색상 별 통계 조회
@@ -119,7 +125,7 @@ public class RecordController {
 
     /**
      * 개인 로컬 영상 업로드
-     * @param uploadVideoRequest 업로드 영상 50MB 이상 시, 예외 발생
+     * @param uploadVideoRequest 업로드 영상 100MB 이상 시, 예외 발생
      */
     @Operation(description = "로컬 영상 개인 기록용 업로드")
     @ApiResponse(responseCode = "200", description = "영상 업로드 성공")
@@ -136,6 +142,31 @@ public class RecordController {
         videoService.uploadVideo(member, s3URL, uploadVideoRequest);
         // 영상의 길이를 사용자별 누적 기록에 추가
         // 영상 길이를 확인하는 방법 고민 중..
+        return new BaseResponse<>(GlobalErrorCode.SUCCESS);
+    }
+
+    /**
+     * 개인 영상 기록 삭제 요청
+     * @param memberDetails JWT를 통한 Member 불러오기
+     * @param videoId 삭제하고자 하는 videoId
+     */
+    @Operation(description = "개인 영상 기록 삭제 요청")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "개인 영상 기록 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "해당 videoId에 맞는 Video가 존재하지 않음")
+    })
+    @PostMapping("/video/{videoId}")
+    public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable @Positive Long videoId) {
+        Member member = memberDetails.getMember();
+        // 현재 로그인한 member와 영상의 주인이 일치하는 지 확인
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND));
+        if(!member.equals(video.getMember())) throw new WrongMemberException(GlobalErrorCode.NOT_VIDEO_OWNER);
+        // S3에서 해당 영상 삭제
+        String videoName = video.getVideoName();
+        s3Service.deleteFile(videoName);
+        // DB에서 해당 영상 삭제
+        videoService.deleteVideo(videoId);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 }
