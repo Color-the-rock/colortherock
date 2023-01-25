@@ -1,18 +1,17 @@
-import React, {useState} from 'react'
-import { Mobile, Desktop } from "../../../components/layout/Template"
+import React, { useState } from "react";
+import { Mobile, Desktop } from "../../../components/layout/Template";
 import * as S from "./style";
-import  { FiArrowLeft } from "react-icons/fi";
-import DatePicker from "react-datepicker"
+import { FiArrowLeft } from "react-icons/fi";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import SubTitleForm from "../../../components/Board/SubTitleForm"
-import UploadForm from "../../../components/Board/UploadForm"
-import InputComp from '../../../components/Board/InputComp';
-import SelectButton from '../../../components/Board/SelectButton';
-import DatePickBtn from '../../../components/Board/DatePickBtn';
-import KakaoMapBtn from '../../../components/Board/KakaoMapBtn';
-import RegistBtn from '../../../components/Board/RegistBtn' 
-import { useNavigate } from 'react-router-dom'  
-
+import UploadForm from "../../../components/Board/UploadForm";
+import InputComp from "../../../components/Board/InputComp";
+import SelectButton from "../../../components/Board/SelectButton";
+import DatePickBtn from "../../../components/Board/DatePickBtn";
+import KakaoMapBtn from "../../../components/Board/KakaoMapBtn";
+import RegistBtn from "../../../components/Board/RegistBtn";
+import { useNavigate } from "react-router-dom";
+import SubTitle from "../../../components/Common/SubTitle";
 export default function BoardRegist() {
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState();
@@ -24,7 +23,7 @@ export default function BoardRegist() {
 
   const onClickHandler = () => {
     navigate("/");
-  }
+  };
 
   return (
     <div>
@@ -32,24 +31,23 @@ export default function BoardRegist() {
 
       <Mobile>
         <S.Container>
-
           <S.CloseBtnContainer>
             <S.CloseBtn>
-              <FiArrowLeft onClick={onClickHandler}/>
+              <FiArrowLeft onClick={onClickHandler} />
             </S.CloseBtn>
           </S.CloseBtnContainer>
-          
-           <S.ContentWrap>
+
+          <S.ContentWrap>
             <S.Content>
-              <SubTitleForm title="동영상"></SubTitleForm>
+              <SubTitle text="동영상" margin="16"></SubTitle>
               <UploadForm></UploadForm>
-              <SubTitleForm title="글등록"></SubTitleForm>
+              <SubTitle text="글등록" margin="16"></SubTitle>
               <InputComp placeholder="제목을 입력해주세요."></InputComp>
               <S.SelectWrap>
-                  <SelectButton></SelectButton>
-                  <SelectButton></SelectButton>
+                <SelectButton></SelectButton>
+                <SelectButton></SelectButton>
               </S.SelectWrap>
-              <KakaoMapBtn location={location} setLocation={setLocation}/>
+              <KakaoMapBtn location={location} setLocation={setLocation} />
               <DatePickBtn
                 startDate={startDate}
                 setStartDate={setStartDate}
@@ -57,7 +55,7 @@ export default function BoardRegist() {
               <RegistBtn btnName="등록하기"></RegistBtn>
             </S.Content>
           </S.ContentWrap>
-          
+
           {/*  <S.TitleContainer>
               <S.Title>동영상</S.Title>
             </S.TitleContainer>
@@ -79,6 +77,5 @@ export default function BoardRegist() {
         </S.Container>
       </Mobile>
     </div>
-  )
+  );
 }
-

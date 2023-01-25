@@ -3,7 +3,7 @@ import StackedGraph from "../../components/Record/StackedGraph";
 import Title from "../../components/Common/Title";
 import "react-calendar/dist/Calendar.css";
 import "./calendar.css";
-
+import SubTitle from "../../components/Common/SubTitle";
 import * as S from "./style";
 import RecordVideo from "../../components/Record/RecordVideo";
 const Record = () => {
@@ -22,21 +22,16 @@ const Record = () => {
         </S.Text>
       </S.TextWrapper>
       {/* 레벨별 도전 현황 */}
-      <S.SubTitle>레벨별 도전 현황</S.SubTitle>
+      <SubTitle text="레벨별 도전 현황" />
       <S.GraphWrapper>
         <StackedGraph />
       </S.GraphWrapper>
       {/* 활동 통계 */}
-      <S.SubTitle>활동 통계</S.SubTitle>
+      <SubTitle text="활동 통계" />
       <S.GraphWrapper></S.GraphWrapper>
       {/* <StatisticGraph /> */}
-      <S.SubTitle>일별 도전 기록</S.SubTitle>
+      <SubTitle text="일별 도전 기록" />
       <S.RecordCalendar onChange={onChange} value={value} />
-
-      <S.SubTitle>성공 영상</S.SubTitle>
-      <RecordVideo />
-      <S.SubTitle>실패 영상</S.SubTitle>
-      <RecordVideo />
     </S.Container>
   );
 };
