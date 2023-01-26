@@ -63,9 +63,9 @@ public class VideoBoardService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_USER));
         Video video = videoRepository.findById(successVideoUploadRequest.getVideoId())
-                .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.NO_SUCH_VIDEO));
+                .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND));
         if (!video.getMember().getId().equals(memberId)) {
-            throw new VideoUserMismatchException(GlobalErrorCode.VIDEO_OWNER_MISMATCH);
+            throw new VideoUserMismatchException(GlobalErrorCode.NOT_VIDEO_OWNER);
         }
 
         VideoBoard newVideoBoard = videoBoardRepository.save(VideoBoard.builder()
