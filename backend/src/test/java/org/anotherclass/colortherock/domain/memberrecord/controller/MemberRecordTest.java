@@ -103,4 +103,23 @@ public class MemberRecordTest extends IntegrationTest {
                 .andExpect(jsonPath("$.result.size()").value(15));
     }
 
+    @Test
+    @DisplayName("[GET] 영상 상세 조회")
+    public void 영상_상세_조회() throws Exception {
+        mockMvc.perform(
+                        get(url + "/record/video/2")
+                                .header("Authorization", AUTHORIZATION_HEADER + token)
+                ).andExpect(jsonPath("$.status", is(200)))
+                .andExpect(jsonPath("$.result.level").isNumber());
+    }
+
+    @Test
+    @DisplayName("[GET] 영상 상세 조회 - 실패(해당 아이디의 영상 없음)")
+    public void 영상_상세_조회_실패() throws Exception {
+        mockMvc.perform(
+                get(url + "/record/video/1")
+                        .header("Authorization", AUTHORIZATION_HEADER + token)
+        ).andExpect(jsonPath("$.status", is(404)));
+    }
+
 }
