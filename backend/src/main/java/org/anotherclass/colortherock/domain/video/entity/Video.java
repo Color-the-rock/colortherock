@@ -1,5 +1,7 @@
 package org.anotherclass.colortherock.domain.video.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 
@@ -7,7 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "video")
+@Table(name = "video") @Getter @Setter
 public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,11 +36,12 @@ public class Video {
 
     @Column(name = "color", length = 20)
     private String color;
+    @Column(name = "video_name", length = 100)
+    private String videoName;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
-
 
     @OneToOne(mappedBy = "video", orphanRemoval = true)
     private VideoBoard videoBoard;
