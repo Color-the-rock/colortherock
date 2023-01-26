@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   @media (min-width: 992px) {
+  
   }
 
   @media (max-width: 991px) {
@@ -17,6 +18,7 @@ export const Container = styled.div`
 
 export const CloseBtnContainer = styled.div`
   @media (min-width: 992px) {
+  
   }
 
   @media (max-width: 991px) {
@@ -28,6 +30,7 @@ export const CloseBtnContainer = styled.div`
 
 export const CloseBtn = styled.div`
   @media (min-width: 992px) {
+  
   }
 
   @media (max-width: 991px) {
@@ -42,6 +45,7 @@ export const CloseBtn = styled.div`
 
 export const ContentWrap = styled.div`
   @media (min-width: 992px) {
+  
   }
 
   @media (max-width: 991px) {

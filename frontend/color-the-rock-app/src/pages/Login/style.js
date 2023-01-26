@@ -12,7 +12,6 @@ export const Container = styled.div`
   }
   
   @media(max-width: 991px) {
-    /* position: fixed; */
     height: 100vh;
   }
 `
@@ -51,6 +50,10 @@ export const CloseBtn = styled.div`
 export const ContentWrap = styled.div`
   @media(min-width: 992px) {
     height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 100vw;
   }
   
   @media(max-width: 991px) {
@@ -67,7 +70,9 @@ export const ContentWrap = styled.div`
 export const LogoContainer = styled.div`
   
   @media(min-width: 992px) {
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   @media(max-width: 991px) {
@@ -81,7 +86,9 @@ export const LogoContainer = styled.div`
 export const LogoImg = styled.img`
   
   @media(min-width: 992px) {
-
+    width: 176px;
+    height: 101px;
+    margin: 0 16px;
   }
 
   @media(max-width: 991px) {
@@ -96,7 +103,18 @@ export const SecondLogo = styled.div`
 
 
   @media(min-width: 992px) {
+    display: flex;
+    justify-content: center;
+    
+    margin-top: 10px;
 
+    white-space: pre-wrap;
+
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 34px;
   }
 
   @media(max-width: 991px) {
@@ -119,7 +137,10 @@ export const SecondLogo = styled.div`
 export const LoginContainer = styled.div`
 
   @media(min-width: 992px) {
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   @media(max-width: 991px) {
@@ -132,7 +153,12 @@ export const LoginContainer = styled.div`
 export const LoginWrap = styled.a`
 
   @media(min-width: 992px) {
-
+    display: flex;
+    justify-content: center;
+    margin: 8px 16px;
+    padding: 0;
+    width: 100%;
+    height: 50px;
   }
 
   @media(max-width: 991px) {
