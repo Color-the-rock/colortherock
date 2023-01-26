@@ -1,10 +1,11 @@
 import React from "react";
 import Content from "../../components/Intro/Content";
+import * as S from "./style";
 const Intro = () => {
   return (
-    <div>
+    <S.Container>
       <Content />
-    </div>
+    </S.Container>
   );
 };
 export default Intro;

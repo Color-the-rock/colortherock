@@ -1,6 +1,6 @@
 import styled from "styled-components";
-
-export const Container = styled.div`
+import { Link } from "react-router-dom";
+export const Container = styled(Link)`
   width: 100%;
   max-width: 10.75rem;
   min-height: 20.375rem;
