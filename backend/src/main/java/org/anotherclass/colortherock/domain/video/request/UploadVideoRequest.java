@@ -38,27 +38,25 @@ public class UploadVideoRequest {
     }
 
     public Video toEntity() {
-        Video video = new Video();
-        video.setShootingDate(this.shootingDate);
-        video.setLevel(this.level);
-        video.setGymName(this.gymName);
-        video.setIsSuccess(this.isSuccess);
-        video.setColor(this.color);
-        video.setMember(this.member);
-        video.setVideoName(this.videoName);
-        return video;
+        return Video.builder()
+            .shootingDate(this.shootingDate)
+            .level(this.level)
+            .gymName(this.gymName)
+            .isSuccess(this.isSuccess)
+            .color(this.color)
+            .member(this.member)
+            .videoName(this.videoName).build();
     }
 
     public Video toEntity(Member member, String s3URL) {
-        Video video = new Video();
-        video.setShootingDate(this.shootingDate);
-        video.setLevel(this.level);
-        video.setGymName(this.gymName);
-        video.setIsSuccess(this.isSuccess);
-        video.setColor(this.color);
-        video.setMember(member);
-        video.setS3URL(s3URL);
-        return video;
+        return Video.builder()
+        .shootingDate(this.shootingDate)
+        .level(this.level)
+        .gymName(this.gymName)
+        .isSuccess(this.isSuccess)
+        .color(this.color)
+        .member(member)
+        .s3URL(s3URL).build();
     }
 
 }

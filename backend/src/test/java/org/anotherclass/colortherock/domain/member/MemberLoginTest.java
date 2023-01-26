@@ -1,7 +1,6 @@
 package org.anotherclass.colortherock.domain.member;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.anotherclass.colortherock.IntegrationTest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
@@ -11,7 +10,6 @@ import org.anotherclass.colortherock.domain.member.response.ReGenerateAccessToke
 import org.anotherclass.colortherock.global.redis.RefreshTokenRepository;
 import org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils;
 import org.anotherclass.colortherock.global.security.jwt.RefreshToken;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -66,11 +64,11 @@ public class MemberLoginTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("비 로그인 요청시 403 에러")
-    public void 비로그인시_403에러를_반환() throws Exception {
+    @DisplayName("비 로그인 요청시 302 에러")
+    public void 비로그인시_302에러를_반환() throws Exception {
         mockMvc.perform(
                 get(url + "test")
-        ).andExpect(status().is(HttpStatus.FORBIDDEN.value()));
+        ).andExpect(status().is(302));
     }
 
     @Test
