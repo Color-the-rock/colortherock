@@ -98,17 +98,17 @@ public class RecordController {
     /**
      * 날짜별 운동 영상 목록 조회(성공 / 실패 영상)
      */
-    @Operation(description = "사용자별 날짜별 성공 영상 조회")
+    @Operation(description = "사용자별 날짜별 성공/실패 영상 조회")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "해당 날짜 영상 조회 성공", content = @Content(schema = @Schema(implementation = VideoListResponse.class))),
-        @ApiResponse(responseCode = "400", description = "잘못된 날짜 형식으로 인한 영상 조회 실패")
+        @ApiResponse(responseCode = "500", description = "잘못된 날짜 형식으로 인한 영상 조회 실패")
     })
-    @GetMapping("/videos/success")
-    public BaseResponse<List<VideoListResponse>> successVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody MyVideoRequest myVideoRequest, @PageableDefault(size = 6)Pageable pageable) {
+    @GetMapping("/videos")
+    public BaseResponse<List<VideoListResponse>> MyVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody MyVideoRequest myVideoRequest, @PageableDefault(size = 15)Pageable pageable) {
         Member member = memberDetails.getMember();
         myVideoRequest.setMember(member);
-        List<VideoListResponse> successResponse = recordService.getMyVideos(pageable, myVideoRequest);
-        return new BaseResponse<>(successResponse);
+        List<VideoListResponse> videoListResponses = recordService.getMyVideos(pageable, myVideoRequest);
+        return new BaseResponse<>(videoListResponses);
     }
 
 
