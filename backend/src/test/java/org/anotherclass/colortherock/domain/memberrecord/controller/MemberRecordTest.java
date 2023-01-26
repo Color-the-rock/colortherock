@@ -2,7 +2,6 @@ package org.anotherclass.colortherock.domain.memberrecord.controller;
 
 import org.anotherclass.colortherock.IntegrationTest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
-import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
@@ -14,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -50,8 +50,12 @@ public class MemberRecordTest extends IntegrationTest {
         Member savedMember = memberRepository.save(member);
         token = jwtTokenUtils.createTokens(savedMember, List.of(new SimpleGrantedAuthority("ROLE_USER")));
         // 영상 추가
-        video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), 1, "더클라임 강남", true, "노랑", savedMember).toEntity();
-        videoRepository.save(video);
+        for (int i = 1; i <= 9; i++) {
+            video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 강남", true, "노랑", savedMember).toEntity();
+            videoRepository.save(video);
+            video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 홍대", true, "노랑", savedMember).toEntity();
+            videoRepository.save(video);
+        }
     }
 
     @Test
@@ -84,6 +88,19 @@ public class MemberRecordTest extends IntegrationTest {
                         get(url + "/record/color/2023-13-17")
                                 .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(jsonPath("$.status", is(400)));
+    }
+
+    @Test
+    @DisplayName("[GET]사용자 날짜별 성공/실패 영상 조회")
+    public void 날짜별_성공_실패_영상조회() throws Exception {
+        mockMvc.perform(
+                        get(url + "/record/videos")
+                                .header("Authorization", AUTHORIZATION_HEADER + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{ \"shootingDate\": \"2023-01-17\", " +
+                                        "\"isSuccess\": true }"))
+                .andExpect(jsonPath("$.status", is(200)))
+                .andExpect(jsonPath("$.result.size()").value(15));
     }
 
 }
