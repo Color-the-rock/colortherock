@@ -12,7 +12,29 @@ import DatePickBtn from "../../components/Board/DatePickBtn";
 import RegistBtn from "../../components/Board/RegistBtn";
 import { useNavigate } from "react-router-dom";
 import SubTitle from "../../components/Common/SubTitle";
+import CustomSelect from "../../components/Common/CustomSelect";
 
+const levelValues = [
+  { key: "난이도 레벨", value: "" },
+  { key: "LEVEL1", value: "level-1" },
+  { key: "LEVEL2", value: "level-2" },
+  { key: "LEVEL3", value: "level-3" },
+  { key: "LEVEL4", value: "level-4" },
+  { key: "LEVEL5", value: "level-5" },
+  { key: "LEVEL6", value: "level-6" },
+  { key: "LEVEL7", value: "level-7" },
+];
+const colorValues = [
+  { key: "난이도 색상", value: "" },
+  { key: "빨강", value: "red" },
+  { key: "주황", value: "orange" },
+  { key: "노랑", value: "yellow" },
+  { key: "연두", value: "green" },
+  { key: "하늘", value: "skyBlue" },
+  { key: "남색", value: "indigo" },
+  { key: "보리", value: "purple" },
+  { key: "검정", value: "black" },
+];
 export default function StreamingForm() {
   const navigate = useNavigate();
 
@@ -29,8 +51,8 @@ export default function StreamingForm() {
 
   const submitHandler = () => {
     alert("방송시작");
-    navigate("/streaming")
-  }
+    navigate("/streaming");
+  };
 
   return (
     <div>
@@ -51,12 +73,15 @@ export default function StreamingForm() {
               <SubTitle text="방송 설정" margin="16"></SubTitle>
               <InputComp placeholder="제목을 입력해주세요."></InputComp>
               <S.SelectWrap>
-                <SelectButton></SelectButton>
-                <SelectButton></SelectButton>
+                <CustomSelect optionValues={levelValues} />
+                <CustomSelect optionValues={colorValues} />
               </S.SelectWrap>
               <InputComp placeholder="암장을 입력해주세요."></InputComp>
               {/* <KakaoMapBtn location ={location} setLocation={setLocation}/> */}
-              <RegistBtn btnName="방송 시작" clickHandler={submitHandler}></RegistBtn>
+              <RegistBtn
+                btnName="방송 시작"
+                clickHandler={submitHandler}
+              ></RegistBtn>
             </S.Content>
           </S.ContentWrap>
 
