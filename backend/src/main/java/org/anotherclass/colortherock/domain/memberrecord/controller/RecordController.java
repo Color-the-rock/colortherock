@@ -156,13 +156,13 @@ public class RecordController {
             @ApiResponse(responseCode = "200", description = "개인 영상 기록 삭제 성공"),
             @ApiResponse(responseCode = "400", description = "해당 videoId에 맞는 Video가 존재하지 않음")
     })
-    @PostMapping("/video/{videoId}")
-    public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable @Positive Long videoId) {
+    @DeleteMapping("/video/{videoId}")
+    public BaseResponse<Void> deleteVideo(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable @Positive Long videoId) {
         Member member = memberDetails.getMember();
         // 현재 로그인한 member와 영상의 주인이 일치하는 지 확인
         Video video = videoRepository.findById(videoId)
                 .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND));
-        if(!member.equals(video.getMember())) throw new WrongMemberException(GlobalErrorCode.NOT_VIDEO_OWNER);
+        if(member.getId().equals(video.getMember().getId())) throw new WrongMemberException(GlobalErrorCode.NOT_VIDEO_OWNER);
         // S3에서 해당 영상 삭제
         String videoName = video.getVideoName();
         s3Service.deleteFile(videoName);
