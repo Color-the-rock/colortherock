@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import * as S from "./style"
 import CommentBtn from '../CommentBtn'
 import { VscChromeClose } from "react-icons/vsc";
+import MyCommentList from '../../Mypage/MyCommentList';
 const CommentModal = ({setIsModalOpen}) => {
 
   const closeModalHandler = () => {
@@ -24,7 +25,10 @@ const CommentModal = ({setIsModalOpen}) => {
         <S.CommentBtnWrap>
           <CommentBtn isReadOnly={false}/>
         </S.CommentBtnWrap>
-      
+
+        <S.CommentListWrap>
+          <MyCommentList/>
+        </S.CommentListWrap>
         {/* <S.CommentList>
           
         </S.CommentList> */}

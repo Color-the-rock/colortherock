@@ -50,5 +50,8 @@ export const CommentBtnWrap = styled.div`
   /* width: 100%; */
   
   height: 2.25rem;
+`
 
+export const CommentListWrap = styled.div`
+  padding: 0 1rem;
 `

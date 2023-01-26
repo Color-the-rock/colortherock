@@ -22,7 +22,7 @@ export default function BoardRegist() {
   const [location, setLocation] = useState("");
 
   const onClickHandler = () => {
-    navigate("/");
+    navigate("/board");
   };
 
   const submitHandler = () => {
