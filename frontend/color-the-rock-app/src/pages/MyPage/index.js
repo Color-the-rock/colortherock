@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as S from "./style";
 import Title from "../../components/Common/Title";
 import { useInput } from "../../hooks/useInput";
 import MyPost from "../../components/Mypage/MyPost";
 import MyCommentList from "../../components/Mypage/MyCommentList";
+
 const MyPage = () => {
   const [userNickName, onChangeUserNickName] = useInput("김싸피");
   const [radioValue, onChangeRadioButton] = useInput("post");

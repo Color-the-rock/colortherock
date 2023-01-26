@@ -2,20 +2,26 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Mobile, Desktop } from "../Template";
 import * as S from "./style";
-const menuItems = [
+import { useNavigate } from "react-router-dom";
+
+let menuItems = [
   {
+    id: 1,
     name: "실시간 도전",
     path: "/streaming",
   },
   {
+    id: 2,
     name: "완등 영상 모음",
     path: "/board",
   },
   {
+    id: 3,
     name: "운동 기록",
     path: "/record",
   },
   {
+    id: 4,
     name: "로그인/회원가입",
     path: "/login",
   },
@@ -25,12 +31,32 @@ const Header = () => {
   const [isShowNav, setShowNav] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const updateScrollPosition = () => {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);
   };
   useEffect(() => {
     window.addEventListener("scroll", updateScrollPosition);
+
+    // test
+    if (localStorage.getItem("user") !== null) {
+      menuItems = menuItems.filter((item) => {
+        if (item.id === 4) {
+          item.name = "마이페이지";
+          item.path = "/mypage";
+        }
+        return item;
+      });
+    }
+
+    if (
+      location.pathname === "/record" &&
+      localStorage.getItem("user") === null
+    ) {
+      alert("로그인이 필요한 서비스입니다:)");
+      navigate("/login");
+    }
   });
 
   const handleSetShowNav = () => {

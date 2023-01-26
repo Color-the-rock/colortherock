@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import { Link } from "react-router-dom";
 export const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -54,13 +54,16 @@ export const ThumbnailList = styled.div`
     grid-template-columns: 1fr 1fr;
   }
 `;
-export const LiveButton = styled.button`
+export const LiveButton = styled(Link)`
   width: 50px;
   height: 50px;
   border-radius: 50%;
   position: fixed;
   bottom: 16px;
   right: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: pink;
   border: 3px solid transparent;
   background-image: linear-gradient(var(--color-dark), var(--color-dark)),

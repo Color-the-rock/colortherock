@@ -15,7 +15,7 @@ const Record = () => {
       {/* 모바일 버전 */}
       <S.TextWrapper>
         <S.Text>
-          나싸피님은 <S.GradientText>30일</S.GradientText>동안
+          김싸피님은 <S.GradientText>30일</S.GradientText>동안
         </S.Text>
         <S.Text>
           총 <S.GradientText>100개의 문제</S.GradientText>에 성공했어요!
