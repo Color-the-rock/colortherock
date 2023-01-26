@@ -9,6 +9,10 @@ import java.util.List;
 
 @Getter
 public class MemberDetails implements UserDetails {
+    public Member getMember() {
+        return member;
+    }
+
     private final Member member;
 
     public MemberDetails(Member member) {
