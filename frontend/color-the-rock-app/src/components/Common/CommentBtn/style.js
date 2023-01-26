@@ -17,6 +17,7 @@ export const InputBtn = styled.input`
   border: none;
   width: 80%;
   padding-left: 1rem;
+  color: white;
 `
 
 export const Ornament = styled.div`
