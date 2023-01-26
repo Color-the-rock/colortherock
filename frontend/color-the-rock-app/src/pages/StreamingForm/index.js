@@ -24,8 +24,13 @@ export default function StreamingForm() {
   const [location, setLocation] = useState("");
 
   const onClickHandler = () => {
-    navigate("/");
+    navigate("/streaming");
   };
+
+  const submitHandler = () => {
+    alert("방송시작");
+    navigate("/streaming")
+  }
 
   return (
     <div>
@@ -51,7 +56,7 @@ export default function StreamingForm() {
               </S.SelectWrap>
               <InputComp placeholder="암장을 입력해주세요."></InputComp>
               {/* <KakaoMapBtn location ={location} setLocation={setLocation}/> */}
-              <RegistBtn btnName="방송 시작"></RegistBtn>
+              <RegistBtn btnName="방송 시작" clickHandler={submitHandler}></RegistBtn>
             </S.Content>
           </S.ContentWrap>
 

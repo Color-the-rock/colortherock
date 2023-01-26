@@ -3,13 +3,13 @@ import * as S from "./style"
 import { Desktop, Mobile } from "../../layout/Template"
 
 
-export default function RegistBtn({btnName}) {
+function RegistBtn({btnName, clickHandler}) {  
   
   return (
     <div>
       <Desktop></Desktop>
       <Mobile>
-        <S.Container>
+        <S.Container onClick={clickHandler}>
           <S.ButtonWrap>
             {btnName}
           </S.ButtonWrap>
@@ -18,3 +18,5 @@ export default function RegistBtn({btnName}) {
     </div>
   )
 }
+
+export default React.memo(RegistBtn);
