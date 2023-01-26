@@ -42,9 +42,6 @@ public class Video {
     @Column(name = "video_name", length = 100)
     private String videoName;
 
-    @Column(name = "video_name", length = 100)
-    private String videoName;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
