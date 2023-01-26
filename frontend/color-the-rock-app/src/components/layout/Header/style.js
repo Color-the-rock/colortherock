@@ -24,7 +24,7 @@ export const Container = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding: 0 1rem 0.5rem 0;
   background-color: var(--color-dark);
   z-index: 10;
   transition: ${(props) =>

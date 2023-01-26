@@ -11,7 +11,7 @@ const Thumbnail = ({
   color,
 }) => {
   return (
-    <S.Container id={id}>
+    <S.Container id={id} to={isLive ? `/streaming` : `/board/detail/${id}`}>
       <S.ThumbnailImg src={!imgUrl ? TestImg : imgUrl} />
       <S.VideoText isLive={true}>{title}</S.VideoText>
       <S.VideoText isLive={isLive}>
