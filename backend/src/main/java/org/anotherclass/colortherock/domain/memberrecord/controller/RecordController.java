@@ -28,6 +28,7 @@ import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -129,11 +130,11 @@ public class RecordController {
      */
     @Operation(description = "로컬 영상 개인 기록용 업로드")
     @ApiResponse(responseCode = "200", description = "영상 업로드 성공")
-    @PostMapping("/video")
-    public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody UploadVideoRequest uploadVideoRequest) throws IOException {
+    @PostMapping(value = "/video", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails
+            , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) throws IOException {
         Member member = memberDetails.getMember();
         // S3 영상 저장 후 URL 얻어오기
-        MultipartFile newVideo = uploadVideoRequest.getNewVideo();
         // 영상 식별을 위해 파일 앞에 현재 시각 추가
         String videoName = DateTime.now() + newVideo.getOriginalFilename();
         String s3URL = s3Service.upload(newVideo, videoName);
