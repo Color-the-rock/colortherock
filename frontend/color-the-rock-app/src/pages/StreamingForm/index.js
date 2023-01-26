@@ -13,6 +13,7 @@ import RegistBtn from "../../components/Board/RegistBtn";
 import { useNavigate } from "react-router-dom";
 import SubTitle from "../../components/Common/SubTitle";
 import CustomSelect from "../../components/Common/CustomSelect";
+import { GuideWrapper } from "../../components/Common/InfoGuide/style";
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
@@ -70,7 +71,11 @@ export default function StreamingForm() {
             <S.Content>
               <SubTitle text="미리보기" margin="16"></SubTitle>
               <UploadForm></UploadForm>
-              <SubTitle text="방송 설정" margin="16"></SubTitle>
+
+              <SubTitle text="방송 설정" margin="16">
+                <S.InfoButton />
+              </SubTitle>
+
               <InputComp placeholder="제목을 입력해주세요."></InputComp>
               <S.SelectWrap>
                 <CustomSelect optionValues={levelValues} />
@@ -84,25 +89,6 @@ export default function StreamingForm() {
               ></RegistBtn>
             </S.Content>
           </S.ContentWrap>
-
-          {/*  <S.TitleContainer>
-              <S.Title>동영상</S.Title>
-            </S.TitleContainer>
-            
-            <S.UploadContainer>
-              <S.Upload>
-
-              </S.Upload>
-            </S.UploadContainer>
-
-            <S.TitleContainer>
-              <S.Title>글등록</S.Title>
-            </S.TitleContainer>
-
-            <S.ContentContainer>
-
-            </S.ContentContainer>
-            */}
         </S.Container>
       </Mobile>
     </div>
