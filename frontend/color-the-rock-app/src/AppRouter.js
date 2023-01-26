@@ -12,10 +12,10 @@ import Board from "./pages/Board";
 import BoardDetail from "./pages/Board/BoardDetail";
 import Record from "./pages/Record";
 import Header from "./components/layout/Header";
-import MyPage from "./pages/MyPage";
-import Signup from "./pages/Signup/index";
-import BoardRegist from "./pages/Board/BoardRegist/index";
-import StreamingForm from "./pages/StreamingForm";
+import Oauth from "./components/LogIn/index";
+import Signup from "./pages/Signup/index"
+import BoardRegist from "./pages/Board/BoardRegist/index"
+import StreamingForm from "./pages/StreamingForm"
 const Layout = () => {
   return (
     <div>
@@ -35,16 +35,17 @@ const AppRouter = () => {
           <Route path="/board" element={<Board />} />
           <Route path="/record" element={<Record />} />
           <Route path="/streaming" element={<Streaming />} />
-          <Route path="/mypage" element={<MyPage />} />
         </Route>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/board/regist" element={<BoardRegist />} />
-        <Route path="/board/detail/:id" element={<BoardDetail />} />
-        <Route path="/streaming/regist" element={<StreamingForm />} />
+        <Route path="/login" element={<Login />}/>
+        <Route path="/signup" element={<Signup />}/>
+        <Route path="/board/regist" element={<BoardRegist/>}/>
+        <Route path="/board/detail/:id" element={<BoardDetail />}/>
+        <Route path="/oauth" element={<Oauth />} />  
         <Route path="/streaming/:streamingId" element={<Streaming />} />
+        <Route path="/streamingform" element={<StreamingForm />} />
       </Routes>
+      {/* <Footer /> */}
     </Router>
   );
 };
