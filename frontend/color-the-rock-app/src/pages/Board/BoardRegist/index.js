@@ -24,6 +24,11 @@ export default function BoardRegist() {
   const onClickHandler = () => {
     navigate("/");
   };
+
+  const submitHandler = () => {
+    alert("등록 성공!");
+    navigate("/board");
+  }
   
   return (
     <div>
@@ -52,7 +57,7 @@ export default function BoardRegist() {
                 startDate={startDate}
                 setStartDate={setStartDate}
               ></DatePickBtn>
-              <RegistBtn btnName="등록하기"></RegistBtn>
+              <RegistBtn btnName="등록하기" clickHandler={submitHandler}></RegistBtn>
             </S.Content>
           </S.ContentWrap>
 
