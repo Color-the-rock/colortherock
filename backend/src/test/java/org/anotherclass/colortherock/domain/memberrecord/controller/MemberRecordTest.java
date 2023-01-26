@@ -14,14 +14,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class MemberRecordTest extends IntegrationTest {
@@ -120,6 +123,28 @@ public class MemberRecordTest extends IntegrationTest {
                 get(url + "/record/video/1")
                         .header("Authorization", AUTHORIZATION_HEADER + token)
         ).andExpect(jsonPath("$.status", is(404)));
+    }
+
+    @Test
+    @DisplayName("[POST] 로컬 영상 업로드")
+    public void 로컬_영상_업로드_성공() throws Exception {
+        MockMultipartFile newVideo = new MockMultipartFile("newVideo", "video.mp4", "mp4", "<<video data>>".getBytes());
+        String content = "{" +
+                "\"shootingDate\": \"2023-01-17\"," +
+                "\"level\": 1," +
+                "\"color\": \"빨강\"," +
+                "\"gymName\": \"볼더프렌즈\"," +
+                "\"isSuccess\": true }";
+        MockMultipartFile json = new MockMultipartFile("uploadVideoRequest", "jsondata", "application/json", content.getBytes(StandardCharsets.UTF_8));
+        mockMvc.perform(multipart(url + "/record/video")
+                    .file(newVideo)
+                    .file(json)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .characterEncoding("UTF-8")
+                    .header("Authorization", AUTHORIZATION_HEADER + token))
+                .andExpect(jsonPath("$.status", is(200)));
+
     }
 
 }
