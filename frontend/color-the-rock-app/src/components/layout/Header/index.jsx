@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Mobile, Desktop } from "../Template";
 import * as S from "./style";
@@ -23,12 +23,21 @@ const menuItems = [
 
 const Header = () => {
   const [isShowNav, setShowNav] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
   const location = useLocation();
+
+  const updateScrollPosition = () => {
+    setScrollPosition(window.scrollY || document.documentElement.scrollTop);
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", updateScrollPosition);
+  });
+
   const handleSetShowNav = () => {
     setShowNav((prev) => !prev);
   };
   return (
-    <S.Container>
+    <S.Container scrollPosition={scrollPosition}>
       <S.SLink to="/">
         <S.LogoImg />
       </S.SLink>
