@@ -23,8 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class MemberRecordTest extends IntegrationTest {
@@ -54,7 +53,7 @@ public class MemberRecordTest extends IntegrationTest {
         token = jwtTokenUtils.createTokens(savedMember, List.of(new SimpleGrantedAuthority("ROLE_USER")));
         // 영상 추가
         for (int i = 1; i <= 9; i++) {
-            video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 강남", true, "노랑", savedMember).toEntity();
+            video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 강남", true, "노랑", savedMember, "videoTitle").toEntity();
             videoRepository.save(video);
             video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 홍대", true, "노랑", savedMember).toEntity();
             videoRepository.save(video);
@@ -145,6 +144,15 @@ public class MemberRecordTest extends IntegrationTest {
                     .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(jsonPath("$.status", is(200)));
 
+    }
+
+    @Test
+    @DisplayName("[DELETE] 영상 삭제 요청")
+    public void 영상_삭제() throws Exception {
+        mockMvc.perform(
+                delete(url + "/record/video/2")
+                        .header("Authorization", AUTHORIZATION_HEADER + token))
+                .andExpect(jsonPath("$.status", is(200)));
     }
 
 }

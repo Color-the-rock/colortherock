@@ -34,6 +34,16 @@ public class UploadVideoRequest {
         this.member = member;
     }
 
+    public UploadVideoRequest(LocalDate shootingDate, Integer level, String gymName, Boolean isSuccess, String color, Member member, String videoName) {
+        this.shootingDate = shootingDate;
+        this.level = level;
+        this.gymName = gymName;
+        this.isSuccess = isSuccess;
+        this.color = color;
+        this.member = member;
+        this.videoName = videoName;
+    }
+
     public Video toEntity() {
         return Video.builder()
             .shootingDate(this.shootingDate)
