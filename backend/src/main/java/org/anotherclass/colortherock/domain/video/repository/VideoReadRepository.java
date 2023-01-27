@@ -34,7 +34,7 @@ public class VideoReadRepository {
                         // 다른 조건
                         video.member.eq(request.getMember()),
                         video.shootingDate.eq(request.getShootingDate()),
-                        video.isSuccess.eq(request.isSuccess())
+                        video.isSuccess.eq(request.getIsSuccess())
                 )
                 .limit(pageable.getPageSize() + 1)
                 .fetch();

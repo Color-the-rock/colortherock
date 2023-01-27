@@ -2,7 +2,6 @@ package org.anotherclass.colortherock.domain.memberrecord.controller;
 
 import org.anotherclass.colortherock.IntegrationTest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
-import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
@@ -14,14 +13,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class MemberRecordTest extends IntegrationTest {
@@ -43,6 +45,7 @@ public class MemberRecordTest extends IntegrationTest {
     Member member;
     String token;
     Video video;
+    Long videoId;
     @BeforeEach
     public void setMemberAndToken() {
         // Member 추가 및 token 설정
@@ -50,8 +53,13 @@ public class MemberRecordTest extends IntegrationTest {
         Member savedMember = memberRepository.save(member);
         token = jwtTokenUtils.createTokens(savedMember, List.of(new SimpleGrantedAuthority("ROLE_USER")));
         // 영상 추가
-        video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), 1, "더클라임 강남", true, "노랑", savedMember).toEntity();
-        videoRepository.save(video);
+        for (int i = 1; i <= 9; i++) {
+            video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 강남", true, "노랑", savedMember, "videoTitle").toEntity();
+            Video save = videoRepository.save(video);
+            videoId = save.getId();
+            video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 홍대", true, "노랑", savedMember).toEntity();
+            videoRepository.save(video);
+        }
     }
 
     @Test
@@ -74,7 +82,7 @@ public class MemberRecordTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result").isArray())
                 .andExpect(jsonPath("$.result[0].level").isNumber())
-                .andExpect(jsonPath("$.result[0].success").value(1));
+                .andExpect(jsonPath("$.result[0].success").value(2));
     }
 
     @Test
@@ -84,6 +92,69 @@ public class MemberRecordTest extends IntegrationTest {
                         get(url + "/record/color/2023-13-17")
                                 .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(jsonPath("$.status", is(400)));
+    }
+
+    @Test
+    @DisplayName("[GET]사용자 날짜별 성공/실패 영상 조회")
+    public void 날짜별_성공_실패_영상조회() throws Exception {
+        mockMvc.perform(
+                        get(url + "/record/videos")
+                                .header("Authorization", AUTHORIZATION_HEADER + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{ \"shootingDate\": \"2023-01-17\", " +
+                                        "\"isSuccess\": true }"))
+                .andExpect(jsonPath("$.status", is(200)))
+                .andExpect(jsonPath("$.result.size()").value(15));
+    }
+
+    @Test
+    @DisplayName("[GET] 영상 상세 조회")
+    public void 영상_상세_조회() throws Exception {
+        mockMvc.perform(
+                        get(url + "/record/video/" + videoId)
+                                .header("Authorization", AUTHORIZATION_HEADER + token)
+                ).andExpect(jsonPath("$.status", is(200)))
+                .andExpect(jsonPath("$.result.level").isNumber());
+    }
+
+    @Test
+    @DisplayName("[GET] 영상 상세 조회 - 실패(해당 아이디의 영상 없음)")
+    public void 영상_상세_조회_실패() throws Exception {
+        mockMvc.perform(
+                get(url + "/record/video/1")
+                        .header("Authorization", AUTHORIZATION_HEADER + token)
+        ).andExpect(jsonPath("$.status", is(404)));
+    }
+
+    @Test
+    @DisplayName("[POST] 로컬 영상 업로드")
+    public void 로컬_영상_업로드_성공() throws Exception {
+        MockMultipartFile newVideo = new MockMultipartFile("newVideo", "video.mp4", "mp4", "<<video data>>".getBytes());
+        String content = "{" +
+                "\"shootingDate\": \"2023-01-17\"," +
+                "\"level\": 1," +
+                "\"color\": \"빨강\"," +
+                "\"gymName\": \"볼더프렌즈\"," +
+                "\"isSuccess\": true }";
+        MockMultipartFile json = new MockMultipartFile("uploadVideoRequest", "jsondata", "application/json", content.getBytes(StandardCharsets.UTF_8));
+        mockMvc.perform(multipart(url + "/record/video")
+                    .file(newVideo)
+                    .file(json)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .characterEncoding("UTF-8")
+                    .header("Authorization", AUTHORIZATION_HEADER + token))
+                .andExpect(jsonPath("$.status", is(200)));
+
+    }
+
+    @Test
+    @DisplayName("[DELETE] 영상 삭제 요청")
+    public void 영상_삭제() throws Exception {
+        mockMvc.perform(
+                delete(url + "/record/video/" + videoId)
+                        .header("Authorization", AUTHORIZATION_HEADER + token))
+                .andExpect(jsonPath("$.status", is(200)));
     }
 
 }

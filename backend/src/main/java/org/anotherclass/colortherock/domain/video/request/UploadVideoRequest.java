@@ -3,7 +3,6 @@ package org.anotherclass.colortherock.domain.video.request;
 import lombok.*;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.video.entity.Video;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -22,8 +21,6 @@ public class UploadVideoRequest {
     private Boolean isSuccess;
     @NotNull
     private String color;
-    @NotNull
-    private MultipartFile newVideo;
     private Member member;
     private String s3URL;
     private String videoName;
@@ -35,6 +32,16 @@ public class UploadVideoRequest {
         this.isSuccess = isSuccess;
         this.color = color;
         this.member = member;
+    }
+
+    public UploadVideoRequest(LocalDate shootingDate, Integer level, String gymName, Boolean isSuccess, String color, Member member, String videoName) {
+        this.shootingDate = shootingDate;
+        this.level = level;
+        this.gymName = gymName;
+        this.isSuccess = isSuccess;
+        this.color = color;
+        this.member = member;
+        this.videoName = videoName;
     }
 
     public Video toEntity() {

@@ -21,5 +21,5 @@ public class MyVideoRequest {
     private LocalDate shootingDate;
     private Member member;
     @NotNull
-    private boolean isSuccess;
+    private Boolean isSuccess;
 }

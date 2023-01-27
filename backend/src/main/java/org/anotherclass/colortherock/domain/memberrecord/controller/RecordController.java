@@ -28,6 +28,7 @@ import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -98,17 +99,17 @@ public class RecordController {
     /**
      * 날짜별 운동 영상 목록 조회(성공 / 실패 영상)
      */
-    @Operation(description = "사용자별 날짜별 성공 영상 조회")
+    @Operation(description = "사용자별 날짜별 성공/실패 영상 조회")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "해당 날짜 영상 조회 성공", content = @Content(schema = @Schema(implementation = VideoListResponse.class))),
-        @ApiResponse(responseCode = "400", description = "잘못된 날짜 형식으로 인한 영상 조회 실패")
+        @ApiResponse(responseCode = "500", description = "잘못된 날짜 형식으로 인한 영상 조회 실패")
     })
-    @GetMapping("/videos/success")
-    public BaseResponse<List<VideoListResponse>> successVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody MyVideoRequest myVideoRequest, @PageableDefault(size = 6)Pageable pageable) {
+    @GetMapping("/videos")
+    public BaseResponse<List<VideoListResponse>> MyVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody MyVideoRequest myVideoRequest, @PageableDefault(size = 15)Pageable pageable) {
         Member member = memberDetails.getMember();
         myVideoRequest.setMember(member);
-        List<VideoListResponse> successResponse = recordService.getMyVideos(pageable, myVideoRequest);
-        return new BaseResponse<>(successResponse);
+        List<VideoListResponse> videoListResponses = recordService.getMyVideos(pageable, myVideoRequest);
+        return new BaseResponse<>(videoListResponses);
     }
 
 
@@ -129,11 +130,11 @@ public class RecordController {
      */
     @Operation(description = "로컬 영상 개인 기록용 업로드")
     @ApiResponse(responseCode = "200", description = "영상 업로드 성공")
-    @PostMapping("/video")
-    public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody UploadVideoRequest uploadVideoRequest) throws IOException {
+    @PostMapping(value = "/video", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails
+            , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) throws IOException {
         Member member = memberDetails.getMember();
         // S3 영상 저장 후 URL 얻어오기
-        MultipartFile newVideo = uploadVideoRequest.getNewVideo();
         // 영상 식별을 위해 파일 앞에 현재 시각 추가
         String videoName = DateTime.now() + newVideo.getOriginalFilename();
         String s3URL = s3Service.upload(newVideo, videoName);
@@ -155,13 +156,13 @@ public class RecordController {
             @ApiResponse(responseCode = "200", description = "개인 영상 기록 삭제 성공"),
             @ApiResponse(responseCode = "400", description = "해당 videoId에 맞는 Video가 존재하지 않음")
     })
-    @PostMapping("/video/{videoId}")
-    public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable @Positive Long videoId) {
+    @DeleteMapping("/video/{videoId}")
+    public BaseResponse<Void> deleteVideo(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable @Positive Long videoId) {
         Member member = memberDetails.getMember();
         // 현재 로그인한 member와 영상의 주인이 일치하는 지 확인
         Video video = videoRepository.findById(videoId)
                 .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND));
-        if(!member.equals(video.getMember())) throw new WrongMemberException(GlobalErrorCode.NOT_VIDEO_OWNER);
+        if(member.getId().longValue() != video.getMember().getId().longValue()) throw new WrongMemberException(GlobalErrorCode.NOT_VIDEO_OWNER);
         // S3에서 해당 영상 삭제
         String videoName = video.getVideoName();
         s3Service.deleteFile(videoName);
