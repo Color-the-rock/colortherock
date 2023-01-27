@@ -162,7 +162,7 @@ public class RecordController {
         // 현재 로그인한 member와 영상의 주인이 일치하는 지 확인
         Video video = videoRepository.findById(videoId)
                 .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND));
-        if(member.getId().equals(video.getMember().getId())) throw new WrongMemberException(GlobalErrorCode.NOT_VIDEO_OWNER);
+        if(member.getId().longValue() != video.getMember().getId().longValue()) throw new WrongMemberException(GlobalErrorCode.NOT_VIDEO_OWNER);
         // S3에서 해당 영상 삭제
         String videoName = video.getVideoName();
         s3Service.deleteFile(videoName);
