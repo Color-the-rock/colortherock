@@ -54,11 +54,31 @@ export const GradientText = styled.label`
   text-fill-color: transparent;
 `;
 
-export const RecordCalendar = styled(Calendar)`
-  width: 100% !important;
-  font-family: "Noto Sans KR";
-  background-color: var(--color-background) !important;
-  border: none !important;
-  border-radius: 10px;
-  color: #fff !important;
+export const RadioLabel = styled.label`
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1.625rem;
+  margin-bottom: 1rem;
+  color: ${(props) =>
+    props.checked ? "var(--color-white)" : "var(--color-tertiary)"};
+
+  &:first-child {
+    margin-right: 1rem;
+  }
+`;
+export const RadioButton = styled.input`
+  appearance: none;
+  margin: 0;
+`;
+
+export const RadioGroup = styled.div`
+  display: flex;
+  margin-top: 1rem;
+`;
+
+export const VideoList = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 `;

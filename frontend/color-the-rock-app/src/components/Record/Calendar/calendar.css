@@ -1,0 +1,97 @@
+/*
+  Calendar Custom css
+*/
+
+/* calendar Container */
+.react-calendar {
+  background-color: var(--color-background);
+  background-color: var(--color-dark);
+  border: none;
+  border-radius: 20px;
+  font-family: "Noto Sans KR";
+  width: 96%;
+  min-width: 358px;
+  margin: 0 auto;
+}
+
+/* Calendar Header */
+.react-calendar__navigation .react-calendar__navigation__arrow {
+  font-size: 1.5rem;
+}
+.react-calendar__navigation__label__labelText {
+  font-size: 1.15rem;
+  line-height: 3rem;
+}
+
+/* 요일 */
+.react-calendar__month-view__weekdays__weekday {
+  /* flex: 0 0 12% !important; */
+}
+
+/* Calendar Button */
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background-color: var(--color-brand-primary);
+}
+
+/* Active Button */
+.react-calendar__tile--hasActive {
+  background-color: var(--color-border);
+}
+
+/* Calendar Tile Style */
+.react-calendar__tile {
+  /* flex: 0 0 12% !important; */
+  min-height: 51.14px;
+  border-radius: 50%;
+  padding: 0.2px;
+  font-size: 1rem;
+}
+
+.react-calendar__tile--active {
+  background-color: var(--color-border);
+  /* background-color: var(--color-background); */
+}
+
+/* 오늘 날짜 */
+.react-calendar__tile--now {
+  background-color: var(--color-background) !important;
+  /* background-color: var(--color-border) !important; */
+  color: var(--color-white) !important;
+}
+
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  /* background-color: var(--color-background); */
+  background-color: var(--color-border);
+  font-weight: bold;
+  border-radius: 50%;
+}
+.react-calendar__year-view__months__month {
+  background-color: transparent;
+  border-radius: 0px;
+  color: var(--color-white);
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #fff;
+}
+
+.react-calendar__month-view__days button {
+  color: #fff;
+}
+
+.react-calendar__navigation__label {
+  color: #fff;
+}
+
+.react-calendar__navigation__arrow {
+  color: #fff;
+}
+
+.dot_list {
+  width: 24px;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 2px auto;
+}
