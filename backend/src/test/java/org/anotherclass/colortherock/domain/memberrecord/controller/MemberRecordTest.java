@@ -45,6 +45,7 @@ public class MemberRecordTest extends IntegrationTest {
     Member member;
     String token;
     Video video;
+    Long videoId;
     @BeforeEach
     public void setMemberAndToken() {
         // Member 추가 및 token 설정
@@ -54,7 +55,8 @@ public class MemberRecordTest extends IntegrationTest {
         // 영상 추가
         for (int i = 1; i <= 9; i++) {
             video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 강남", true, "노랑", savedMember, "videoTitle").toEntity();
-            videoRepository.save(video);
+            Video save = videoRepository.save(video);
+            videoId = save.getId();
             video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 홍대", true, "노랑", savedMember).toEntity();
             videoRepository.save(video);
         }
@@ -80,7 +82,7 @@ public class MemberRecordTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result").isArray())
                 .andExpect(jsonPath("$.result[0].level").isNumber())
-                .andExpect(jsonPath("$.result[0].success").value(1));
+                .andExpect(jsonPath("$.result[0].success").value(2));
     }
 
     @Test
@@ -109,7 +111,7 @@ public class MemberRecordTest extends IntegrationTest {
     @DisplayName("[GET] 영상 상세 조회")
     public void 영상_상세_조회() throws Exception {
         mockMvc.perform(
-                        get(url + "/record/video/2")
+                        get(url + "/record/video/" + videoId)
                                 .header("Authorization", AUTHORIZATION_HEADER + token)
                 ).andExpect(jsonPath("$.status", is(200)))
                 .andExpect(jsonPath("$.result.level").isNumber());
@@ -150,7 +152,7 @@ public class MemberRecordTest extends IntegrationTest {
     @DisplayName("[DELETE] 영상 삭제 요청")
     public void 영상_삭제() throws Exception {
         mockMvc.perform(
-                delete(url + "/record/video/2")
+                delete(url + "/record/video/" + videoId)
                         .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(jsonPath("$.status", is(200)));
     }
