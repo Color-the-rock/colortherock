@@ -92,6 +92,7 @@ export const RadioLabel = styled.label`
 `;
 export const RadioButton = styled.input`
   appearance: none;
+  margin: 0;
 `;
 
 export const RadioGroup = styled.div`
