@@ -43,4 +43,4 @@ spring:
 OPENVIDU_URL: ${OPENVIDU_URL}
 OPENVIDU_SECRET : ${OPENVIDU_SECRET}
 server:
-  port: ${PORT}
+  port: ${IDLE_PORT}
