@@ -22,17 +22,6 @@ public class Video {
     @Column(name = "shooting_date")
     private LocalDate shootingDate;
 
-    @Builder
-    public Video(Integer level, String gymName, String s3URL, Boolean isSuccess, String thumbnailURL, String color, Member member) {
-        this.level = level;
-        this.gymName = gymName;
-        this.s3URL = s3URL;
-        this.isSuccess = isSuccess;
-        this.thumbnailURL = thumbnailURL;
-        this.color = color;
-        this.member = member;
-    }
-
     @Column(name = "level")
     private Integer level;
 
