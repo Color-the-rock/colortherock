@@ -9,8 +9,9 @@
   border: none;
   border-radius: 20px;
   font-family: "Noto Sans KR";
-  width: 96%;
+  width: 100%;
   min-width: 358px;
+  max-width: 358px;
   margin: 0 auto;
 }
 
