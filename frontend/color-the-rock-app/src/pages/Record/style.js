@@ -1,11 +1,20 @@
-import { Calendar } from "react-calendar";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { HiOutlinePlusSm } from "react-icons/hi";
 
 export const Container = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   background-color: transparent;
-  padding: 0px 16px;
+  padding: 0 16px;
+  margin-top: 5rem;
+  margin-bottom: 1rem;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const Title = styled.h1`
@@ -14,16 +23,22 @@ export const Title = styled.h1`
   line-height: 2.125rem;
   letter-spacing: -0.01em;
   padding-bottom: 0.4rem;
-  border-bottom: 1px solid #272727;
+  border-bottom: 1px solid var(--color-border);
+`;
+
+export const Description = styled.div`
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  text-align: center;
+  letter-spacing: -0.01em;
+  margin: 1.25rem 0px;
+  color: var(--color-tertiary);
 `;
 
 export const TextWrapper = styled.div`
   margin: 32px 0px;
-`;
-
-export const GraphWrapper = styled.div`
-  height: 300px;
-  background-color: var(--color-background);
 `;
 
 export const Text = styled.p`
@@ -53,11 +68,69 @@ export const GradientText = styled.label`
   text-fill-color: transparent;
 `;
 
-export const RecordCalendar = styled(Calendar)`
-  width: 100% !important;
-  font-family: "Noto Sans KR";
-  background-color: var(--color-background) !important;
-  border: none !important;
-  border-radius: 10px;
-  color: #fff !important;
+export const RadioLabel = styled.label`
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1.625rem;
+  margin-bottom: 1rem;
+  background-color: transparent;
+  color: ${(props) =>
+    props.checked ? "var(--color-white)" : "var(--color-tertiary)"};
+
+  margin-right: 1rem;
+`;
+export const RadioButton = styled.input`
+  appearance: none;
+  margin: 0;
+  display: none;
+`;
+
+export const RadioGroup = styled.div`
+  margin: 0 0 1rem 0;
+  background-color: transparent;
+  @media (max-width: 992px) {
+    margin: 2rem 0 1rem 0;
+  }
+`;
+
+export const CalendarWrapper = styled.div`
+  min-width: 358px;
+  max-width: 400px;
+  margin: 0 auto;
+`;
+
+export const UploadIcon = styled(HiOutlinePlusSm)`
+  font-size: 1.125rem;
+  line-height: 1.625rem;
+  background-color: transparent;
+`;
+
+export const UploadButton = styled(Link)`
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1.625rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  background-color: transparent;
+  float: right;
+  display: flex;
+  align-items: center;
+`;
+
+// Desktop CSS
+
+export const ContentWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  max-width: 736px;
+  background-color: transparent;
+  margin: 0 auto;
+`;
+
+export const RecordWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
 `;

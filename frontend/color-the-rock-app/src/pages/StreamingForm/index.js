@@ -12,7 +12,30 @@ import DatePickBtn from "../../components/Board/DatePickBtn";
 import RegistBtn from "../../components/Board/RegistBtn";
 import { useNavigate } from "react-router-dom";
 import SubTitle from "../../components/Common/SubTitle";
+import CustomSelect from "../../components/Common/CustomSelect";
+import { GuideWrapper } from "../../components/Common/InfoGuide/style";
 
+const levelValues = [
+  { key: "난이도 레벨", value: "" },
+  { key: "LEVEL1", value: "level-1" },
+  { key: "LEVEL2", value: "level-2" },
+  { key: "LEVEL3", value: "level-3" },
+  { key: "LEVEL4", value: "level-4" },
+  { key: "LEVEL5", value: "level-5" },
+  { key: "LEVEL6", value: "level-6" },
+  { key: "LEVEL7", value: "level-7" },
+];
+const colorValues = [
+  { key: "난이도 색상", value: "" },
+  { key: "빨강", value: "red" },
+  { key: "주황", value: "orange" },
+  { key: "노랑", value: "yellow" },
+  { key: "연두", value: "green" },
+  { key: "하늘", value: "skyBlue" },
+  { key: "남색", value: "indigo" },
+  { key: "보리", value: "purple" },
+  { key: "검정", value: "black" },
+];
 export default function StreamingForm() {
   const navigate = useNavigate();
 
@@ -24,7 +47,12 @@ export default function StreamingForm() {
   const [location, setLocation] = useState("");
 
   const onClickHandler = () => {
-    navigate("/");
+    navigate("/streaming");
+  };
+
+  const submitHandler = () => {
+    alert("방송시작");
+    navigate("/streaming");
   };
 
   return (
@@ -43,36 +71,24 @@ export default function StreamingForm() {
             <S.Content>
               <SubTitle text="미리보기" margin="16"></SubTitle>
               <UploadForm></UploadForm>
-              <SubTitle text="방송 설정" margin="16"></SubTitle>
+
+              <SubTitle text="방송 설정" margin="16">
+                <S.InfoButton />
+              </SubTitle>
+
               <InputComp placeholder="제목을 입력해주세요."></InputComp>
               <S.SelectWrap>
-                <SelectButton></SelectButton>
-                <SelectButton></SelectButton>
+                <CustomSelect optionValues={levelValues} />
+                <CustomSelect optionValues={colorValues} />
               </S.SelectWrap>
               <InputComp placeholder="암장을 입력해주세요."></InputComp>
               {/* <KakaoMapBtn location ={location} setLocation={setLocation}/> */}
-              <RegistBtn btnName="방송 시작"></RegistBtn>
+              <RegistBtn
+                btnName="방송 시작"
+                clickHandler={submitHandler}
+              ></RegistBtn>
             </S.Content>
           </S.ContentWrap>
-
-          {/*  <S.TitleContainer>
-              <S.Title>동영상</S.Title>
-            </S.TitleContainer>
-            
-            <S.UploadContainer>
-              <S.Upload>
-
-              </S.Upload>
-            </S.UploadContainer>
-
-            <S.TitleContainer>
-              <S.Title>글등록</S.Title>
-            </S.TitleContainer>
-
-            <S.ContentContainer>
-
-            </S.ContentContainer>
-            */}
         </S.Container>
       </Mobile>
     </div>

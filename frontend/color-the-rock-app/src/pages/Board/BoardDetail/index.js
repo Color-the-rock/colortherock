@@ -8,7 +8,7 @@ import CommentBtn from "../../../components/Common/CommentBtn"
 import { useNavigate } from "react-router";
 import Title from "../../../components/Common/Title";
 import Thumbnail from "../../../components/Common/Thumbnail";
-
+import useInfiniteScroll from "../../../hooks/useInfiniteScroll"
 
 const dummy = [
   {
@@ -58,7 +58,21 @@ const BoardDetail = () => {
   
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [data, setData] = useState(dummy);
   
+  const updateFuncOnScroll= () => {
+   
+    try {
+      setData((prev) => [...prev, ...dummy]);
+    } catch(error) {
+    } finally {
+      setIsFetching(false);
+    }
+  }
+
+  const [isFetching, setIsFetching] = useInfiniteScroll(updateFuncOnScroll);
+
+
   const beforePage = () => {
     navigate("/board");
   }
@@ -75,7 +89,7 @@ const BoardDetail = () => {
       
       <Mobile>
         <S.Container>
-          <ArrowLeftBtn onClick={beforePage}></ArrowLeftBtn>
+          <ArrowLeftBtn clickHandler={beforePage}></ArrowLeftBtn>
           {/* 타이틀 + 운동한 날 */}
           <S.TitleWrap>
             <div>실시간 스트리밍 중</div>
@@ -91,17 +105,11 @@ const BoardDetail = () => {
         
         <S.Container>
           {
-            isModalOpen
-            ?
-            (
-            <div>
-              <S.CommentModalWrap>
+            isModalOpen ? (
+              <S.CommentModalWrap isModalOpen>
                 <CommentModal setIsModalOpen={setIsModalOpen} />
               </S.CommentModalWrap>
-            </div>
-            )
-            :
-            (
+            ) : (
             <div>
               {/* 댓글 버튼 */}
               <S.CommentWrap onClick={handleModal}>
@@ -111,7 +119,7 @@ const BoardDetail = () => {
                 <div>다른 완등 영상 보기</div>
               </S.TitleWrap>
               <S.ThumbnailList>
-                {dummy.map((item) => (
+                {data.map((item) => (
                   <Thumbnail
                     key={item.id}
                     id={item.id}
@@ -127,9 +135,6 @@ const BoardDetail = () => {
             </div>
             )
           }
-
-
-
         </S.Container>
       </Mobile>  
     </div>

@@ -16,17 +16,20 @@ from {
 `;
 
 export const Container = styled.header`
-  position: relative;
-  display: flex;
+  position: fixed;
+  top: ${(props) => (props.scrollPosition < 10 ? "0" : "-4.5rem")};
+  left: 0;
   width: 100%;
-  height: 6rem;
-  background-color: var(--color-dark);
-  padding: 1rem 1rem 0rem 0rem;
-  justify-content: space-between;
+  height: 4.5rem;
+  display: flex;
   align-items: center;
-  @media (max-width: 1070px) {
-    padding: 0.5rem 0.5rem 0rem 0rem;
-  }
+  justify-content: space-between;
+  padding: 0 1rem 0 0;
+  background-color: var(--color-dark);
+  z-index: 10;
+  transition: ${(props) =>
+    props.scrollPosition < 80 ? "0.5s ease-in" : "0.5s ease-in-out"};
+  /* box-shadow: 0px 1px 5px 2px rgba(0, 0, 0, 0.8); */
 `;
 
 export const LogoImg = styled.div`
@@ -37,8 +40,8 @@ export const LogoImg = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   @media (max-width: 1070px) {
-    width: 96px;
-    min-height: 54px;
+    width: 82px;
+    min-height: 48px;
     background-image: url(${AppLogo});
   }
 `;

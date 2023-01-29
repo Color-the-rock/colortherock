@@ -6,11 +6,14 @@ export const Container = styled.div`
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-image: url(${bgImg});
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(${bgImg});
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
   justify-content: center;
+  overflow-x: hidden;
+  padding: 1rem;
 `;
 
 export const Text = styled.p`

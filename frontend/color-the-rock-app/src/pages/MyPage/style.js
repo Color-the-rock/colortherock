@@ -5,9 +5,9 @@ export const Container = styled.div`
   height: 100vh;
   background-color: transparent;
   padding: 0px 16px;
+  margin-top: 5rem;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
 `;
 
 export const Title = styled.h1`
@@ -92,6 +92,7 @@ export const RadioLabel = styled.label`
 `;
 export const RadioButton = styled.input`
   appearance: none;
+  margin: 0;
 `;
 
 export const RadioGroup = styled.div`
