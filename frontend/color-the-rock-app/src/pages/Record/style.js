@@ -1,12 +1,18 @@
-import { Calendar } from "react-calendar";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { HiOutlinePlusSm } from "react-icons/hi";
 
 export const Container = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   background-color: transparent;
   padding: 0px 16px;
   margin-top: 5rem;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const Title = styled.h1`
@@ -15,16 +21,22 @@ export const Title = styled.h1`
   line-height: 2.125rem;
   letter-spacing: -0.01em;
   padding-bottom: 0.4rem;
-  border-bottom: 1px solid #272727;
+  border-bottom: 1px solid var(--color-border);
+`;
+
+export const Description = styled.div`
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  text-align: center;
+  letter-spacing: -0.01em;
+  margin: 1.25rem 0px;
+  color: var(--color-tertiary);
 `;
 
 export const TextWrapper = styled.div`
   margin: 32px 0px;
-`;
-
-export const GraphWrapper = styled.div`
-  height: 300px;
-  background-color: var(--color-background);
 `;
 
 export const Text = styled.p`
@@ -60,25 +72,58 @@ export const RadioLabel = styled.label`
   font-size: 1.125rem;
   line-height: 1.625rem;
   margin-bottom: 1rem;
+  background-color: transparent;
   color: ${(props) =>
     props.checked ? "var(--color-white)" : "var(--color-tertiary)"};
 
-  &:first-child {
-    margin-right: 1rem;
-  }
+  margin-right: 1rem;
 `;
 export const RadioButton = styled.input`
   appearance: none;
   margin: 0;
+  display: none;
 `;
 
 export const RadioGroup = styled.div`
-  display: flex;
-  margin-top: 1rem;
+  margin: 1rem auto;
+  background-color: transparent;
 `;
 
 export const VideoList = styled.div`
+  align-self: center;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   gap: 1rem;
+  margin-top: 20px;
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+`;
+
+export const CalendarWrapper = styled.div`
+  min-width: 358px;
+  max-width: 600px;
+`;
+
+export const UploadIcon = styled(HiOutlinePlusSm)`
+  font-size: 1.2rem;
+`;
+
+export const UploadButton = styled(Link)`
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1.625rem;
+  margin-bottom: 1rem;
+  background-color: transparent;
+  float: right;
+`;
+
+// Desktop CSS
+
+export const ContentWrapper = styled.div`
+  width: 100%;
+  max-width: 736px;
+  background-color: transparent;
+  margin: 0 auto;
 `;
