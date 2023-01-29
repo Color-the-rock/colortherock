@@ -1,10 +1,9 @@
 import styled from "styled-components";
 
-export const Container = styled.video`
+export const Container = styled.div`
   max-width: 6.75rem;
-  min-height: 10.75rem;
+  min-height: 13.75rem;
   border-radius: 10px;
-  background-color: var(--color-background);
 `;
 
 export const ThumbnailImg = styled.img`

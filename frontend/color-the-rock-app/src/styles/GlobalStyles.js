@@ -4,8 +4,6 @@ import reset from "styled-reset";
 const GlobalStyles = createGlobalStyle`
   ${reset}
 
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
-
 html {
   --color-dark: #191A20;
   --color-background: #272727;
@@ -15,6 +13,8 @@ html {
   --color-primary: #F7F8FA;
   --color-white: #ffffff;
   --color-brand-primary : #C250D6;
+  --color-brand-shade: #8A3B98;
+  --color-brand-tint: #CC98D6;
   --color-brand-gradient-start: #FF6CAB;
   --color-brand-gradient-end: #8533FF;
   --color-level-v0-start: #FFFFFF;
@@ -41,6 +41,7 @@ html {
 }
 
 body {
+
   margin: 0;
   font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
