@@ -3,7 +3,6 @@ import Calendar from "react-calendar";
 import moment from "moment";
 import * as S from "./style";
 import "./calendar.css";
-import SubTitle from "../../Common/SubTitle";
 const testData = [
   { date: "2023-01-02", colors: ["#FF4E36", "#FFCF1B", "#C0FA87"] },
   { date: "2023-01-03", colors: ["#FFCF1B", "#C0FA87"] },

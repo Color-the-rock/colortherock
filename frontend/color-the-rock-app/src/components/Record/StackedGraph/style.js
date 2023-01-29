@@ -5,10 +5,12 @@ export const GraphWrapper = styled.div`
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  height: 400px;
+  min-width: 400px;
   padding: 1rem;
+  border-radius: 10px;
   background-color: var(--color-background);
   @media (max-width: 992px) {
+    min-width: 240px;
     height: 240px;
     max-height: 280px;
   }

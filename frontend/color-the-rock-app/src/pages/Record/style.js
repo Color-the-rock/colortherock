@@ -9,6 +9,7 @@ export const Container = styled.div`
   padding: 0 16px;
   margin-top: 5rem;
   margin-bottom: 1rem;
+  overflow-x: hidden;
   overflow-y: scroll;
   -ms-overflow-style: none;
   ::-webkit-scrollbar {
@@ -86,24 +87,17 @@ export const RadioButton = styled.input`
 `;
 
 export const RadioGroup = styled.div`
-  margin: 2rem 0 1rem 0;
+  margin: 0 0 1rem 0;
   background-color: transparent;
-`;
-
-export const VideoList = styled.div`
-  align-self: center;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  gap: 1rem;
-  margin-top: 20px;
   @media (max-width: 992px) {
-    grid-template-columns: 1fr 1fr 1fr;
+    margin: 2rem 0 1rem 0;
   }
 `;
 
 export const CalendarWrapper = styled.div`
   min-width: 358px;
-  max-width: 600px;
+  max-width: 400px;
+  margin: 0 auto;
 `;
 
 export const UploadIcon = styled(HiOutlinePlusSm)`
@@ -129,7 +123,14 @@ export const UploadButton = styled(Link)`
 
 export const ContentWrapper = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
   max-width: 736px;
   background-color: transparent;
   margin: 0 auto;
+`;
+
+export const RecordWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
 `;

@@ -4,9 +4,12 @@ export const GraphWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-width: 300px;
   padding: 1rem;
   background-color: var(--color-background);
+  border-radius: 10px;
   @media (max-width: 992px) {
+    min-width: 200px;
   }
 `;
 

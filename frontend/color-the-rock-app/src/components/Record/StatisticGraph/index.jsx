@@ -51,7 +51,6 @@ const StatisticGraph = ({ count = 3 }) => {
                 (100 / homeGymData.gyms.length) *
                 (homeGymData.gyms.length - (index + 1))
               }
-              onBlur={() => console.log("hello")}
             />
           ))}
       </S.HomeGymGraph>

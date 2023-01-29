@@ -65,11 +65,53 @@ const Record = () => {
       </Mobile>
       <Desktop>
         <S.ContentWrapper>
-          <SubTitle text="레벨별 도전 현황" />
-          <StackedGraph />
-          {/* 활동 통계 */}
-          <SubTitle text="활동 통계" />
+          <S.RecordWrapper>
+            <div>
+              <SubTitle text="레벨별 도전 현황" />
+              <StackedGraph />
+            </div>
+            {/* 활동 통계 */}
+            <div>
+              <SubTitle text="활동 통계" />
+              <StatisticGraph />
+            </div>
+          </S.RecordWrapper>
           <SubTitle text="일별 도전 기록" />
+          <S.RecordWrapper>
+            <S.CalendarWrapper>
+              <CustomCalendar />
+            </S.CalendarWrapper>
+
+            <div>
+              <S.RadioGroup>
+                <S.RadioLabel checked={radioValue === "success"}>
+                  <S.RadioButton
+                    type="radio"
+                    name="type"
+                    value="success"
+                    checked={radioValue === "success"}
+                    onChange={onChangeRadioButton}
+                  />
+                  성공영상
+                </S.RadioLabel>
+                <S.RadioLabel checked={radioValue === "fail"}>
+                  <S.RadioButton
+                    type="radio"
+                    name="type"
+                    value="fail"
+                    checked={radioValue === "fail"}
+                    onChange={onChangeRadioButton}
+                  />
+                  실패영상
+                </S.RadioLabel>
+                <S.UploadButton>
+                  <S.UploadIcon size="20px" color="#ffffff" />
+                  업로드
+                </S.UploadButton>
+              </S.RadioGroup>
+              <MyPost />
+            </div>
+          </S.RecordWrapper>
         </S.ContentWrapper>
       </Desktop>
     </S.Container>
