@@ -17,6 +17,8 @@ import Oauth from "./components/LogIn/index";
 import Signup from "./pages/Signup/index";
 import BoardRegist from "./pages/Board/BoardRegist/index";
 import StreamingForm from "./pages/StreamingForm";
+import RecordForm from "./pages/Record/RecordForm"
+
 const Layout = () => {
   return (
     <div>
@@ -46,6 +48,7 @@ const AppRouter = () => {
         <Route path="/oauth" element={<Oauth />} />
         <Route path="/streaming/:streamingId" element={<Streaming />} />
         <Route path="/streaming/regist" element={<StreamingForm />} />
+        <Route path="/record/form" element={<RecordForm />} />
       </Routes>
       {/* <Footer /> */}
     </Router>

@@ -58,6 +58,11 @@ body {
   }
   *{
       box-sizing: border-box;
+      overflow-y: scroll;
+      -ms-overflow-style: none;
+      ::-webkit-scrollbar {
+        display: none;
+  }
   }
   input, textarea { 
     -moz-user-select: auto;
