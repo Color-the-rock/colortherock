@@ -50,13 +50,13 @@ const Header = () => {
       });
     }
 
-    if (
-      location.pathname === "/record" &&
-      localStorage.getItem("user") === null
-    ) {
-      alert("로그인이 필요한 서비스입니다:)");
-      navigate("/login");
-    }
+    // if (
+    //   location.pathname === "/record" &&
+    //   localStorage.getItem("user") === null
+    // ) {
+    //   alert("로그인이 필요한 서비스입니다:)");
+    //   navigate("/login");
+    // }
   });
 
   const handleSetShowNav = () => {

@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import StackedGraph from "../../components/Record/StackedGraph";
 import Title from "../../components/Common/Title";
 import "react-calendar/dist/Calendar.css";
-import "./calendar.css";
 import SubTitle from "../../components/Common/SubTitle";
 import * as S from "./style";
-import RecordVideo from "../../components/Record/RecordVideo";
+import CustomCalendar from "../../components/Record/Calendar";
+import { useInput } from "../../hooks/useInput";
+import MyPost from "../../components/Mypage/MyPost";
+import { Mobile, Desktop } from "../../components/layout/Template";
+import StatisticGraph from "../../components/Record/StatisticGraph";
 const Record = () => {
-  const [value, onChange] = useState(new Date());
+  const [radioValue, onChangeRadioButton] = useInput("success");
 
   return (
     <S.Container>
       <Title>나의 운동 기록</Title>
-      {/* 모바일 버전 */}
+      <S.Description>나의 도전 현황을 한 눈에 확인해보세요!</S.Description>
       <S.TextWrapper>
         <S.Text>
           김싸피님은 <S.GradientText>30일</S.GradientText>동안
@@ -21,17 +24,96 @@ const Record = () => {
           총 <S.GradientText>100개의 문제</S.GradientText>에 성공했어요!
         </S.Text>
       </S.TextWrapper>
-      {/* 레벨별 도전 현황 */}
-      <SubTitle text="레벨별 도전 현황" />
-      <S.GraphWrapper>
+      <Mobile>
+        {/* 레벨별 도전 현황 */}
+        <SubTitle text="레벨별 도전 현황" />
         <StackedGraph />
-      </S.GraphWrapper>
-      {/* 활동 통계 */}
-      <SubTitle text="활동 통계" />
-      <S.GraphWrapper></S.GraphWrapper>
-      {/* <StatisticGraph /> */}
-      <SubTitle text="일별 도전 기록" />
-      <S.RecordCalendar onChange={onChange} value={value} />
+        {/* 활동 통계 */}
+        <SubTitle text="활동 통계" />
+        <StatisticGraph />
+        <SubTitle text="일별 도전 기록" />
+        <S.CalendarWrapper>
+          <CustomCalendar />
+        </S.CalendarWrapper>
+        <S.RadioGroup>
+          <S.RadioLabel checked={radioValue === "success"}>
+            <S.RadioButton
+              type="radio"
+              name="type"
+              value="success"
+              checked={radioValue === "success"}
+              onChange={onChangeRadioButton}
+            />
+            성공영상
+          </S.RadioLabel>
+          <S.RadioLabel checked={radioValue === "fail"}>
+            <S.RadioButton
+              type="radio"
+              name="type"
+              value="fail"
+              checked={radioValue === "fail"}
+              onChange={onChangeRadioButton}
+            />
+            실패영상
+          </S.RadioLabel>
+          <S.UploadButton>
+            <S.UploadIcon size="20px" color="#ffffff" />
+            업로드
+          </S.UploadButton>
+        </S.RadioGroup>
+        <MyPost />
+      </Mobile>
+      <Desktop>
+        <S.ContentWrapper>
+          <S.RecordWrapper>
+            <div>
+              <SubTitle text="레벨별 도전 현황" />
+              <StackedGraph />
+            </div>
+            {/* 활동 통계 */}
+            <div>
+              <SubTitle text="활동 통계" />
+              <StatisticGraph />
+            </div>
+          </S.RecordWrapper>
+          <SubTitle text="일별 도전 기록" />
+          <S.RecordWrapper>
+            <S.CalendarWrapper>
+              <CustomCalendar />
+            </S.CalendarWrapper>
+
+            <div>
+              <S.RadioGroup>
+                <S.RadioLabel checked={radioValue === "success"}>
+                  <S.RadioButton
+                    type="radio"
+                    name="type"
+                    value="success"
+                    checked={radioValue === "success"}
+                    onChange={onChangeRadioButton}
+                  />
+                  성공영상
+                </S.RadioLabel>
+                <S.RadioLabel checked={radioValue === "fail"}>
+                  <S.RadioButton
+                    type="radio"
+                    name="type"
+                    value="fail"
+                    checked={radioValue === "fail"}
+                    onChange={onChangeRadioButton}
+                  />
+                  실패영상
+                </S.RadioLabel>
+                <S.UploadButton>
+                  <S.UploadIcon size="20px" color="#ffffff" />
+                  업로드
+                </S.UploadButton>
+              </S.RadioGroup>
+              <MyPost />
+            </div>
+          </S.RecordWrapper>
+        </S.ContentWrapper>
+      </Desktop>
     </S.Container>
   );
 };

@@ -1,139 +1,94 @@
 import React from "react";
-import { ResponsivePie } from "@nivo/pie";
+import * as S from "./style";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
 
-const data = [
-  {
-    id: "erlang",
-    label: "erlang",
-    value: 547,
-    color: "hsl(160, 70%, 50%)",
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export const options = {
+  plugins: {
+    title: {
+      display: false,
+    },
+    legend: {
+      display: false,
+    },
   },
-  {
-    id: "ruby",
-    label: "ruby",
-    value: 353,
-    color: "hsl(8, 70%, 50%)",
+  responsive: true,
+  scales: {
+    x: {
+      stacked: false,
+    },
+    y: {
+      stacked: false,
+    },
   },
-  {
-    id: "scala",
-    label: "scala",
-    value: 591,
-    color: "hsl(103, 70%, 50%)",
-  },
-  {
-    id: "haskell",
-    label: "haskell",
-    value: 448,
-    color: "hsl(300, 70%, 50%)",
-  },
-  {
-    id: "stylus",
-    label: "stylus",
-    value: 380,
-    color: "hsl(126, 70%, 50%)",
-  },
+};
+
+const labels = [
+  "white",
+  "red",
+  "orange",
+  "yellow",
+  "green",
+  "skyblue",
+  "indigo",
+  "purple",
+  "brown",
 ];
+const data = {
+  labels: labels,
+  datasets: [
+    {
+      data: [12, 20, 6, 9, 2, 4, 2, 4, 10],
+      backgroundColor: [
+        "rgba(255, 255, 255, 0.6)",
+        "rgba(255, 78, 54, 0.6)",
+        "rgba(255, 166, 46, 0.6)",
+        "rgba(255, 207, 27, 0.6)",
+        "rgba(192, 250, 135, 0.6)",
+        "rgba(110, 226, 245, 0.6)",
+        "rgba(60, 93, 211, 0.6)",
+        "rgba(133, 51, 255, 0.6)",
+        "rgba(105, 95, 84, 0.6)",
+      ],
+      borderColor: [
+        "rgb(255, 255, 255)",
+        "rgb(255, 78, 54)",
+        "rgb(255, 166, 46)",
+        "rgb(255, 207, 27)",
+        "rgb(192, 250, 135)",
+        "rgb(110, 226, 245)",
+        "rgb(60, 93, 211)",
+        "rgb(133, 51, 255)",
+        "rgba(105, 95, 84, 1)",
+      ],
+      borderWidth: 1,
+      borderRadius: 5,
+    },
+  ],
+};
 
 const StackedGraph = () => {
   return (
-    <ResponsivePie
-      width={300}
-      height={300}
-      data={data}
-      margin={{ top: 0, right: 80, bottom: 0, left: 20 }}
-      startAngle={0}
-      innerRadius={0.5}
-      padAngle={2}
-      cornerRadius={2}
-      activeOuterRadiusOffset={8}
-      colors={{ scheme: "spectral" }}
-      borderWidth={1}
-      borderColor="#000000"
-      enableArcLinkLabels={false}
-      arcLinkLabelsSkipAngle={10}
-      arcLinkLabelsTextColor="#333333"
-      arcLinkLabelsThickness={2}
-      arcLinkLabelsColor={{ from: "color" }}
-      enableArcLabels={false}
-      arcLabelsRadiusOffset={0}
-      arcLabelsTextColor="#000000"
-      fill={[
-        {
-          match: {
-            id: "ruby",
-          },
-          id: "dots",
-        },
-        {
-          match: {
-            id: "c",
-          },
-          id: "dots",
-        },
-        {
-          match: {
-            id: "go",
-          },
-          id: "dots",
-        },
-        {
-          match: {
-            id: "python",
-          },
-          id: "dots",
-        },
-        {
-          match: {
-            id: "scala",
-          },
-          id: "lines",
-        },
-        {
-          match: {
-            id: "lisp",
-          },
-          id: "lines",
-        },
-        {
-          match: {
-            id: "elixir",
-          },
-          id: "lines",
-        },
-        {
-          match: {
-            id: "javascript",
-          },
-          id: "lines",
-        },
-      ]}
-      legends={[
-        {
-          anchor: "right",
-          direction: "column",
-          justify: false,
-          translateX: 164,
-          translateY: -3,
-          itemsSpacing: 5,
-          itemWidth: 132,
-          itemHeight: 24,
-          itemTextColor: "#fff",
-          itemDirection: "left-to-right",
-          itemOpacity: 1,
-          symbolSize: 18,
-          symbolShape: "circle",
-          effects: [
-            {
-              on: "hover",
-              style: {
-                itemTextColor: "#f2f2f2",
-              },
-            },
-          ],
-        },
-      ]}
-    />
+    <S.GraphWrapper>
+      <Bar options={options} data={data} />
+    </S.GraphWrapper>
   );
 };
-
 export default StackedGraph;
