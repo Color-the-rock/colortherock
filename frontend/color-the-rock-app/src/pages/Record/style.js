@@ -6,8 +6,9 @@ export const Container = styled.div`
   width: 100%;
   height: 100vh;
   background-color: transparent;
-  padding: 0px 16px;
+  padding: 0 16px;
   margin-top: 5rem;
+  margin-bottom: 1rem;
   overflow-y: scroll;
   -ms-overflow-style: none;
   ::-webkit-scrollbar {
@@ -85,7 +86,7 @@ export const RadioButton = styled.input`
 `;
 
 export const RadioGroup = styled.div`
-  margin: 1rem auto;
+  margin: 2rem 0 1rem 0;
   background-color: transparent;
 `;
 
@@ -106,7 +107,9 @@ export const CalendarWrapper = styled.div`
 `;
 
 export const UploadIcon = styled(HiOutlinePlusSm)`
-  font-size: 1.2rem;
+  font-size: 1.125rem;
+  line-height: 1.625rem;
+  background-color: transparent;
 `;
 
 export const UploadButton = styled(Link)`
@@ -114,9 +117,12 @@ export const UploadButton = styled(Link)`
   font-weight: 700;
   font-size: 1.125rem;
   line-height: 1.625rem;
+  text-align: center;
   margin-bottom: 1rem;
   background-color: transparent;
   float: right;
+  display: flex;
+  align-items: center;
 `;
 
 // Desktop CSS

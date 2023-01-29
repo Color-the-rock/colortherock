@@ -30,14 +30,14 @@ const homeGymData = {
 const StatisticGraph = ({ count = 3 }) => {
   return (
     <S.GraphWrapper>
-      <S.GraphTitle>도전 현황</S.GraphTitle>
+      <S.GraphTitle>모든 도전</S.GraphTitle>
       <S.ChallengeBar>
         <S.Success count={count} />
         <S.BarLabel right="16px">{count}번의 성공</S.BarLabel>
         <S.BarLabel>10번의 도전</S.BarLabel>
       </S.ChallengeBar>
 
-      <S.GraphTitle>홈짐 현황</S.GraphTitle>
+      <S.GraphTitle>방문한 홈짐</S.GraphTitle>
       <S.HomeGymGraph>
         {homeGymData &&
           homeGymData.gyms.length > 0 &&

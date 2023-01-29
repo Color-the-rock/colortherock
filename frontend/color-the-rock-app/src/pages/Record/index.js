@@ -15,7 +15,7 @@ const Record = () => {
   return (
     <S.Container>
       <Title>나의 운동 기록</Title>
-      <S.Description>나의 기록 현황을 확인해보세요!</S.Description>
+      <S.Description>나의 도전 현황을 한 눈에 확인해보세요!</S.Description>
       <S.TextWrapper>
         <S.Text>
           김싸피님은 <S.GradientText>30일</S.GradientText>동안
@@ -57,7 +57,7 @@ const Record = () => {
             실패영상
           </S.RadioLabel>
           <S.UploadButton>
-            <S.UploadIcon size="16px" color="#ffffff" />
+            <S.UploadIcon size="20px" color="#ffffff" />
             업로드
           </S.UploadButton>
         </S.RadioGroup>
