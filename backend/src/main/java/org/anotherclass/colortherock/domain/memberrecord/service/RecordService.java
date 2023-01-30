@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.memberrecord.service;
 
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
 import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
 import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatResponse;
@@ -31,6 +32,7 @@ public class RecordService {
     private final VideoRepository videoRepository;
     private final RecordRepository recordRepository;
     private final VideoReadRepository videoReadRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
     public List<LevelStatResponse> getColorRecords(Member member) {
@@ -64,8 +66,6 @@ public class RecordService {
         return list;
     }
 
-
-    // 향후 데이터 읽는 것으로 변환해야함@@@@
     @Transactional(readOnly = true)
     public TotalStatResponse getTotalRecords(Member member) {
         MemberRecord memberRecord = recordRepository.findByMember(member);
@@ -102,5 +102,40 @@ public class RecordService {
                 .color(video.getColor())
                 .gymName(video.getGymName())
                 .id(video.getId()).build();
+    }
+
+    @Transactional
+    public void addVideoCount(Member member) {
+        MemberRecord record = recordRepository.findByMember(member);
+        record.addVideoCount();
+        recordRepository.save(record);
+    }
+
+    @Transactional
+    public void addSuccessCount(Member member) {
+        MemberRecord record = recordRepository.findByMember(member);
+        record.addSuccessCount();
+        recordRepository.save(record);
+    }
+
+    @Transactional
+    public void subVideoCount(Member member) {
+        MemberRecord record = recordRepository.findByMember(member);
+        record.subVideoCount();
+        recordRepository.save(record);
+    }
+
+    @Transactional
+    public void subSuccessCount(Member member) {
+        MemberRecord record = recordRepository.findByMember(member);
+        record.subSuccessCount();
+        recordRepository.save(record);
+    }
+
+    @Transactional
+    public void saveNewRecord(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        MemberRecord memberRecord = new MemberRecord(member);
+        recordRepository.save(memberRecord);
     }
 }
