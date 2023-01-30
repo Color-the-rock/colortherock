@@ -48,7 +48,7 @@ cloud:
       access-key: ${AWS_ACCESS_KEY}
       secret-key: ${AWS_SECRET_KEY}
     s3:
-      bucket: color-the-rock
+      bucket: ${BUCKET_NAME}
     region:
       static: ap-northeast-2
     stack:
