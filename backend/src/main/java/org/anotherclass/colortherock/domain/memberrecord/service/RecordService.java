@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.memberrecord.service;
 
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
 import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
 import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatResponse;
@@ -31,6 +32,7 @@ public class RecordService {
     private final VideoRepository videoRepository;
     private final RecordRepository recordRepository;
     private final VideoReadRepository videoReadRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
     public List<LevelStatResponse> getColorRecords(Member member) {
@@ -128,5 +130,12 @@ public class RecordService {
         MemberRecord record = recordRepository.findByMember(member);
         record.subSuccessCount();
         recordRepository.save(record);
+    }
+
+    @Transactional
+    public void saveNewRecord(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        MemberRecord memberRecord = new MemberRecord(member);
+        recordRepository.save(memberRecord);
     }
 }

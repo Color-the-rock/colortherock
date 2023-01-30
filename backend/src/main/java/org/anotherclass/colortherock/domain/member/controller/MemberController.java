@@ -13,6 +13,7 @@ import org.anotherclass.colortherock.domain.member.request.ReGenerateAccessToken
 import org.anotherclass.colortherock.domain.member.response.MemberSignUpResponse;
 import org.anotherclass.colortherock.domain.member.response.ReGenerateAccessTokenResponse;
 import org.anotherclass.colortherock.domain.member.service.MemberService;
+import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final RecordService recordService;
 
     @GetMapping("/test")
     @Operation(description = "임시 테스트용 API")
@@ -49,6 +51,7 @@ public class MemberController {
     @PostMapping("/api/member/signup")
     public BaseResponse<MemberSignUpResponse> signup(@Valid @RequestBody MemberSignUpRequest request) {
         MemberSignUpResponse signup = memberService.signup(request);
+        recordService.saveNewRecord(signup.getId());
         return new BaseResponse<>(signup);
     }
 
