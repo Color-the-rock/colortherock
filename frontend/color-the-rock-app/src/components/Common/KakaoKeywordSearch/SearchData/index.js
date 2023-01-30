@@ -1,5 +1,5 @@
 import React from 'react'
-import { Desktop, Mobile } from "../../layout/Template"
+import { Desktop, Mobile } from "../../../layout/Template"
 import * as S from "./style"
 
 export default function KakaoSearchData() {

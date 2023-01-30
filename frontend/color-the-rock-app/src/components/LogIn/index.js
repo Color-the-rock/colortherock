@@ -7,10 +7,9 @@ export default function Oauth() {
   const navigate = useNavigate();
   
   useEffect(() => {
-    console.log("여기왔어요.")
     const code = new URL(window.location.href).searchParams.get('code');
     console.log("code: ", code);
-    navigate('/');
+    navigate('/signup');
 
   })
   // const parseHash = new URLSearchParams(window.location.hash.substring(1));
