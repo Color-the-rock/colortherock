@@ -41,7 +41,17 @@ spring:
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    s3:
+      bucket: color-the-rock
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 OPENVIDU_URL: ${OPENVIDU_URL}
 OPENVIDU_SECRET : ${OPENVIDU_SECRET}
-server:
-  port: ${IDLE_PORT}
