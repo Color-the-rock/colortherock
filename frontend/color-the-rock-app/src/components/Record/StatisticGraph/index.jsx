@@ -1,106 +1,60 @@
-import React from "react";
-import { ResponsiveBar } from "@nivo/bar";
+import React, { useEffect } from "react";
+import * as S from "./style";
 
-const data = [
-  {
-    country: "AE",
-    "hot dog": 14,
-    "hot dogColor": "hsl(248, 70%, 50%)",
-    burger: 49,
-    burgerColor: "hsl(43, 70%, 50%)",
-    sandwich: 158,
-    sandwichColor: "hsl(73, 70%, 50%)",
-    kebab: 43,
-    kebabColor: "hsl(121, 70%, 50%)",
-    fries: 1,
-    friesColor: "hsl(32, 70%, 50%)",
-    donut: 59,
-    donutColor: "hsl(2, 70%, 50%)",
-  },
-];
-const StatisticGraph = () => {
-  return (
-    <ResponsiveBar
-      data={data}
-      keys={["hot dog", "burger", "sandwich", "kebab", "fries", "donut"]}
-      indexBy="country"
-      margin={{ top: 50, right: 20, bottom: 50, left: 20 }}
-      padding={0.8}
-      layout="horizontal"
-      valueScale={{ type: "linear" }}
-      indexScale={{ type: "band", round: true }}
-      colors={{ scheme: "red_purple" }}
-      fill={[
-        {
-          match: {
-            id: "fries",
-          },
-          id: "dots",
-        },
-        {
-          match: {
-            id: "sandwich",
-          },
-          id: "lines",
-        },
-      ]}
-      borderColor="black"
-      axisTop={null}
-      axisRight={null}
-      axisBottom={{
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: "country",
-        legendPosition: "middle",
-        legendOffset: 32,
-      }}
-      axisLeft={{
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: "food",
-        legendPosition: "middle",
-        legendOffset: -40,
-      }}
-      enableLabel={false}
-      labelSkipWidth={12}
-      labelSkipHeight={12}
-      labelTextColor={{
-        from: "color",
-        modifiers: [["darker", 1.6]],
-      }}
-      legends={[
-        {
-          dataFrom: "keys",
-          anchor: "top",
-          direction: "row",
-          justify: false,
-          translateX: 20,
-          translateY: 0,
-          itemsSpacing: 2,
-          itemWidth: 100,
-          itemHeight: 20,
-          itemDirection: "left-to-right",
-          itemOpacity: 0.85,
-          symbolSize: 20,
-          effects: [
-            {
-              on: "hover",
-              style: {
-                itemOpacity: 1,
-              },
-            },
-          ],
-        },
-      ]}
-      role="application"
-      ariaLabel="Nivo bar chart demo"
-      barAriaLabel={function (e) {
-        return e.id + ": " + e.formattedValue + " in country: " + e.indexValue;
-      }}
-    />
-  );
+const homeGymData = {
+  totalCount: 11,
+  gyms: [
+    {
+      id: 1,
+      name: "더 클라이밍 강남",
+      visitedCount: 3,
+    },
+    {
+      id: 2,
+      name: "더 클라이밍 홍대",
+      visitedCount: 2,
+    },
+    {
+      id: 3,
+      name: "클라이밍짱짱",
+      visitedCount: 5,
+    },
+    {
+      id: 4,
+      name: "클클클",
+      visitedCount: 1,
+    },
+  ],
 };
 
+const StatisticGraph = ({ count = 3 }) => {
+  return (
+    <S.GraphWrapper>
+      <S.GraphTitle>모든 도전</S.GraphTitle>
+      <S.ChallengeBar>
+        <S.Success count={count} />
+        <S.BarLabel right="16px">{count}번의 성공</S.BarLabel>
+        <S.BarLabel>10번의 도전</S.BarLabel>
+      </S.ChallengeBar>
+
+      <S.GraphTitle>방문한 홈짐</S.GraphTitle>
+      <S.HomeGymGraph>
+        {homeGymData &&
+          homeGymData.gyms.length > 0 &&
+          homeGymData.gyms.map((gym, index) => (
+            <S.VisitedState
+              className="visited_state"
+              key={gym.id}
+              percent={(gym.visitedCount / homeGymData.totalCount) * 100}
+              count={
+                0.01 *
+                (100 / homeGymData.gyms.length) *
+                (homeGymData.gyms.length - (index + 1))
+              }
+            />
+          ))}
+      </S.HomeGymGraph>
+    </S.GraphWrapper>
+  );
+};
 export default StatisticGraph;

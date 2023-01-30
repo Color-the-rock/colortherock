@@ -2,7 +2,7 @@ import React from 'react'
 import * as S from "./style"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
-// import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 // import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/esm/locale";
 

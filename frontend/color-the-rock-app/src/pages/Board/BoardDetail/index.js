@@ -107,7 +107,7 @@ const BoardDetail = () => {
           {/* <S.VideoWrap>
           </S.VideoWrap> */}
             <S.Video  controls>
-              <source src="#" type="video/mp4"/>
+              <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"/>
             </S.Video>
           
           {

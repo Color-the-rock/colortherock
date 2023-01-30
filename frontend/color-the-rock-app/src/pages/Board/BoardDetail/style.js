@@ -44,14 +44,11 @@ export const VideoWrap = styled.div`
   display: block;
   position: relative;
   width: 100%;
-  /* height: 600px; */
 `
 
 export const Video = styled.video`
-  /* display: block; */
   width: 100%;
-  height: 45vh;
-
+  height: 600px;
   object-fit: cover;
 `
 
@@ -64,16 +61,14 @@ export const ComponenentWrap = styled.div`
 
 export const FalseWrap = styled.div`
   width: 100%;
-  /* height: 100%; */
   min-width: 328px;
   max-width: 600px;
-  `
+`
 
 export const SelectButtonWrap = styled.div`
   width: 100%;
   margin-bottom: 1rem;
-  
-  `
+`
 
 export const selectBtnContent = styled.span`
   width: 100%;
@@ -107,11 +102,10 @@ export const ThumbnailList = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1rem;
-  /* margin-top: 20px; */
   padding-left: 1rem;
   padding-right: 1rem;
   
   @media (max-width: 1070px) {
     grid-template-columns: 1fr 1fr;
   }
-  `
+`
