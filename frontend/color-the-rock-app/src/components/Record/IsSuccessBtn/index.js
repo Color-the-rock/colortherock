@@ -4,7 +4,9 @@ import * as S from "./style"
 
 const IsSuccessBtn = ({select}) => {
   return (
-    
+    <S.Container>
+      
+    </S.Container>
   )
 }
 

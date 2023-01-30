@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Desktop, Mobile } from "../../layout/Template"
+import { Desktop, Mobile } from "../../../layout/Template"
 import * as S from "./style"
-import SearchData from "./style"
-const { kakao } = window;
+// import SearchData from "./style"
 
+
+const { kakao } = window;
 
 const KakaoSearchList = ({searchPlace, setOpenList}) => {
 
@@ -12,7 +13,7 @@ const KakaoSearchList = ({searchPlace, setOpenList}) => {
   useEffect(() => {
     const ps = new kakao.maps.services.Places();
     console.log("searchPlace: ",searchPlace);
-    ps.keywordSearch({searchPlace}, placesSearchCB);
+    ps.keywordSearch(searchPlace, placesSearchCB);
 
     // function placesSearchCB(data, status, pagination) {
     //   console.log("data", data);
@@ -30,13 +31,15 @@ const KakaoSearchList = ({searchPlace, setOpenList}) => {
   const handleClick = () => {
     
     // 여기에 결과 설정...
-
+    console.log("성공")
 
     setOpenList(false);
   }
 
-
-
+  const CloseKakaoSearch = () => {
+    console.log("close");
+    setOpenList(false);
+  }
 
   return (
     <div>
@@ -46,14 +49,12 @@ const KakaoSearchList = ({searchPlace, setOpenList}) => {
 
       <Mobile>
         <S.Container>
+          <S.OutSideArea onClick={CloseKakaoSearch}/>
           <S.SearchResultWrap>
-            {/* {searchData.map((data, index) => (
-              <SearchData
-                index = {index}
-                data={data}
-                handleClick={handleClick}
-              />
-            ))} */}
+            {searchData.map((data, index) => (
+              <button key={index} onClick={handleClick}>{data.place_name}</button>
+              
+            ))}
           </S.SearchResultWrap>
         </S.Container>
       </Mobile>
