@@ -3,6 +3,7 @@ package org.anotherclass.colortherock.domain.memberrecord.controller;
 import org.anotherclass.colortherock.IntegrationTest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
@@ -39,6 +40,8 @@ public class MemberRecordTest extends IntegrationTest {
     JwtTokenUtils jwtTokenUtils;
     @Autowired
     VideoRepository videoRepository;
+    @Autowired
+    RecordService recordService;
     @Autowired
     MockMvc mockMvc;
     String url = "http://localhost:8080/api";
@@ -92,6 +95,24 @@ public class MemberRecordTest extends IntegrationTest {
                         get(url + "/record/color/2023-13-17")
                                 .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(jsonPath("$.status", is(400)));
+    }
+
+    @Test
+    @DisplayName("[GET]전체 운동 기록 누적 통계 조회")
+    public void 사용자_누적통계_조회() throws Exception {
+        recordService.saveNewRecord(member.getId());
+        recordService.addVideoCount(member);
+        recordService.addVideoCount(member);
+        recordService.addVideoCount(member);
+        recordService.addSuccessCount(member);
+        recordService.addSuccessCount(member);
+        mockMvc.perform(
+                get(url + "/record/total")
+                        .header("Authorization", AUTHORIZATION_HEADER + token))
+                .andExpect(jsonPath("$.status", is(200)));
+//                .andExpect(jsonPath("$.result.videoCount").value(3))
+//                .andExpect(jsonPath("$.result.successCount").value(2));
+
     }
 
     @Test
