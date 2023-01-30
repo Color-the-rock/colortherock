@@ -1,7 +1,11 @@
 package org.anotherclass.colortherock.domain.videoboard.service;
 
+import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
 import org.anotherclass.colortherock.domain.video.exception.VideoUserMismatchException;
+import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundException;
 import org.anotherclass.colortherock.domain.videoboard.exception.WriterMismatchException;
@@ -12,29 +16,74 @@ import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchR
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetailResponse;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 class VideoBoardServiceTest {
 
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    VideoRepository videoRepository;
     @Autowired
     private VideoBoardService videoBoardService;
     @Autowired
     private VideoBoardRepository videoBoardRepository;
+    ArrayList<Long> memberIds;
+    ArrayList<Long> videoIds;
+    ArrayList<Long> videoBoardIds;
+
+    @BeforeEach
+    public void setMemberAndVideo() {
+        memberIds = new ArrayList<>();
+        videoIds = new ArrayList<>();
+        videoBoardIds = new ArrayList<>();
+        // Member 생성
+        Member memberA = new Member("yeji@rock.com", "yezi", Member.RegistrationId.kakao);
+        Member memberB = new Member("johan@rock.com", "johan", Member.RegistrationId.google);
+        Member saveA = memberRepository.save(memberA);
+        Member saveB = memberRepository.save(memberB);
+        memberIds.add(saveA.getId());
+        memberIds.add(saveB.getId());
+
+        // Video, VideoBoard 생성
+        for(int i = 1; i <= 8; i++){
+            Video video = new Video(LocalDate.parse("2023-01-30"), 4, "더클라임 강남점", "s3url", true, "thumbnail", "초록", saveA, "videoName");
+            Video saveVideo = videoRepository.save(video);
+            videoIds.add(saveVideo.getId());
+            if(i % 2 == 0) {
+                VideoBoard videoBoard = new VideoBoard("성공했습니다.", video, memberA, LocalDateTime.of(2023,1,30,15,i));
+                VideoBoard saveVideoBoard = videoBoardRepository.save(videoBoard);
+                videoBoardIds.add(saveVideoBoard.getId());
+            }
+        }
+        for(int i = 9; i <= 16; i++){
+            Video video = new Video(LocalDate.parse("2023-01-29"),5, "더클라임 홍대점", "s3url", true, "thumbnail", "파랑", saveB, "videoName");
+            Video saveVideo = videoRepository.save(video);
+            videoIds.add(saveVideo.getId());
+            if(i % 2 == 0){
+                VideoBoard videoBoard = new VideoBoard("완등 인증!", video, memberB, LocalDateTime.of(2023,1,30,15,i));
+                VideoBoard saveVideoBoard = videoBoardRepository.save(videoBoard);
+                videoBoardIds.add(saveVideoBoard.getId());
+            }
+        }
+    }
 
     @Nested
-    @DisplayName("getSuccessVideo 메소드는")
+    @DisplayName("성공 영상 리스트 불러오기 메소드는")
     class getSuccessVideos {
 
         @Nested
@@ -73,7 +122,7 @@ class VideoBoardServiceTest {
 
                     // given
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
-                    cond.setStoreId(3L);
+                    cond.setStoreId(videoBoardIds.get(7));
                     cond.setGymName("");
                     cond.setColor("");
                     Pageable pageable = Pageable.ofSize(2); // 사이즈 임의로 2로 지정
@@ -131,6 +180,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertEquals(successVideos.get(0).getColor(), cond.getColor());
+                    assertEquals(successVideos.get(1).getColor(), cond.getColor());
                     assertEquals(successVideos.size(), 2);
                 }
 
@@ -149,7 +199,7 @@ class VideoBoardServiceTest {
                     // given
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
                     cond.setStoreId(null);
-                    cond.setGymName("더클라임 강남");
+                    cond.setGymName("더클라임 강남점");
                     cond.setColor("");
                     Pageable pageable = Pageable.ofSize(2); // 사이즈 임의로 2로 지정
 
@@ -177,8 +227,8 @@ class VideoBoardServiceTest {
                     // given
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
                     cond.setStoreId(null);
-                    cond.setGymName("더클라임 강남");
-                    cond.setColor("초록");
+                    cond.setGymName("더클라임 홍대점");
+                    cond.setColor("파랑");
                     Pageable pageable = Pageable.ofSize(2); // 사이즈 임의로 2로 지정
 
                     // when
@@ -197,13 +247,13 @@ class VideoBoardServiceTest {
 
 
     @Nested
-    @DisplayName("uploadMySuccessVideoPost 메소드는")
+    @DisplayName("내 성공 영상 게시글 올리기 메소드는")
     class UploadMySuccessVideoPost {
         @Nested
         @DisplayName("유저 정보를 찾을 수 없을 경우")
         class No_Such_User {
             @Test
-            @DisplayName("NO_SUCH_USER 예외를 발생시킴")
+            @DisplayName("USER_NOT_FOUND 예외를 발생시킴")
             void noSuchUserException() {
                 // given
                 Long memberId = 2L; //DB에 없는 id
@@ -222,11 +272,11 @@ class VideoBoardServiceTest {
         @DisplayName("비디오를 찾을 수 없을 경우")
         class No_Such_Video {
             @Test
-            @DisplayName("NO_SUCH_VIDEO 예외를 발생시킴")
+            @DisplayName("VIDEO_NOT_FOUND 예외를 발생시킴")
             void noSuchVideoException() {
-                Long memberId = 0L;
+                Long memberId = memberIds.get(0);
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
-                request.setVideoId(10L); // DB에 없는 ID
+                request.setVideoId(20L); // DB에 없는 ID
                 request.setTitle("성공했습니다.");
                 request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 18, 30));
 
@@ -242,9 +292,9 @@ class VideoBoardServiceTest {
             @Test
             @DisplayName("Video_User_Mismatch 예외를 발생시킴")
             void videoUserMismatchException() {
-                Long memberId = 1L;
+                Long memberId = memberIds.get(0);
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
-                request.setVideoId(1L); // 해당 비디오의 memberId는 0L
+                request.setVideoId(videoIds.get(10));
                 request.setTitle("성공했습니다.");
                 request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 18, 30));
 
@@ -261,9 +311,9 @@ class VideoBoardServiceTest {
             @DisplayName("영상 게시글을 DB에 저장한 후 id값을 반환")
             void uploadSuccessVideoPost() {
                 // given
-                Long memberId = 0L;
+                Long memberId = memberIds.get(0);
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
-                request.setVideoId(1L);
+                request.setVideoId(videoIds.get(0));
                 request.setTitle("성공했습니다.");
                 request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 18, 30));
                 // when
@@ -277,15 +327,15 @@ class VideoBoardServiceTest {
     }
 
     @Nested
-    @DisplayName("getVideoDetail 메소드는")
+    @DisplayName("완등 영상 게시글 상세 조회 메소드는")
     class GetVideoDetail {
         @Nested
         @DisplayName("없는 videoBoardId일 경우")
-        class No_Such_Post {
+        class No_Video_Board_Id {
             @Test
             @DisplayName("PostNotFound예외를 발생시킨다")
             void postNotFoundException() {
-                Long videoBoardId = 10L;
+                Long videoBoardId = 20L;
                 assertThrows(PostNotFoundException.class, () -> {
                     videoBoardService.getVideoDetail(videoBoardId);
                 });
@@ -298,7 +348,7 @@ class VideoBoardServiceTest {
             @Test
             @DisplayName("비디오의 상세 정보를 반환")
             void getVideoDetail() {
-                Long videoBoardId = 0L;
+                Long videoBoardId = videoBoardIds.get(0);
                 VideoBoardDetailResponse videoBoardDetail = videoBoardService.getVideoDetail(videoBoardId);
                 assertEquals(videoBoardId, videoBoardDetail.getVideoBoardId());
             }
@@ -306,7 +356,7 @@ class VideoBoardServiceTest {
     }
 
     @Nested
-    @DisplayName("updateSuccessPost 메소드는")
+    @DisplayName("완등 영상 게시글 수정 메소드는")
     class updateSuccessPost {
 
         @Nested
@@ -317,7 +367,7 @@ class VideoBoardServiceTest {
             void PostNotFoundException() {
                 Long memberId = 1L;
                 SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
-                request.setVideoBoardId(10L); // 없는 게시글 번호
+                request.setVideoBoardId(20L); // 없는 게시글 번호
                 request.setTitle("수정했습니다.");
                 request.setWrittenTime(LocalDateTime.of(2023,1,23,19,50));
 
@@ -333,9 +383,9 @@ class VideoBoardServiceTest {
             @Test
             @DisplayName("Writer Mismatch 예외를 발생시킴")
             void WriterMismatchException() {
-                Long memberId = 1L;
+                Long memberId = memberIds.get(0);
                 SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
-                request.setVideoBoardId(5L); // 해당 게시글의 작성자는 0L
+                request.setVideoBoardId(videoBoardIds.get(6)); // 해당 게시글의 작성자는 0L
                 request.setTitle("수정했습니다.");
                 request.setWrittenTime(LocalDateTime.of(2023,1,23,19,50));
 
@@ -351,9 +401,9 @@ class VideoBoardServiceTest {
             @Test
             @DisplayName("수정이 정상적으로 완료")
             void updateSuccessPost() {
-                Long memberId = 0L;
+                Long memberId = memberIds.get(0);
                 SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
-                request.setVideoBoardId(5L);
+                request.setVideoBoardId(videoBoardIds.get(0));
                 request.setTitle("수정했습니다.");
                 request.setWrittenTime(LocalDateTime.of(2023,1,23,19,50));
 
@@ -367,7 +417,7 @@ class VideoBoardServiceTest {
     }
 
     @Nested
-    @DisplayName("deleteSuccessPost 메소드는")
+    @DisplayName("완등 영상 게시글 삭제 메소드는")
     class DeleteSuccessPost {
 
         @Nested
@@ -376,8 +426,8 @@ class VideoBoardServiceTest {
             @Test
             @DisplayName("해당 게시글을 삭제")
             void deleteSuccessPost() {
-                Long memberId = 0L;
-                Long videoBoardId = 1L;
+                Long memberId = memberIds.get(0);
+                Long videoBoardId = videoBoardIds.get(0);
                 videoBoardService.deleteSuccessPost(memberId, videoBoardId);
                 // 삭제 후에 해당 데이터를 한번 더 삭제할 경우 No Such Post 예외 발생
                 assertThrows(PostNotFoundException.class, () -> {
@@ -388,7 +438,7 @@ class VideoBoardServiceTest {
     }
 
     @Nested
-    @DisplayName("getMySuccessVideoPosts 메소드는")
+    @DisplayName("내 완등 영상 게시글 가져오기 메소드는")
     class GetMySuccessVideoPosts {
         @Nested
         @DisplayName("storeId가 null일 경우")
@@ -396,7 +446,7 @@ class VideoBoardServiceTest {
             @Test
             @DisplayName("멤버의 성공 영상 게시글의 id값이 큰 순서대로 사이즈만큼 반환")
             void getMySuccessVideoPosts() {
-                Long memberId = 0L;
+                Long memberId = memberIds.get(0);
                 Long storeId = null;
                 Pageable pageable = Pageable.ofSize(2);
 
