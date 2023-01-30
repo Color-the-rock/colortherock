@@ -9,8 +9,6 @@ import { useNavigate } from "react-router";
 import Title from "../../../components/Common/Title";
 import Thumbnail from "../../../components/Common/Thumbnail";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll"
-import Header from "../../../components/layout/Header"
-import BoardSubTitle from "../../../components/Board/BoardSubTitle"
 
 const dummy = [
   {
@@ -74,9 +72,6 @@ const BoardDetail = () => {
 
   const [isFetching, setIsFetching] = useInfiniteScroll(updateFuncOnScroll);
 
-  const clickHandler = () => {
-    navigate("/board");
-  }
 
   const beforePage = () => {
     navigate("/board");
@@ -90,50 +85,39 @@ const BoardDetail = () => {
   return (
     <div>
       <Desktop>
-        <S.HeaderWrap>
-          <Header></Header>
-        </S.HeaderWrap>
       </Desktop>
+      
       <Mobile>
-        <S.ArrowLeftBtnWrap>
-          <ArrowLeftBtn clickHandler={clickHandler}></ArrowLeftBtn>
-        </S.ArrowLeftBtnWrap>
-      </Mobile>
-    
-    <S.Container>
-      <S.ContentContainer>
-        <S.ContentWrap>
+        <S.Container>
+          <ArrowLeftBtn clickHandler={beforePage}></ArrowLeftBtn>
+          {/* 타이틀 + 운동한 날 */}
+          <S.TitleWrap>
+            <div>실시간 스트리밍 중</div>
+          </S.TitleWrap>
+        </S.Container>
+        
           {/* 비디오 */}
-          {/* <S.VideoWrap>
-          </S.VideoWrap> */}
-            <S.Video  controls>
-              <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"/>
+          <S.VideoWrap>
+            <S.Video controls>
+              <source src="" type="video/mp4"></source>
             </S.Video>
-          
+          </S.VideoWrap>
+        
+        <S.Container>
           {
             isModalOpen ? (
               <S.CommentModalWrap isModalOpen>
                 <CommentModal setIsModalOpen={setIsModalOpen} />
               </S.CommentModalWrap>
-            )
-            : 
-            (
-              <S.FalseWrap>
-              <S.ComponenentWrap>
-                <div>
-                  <BoardSubTitle text="살려주세요." />
-                  <div>SSAFY는 사람을 찢어</div>
-                </div>
-                <div>2023-01-29</div>
-              </S.ComponenentWrap>
+            ) : (
+            <div>
+              {/* 댓글 버튼 */}
               <S.CommentWrap onClick={handleModal}>
                 <CommentBtn />
               </S.CommentWrap>
-              
-              <S.ComponenentWrap>
-                <BoardSubTitle text="다른영상도 봐주세요" />
-              </S.ComponenentWrap>
-              
+              <S.TitleWrap>
+                <div>다른 완등 영상 보기</div>
+              </S.TitleWrap>
               <S.ThumbnailList>
                 {data.map((item) => (
                   <Thumbnail
@@ -148,16 +132,13 @@ const BoardDetail = () => {
                   />
                 ))}
               </S.ThumbnailList>
-            </S.FalseWrap> 
+            </div>
             )
           }
-
-
-        </S.ContentWrap>
-      </S.ContentContainer>
-    </S.Container>
+        </S.Container>
+      </Mobile>  
     </div>
   )
 };
 
-export default BoardDetail;
+// export default BoardDetail;
