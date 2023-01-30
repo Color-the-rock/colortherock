@@ -13,6 +13,7 @@ import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundExc
 import org.anotherclass.colortherock.domain.videoboard.exception.WriterMismatchException;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardReadRepository;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
+import org.anotherclass.colortherock.domain.videoboard.request.LocalSuccessVideoUploadRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessPostUpdateRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessVideoUploadRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
@@ -59,9 +60,23 @@ public class VideoBoardService {
     }
 
     @Transactional
+    public Long uploadLocalSuccessVideoPost(Member member, Long videoId, LocalSuccessVideoUploadRequest localSuccessVideoUploadRequest) {
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND));
+
+        VideoBoard newVideoBoard = videoBoardRepository.save(VideoBoard.builder()
+                .title(localSuccessVideoUploadRequest.getTitle())
+                .video(video)
+                .member(member)
+                .writtenTime(localSuccessVideoUploadRequest.getWrittenTime())
+                .build());
+        return newVideoBoard.getId();
+    }
+
+    @Transactional
     public Long uploadMySuccessVideoPost(Long memberId, SuccessVideoUploadRequest successVideoUploadRequest) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_USER));
+                .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.USER_NOT_FOUND));
         Video video = videoRepository.findById(successVideoUploadRequest.getVideoId())
                 .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND));
         if (!video.getMember().getId().equals(memberId)) {
@@ -82,7 +97,7 @@ public class VideoBoardService {
     @Transactional(readOnly = true)
     public VideoBoardDetailResponse getVideoDetail(Long videoBoardId) {
         VideoBoard vb = videoBoardRepository.findById(videoBoardId)
-                .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.NO_SUCH_POST));
+                .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
         return VideoBoardDetailResponse.builder()
                 .videoBoardId(vb.getId())
                 .nickname(vb.getMember().getNickname())
@@ -95,7 +110,7 @@ public class VideoBoardService {
     @Transactional
     public void updateSuccessPost(Long memberId, SuccessPostUpdateRequest successPostUpdateRequest) {
         VideoBoard vb = videoBoardRepository.findById(successPostUpdateRequest.getVideoBoardId())
-                .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.NO_SUCH_POST));
+                .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
         checkAuth(memberId, vb);
         vb.update(successPostUpdateRequest.getTitle(), successPostUpdateRequest.getWrittenTime());
     }
@@ -104,7 +119,7 @@ public class VideoBoardService {
     @Transactional
     public void deleteSuccessPost(Long memberId, Long videoBoardId) {
         VideoBoard vb = videoBoardRepository.findById(videoBoardId)
-                .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.NO_SUCH_POST));
+                .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
         checkAuth(memberId, vb);
         videoBoardRepository.delete(vb);
     }
@@ -132,7 +147,8 @@ public class VideoBoardService {
     // 받은 멤버가 수정권한이 있는지 확인하는 메서드
     private void checkAuth(Long memberId, VideoBoard videoBoard) {
         if (!videoBoard.getMember().getId().equals(memberId)) {
-            throw new WriterMismatchException(GlobalErrorCode.WRITER_MISMATCH);
+            throw new WriterMismatchException(GlobalErrorCode.NOT_WRITER);
         }
     }
+
 }
