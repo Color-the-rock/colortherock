@@ -8,6 +8,7 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
   security:
     oauth2:
       client:
