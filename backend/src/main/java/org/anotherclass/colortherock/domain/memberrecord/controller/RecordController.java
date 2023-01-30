@@ -141,8 +141,9 @@ public class RecordController {
         uploadVideoRequest.setVideoName(videoName);
         // request와 URL을 통해 DB에 저장
         videoService.uploadVideo(member, s3URL, uploadVideoRequest);
-        // 영상의 길이를 사용자별 누적 기록에 추가
-        // 영상 길이를 확인하는 방법 고민 중..
+        // 영상 누적 통계에서 영상 갯수 올리기
+        recordService.addVideoCount(member);
+        if(uploadVideoRequest.getIsSuccess()) recordService.addSuccessCount(member);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 
@@ -168,6 +169,9 @@ public class RecordController {
         s3Service.deleteFile(videoName);
         // DB에서 해당 영상 삭제
         videoService.deleteVideo(videoId);
+        // 영상 누적 통계에서 영상 갯수 줄이기
+        recordService.subVideoCount(member);
+        if(video.getIsSuccess()) recordService.subSuccessCount(member);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 }
