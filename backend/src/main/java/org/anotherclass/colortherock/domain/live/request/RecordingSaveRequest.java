@@ -15,6 +15,7 @@ public class RecordingSaveRequest {
     private String gymName;
     private Boolean isSuccess;
     private String color;
+    private String recordingId;
 
     public Video toEntity(String s3Url, String thumbnailUrl, Member member) {
 

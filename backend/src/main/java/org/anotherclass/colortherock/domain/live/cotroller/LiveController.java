@@ -12,6 +12,8 @@ import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -52,7 +54,7 @@ public class LiveController {
     }
 
     @PostMapping("/live/{sessionId}/recording/save")
-    public BaseResponse<?> recordingSave(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String sessionId,@RequestBody RecordingSaveRequest request) {
+    public BaseResponse<?> recordingSave(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String sessionId,@RequestBody RecordingSaveRequest request) throws IOException {
         liveService.recordingSave(memberDetails,sessionId,request);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }

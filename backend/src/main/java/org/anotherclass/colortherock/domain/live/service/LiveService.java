@@ -14,23 +14,32 @@ import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
+import org.anotherclass.colortherock.domain.video.service.S3Service;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 @Service
 public class LiveService {
 
+    private final S3Service s3Service;
     private final LiveRepository liveRepository;
     private final MemberRepository memberRepository;
     private final VideoRepository videoRepository;
 
     private final OpenVidu openVidu;
 
+    @Value("${RECORDING_PATH}") String dir;
+
     public LiveService(LiveRepository liveRepository,
                        MemberRepository memberRepository,
                        VideoRepository videoRepository,
+                       S3Service s3Service,
                        @Value("${OPENVIDU_URL}") String OPENVIDU_URL,
                        @Value("${OPENVIDU_SECRET}") String OPENVIDU_SECRET) {
+        this.s3Service = s3Service;
         this.liveRepository = liveRepository;
         this.memberRepository = memberRepository;
         this.videoRepository = videoRepository;
@@ -104,10 +113,12 @@ public class LiveService {
         throw new RecordingStartBadRequestException();
     }
 
-    public void recordingSave(MemberDetails memberDetails, String sessionId, RecordingSaveRequest request) {
-        // TODO S3 저장 로직
+    public void recordingSave(MemberDetails memberDetails, String sessionId, RecordingSaveRequest request) throws IOException {
+        dir += "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".webm";
+        String videoName = DateTime.now() + request.getRecordingId();
+        String s3Url = s3Service.uploadFromLocal(dir, videoName);
         Member member = memberRepository.findById(memberDetails.getMember().getId()).orElseThrow();
-        Video video = request.toEntity("대충 s3url", "섬네일 url", member);
+        Video video = request.toEntity(s3Url, "섬네일 url", member);
         videoRepository.save(video);
     }
 }
