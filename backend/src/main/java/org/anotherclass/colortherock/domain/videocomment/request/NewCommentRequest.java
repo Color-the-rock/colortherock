@@ -15,4 +15,5 @@ public class NewCommentRequest {
     @NotNull
     private String content;
 
+
 }

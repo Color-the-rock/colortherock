@@ -14,6 +14,6 @@ public class MyCommentListResponse {
     private Long videoBoardId;
     private String nickname;
     private String content;
-    private LocalDateTime writtenTime;
+    private LocalDateTime createdDate;
 
 }
