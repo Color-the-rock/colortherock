@@ -4,11 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
-import org.anotherclass.colortherock.domain.participant.entity.Participant;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor
 @Entity
@@ -31,9 +28,6 @@ public class Live {
     @Column(name = "thumbnail_url", length = 100)
     private String thumbnailURL;
 
-    @Column(name = "level")
-    private Integer level;
-
     @Column(name = "session_id", length = 100)
     private String sessionId;
 
@@ -45,16 +39,12 @@ public class Live {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "live", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Participant> participants = new ArrayList<>();
-
     @Builder
-    public Live(Boolean isPublic, String gymName, String title, String thumbnailURL, Integer level, String sessionId, Boolean isLive, Member member) {
+    public Live(Boolean isPublic, String gymName, String title, String thumbnailURL, String sessionId, Boolean isLive, Member member) {
         this.isPublic = isPublic;
         this.gymName = gymName;
         this.title = title;
         this.thumbnailURL = thumbnailURL;
-        this.level = level;
         this.sessionId = sessionId;
         this.isLive = isLive;
         this.member = member;
