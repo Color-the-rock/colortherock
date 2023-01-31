@@ -18,6 +18,7 @@ import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -113,9 +114,10 @@ public class LiveService {
         throw new RecordingStartBadRequestException();
     }
 
+    @Transactional
     public void recordingSave(MemberDetails memberDetails, String sessionId, RecordingSaveRequest request) throws IOException {
         dir += "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".webm";
-        String videoName = DateTime.now() + request.getRecordingId();
+        String videoName = DateTime.now() + request.getRecordingId()+ ".webm";
         String s3Url = s3Service.uploadFromLocal(dir, videoName);
         Member member = memberRepository.findById(memberDetails.getMember().getId()).orElseThrow();
         Video video = request.toEntity(s3Url, "섬네일 url", member);

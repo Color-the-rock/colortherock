@@ -1,4 +1,4 @@
-package org.anotherclass.colortherock.domain.live.cotroller;
+package org.anotherclass.colortherock.domain.live.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.live.request.CreateLiveRequest;

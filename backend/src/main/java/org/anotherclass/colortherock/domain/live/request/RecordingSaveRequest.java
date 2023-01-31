@@ -10,7 +10,6 @@ import javax.validation.constraints.Positive;
 public class RecordingSaveRequest {
     @Positive
     private Integer level;
-
     private String title;
     private String gymName;
     private Boolean isSuccess;
