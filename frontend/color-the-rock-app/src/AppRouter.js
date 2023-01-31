@@ -19,6 +19,7 @@ import BoardRegist from "./pages/Board/BoardRegist/index";
 import StreamingForm from "./pages/StreamingForm";
 import Preview from "./pages/Preview/inedx";
 import RecordForm from "./pages/Record/RecordForm";
+import StreamingLive from "./pages/StreamingLive";
 const Layout = () => {
   return (
     <div>
@@ -50,6 +51,7 @@ const AppRouter = () => {
         <Route path="/streaming/regist" element={<StreamingForm />} />
         <Route path="preview" element={<Preview />} />
         <Route path="/record/form" element={<RecordForm />} />
+        <Route path="/streaming/live/:sessionId" element={<StreamingLive />} />
       </Routes>
       {/* <Footer /> */}
     </Router>
