@@ -8,7 +8,6 @@ import org.anotherclass.colortherock.domain.member.entity.Member;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @Getter
 @RequiredArgsConstructor
@@ -21,9 +20,6 @@ public class CreateLiveRequest {
     private final String gymName;
     @NotBlank
     private final String title;
-    @Positive
-    @NotNull
-    private final Integer level;
 
     public Live toEntity(String sessionId, String thumbnailURL, Member member) {
         return Live.builder()
@@ -31,10 +27,9 @@ public class CreateLiveRequest {
                 .sessionId(sessionId)
                 .thumbnailURL(thumbnailURL)
                 .member(member)
-                .gymName(gymName)
-                .isPublic(isPublic)
-                .level(level)
-                .title(title)
+                .gymName(this.gymName)
+                .isPublic(this.isPublic)
+                .title(this.title)
                 .build();
     }
 }
