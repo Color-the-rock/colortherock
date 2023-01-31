@@ -83,7 +83,7 @@ public class VideoBoardReadRepository {
 
     // 암장 검색을 처리하는 메서드
     private BooleanExpression checkGymName(String gymNameCond) {
-        if (gymNameCond.equals("")) {
+        if (gymNameCond == null || gymNameCond.isBlank()) {
             return null;
         }
         return videoBoard.video.gymName.eq(gymNameCond);
@@ -91,7 +91,7 @@ public class VideoBoardReadRepository {
 
     // 레벨 검색을 처리하는 메서드
     private BooleanExpression checkColor(String colorCond) {
-        if (colorCond.equals("")) {
+        if (colorCond == null || colorCond.isBlank()) {
             return null;
         }
         return videoBoard.video.color.eq(colorCond);
