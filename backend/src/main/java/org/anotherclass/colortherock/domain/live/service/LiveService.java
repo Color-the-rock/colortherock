@@ -67,9 +67,7 @@ public class LiveService {
             throw new RuntimeException(e);
         }
         String sessionId = session.getSessionId();
-
-        // TODO 섬네일 어떻게 받을지?
-        Live live = request.toEntity(sessionId, "대충 섬네일", member);
+        Live live = request.toEntity(sessionId, member);
         liveRepository.save(live);
         try {
             Connection connection = session.createConnection(new ConnectionProperties.Builder().role(OpenViduRole.PUBLISHER).build());
@@ -129,6 +127,7 @@ public class LiveService {
         String videoName = DateTime.now() + request.getRecordingId() + ".webm";
         String s3Url = s3Service.uploadFromLocal(dir, videoName);
         Member member = memberRepository.findById(memberDetails.getMember().getId()).orElseThrow();
+        // TODO 썸네일 주소 필요
         Video video = request.toEntity(s3Url, "섬네일 url", member);
         videoRepository.save(video);
     }
@@ -147,7 +146,10 @@ public class LiveService {
                                 .memberId(live.getMember().getId())
                                 .memberName(live.getMember().getNickname())
                                 .gymName(live.getGymName())
-                                .participantNum(live.getParticipants().size()).build())
+                                .sessionId(live.getSessionId())
+                                .participantNum(
+                                        openVidu.getActiveSession(live.getSessionId()).getActiveConnections().size()
+                                ).build())
                 .collect(Collectors.toList());
     }
 }

@@ -8,15 +8,17 @@ public class LiveListResponse {
     private String memberName;
     private Long memberId;
     private String gymName;
+    private String sessionId;
     private Integer participantNum;
 
     @Builder
-    public LiveListResponse(Long id, String title, String memberName, Long memberId, String gymName, Integer participantNum) {
+    public LiveListResponse(Long id, String title, String memberName, Long memberId, String gymName, String sessionId, Integer participantNum) {
         this.id = id;
         this.title = title;
         this.memberName = memberName;
         this.memberId = memberId;
         this.gymName = gymName;
+        this.sessionId = sessionId;
         this.participantNum = participantNum;
     }
 }

@@ -36,12 +36,10 @@ public class LiveController {
     public BaseResponse<String> createLive(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody CreateLiveRequest request) {
         String token = liveService.createLiveRoom(memberDetails, request);
         return new BaseResponse<>(token);
-
     }
 
     @GetMapping("/live/{sessionId}")
     public BaseResponse<String> joinLive(@PathVariable String sessionId) {
-
         String token = liveService.joinLiveRoom(sessionId);
         return new BaseResponse<>(token);
     }
@@ -49,17 +47,13 @@ public class LiveController {
     @PostMapping("/live/{sessionId}/recording/start")
 
     public BaseResponse<?> recordingStart(@PathVariable String sessionId, @RequestBody RecordingStartRequest request) {
-
         String recordingId = liveService.recordingStart(sessionId, request);
-
         return new BaseResponse<>(recordingId);
     }
 
     @PostMapping("/live/{sessionId}/recording/stop")
     public BaseResponse<?> recordingStop(@RequestBody RecordingStopRequest request) {
-
         liveService.recordingStop(request);
-
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 
