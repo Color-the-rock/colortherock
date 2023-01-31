@@ -14,5 +14,5 @@ public class VideoBoardSummaryResponse {
     private String thumbnailURL;
     private String color;
     private String gymName;
-    private LocalDateTime writtenTime;
+    private LocalDateTime createdDate;
 }

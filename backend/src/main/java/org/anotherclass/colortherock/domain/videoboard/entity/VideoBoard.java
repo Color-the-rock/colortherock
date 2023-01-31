@@ -1,12 +1,15 @@
 package org.anotherclass.colortherock.domain.videoboard.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.videocomment.entity.VideoComment;
+import org.anotherclass.colortherock.global.common.BaseTime;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +17,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "video_board")
-public class VideoBoard {
+public class VideoBoard extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -34,20 +37,15 @@ public class VideoBoard {
     @OneToMany(mappedBy = "videoBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VideoComment> videoComments = new ArrayList<>();
 
-    @Column(name = "written_time")
-    private LocalDateTime writtenTime;
-
     @Builder
-    public VideoBoard(String title, Video video, Member member, LocalDateTime writtenTime) {
+    public VideoBoard(String title, Video video, Member member) {
         this.title = title;
         this.video = video;
         this.member = member;
-        this.writtenTime = writtenTime;
     }
 
-    public void update(String title, LocalDateTime writtenTime) {
+    public void update(String title) {
         this.title = title;
-        this.writtenTime = writtenTime;
     }
 
 }
