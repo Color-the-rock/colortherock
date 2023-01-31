@@ -25,9 +25,9 @@ public class CreateLiveRequest {
                 .isLive(true)
                 .sessionId(sessionId)
                 .member(member)
-                .gymName(gymName)
-                .isPublic(isPublic)
-                .title(title)
+                .gymName(this.gymName)
+                .isPublic(this.isPublic)
+                .title(this.title)
                 .build();
     }
 }

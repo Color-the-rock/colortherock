@@ -45,7 +45,6 @@ public class LiveController {
     }
 
     @PostMapping("/live/{sessionId}/recording/start")
-
     public BaseResponse<?> recordingStart(@PathVariable String sessionId, @RequestBody RecordingStartRequest request) {
         String recordingId = liveService.recordingStart(sessionId, request);
         return new BaseResponse<>(recordingId);
