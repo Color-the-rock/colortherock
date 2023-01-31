@@ -1,26 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
 import * as S from "./style"
-import { Desktop, Mobile } from "../../layout/Template"
 
-const levelList = [
-
-]
-
-export default function SelectButton() {
+const SelectButton = ({value, setValue}) => {
   return (
-    <div>
-      <Desktop></Desktop>
-      <Mobile>
-        <S.Container>
-          <S.SelectWrap>
-            <S.Select>
-              <option value="">난이도 레벨</option>
-              <option value="dog">Dog</option>
-              <option vlaue="cat">Cat</option>
-            </S.Select>
-          </S.SelectWrap>
-        </S.Container>
-      </Mobile>
-    </div>
+    <S.Container className='custom-select'>
+        <S.Select>
+          <option value="0">난이도 레벨</option>
+          <option value="dog">Dog</option>
+          <option vlaue="cat">Cat</option>
+        </S.Select>
+    </S.Container>
   )
 }
+
+
+
+export default React.memo(SelectButton);
