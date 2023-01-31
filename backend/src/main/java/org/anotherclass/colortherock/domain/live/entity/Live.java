@@ -1,13 +1,18 @@
 package org.anotherclass.colortherock.domain.live.entity;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.participant.entity.Participant;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Entity
+@Getter
 public class Live {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,13 +37,16 @@ public class Live {
     @Column(name = "session_id", length = 100)
     private String sessionId;
 
+    @Column(name = "is_live")
+    private Boolean isLive;
+
     // Many : 1 관계 에서는 지연 로딩을 사용 하자
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Column(name = "is_live")
-    private Boolean isLive;
+    @OneToMany(mappedBy = "live", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Participant> participants = new ArrayList<>();
 
     @Builder
     public Live(Boolean isPublic, String gymName, String title, String thumbnailURL, Integer level, String sessionId, Boolean isLive, Member member) {
