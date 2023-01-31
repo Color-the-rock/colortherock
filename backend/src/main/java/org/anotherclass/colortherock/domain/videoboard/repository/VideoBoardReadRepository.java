@@ -60,6 +60,7 @@ public class VideoBoardReadRepository {
 
         List<VideoBoard> results = query.selectFrom(videoBoard)
                 .join(videoBoard.member, member)
+                .fetchJoin()
                 .where(
                         // no-offset 페이징 처리
                         checkStoreId(storeId),
