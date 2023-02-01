@@ -11,10 +11,7 @@ import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
 import org.anotherclass.colortherock.domain.memberrecord.exception.WrongMemberException;
-import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatResponse;
-import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatResponse;
-import org.anotherclass.colortherock.domain.memberrecord.response.VideoDetailResponse;
-import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
+import org.anotherclass.colortherock.domain.memberrecord.response.*;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
@@ -173,5 +170,12 @@ public class RecordController {
         recordService.subVideoCount(member);
         if(video.getIsSuccess()) recordService.subSuccessCount(member);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
+    }
+
+    @GetMapping("/visit")
+    public BaseResponse<List<VisitListResponse>> getVisitList(@AuthenticationPrincipal MemberDetails memberDetails) {
+        Member member = memberDetails.getMember();
+        List<VisitListResponse> visitList = recordService.getVisitList(member);
+        return new BaseResponse<>(visitList);
     }
 }

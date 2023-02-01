@@ -1,7 +1,10 @@
 package org.anotherclass.colortherock.domain.video.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.memberrecord.response.VisitListResponse;
 import org.anotherclass.colortherock.domain.video.entity.QVideo;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
@@ -58,5 +61,18 @@ public class VideoReadRepository {
         }
 
         return new SliceImpl<>(results, pageable, hasNext);
+    }
+
+    // 사용자 암장 방문 횟수
+    public List<VisitListResponse> searchVisitCount(Member member) {
+        return queryFactory.select(
+                        Projections.constructor(VisitListResponse.class,
+                                video.gymName.as("gymName"),
+                                video.shootingDate.countDistinct().as("count"))
+                )
+                .from(video)
+                .where(video.member.eq(member))
+                .groupBy(video.gymName)
+                .fetch();
     }
 }

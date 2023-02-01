@@ -5,13 +5,10 @@ import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
 import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
-import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatResponse;
-import org.anotherclass.colortherock.domain.memberrecord.response.VideoDetailResponse;
-import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
+import org.anotherclass.colortherock.domain.memberrecord.response.*;
 import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
 import org.anotherclass.colortherock.domain.video.repository.VideoReadRepository;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
-import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatResponse;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
@@ -137,5 +134,10 @@ public class RecordService {
         Member member = memberRepository.findById(memberId).get();
         MemberRecord memberRecord = new MemberRecord(member);
         recordRepository.save(memberRecord);
+    }
+
+    @Transactional(readOnly = true)
+    public List<VisitListResponse> getVisitList(Member member) {
+        return videoReadRepository.searchVisitCount(member);
     }
 }
