@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Desktop, Mobile } from "../../../components/layout/Template"
 import * as S from "./style"
 import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn"
@@ -11,6 +11,9 @@ import Thumbnail from "../../../components/Common/Thumbnail";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll"
 import Header from "../../../components/layout/Header"
 import BoardSubTitle from "../../../components/Board/BoardSubTitle"
+
+import { defaultInstance } from "../../../api/utils";
+import requests from "../../../api/board"
 
 const dummy = [
   {
@@ -58,10 +61,31 @@ const dummy = [
 
 const BoardDetail = () => {
   
+
+
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState(dummy);
   
+  const config = {
+    params: {
+      
+    }
+  }
+
+  // 상세 정보 받아오기!!
+  useEffect(() => {
+    defaultInstance.get(requests.GetBoardDetail, config)
+      .then((res) => {
+        setData(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }, [])
+
+
+
   const updateFuncOnScroll= () => {
    
     try {
@@ -88,7 +112,7 @@ const BoardDetail = () => {
   }
 
   return (
-    <div>
+    <S.ContainerWrap>
       <Desktop>
         <S.HeaderWrap>
           <Header></Header>
@@ -106,7 +130,7 @@ const BoardDetail = () => {
           {/* 비디오 */}
           {/* <S.VideoWrap>
           </S.VideoWrap> */}
-            <S.Video  controls>
+            <S.Video   controls>
               <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"/>
             </S.Video>
           
@@ -156,7 +180,7 @@ const BoardDetail = () => {
         </S.ContentWrap>
       </S.ContentContainer>
     </S.Container>
-    </div>
+    </S.ContainerWrap>
   )
 };
 

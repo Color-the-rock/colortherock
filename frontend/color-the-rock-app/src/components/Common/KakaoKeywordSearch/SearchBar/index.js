@@ -1,50 +1,52 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from "prop-types"
 import * as S from "./style"
-import { Desktop, Mobile } from "../../../layout/Template"
 import SearchList from '../SearchList';
 
-const KakaoMapBtn = ({location, setLocation}) => {
+const SearchBar = ({location, setLocation, opacity="100"}) => {
 
-  const [inputText, setInputText] = useState("");
+  // const [inputText, setInputText] = useState("");
   const [OpenList, setOpenList] = useState(false);
 
   const handleChange = (e) => {
-    setInputText(e.target.value);
+    setLocation(e.target.value);
+    setOpenList(false);
   }
 
   const handleOnKeyPress = (e) => {
     // Enter event 발생시
     if(e.key === 'Enter') {
-      setLocation(inputText);
+      setLocation(location);
       setOpenList(true);
     }
   }
   
   return (
-    <S.Container>
-        <S.InputContent
-          type="text"
-          placeholder="암장을 입력해주세요."
-          onChange={handleChange}
-          onKeyDown={handleOnKeyPress}
-        />
+    <div>
+      <S.Container opacity={opacity}>
+          <S.InputContent
+            type="text"
+            value={location}
+            placeholder="암장을 입력해주세요."
+            onChange={handleChange}
+            onKeyDown={handleOnKeyPress}
+          />
+      </S.Container>
 
-      { OpenList ?
-        (<SearchList searchPlace={location} setOpenList={setOpenList}></SearchList>) 
-      :
-        null
-      }
-        
-    </S.Container>
+        { OpenList ?
+          (<SearchList searchPlace={location} opacity={opacity} setLocation={setLocation} setOpenList={setOpenList}></SearchList>) 
+        :
+          null
+        }
+    </div>
   )
 }
 
-KakaoMapBtn.propTypes = {
+SearchBar.propTypes = {
   location: PropTypes.string,
   setLocation: PropTypes.func,
 }
 
 
 
-export default React.memo(KakaoMapBtn); 
+export default React.memo(SearchBar); 

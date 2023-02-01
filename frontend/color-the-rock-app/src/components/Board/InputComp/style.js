@@ -9,16 +9,19 @@ export const Container = styled.div`
   background-color: var(--color-background);
   border: 1px solid var(--color-border);
   border-radius: 20px;
-  min-width: 328px;
+  /* min-width: 328px; */
   max-width: 600px;
-`
+  opacity: ${(props) => 
+    props.opacity !== "100" ? `${props.opacity}%` : "100%"};
 
+`  
 export const InputContent = styled.input`
   border: none;
   width: 100%;
   height: 100%;
   padding: 16px;
-  min-width: 280px;
+  border-radius: 20px;
+  /* min-width: 280px; */
   background-color: var(--color-background);
   color: var(--color-tertiary); 
   letter-spacing: -0.01em;
@@ -27,4 +30,6 @@ export const InputContent = styled.input`
   font-weight: 400;
   font-size: 14px;
   line-height: 1.5rem;
+
+
 `

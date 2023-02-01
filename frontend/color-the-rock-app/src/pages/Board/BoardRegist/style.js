@@ -1,5 +1,17 @@
 import styled from "styled-components"
 
+export const ContainerWrap = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
+  
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`
+
 export const HeaderWrap = styled.div`
   height: 10vh;
 `

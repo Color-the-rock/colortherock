@@ -5,13 +5,9 @@ export const Container = styled.div`
   border-radius: 10px;
   color: var(--color-tertiary);
   background-color: transparent;
+  min-width: 155px;
 
-  &:nth-child(2n-1) {
-    margin-right: 0.5rem;
-  }
-  &:nth-child(2n) {
-    margin-left: 0.5rem;
-  }
+
 `;
 
 export const SelectBox = styled.div`
@@ -19,7 +15,6 @@ export const SelectBox = styled.div`
   align-items: center;
   position: relative;
   width: 100%;
-  min-width: 10.688rem;
   min-height: 2.5rem;
   padding: 0.5rem;
   border-radius: 20px;
@@ -57,6 +52,11 @@ export const SelectOption = styled.ul`
   color: #ffffff;
   transition: 0.2s ease-in;
   overflow: scroll;
+
+  /* 추가 */
+  z-index: 1;
+  /* margin-top: 2px; */
+  /* border: 1px solid var(--color-border); */
 `;
 
 export const OptionItem = styled.li`
