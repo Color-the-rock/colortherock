@@ -86,7 +86,7 @@ public class VideoBoardService {
                 .videoBoardId(vb.getId())
                 .nickname(vb.getMember().getNickname())
                 .title(vb.getTitle())
-                .createDate(vb.getCreatedDate())
+                .createdDate(vb.getCreatedDate())
                 .build();
     }
 

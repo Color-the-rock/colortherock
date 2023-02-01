@@ -12,6 +12,4 @@ import java.util.List;
 public interface VideoRepository extends JpaRepository<Video, Long> {
     List<Video> findAllByMember(Member member);
     List<Video> findAllByMemberAndShootingDate(Member member, LocalDate date);
-    List<Video> findAllByMemberAndShootingDateAndIsSuccessIsTrue(Member member, LocalDate date);
-    List<Video> findAllByMemberAndShootingDateAndIsSuccessIsFalse(Member member, LocalDate videoDate);
 }
