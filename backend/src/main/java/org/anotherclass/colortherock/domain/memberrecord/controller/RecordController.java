@@ -25,6 +25,8 @@ import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
+import org.apache.commons.io.FilenameUtils;
+import org.jcodec.api.JCodecException;
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -132,18 +134,20 @@ public class RecordController {
     @ApiResponse(responseCode = "200", description = "영상 업로드 성공")
     @PostMapping(value = "/video", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails
-            , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) throws IOException {
+            , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
         Member member = memberDetails.getMember();
         // S3 영상 저장 후 URL 얻어오기
         // 영상 식별을 위해 파일 앞에 현재 시각 추가
         String videoName = DateTime.now() + newVideo.getOriginalFilename();
         String s3URL = s3Service.upload(newVideo, videoName);
         uploadVideoRequest.setVideoName(videoName);
+        // 썸네일 이미지 생성하여 S3 저장
+        String thumbnailName = "Thumb"+DateTime.now() + FilenameUtils.getBaseName(newVideo.getOriginalFilename()) + ".JPEG";
+        String thumbnailURL = s3Service.uploadThumbnail(newVideo, thumbnailName);
         // request와 URL을 통해 DB에 저장
-        videoService.uploadVideo(member, s3URL, uploadVideoRequest);
+        videoService.uploadVideo(member, s3URL, thumbnailURL, uploadVideoRequest);
         // 영상 누적 통계에서 영상 갯수 올리기
-        recordService.addVideoCount(member);
-        if(uploadVideoRequest.getIsSuccess()) recordService.addSuccessCount(member);
+        recordService.addVideoCount(member, uploadVideoRequest.getIsSuccess());
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 
@@ -170,8 +174,7 @@ public class RecordController {
         // DB에서 해당 영상 삭제
         videoService.deleteVideo(videoId);
         // 영상 누적 통계에서 영상 갯수 줄이기
-        recordService.subVideoCount(member);
-        if(video.getIsSuccess()) recordService.subSuccessCount(member);
+        recordService.subVideoCount(member, video.getIsSuccess());
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 }

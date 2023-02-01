@@ -1,10 +1,14 @@
 package org.anotherclass.colortherock.domain.videoboard.request;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
-@Data
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SuccessVideoUploadRequest {
 
     @NotNull
