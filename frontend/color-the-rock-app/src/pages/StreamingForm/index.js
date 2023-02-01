@@ -12,7 +12,9 @@ import BoardRadioBtn from "../../components/Board/BoardRadioBtn";
 import { FiChevronDown } from "react-icons/fi";
 import { FiChevronUp } from "react-icons/fi";
 import { HiOutlineCamera } from "react-icons/hi2";
-
+import { OpenVidu } from "openvidu-browser";
+import { useDispatch } from "react-redux";
+import { setOV } from "../../stores/streaming/streamingSlice";
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
@@ -45,6 +47,7 @@ const videoConstraints = {
 
 const StreamingForm = () => {
 
+
   const navigate = useNavigate();
 
   const webcamRef = useRef(null);
@@ -64,23 +67,39 @@ const StreamingForm = () => {
 
     // navigate("/streaming");
   }
+  const [level, setLevel] = useState("");
+  const [color, setColor] = useState("");
+  const [location, setLocation] = useState("");
+  const dispatch = useDispatch();
+
 
   const clickHandler = () => {
     navigate("/streaming");
   }
-
+  
   // setting 창 열기/닫기
   const ChangeSettingMode = () => {
     setOnSetting((prev) => !prev);
   }
   
+  const submitHandler = () => {
+    joinSession();
+    navigate("/streaming/live/1");
+  };
+  
+  // openVidu 설정
+  const joinSession = () => {
+    console.log("joinSession");
+    const ov = new OpenVidu();
+    dispatch(setOV({ ov }));
+  };
   
   // 캡처
   const handleCapture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
     console.log("찰칵찰칵");
-
+    
   }, [webcamRef, setImgSrc]);
 
   return (
@@ -106,7 +125,7 @@ const StreamingForm = () => {
             )
           }
           <S.ComponenentWrap>
-            <RegistBtn btnName="방송 시작" clickHandler={startStreaming}/>
+            <RegistBtn btnName="방송 시작" clickHandler={submitHandler}/>
           </S.ComponenentWrap>
           
 

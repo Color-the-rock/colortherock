@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100vw;
@@ -12,8 +12,9 @@ export const Container = styled.div`
   }
 `
 
+
 export const ContentWrap = styled.div`
-  width:100%;
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -27,7 +28,7 @@ export const Content = styled.div`
   
   padding: 0 1rem;
   @media (min-width: 992px) {
-  width: 600px;
+    width: 600px;
   }
   @media (max-width: 991px) {
   width: 100vw;
