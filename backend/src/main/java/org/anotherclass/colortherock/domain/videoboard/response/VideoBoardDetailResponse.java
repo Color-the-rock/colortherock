@@ -13,6 +13,6 @@ public class VideoBoardDetailResponse {
     private Long videoBoardId;
     private String nickname;
     private String title;
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
 }

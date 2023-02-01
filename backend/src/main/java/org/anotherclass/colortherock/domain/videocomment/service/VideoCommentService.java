@@ -63,7 +63,6 @@ public class VideoCommentService {
 
         VideoComment videoComment = videoCommentRepository.save(VideoComment.builder()
                 .content(newCommentRequest.getContent())
-                .writtenTime(newCommentRequest.getWrittenTime())
                 .member(member)
                 .videoBoard(videoBoard)
                 .build());
