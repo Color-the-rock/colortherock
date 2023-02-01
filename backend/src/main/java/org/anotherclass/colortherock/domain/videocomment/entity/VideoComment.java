@@ -1,17 +1,20 @@
 package org.anotherclass.colortherock.domain.videocomment.entity;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
+import org.anotherclass.colortherock.global.common.BaseTime;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "video_comment")
-public class VideoComment {
+public class VideoComment extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -19,9 +22,6 @@ public class VideoComment {
 
     @Column(name = "content", length = 500)
     private String content;
-
-    @Column(name = "written_time")
-    private LocalDateTime writtenTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -32,15 +32,13 @@ public class VideoComment {
     private VideoBoard videoBoard;
 
     @Builder
-    public VideoComment(String content, LocalDateTime writtenTime, Member member, VideoBoard videoBoard) {
+    public VideoComment(String content, Member member, VideoBoard videoBoard) {
         this.content = content;
-        this.writtenTime = writtenTime;
         this.member = member;
         this.videoBoard = videoBoard;
     }
 
-    public void update(String content, LocalDateTime writtenTime) {
+    public void update(String content) {
         this.content = content;
-        this.writtenTime = writtenTime;
     }
 }

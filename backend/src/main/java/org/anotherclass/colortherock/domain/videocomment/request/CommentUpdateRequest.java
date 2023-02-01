@@ -17,8 +17,4 @@ public class CommentUpdateRequest {
     @NotNull
     private String content;
 
-    @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime writtenTime;
-
 }

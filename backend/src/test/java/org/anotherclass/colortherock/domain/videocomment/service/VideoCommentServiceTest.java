@@ -26,7 +26,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,11 +68,11 @@ class VideoCommentServiceTest {
         for (int i = 1; i <= 4; i++) {
             Video video = new Video(LocalDate.parse("2023-01-30"), 4, "더클라임 강남점", "s3url", true, "thumbnail", "초록", saveA, "videoName");
             Video saveVideo = videoRepository.save(video);
-            VideoBoard videoBoard = new VideoBoard("성공했습니다.", saveVideo, memberA, LocalDateTime.of(2023, 1, 30, 15, i));
+            VideoBoard videoBoard = new VideoBoard("성공했습니다.", saveVideo, memberA);
             VideoBoard saveVideoBoard = videoBoardRepository.save(videoBoard);
             videoBoardIds.add(saveVideoBoard.getId());
             for (int j = 1; j <= 4; j++) {
-                VideoComment comment = new VideoComment("멋있어요!", LocalDateTime.of(2023, 1, 30, 16, j), saveB, saveVideoBoard);
+                VideoComment comment = new VideoComment("멋있어요!", saveB, saveVideoBoard);
                 VideoComment saveComment = videoCommentRepository.save(comment);
                 videoCommentIds.add(saveComment.getId());
             }
@@ -116,7 +115,6 @@ class VideoCommentServiceTest {
                 NewCommentRequest request = new NewCommentRequest();
                 request.setVideoBoardId(videoBoardIds.get(0));
                 request.setContent("멋있어요!");
-                request.setWrittenTime(LocalDateTime.of(2022, 1, 23, 23, 10));
                 assertThrows(GlobalBaseException.class, () -> {
                     videoCommentService.insertComment(memberId, request);
                 });
@@ -129,7 +127,6 @@ class VideoCommentServiceTest {
                 NewCommentRequest request = new NewCommentRequest();
                 request.setVideoBoardId(20L); // DB에 없는 id
                 request.setContent("멋있어요!");
-                request.setWrittenTime(LocalDateTime.of(2022, 1, 23, 23, 10));
                 assertThrows(PostNotFoundException.class, () -> {
                     videoCommentService.insertComment(memberId, request);
                 });
@@ -146,7 +143,6 @@ class VideoCommentServiceTest {
                 NewCommentRequest request = new NewCommentRequest();
                 request.setVideoBoardId(videoBoardIds.get(0));
                 request.setContent("멋있어요!");
-                request.setWrittenTime(LocalDateTime.of(2022, 1, 23, 23, 10));
 
                 Long commentId = videoCommentService.insertComment(memberId, request);
                 VideoComment videoComment = videoCommentRepository.findById(commentId).get();
@@ -171,7 +167,6 @@ class VideoCommentServiceTest {
                 CommentUpdateRequest request = new CommentUpdateRequest();
                 request.setCommentId(30L); // DB에 없는 commentId
                 request.setContent("수정했어요");
-                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 23, 25));
 
                 assertThrows(CommentNotFoundException.class, () -> {
                     videoCommentService.updateComment(memberId, request);
@@ -185,7 +180,6 @@ class VideoCommentServiceTest {
                 CommentUpdateRequest request = new CommentUpdateRequest();
                 request.setCommentId(videoCommentIds.get(0));
                 request.setContent("수정했어요");
-                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 23, 25));
 
                 assertThrows(GlobalBaseException.class, () -> {
                     videoCommentService.updateComment(memberId, request);
@@ -203,7 +197,6 @@ class VideoCommentServiceTest {
                 CommentUpdateRequest request = new CommentUpdateRequest();
                 request.setCommentId(videoCommentIds.get(0));
                 request.setContent("수정했어요");
-                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 23, 25));
 
                 videoCommentService.updateComment(memberId, request);
                 VideoComment comment = videoCommentRepository.findById(request.getCommentId()).get();

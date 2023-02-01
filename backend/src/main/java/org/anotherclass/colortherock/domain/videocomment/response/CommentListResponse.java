@@ -14,5 +14,5 @@ public class CommentListResponse {
     private Long commentId;
     private String nickname;
     private String content;
-    private LocalDateTime writtenTime;
+    private LocalDateTime createdDate;
 }
