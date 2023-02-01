@@ -42,11 +42,13 @@ dependencies {
 	implementation 'com.h2database:h2'
 	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.25.0'
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
 	//querydsl 추가
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.14'
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-security', version: '1.6.14'
 	//썸네일 추출
 	implementation group: 'org.jcodec', name: 'jcodec', version: '0.2.3'
 	implementation group: 'org.jcodec', name: 'jcodec-javase', version: '0.2.5'
