@@ -1,6 +1,6 @@
 import React from "react";
 import OpenViduVideoComponent from "../OpemViduVideo";
-import "./UserVideo.css";
+import * as S from "./style";
 
 function UserVideoComponent({ streamManager }) {
   const getNicknameTag = () => {
@@ -8,18 +8,13 @@ function UserVideoComponent({ streamManager }) {
   };
 
   return (
-    <div>
+    <S.VideoWrapper>
       {streamManager !== undefined ? (
-        <div className="streamcomponent">
-          <OpenViduVideoComponent streamManager={streamManager} />
-          <div>
-            <p>{getNicknameTag()}</p>
-          </div>
-        </div>
+        <OpenViduVideoComponent streamManager={streamManager} />
       ) : (
-        <div>streamManager is undefined</div>
+        <S.GuideText>streamManager is undefined</S.GuideText>
       )}
-    </div>
+    </S.VideoWrapper>
   );
 }
 

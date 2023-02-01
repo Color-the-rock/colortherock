@@ -12,6 +12,7 @@
     "axios": "^1.2.3",
     "chart.js": "^4.2.0",
     "date-fns": "^2.29.3",
+    "framer-motion": "^8.5.5",
     "moment": "^2.29.4",
     "openvidu-browser": "^2.25.0",
     "prop-types": "^15.8.1",
