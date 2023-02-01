@@ -4,36 +4,55 @@ import io.openvidu.java.client.*;
 import org.anotherclass.colortherock.domain.live.entity.Live;
 import org.anotherclass.colortherock.domain.live.exception.RecordingStartBadRequestException;
 import org.anotherclass.colortherock.domain.live.exception.SessionNotFountException;
+import org.anotherclass.colortherock.domain.live.repository.LiveReadRepository;
 import org.anotherclass.colortherock.domain.live.repository.LiveRepository;
 import org.anotherclass.colortherock.domain.live.request.CreateLiveRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingSaveRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStartRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStopRequest;
+import org.anotherclass.colortherock.domain.live.response.LiveListResponse;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
+import org.anotherclass.colortherock.domain.video.service.S3Service;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LiveService {
 
+    private final S3Service s3Service;
     private final LiveRepository liveRepository;
+    private final LiveReadRepository liveReadRepository;
     private final MemberRepository memberRepository;
     private final VideoRepository videoRepository;
 
     private final OpenVidu openVidu;
 
+    @Value("${RECORDING_PATH}") String dir;
+
     public LiveService(LiveRepository liveRepository,
                        MemberRepository memberRepository,
                        VideoRepository videoRepository,
-                       @Value("${OPENVIDU_URL}") String OPENVIDU_URL,
+                       S3Service s3Service,
+                       LiveReadRepository liveReadRepository, @Value("${OPENVIDU_URL}") String OPENVIDU_URL,
                        @Value("${OPENVIDU_SECRET}") String OPENVIDU_SECRET) {
+        this.s3Service = s3Service;
         this.liveRepository = liveRepository;
         this.memberRepository = memberRepository;
         this.videoRepository = videoRepository;
+        this.liveReadRepository = liveReadRepository;
         this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
@@ -48,9 +67,7 @@ public class LiveService {
             throw new RuntimeException(e);
         }
         String sessionId = session.getSessionId();
-
-        // TODO 섬네일 어떻게 받을지?
-        Live live = request.toEntity(sessionId, "대충 섬네일", member);
+        Live live = request.toEntity(sessionId, member);
         liveRepository.save(live);
         try {
             Connection connection = session.createConnection(new ConnectionProperties.Builder().role(OpenViduRole.PUBLISHER).build());
@@ -104,10 +121,35 @@ public class LiveService {
         throw new RecordingStartBadRequestException();
     }
 
-    public void recordingSave(MemberDetails memberDetails, String sessionId, RecordingSaveRequest request) {
-        // TODO S3 저장 로직
+    @Transactional
+    public void recordingSave(MemberDetails memberDetails, String sessionId, RecordingSaveRequest request) throws IOException {
+        dir += "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".webm";
+        String videoName = DateTime.now() + request.getRecordingId() + ".webm";
+        String s3Url = s3Service.uploadFromLocal(dir, videoName);
         Member member = memberRepository.findById(memberDetails.getMember().getId()).orElseThrow();
-        Video video = request.toEntity("대충 s3url", "섬네일 url", member);
+        // TODO 썸네일 주소 필요
+        Video video = request.toEntity(s3Url, "섬네일 url", member);
         videoRepository.save(video);
+    }
+
+    @Transactional(readOnly = true)
+    public List<LiveListResponse> getLiveList(Long liveId, Pageable pageable) {
+        Slice<Live> slices = liveReadRepository.searchBySlice(liveId, pageable);
+
+        if(slices.isEmpty()) return new ArrayList<>();
+
+        return slices.toList().stream()
+                .map(live ->
+                        LiveListResponse.builder()
+                                .id(live.getId())
+                                .title(live.getTitle())
+                                .memberId(live.getMember().getId())
+                                .memberName(live.getMember().getNickname())
+                                .gymName(live.getGymName())
+                                .sessionId(live.getSessionId())
+                                .participantNum(
+                                        openVidu.getActiveSession(live.getSessionId()).getActiveConnections().size()
+                                ).build())
+                .collect(Collectors.toList());
     }
 }
