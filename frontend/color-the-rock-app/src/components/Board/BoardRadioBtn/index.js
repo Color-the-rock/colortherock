@@ -1,35 +1,45 @@
-import React, {useState} from 'react'
-import { useInput } from "../../../hooks/useInput"
+import React from 'react'
+// import { useInput } from "../../../hooks/useInput"
 import * as S from "./style"
+import PropTypes from "prop-types"
 
+const BoardRadioBtn = ({isPublic, setIsPublic, firstText ="성공", SecondText ="실패", opacity="100"}) => {
 
-const BoardRadioBtn = () => {
-
-  const [radioValue, onChangeRadioButton] = useInput("success")
-
+  const onChangeRadioButton = (e) => {
+    const { value } = e.target;
+    console.log(value);
+    setIsPublic(value === "true");
+  }
+  
   return (
-    <S.Container>
-      <S.ContentWrap checked={radioValue === "success"}>
+    <S.Container  opacity={opacity}>
+      <S.ContentWrap checked={isPublic === true}>
       <S.RadioButton
           className='radiobtn'
           type="radio"
           name="type"
-          value="success"
-          checked = {radioValue === "success"}
+          value={true}
           onChange={onChangeRadioButton}
-        /><span>성공</span>
+        /><span>{firstText}</span>
       </S.ContentWrap>
-      <S.ContentWrap checked={radioValue === "fail"}>
+      <S.ContentWrap checked={isPublic === false}>
       <S.RadioButton
           type="radio"
           name="type"
-          value="fail"
-          checked = {radioValue === "fail"}
+          value={false}
           onChange={onChangeRadioButton}
-        /><span>실패</span>
+        /><span>{SecondText}</span>
       </S.ContentWrap>
     </S.Container>
   )
+}
+
+BoardRadioBtn.propTypes = {
+  isPublic: PropTypes.bool.isRequired,
+  setIsPublic: PropTypes.func.isRequired,
+  firstText: PropTypes.string,
+  SecondText: PropTypes.string,
+  opacity: PropTypes.string,
 }
 
 export default BoardRadioBtn;
