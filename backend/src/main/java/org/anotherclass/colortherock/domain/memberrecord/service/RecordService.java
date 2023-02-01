@@ -138,6 +138,8 @@ public class RecordService {
 
     @Transactional(readOnly = true)
     public List<VisitListResponse> getVisitList(Member member) {
-        return videoReadRepository.searchVisitCount(member);
+        List<VisitListResponse> visitListResponses = videoReadRepository.searchVisitCount(member);
+        visitListResponses.sort((r1, r2) -> (int)(r2.getCount() - r1.getCount()));
+        return visitListResponses;
     }
 }
