@@ -1,14 +1,18 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import * as S from "./style";
 const Video = ({ thumb, title, color, sources }) => {
-  console.log(thumb);
+  const navigate = useNavigate();
+  const handleOnClickThumbNail = () => {
+    console.log("handleOnClickThumbNail()... ");
+    navigate(`/preview?source=${sources[0]}`);
+  };
   return (
-    <S.Container poster={thumb} controls>
-      <source src={sources[0]} type="video/mp4" />
+    <S.Container onClick={handleOnClickThumbNail}>
+      <S.ThumbnailImg src={thumb} alt="썸네일 이미지" />
+      <S.Text>{title}</S.Text>
+      <S.Tag>{color}</S.Tag>
     </S.Container>
-    //  <S.ThumbnailImg src={thumb} alt="썸네일 이미지" />
-    //  <S.Text>{title}</S.Text>
-    //  <S.Tag>{color}</S.Tag>
   );
 };
 
