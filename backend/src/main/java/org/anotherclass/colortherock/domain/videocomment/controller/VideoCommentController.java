@@ -43,7 +43,7 @@ public class VideoCommentController {
             @ApiResponse(responseCode = "200", description = "댓글 조회 성공", content = @Content(schema = @Schema(implementation = CommentListResponse.class)))
     })
     public BaseResponse<List<CommentListResponse>> getCommentList
-            (@RequestBody CommentListRequest condition, @PageableDefault(size = 15, sort = "id") Pageable pageable) {
+            ( CommentListRequest condition, @PageableDefault(size = 15, sort = "id") Pageable pageable) {
         List<CommentListResponse> commentList = videoCommentService.getCommentList(condition, pageable);
         return new BaseResponse<>(commentList);
     }
@@ -91,11 +91,9 @@ public class VideoCommentController {
             @ApiResponse(responseCode = "200", description = "나의 댓글 조회 완료")
     })
     public BaseResponse<List<MyCommentListResponse>> getMyCommentList
-            (@AuthenticationPrincipal MemberDetails memberDetails, Long storeId, @PageableDefault(size = 15, sort = "id") Pageable pageable) {
+            (@AuthenticationPrincipal MemberDetails memberDetails, @RequestParam(required = false) Long storeId, @PageableDefault(size = 15, sort = "id") Pageable pageable) {
         Member member = memberDetails.getMember();
         List<MyCommentListResponse> myCommentList = videoCommentService.getMyCommentList(member.getId(), storeId, pageable);
         return new BaseResponse<>(myCommentList);
     }
-
-
 }
