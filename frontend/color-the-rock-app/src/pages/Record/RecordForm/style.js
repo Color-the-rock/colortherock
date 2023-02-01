@@ -1,5 +1,18 @@
 import styled from "styled-components"
 
+export const ContainerWrap = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
+  
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`
+
+
 export const HeaderWrap = styled.div`
   height: 10vh;
 `
@@ -7,11 +20,13 @@ export const HeaderWrap = styled.div`
 
 export const Container = styled.div`
   width: 100vw;
-  height: 90vh;
+  height: 100vh;
+
 `
 
 export const ArrowLeftBtnWrap = styled.div`
-  padding-left: 1rem;
+  width: 100%;
+  display: flex;
 `
 
 export const ContentWrap = styled.div`
@@ -22,8 +37,10 @@ export const ContentWrap = styled.div`
 `
 export const ComponenentWrap = styled.div`
   width: 100%;
+  display: flex;
   margin-bottom: 1rem;
 `
+
 
 export const Content = styled.div`
   display: flex;
@@ -60,4 +77,19 @@ export const selectBtnContent = styled.span`
   align-self: center;
   grid-template-columns: 1fr 1fr;
   grid-gap: 1rem;
+`
+
+export const PickDate = styled.input`
+  background-color: #0080ff;
+
+  
+  &::before {
+
+  }
+
+  &::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
 `

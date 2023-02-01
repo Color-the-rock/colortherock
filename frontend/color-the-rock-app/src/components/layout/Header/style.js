@@ -74,6 +74,7 @@ export const SLink = styled(Link)`
     props.current === "true" ? "underline" : "none"};
   text-decoration-thickness: 5px;
   text-decoration-color: var(--color-brand-primary);
+  
   &:last-child {
     margin-right: 0px;
   }

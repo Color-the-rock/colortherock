@@ -18,6 +18,7 @@ export const UploadArea = styled.div`
   display:flex;
   justify-content: center;
   background-color: var(--color-background);
+  border-radius: 20px;
   z-index: 1500;
   text-align: center;
 `
@@ -45,10 +46,6 @@ export const VideoWrap = styled.div`
     }
 `
 
-// export const InputWrap = styled.div`
-//   width: 100%;
-//   height: 1rem;
-// `
 
 export const Input = styled.input`
   width: 100%;
@@ -64,7 +61,6 @@ export const InputWrap = styled.div`
 
   label {
     position: absolute;
-    /* text-align: center; */
     transform: translateY(-50%);
     left: 0;
     top:50%;
