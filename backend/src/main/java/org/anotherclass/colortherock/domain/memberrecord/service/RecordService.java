@@ -6,6 +6,7 @@ import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
 import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
 import org.anotherclass.colortherock.domain.memberrecord.response.*;
+import org.anotherclass.colortherock.domain.video.dto.DateLevelDto;
 import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
 import org.anotherclass.colortherock.domain.video.repository.VideoReadRepository;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
@@ -18,8 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -141,5 +145,37 @@ public class RecordService {
         List<VisitListResponse> visitListResponses = videoReadRepository.searchVisitCount(member);
         visitListResponses.sort((r1, r2) -> (int)(r2.getCount() - r1.getCount()));
         return visitListResponses;
+    }
+
+    @Transactional(readOnly = true)
+    public List<DailyColorResponse> getCalendarColor(Member member, String yearMonth) {
+        YearMonth month = YearMonth.parse(yearMonth);
+        LocalDate firstDate = month.atDay(1);
+        LocalDate lastDate = month.atEndOfMonth();
+        List<DailyColorResponse> dailyColors = new ArrayList<>();
+        LocalDate currentDate = null;
+        Set<Integer> levels = new HashSet<>();
+        List<DateLevelDto> dtos = videoReadRepository.searchDailyColor(member, firstDate, lastDate);
+        for (int i = 0; i < dtos.size(); i++) {
+            DateLevelDto dto = dtos.get(i);
+            if(currentDate == null) currentDate = dto.getDate();
+            if(currentDate != null && !dto.getDate().isEqual(currentDate)) {
+                dailyColors.add(dtoToResponse(currentDate, levels));
+                levels = new HashSet<>();
+                currentDate = dto.getDate();
+            }
+            if(levels.size() == 3) continue;
+            else levels.add(dto.getLevel());
+        }
+        dailyColors.add(dtoToResponse(currentDate, levels));
+        return dailyColors;
+    }
+
+    public DailyColorResponse dtoToResponse(LocalDate currentDate, Set<Integer> levels) {
+        List<String> colors = new ArrayList<>();
+        levels.stream().forEach(level -> colors.add(ColorCode.getColor(level)));
+        return DailyColorResponse.builder()
+                .date(currentDate)
+                .colors(colors).build();
     }
 }

@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.memberrecord.response.VisitListResponse;
+import org.anotherclass.colortherock.domain.video.dto.DateLevelDto;
 import org.anotherclass.colortherock.domain.video.entity.QVideo;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -73,6 +75,24 @@ public class VideoReadRepository {
                 .from(video)
                 .where(video.member.eq(member))
                 .groupBy(video.gymName)
+                .fetch();
+    }
+
+    // 사용자의 해당 날짜 사이에 존재하는 Video를 조회
+    public List<DateLevelDto> searchDailyColor(Member member, LocalDate firstDate, LocalDate lastDate) {
+        return queryFactory.select(
+                    Projections.constructor(DateLevelDto.class,
+                            video.shootingDate.as("date"),
+                            video.level)
+                )
+                .from(video)
+                .where(
+                        video.member.eq(member),
+                        video.shootingDate.between(firstDate, lastDate),
+                        video.isSuccess.eq(true)
+                )
+                .orderBy(video.shootingDate.asc(), video.level.desc())
+                .distinct()
                 .fetch();
     }
 }

@@ -178,4 +178,14 @@ public class RecordController {
         List<VisitListResponse> visitList = recordService.getVisitList(member);
         return new BaseResponse<>(visitList);
     }
+
+    @GetMapping("/calendar/{yearMonth}")
+    public BaseResponse<List<DailyColorResponse>> getCalendarColor(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String yearMonth) {
+        if(!yearMonth.matches("\\d{4}-(0[1-9]|1[012])")) {
+            throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
+        }
+        Member member = memberDetails.getMember();
+        List<DailyColorResponse> calendarColor = recordService.getCalendarColor(member, yearMonth);
+        return new BaseResponse<>(calendarColor);
+    }
 }
