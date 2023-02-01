@@ -33,6 +33,7 @@ public class VideoCommentReadRepository {
         Long videoBoardId = condition.getVideoBoardId();
         List<VideoComment> results = query.selectFrom(videoComment)
                 .join(videoComment.member, member)
+                .fetchJoin()
                 .where(
                         checkStoreId(lastStoreId),
                         videoComment.videoBoard.id.eq(videoBoardId)
@@ -46,6 +47,7 @@ public class VideoCommentReadRepository {
     public Slice<VideoComment> getMyComments(Long memberId, Long storeId, Pageable pageable) {
         List<VideoComment> results = query.selectFrom(videoComment)
                 .join(videoComment.member, member)
+                .fetchJoin()
                 .where(
                         checkStoreId(storeId),
                         videoComment.member.id.eq(memberId)
