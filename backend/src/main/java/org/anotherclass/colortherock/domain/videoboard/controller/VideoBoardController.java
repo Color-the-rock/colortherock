@@ -62,7 +62,7 @@ public class VideoBoardController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "운동 영상 올리기 성공", content = @Content(schema = @Schema(implementation = Long.class)))
     })
-    public BaseResponse<Long> uplaodLocalSuccessVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid LocalSuccessVideoUploadRequest localSuccessVideoUploadRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
+    public BaseResponse<Long> uplaodLocalSuccessVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody LocalSuccessVideoUploadRequest localSuccessVideoUploadRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
         Member member = memberDetails.getMember();
         // S3 영상 저장 후 URL 얻어오기
         // 영상 식별을 위해 파일 앞에 현재 시각 추가
@@ -91,7 +91,7 @@ public class VideoBoardController {
             @ApiResponse(responseCode = "404", description = "유저 정보를 찾을 수 없음"),
             @ApiResponse(responseCode = "404", description = "해당하는 영상을 찾을 수 없음")
     })
-    public BaseResponse<Long> uploadMySuccessVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid SuccessVideoUploadRequest successVideoUploadRequest) {
+    public BaseResponse<Long> uploadMySuccessVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody SuccessVideoUploadRequest successVideoUploadRequest) {
         Member member = memberDetails.getMember();
         Long videoBoardId = videoBoardService.uploadMySuccessVideoPost(member.getId(), successVideoUploadRequest);
         return new BaseResponse<>(videoBoardId);
@@ -103,7 +103,7 @@ public class VideoBoardController {
             @ApiResponse(responseCode = "200", description = "완등 영상 상세 조회 성공", content = @Content(schema = @Schema(implementation = VideoBoardDetailResponse.class))),
             @ApiResponse(responseCode = "404", description = "해당하는 영상 게시글을 찾을 수 없음")
     })
-    public BaseResponse<VideoBoardDetailResponse> getVideoDetail(@NotNull Long videoBoardId) {
+    public BaseResponse<VideoBoardDetailResponse> getVideoDetail(@NotNull @RequestParam(required = false) Long videoBoardId) {
         VideoBoardDetailResponse videoDetail = videoBoardService.getVideoDetail(videoBoardId);
         return new BaseResponse<>(videoDetail);
     }
@@ -115,7 +115,7 @@ public class VideoBoardController {
             @ApiResponse(responseCode = "404", description = "해당하는 영상 게시글을 찾을 수 없음"),
             @ApiResponse(responseCode = "404", description = "작성자와 유저 정보가 일치하지 않음")
     })
-    public BaseResponse<?> updateSuccessPost(@AuthenticationPrincipal MemberDetails memberDetails, @Valid SuccessPostUpdateRequest successPostUpdateRequest) {
+    public BaseResponse<?> updateSuccessPost(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody SuccessPostUpdateRequest successPostUpdateRequest) {
         Member member = memberDetails.getMember();
         videoBoardService.updateSuccessPost(member.getId(), successPostUpdateRequest);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
@@ -128,7 +128,7 @@ public class VideoBoardController {
             @ApiResponse(responseCode = "404", description = "해당하는 영상 게시글을 찾을 수 없음"),
             @ApiResponse(responseCode = "404", description = "작성자와 유저 정보가 일치하지 않음")
     })
-    public BaseResponse<?> deleteSuccessPost(@AuthenticationPrincipal MemberDetails memberDetails, @Valid Long videoBoardId) {
+    public BaseResponse<?> deleteSuccessPost(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestParam Long videoBoardId) {
         Member member = memberDetails.getMember();
         videoBoardService.deleteSuccessPost(member.getId(), videoBoardId);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
@@ -140,7 +140,7 @@ public class VideoBoardController {
             @ApiResponse(responseCode = "200", description = "내 완등 영상 글 목록 불러오기 성공")
     })
     public BaseResponse<List<VideoBoardSummaryResponse>> getMySuccessVideoPosts
-            (@AuthenticationPrincipal MemberDetails memberDetails, Long storeId, @PageableDefault(size = 8, sort = "id") Pageable pageable) {
+            (@AuthenticationPrincipal MemberDetails memberDetails, @RequestParam Long storeId, @PageableDefault(size = 8, sort = "id") Pageable pageable) {
         Member member = memberDetails.getMember();
         List<VideoBoardSummaryResponse> mySuccessPosts = videoBoardService.getMySuccessVideoPosts(member.getId(), storeId, pageable);
         return new BaseResponse<>(mySuccessPosts);

@@ -23,7 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +64,7 @@ class VideoBoardServiceTest {
             Video saveVideo = videoRepository.save(video);
             videoIds.add(saveVideo.getId());
             if(i % 2 == 0) {
-                VideoBoard videoBoard = new VideoBoard("성공했습니다.", video, memberA, LocalDateTime.of(2023,1,30,15,i));
+                VideoBoard videoBoard = new VideoBoard("성공했습니다.", video, memberA);
                 VideoBoard saveVideoBoard = videoBoardRepository.save(videoBoard);
                 videoBoardIds.add(saveVideoBoard.getId());
             }
@@ -75,7 +74,7 @@ class VideoBoardServiceTest {
             Video saveVideo = videoRepository.save(video);
             videoIds.add(saveVideo.getId());
             if(i % 2 == 0){
-                VideoBoard videoBoard = new VideoBoard("완등 인증!", video, memberB, LocalDateTime.of(2023,1,30,15,i));
+                VideoBoard videoBoard = new VideoBoard("완등 인증!", video, memberB);
                 VideoBoard saveVideoBoard = videoBoardRepository.save(videoBoard);
                 videoBoardIds.add(saveVideoBoard.getId());
             }

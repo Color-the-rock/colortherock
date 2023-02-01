@@ -43,7 +43,7 @@ public class VideoCommentController {
             @ApiResponse(responseCode = "200", description = "댓글 조회 성공", content = @Content(schema = @Schema(implementation = CommentListResponse.class)))
     })
     public BaseResponse<List<CommentListResponse>> getCommentList
-            ( CommentListRequest condition, @PageableDefault(size = 15, sort = "id") Pageable pageable) {
+            (CommentListRequest condition, @PageableDefault(size = 15, sort = "id") Pageable pageable) {
         List<CommentListResponse> commentList = videoCommentService.getCommentList(condition, pageable);
         return new BaseResponse<>(commentList);
     }
