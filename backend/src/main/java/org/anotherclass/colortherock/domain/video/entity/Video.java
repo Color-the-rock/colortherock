@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
+import org.anotherclass.colortherock.global.common.BaseTime;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @Getter
 @RequiredArgsConstructor
 @Table(name = "video")
-public class Video {
+public class Video extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -61,5 +62,4 @@ public class Video {
         this.member = member;
         this.videoName = videoName;
     }
-
 }

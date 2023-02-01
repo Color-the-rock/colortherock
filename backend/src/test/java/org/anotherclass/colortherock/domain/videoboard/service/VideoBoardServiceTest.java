@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -210,11 +209,8 @@ class VideoBoardServiceTest {
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
                 request.setVideoId(1L);
                 request.setTitle("성공했습니다.");
-                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 18, 30));
 
-                assertThrows(GlobalBaseException.class, () -> {
-                    videoBoardService.uploadMySuccessVideoPost(memberId, request);
-                });
+                assertThrows(GlobalBaseException.class, () -> videoBoardService.uploadMySuccessVideoPost(memberId, request));
             }
         }
 
@@ -228,11 +224,8 @@ class VideoBoardServiceTest {
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
                 request.setVideoId(10L); // DB에 없는 ID
                 request.setTitle("성공했습니다.");
-                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 18, 30));
 
-                assertThrows(VideoNotFoundException.class, () -> {
-                    videoBoardService.uploadMySuccessVideoPost(memberId, request);
-                });
+                assertThrows(VideoNotFoundException.class, () -> videoBoardService.uploadMySuccessVideoPost(memberId, request));
             }
         }
 
@@ -246,11 +239,8 @@ class VideoBoardServiceTest {
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
                 request.setVideoId(1L); // 해당 비디오의 memberId는 0L
                 request.setTitle("성공했습니다.");
-                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 18, 30));
 
-                assertThrows(VideoUserMismatchException.class, () -> {
-                    videoBoardService.uploadMySuccessVideoPost(memberId, request);
-                });
+                assertThrows(VideoUserMismatchException.class, () -> videoBoardService.uploadMySuccessVideoPost(memberId, request));
             }
         }
 
@@ -265,7 +255,6 @@ class VideoBoardServiceTest {
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
                 request.setVideoId(1L);
                 request.setTitle("성공했습니다.");
-                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 18, 30));
                 // when
                 Long videoBoardId = videoBoardService.uploadMySuccessVideoPost(memberId, request);
                 Optional<VideoBoard> videoBoard = videoBoardRepository.findById(videoBoardId);
@@ -286,9 +275,7 @@ class VideoBoardServiceTest {
             @DisplayName("PostNotFound예외를 발생시킨다")
             void postNotFoundException() {
                 Long videoBoardId = 10L;
-                assertThrows(PostNotFoundException.class, () -> {
-                    videoBoardService.getVideoDetail(videoBoardId);
-                });
+                assertThrows(PostNotFoundException.class, () -> videoBoardService.getVideoDetail(videoBoardId));
             }
         }
 
@@ -319,11 +306,8 @@ class VideoBoardServiceTest {
                 SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
                 request.setVideoBoardId(10L); // 없는 게시글 번호
                 request.setTitle("수정했습니다.");
-                request.setWrittenTime(LocalDateTime.of(2023,1,23,19,50));
 
-                assertThrows(PostNotFoundException.class, () -> {
-                    videoBoardService.updateSuccessPost(memberId, request);
-                });
+                assertThrows(PostNotFoundException.class, () -> videoBoardService.updateSuccessPost(memberId, request));
             }
         }
 
@@ -337,11 +321,8 @@ class VideoBoardServiceTest {
                 SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
                 request.setVideoBoardId(5L); // 해당 게시글의 작성자는 0L
                 request.setTitle("수정했습니다.");
-                request.setWrittenTime(LocalDateTime.of(2023,1,23,19,50));
 
-                assertThrows(WriterMismatchException.class, () -> {
-                    videoBoardService.updateSuccessPost(memberId, request);
-                });
+                assertThrows(WriterMismatchException.class, () -> videoBoardService.updateSuccessPost(memberId, request));
             }
         }
 
@@ -355,7 +336,6 @@ class VideoBoardServiceTest {
                 SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
                 request.setVideoBoardId(5L);
                 request.setTitle("수정했습니다.");
-                request.setWrittenTime(LocalDateTime.of(2023,1,23,19,50));
 
                 videoBoardService.updateSuccessPost(memberId, request);
                 VideoBoard videoBoard = videoBoardRepository.findById(request.getVideoBoardId()).get();
@@ -380,9 +360,7 @@ class VideoBoardServiceTest {
                 Long videoBoardId = 1L;
                 videoBoardService.deleteSuccessPost(memberId, videoBoardId);
                 // 삭제 후에 해당 데이터를 한번 더 삭제할 경우 No Such Post 예외 발생
-                assertThrows(PostNotFoundException.class, () -> {
-                    videoBoardService.deleteSuccessPost(memberId, videoBoardId);
-                });
+                assertThrows(PostNotFoundException.class, () -> videoBoardService.deleteSuccessPost(memberId, videoBoardId));
             }
         }
     }
