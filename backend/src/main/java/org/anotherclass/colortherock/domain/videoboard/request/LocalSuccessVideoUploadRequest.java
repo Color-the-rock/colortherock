@@ -38,7 +38,7 @@ public class LocalSuccessVideoUploadRequest {
     @NotNull
     private String gymName;
 
-    public Video toEntity(Member member, String s3URL, LocalSuccessVideoUploadRequest request) {
+    public Video toEntity(Member member, String s3URL, String thumbnailURL, LocalSuccessVideoUploadRequest request) {
         return Video.builder()
                 .shootingDate(request.getShootingTime())
                 .level(request.getLevel())
@@ -46,7 +46,9 @@ public class LocalSuccessVideoUploadRequest {
                 .isSuccess(true)
                 .color(request.getColor())
                 .member(member)
-                .s3URL(s3URL).build();
+                .s3URL(s3URL)
+                .thumbnailURL(thumbnailURL)
+                .build();
     }
 
 }

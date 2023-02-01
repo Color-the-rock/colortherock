@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
+import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.domain.videoboard.request.LocalSuccessVideoUploadRequest;
@@ -20,6 +21,8 @@ import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummar
 import org.anotherclass.colortherock.domain.videoboard.service.VideoBoardService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
+import org.apache.commons.io.FilenameUtils;
+import org.jcodec.api.JCodecException;
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -40,6 +43,7 @@ public class VideoBoardController {
 
     private final VideoBoardService videoBoardService;
     private final VideoService videoService;
+    private final RecordService recordService;
     private final S3Service s3Service;
 
     @GetMapping("/board")
@@ -58,18 +62,26 @@ public class VideoBoardController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "운동 영상 올리기 성공", content = @Content(schema = @Schema(implementation = Long.class)))
     })
-    public BaseResponse<Long> uplaodLocalSuccessVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid LocalSuccessVideoUploadRequest localSuccessVideoUploadRequest, @RequestPart MultipartFile newVideo) throws IOException {
+    public BaseResponse<Long> uplaodLocalSuccessVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid LocalSuccessVideoUploadRequest localSuccessVideoUploadRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
         Member member = memberDetails.getMember();
         // S3 영상 저장 후 URL 얻어오기
         // 영상 식별을 위해 파일 앞에 현재 시각 추가
-                String videoName = DateTime.now() + newVideo.getOriginalFilename();
+        String videoName = DateTime.now() + newVideo.getOriginalFilename();
         String s3URL = s3Service.upload(newVideo, videoName);
+        // 썸네일 이미지 생성하여 S3 저장
+        String thumbnailName = "Thumb"+DateTime.now() + FilenameUtils.getBaseName(newVideo.getOriginalFilename()) + ".JPEG";
+        String thumbnailURL = s3Service.uploadThumbnail(newVideo, thumbnailName);
         // request와 URL을 통해 DB에 저장
-        Long videoId = videoService.uploadSuccessVideo(member, s3URL, localSuccessVideoUploadRequest);
-        Long videoBoardId = videoBoardService.uploadLocalSuccessVideoPost(member, videoId, localSuccessVideoUploadRequest);
-        ///////////////
-        // 통계 부분 추가 필요
-        //////////////
+        Long videoId = videoService.uploadSuccessVideo(member, s3URL, thumbnailURL, localSuccessVideoUploadRequest);
+        // 운동 게시글 업로드
+        SuccessVideoUploadRequest request = SuccessVideoUploadRequest.builder()
+                .title(localSuccessVideoUploadRequest.getTitle())
+                .writtenTime(localSuccessVideoUploadRequest.getWrittenTime())
+                .videoId(videoId)
+                .build();
+        Long videoBoardId = videoBoardService.uploadMySuccessVideoPost(member.getId(), request);
+        // 운동기록 통계 카운트 증가
+        recordService.addVideoCount(member, true);
         return new BaseResponse<>(videoBoardId);
     }
 

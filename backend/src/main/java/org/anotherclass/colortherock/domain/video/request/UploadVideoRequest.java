@@ -9,7 +9,8 @@ import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 public class UploadVideoRequest {
     @NotNull
     private LocalDate shootingDate;
@@ -46,24 +47,26 @@ public class UploadVideoRequest {
 
     public Video toEntity() {
         return Video.builder()
-            .shootingDate(this.shootingDate)
-            .level(this.level)
-            .gymName(this.gymName)
-            .isSuccess(this.isSuccess)
-            .color(this.color)
-            .member(this.member)
-            .videoName(this.videoName).build();
+                .shootingDate(this.shootingDate)
+                .level(this.level)
+                .gymName(this.gymName)
+                .isSuccess(this.isSuccess)
+                .color(this.color)
+                .member(this.member)
+                .videoName(this.videoName).build();
     }
 
-    public Video toEntity(Member member, String s3URL) {
+    public Video toEntity(Member member, String s3URL, String thumbnailURL) {
         return Video.builder()
-        .shootingDate(this.shootingDate)
-        .level(this.level)
-        .gymName(this.gymName)
-        .isSuccess(this.isSuccess)
-        .color(this.color)
-        .member(member)
-        .s3URL(s3URL).build();
+                .shootingDate(this.shootingDate)
+                .level(this.level)
+                .gymName(this.gymName)
+                .isSuccess(this.isSuccess)
+                .color(this.color)
+                .member(member)
+                .s3URL(s3URL)
+                .thumbnailURL(thumbnailURL)
+                .build();
     }
 
 }

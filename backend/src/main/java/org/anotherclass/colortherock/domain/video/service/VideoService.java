@@ -16,14 +16,14 @@ public class VideoService {
 
     // 마이페이지에서 동영상 업로드
     @Transactional
-    public void uploadVideo(Member member, String s3URL, UploadVideoRequest request) {
-        videoRepository.save(request.toEntity(member, s3URL));
+    public void uploadVideo(Member member, String s3URL, String thumbnailURL, UploadVideoRequest request) {
+        videoRepository.save(request.toEntity(member, s3URL, thumbnailURL));
     }
 
     // 완등 영상 게시판에서 동영상 업로드
     @Transactional
-    public Long uploadSuccessVideo(Member member, String s3URL, LocalSuccessVideoUploadRequest request) {
-        Video newVideo = videoRepository.save(request.toEntity(member, s3URL, request));
+    public Long uploadSuccessVideo(Member member, String s3URL, String thumbnailURL, LocalSuccessVideoUploadRequest request) {
+        Video newVideo = videoRepository.save(request.toEntity(member, s3URL, thumbnailURL, request));
         return newVideo.getId();
     }
 
