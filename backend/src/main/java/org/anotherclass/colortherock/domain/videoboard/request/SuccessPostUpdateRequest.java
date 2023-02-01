@@ -1,16 +1,19 @@
 package org.anotherclass.colortherock.domain.videoboard.request;
 
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SuccessPostUpdateRequest {
 
     @NotNull
     private Long videoBoardId;
     @NotNull
     private String title;
-
 }

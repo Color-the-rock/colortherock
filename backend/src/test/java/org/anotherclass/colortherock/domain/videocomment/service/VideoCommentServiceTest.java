@@ -1,6 +1,12 @@
 package org.anotherclass.colortherock.domain.videocomment.service;
 
+import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.video.entity.Video;
+import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
+import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundException;
+import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
 import org.anotherclass.colortherock.domain.videocomment.entity.VideoComment;
 import org.anotherclass.colortherock.domain.videocomment.exception.CommentNotFoundException;
 import org.anotherclass.colortherock.domain.videocomment.repository.VideoCommentRepository;
@@ -10,28 +16,73 @@ import org.anotherclass.colortherock.domain.videocomment.request.NewCommentReque
 import org.anotherclass.colortherock.domain.videocomment.response.CommentListResponse;
 import org.anotherclass.colortherock.domain.videocomment.response.MyCommentListResponse;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 class VideoCommentServiceTest {
 
     @Autowired
-    private VideoCommentService videoCommentService;
+    MemberRepository memberRepository;
+    @Autowired
+    VideoRepository videoRepository;
+    @Autowired
+    private VideoBoardRepository videoBoardRepository;
     @Autowired
     private VideoCommentRepository videoCommentRepository;
+    @Autowired
+    private VideoCommentService videoCommentService;
+    ArrayList<Long> memberIds;
+    ArrayList<Long> videoIds;
+    ArrayList<Long> videoBoardIds;
+    ArrayList<Long> videoCommentIds;
+
+    @BeforeEach
+    public void setVideoCommentData() {
+        memberIds = new ArrayList<>();
+        videoIds = new ArrayList<>();
+        videoBoardIds = new ArrayList<>();
+        videoCommentIds = new ArrayList<>();
+        // Member 생성
+        Member memberA = new Member("yeji@rock.com", "yezi", Member.RegistrationId.kakao);
+        Member memberB = new Member("johan@rock.com", "johan", Member.RegistrationId.google);
+        Member saveA = memberRepository.save(memberA);
+        Member saveB = memberRepository.save(memberB);
+        memberIds.add(saveA.getId());
+        memberIds.add(saveB.getId());
+
+        // Video, VideoBoard, VideoComment 생성
+        for (int i = 1; i <= 4; i++) {
+            Video video = new Video(LocalDate.parse("2023-01-30"), 4, "더클라임 강남점", "s3url", true, "thumbnail", "초록", saveA, "videoName");
+            Video saveVideo = videoRepository.save(video);
+            VideoBoard videoBoard = new VideoBoard("성공했습니다.", saveVideo, memberA, LocalDateTime.of(2023, 1, 30, 15, i));
+            VideoBoard saveVideoBoard = videoBoardRepository.save(videoBoard);
+            videoBoardIds.add(saveVideoBoard.getId());
+            for (int j = 1; j <= 4; j++) {
+                VideoComment comment = new VideoComment("멋있어요!", LocalDateTime.of(2023, 1, 30, 16, j), saveB, saveVideoBoard);
+                VideoComment saveComment = videoCommentRepository.save(comment);
+                videoCommentIds.add(saveComment.getId());
+            }
+        }
+    }
+
 
     @Nested
-    @DisplayName("getCommentList 메소드는")
+    @DisplayName("댓글 가져오기 메소드는")
     class GetCommentList {
         @Nested
         @DisplayName("storeId가 null일 경우")
@@ -41,7 +92,7 @@ class VideoCommentServiceTest {
             void getCommentList() {
                 CommentListRequest request = new CommentListRequest();
                 request.setStoreId(null);
-                request.setVideoBoardId(0L);
+                request.setVideoBoardId(videoBoardIds.get(0));
                 Pageable pageable = Pageable.ofSize(2);
 
                 List<CommentListResponse> commentList = videoCommentService.getCommentList(request, pageable);
@@ -53,7 +104,7 @@ class VideoCommentServiceTest {
     }
 
     @Nested
-    @DisplayName("insertComment 메소드는")
+    @DisplayName("댓글 삽입 메소드는")
     class InsertComment {
         @Nested
         @DisplayName("매개변수가 유효하지 않을 경우")
@@ -63,7 +114,7 @@ class VideoCommentServiceTest {
             void noSuchUserException() {
                 Long memberId = 2L; // DB에 없는 유저
                 NewCommentRequest request = new NewCommentRequest();
-                request.setVideoBoardId(0L);
+                request.setVideoBoardId(videoBoardIds.get(0));
                 request.setContent("멋있어요!");
                 request.setWrittenTime(LocalDateTime.of(2022, 1, 23, 23, 10));
                 assertThrows(GlobalBaseException.class, () -> {
@@ -74,9 +125,9 @@ class VideoCommentServiceTest {
             @Test
             @DisplayName("영상 게시글을 찾을 수 없으면 No Such Post 예외 발생")
             void noSuchPostException() {
-                Long memberId = 0L;
+                Long memberId = memberIds.get(0);
                 NewCommentRequest request = new NewCommentRequest();
-                request.setVideoBoardId(10L); // DB에 없는 id
+                request.setVideoBoardId(20L); // DB에 없는 id
                 request.setContent("멋있어요!");
                 request.setWrittenTime(LocalDateTime.of(2022, 1, 23, 23, 10));
                 assertThrows(PostNotFoundException.class, () -> {
@@ -91,9 +142,9 @@ class VideoCommentServiceTest {
             @Test
             @DisplayName("댓글 삽입 성공")
             void insertComment() {
-                Long memberId = 0L;
+                Long memberId = memberIds.get(1);
                 NewCommentRequest request = new NewCommentRequest();
-                request.setVideoBoardId(0L); // DB에 없는 id
+                request.setVideoBoardId(videoBoardIds.get(0));
                 request.setContent("멋있어요!");
                 request.setWrittenTime(LocalDateTime.of(2022, 1, 23, 23, 10));
 
@@ -108,7 +159,7 @@ class VideoCommentServiceTest {
     }
 
     @Nested
-    @DisplayName("updateComment 메소드는")
+    @DisplayName("댓글 수정 메소드는")
     class UpdateComment {
         @Nested
         @DisplayName("매개변수가 유효하지 않을 경우")
@@ -116,13 +167,13 @@ class VideoCommentServiceTest {
             @Test
             @DisplayName("commentId가 잘못되었으면 Commment Not Found 예외 발생")
             void commentNotFoundException() {
-                Long memberId = 0L;
+                Long memberId = memberIds.get(0);
                 CommentUpdateRequest request = new CommentUpdateRequest();
-                request.setCommentId(10L); // DB에 없는 commentId
+                request.setCommentId(30L); // DB에 없는 commentId
                 request.setContent("수정했어요");
-                request.setWrittenTime(LocalDateTime.of(2023,1,23,23,25));
+                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 23, 25));
 
-                assertThrows(CommentNotFoundException.class, () ->{
+                assertThrows(CommentNotFoundException.class, () -> {
                     videoCommentService.updateComment(memberId, request);
                 });
             }
@@ -130,13 +181,13 @@ class VideoCommentServiceTest {
             @Test
             @DisplayName("comment작성자와 유저가 일치하지 않으면 Writer Mismatch 예외 발생")
             void writerMismatchException() {
-                Long memberId = 1L; // 작성자는 0L
+                Long memberId = memberIds.get(0);
                 CommentUpdateRequest request = new CommentUpdateRequest();
-                request.setCommentId(7L);
+                request.setCommentId(videoCommentIds.get(0));
                 request.setContent("수정했어요");
-                request.setWrittenTime(LocalDateTime.of(2023,1,23,23,25));
+                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 23, 25));
 
-                assertThrows(GlobalBaseException.class, () ->{
+                assertThrows(GlobalBaseException.class, () -> {
                     videoCommentService.updateComment(memberId, request);
                 });
             }
@@ -148,11 +199,11 @@ class VideoCommentServiceTest {
             @Test
             @DisplayName("댓글 수정 성공")
             void updateComment() {
-                Long memberId = 0L;
+                Long memberId = memberIds.get(1);
                 CommentUpdateRequest request = new CommentUpdateRequest();
-                request.setCommentId(7L);
+                request.setCommentId(videoCommentIds.get(0));
                 request.setContent("수정했어요");
-                request.setWrittenTime(LocalDateTime.of(2023,1,23,23,25));
+                request.setWrittenTime(LocalDateTime.of(2023, 1, 23, 23, 25));
 
                 videoCommentService.updateComment(memberId, request);
                 VideoComment comment = videoCommentRepository.findById(request.getCommentId()).get();
@@ -163,7 +214,7 @@ class VideoCommentServiceTest {
     }
 
     @Nested
-    @DisplayName("deleteComment 메소드는")
+    @DisplayName("댓글 삭제 메소드는")
     class DeleteComment {
         @Nested
         @DisplayName("유효한 commentId, 유효한 권한을 가졌을 경우")
@@ -172,18 +223,19 @@ class VideoCommentServiceTest {
             @Test
             @DisplayName("해당 댓글 삭제")
             void deleteComment() {
-                Long memberId = 0L;
-                Long commentId = 7L;
+                Long memberId = memberIds.get(1);
+                Long commentId = videoCommentIds.get(0);
 
                 videoCommentService.deleteComment(memberId, commentId);
-                assertThrows(CommentNotFoundException.class, () ->{
+                assertThrows(CommentNotFoundException.class, () -> {
                     videoCommentService.deleteComment(memberId, commentId);
                 });
             }
         }
     }
+
     @Nested
-    @DisplayName("getMyCommentList 메소드는")
+    @DisplayName("내 댓글 리스트 가져오기 메소드는")
     class GetMyCommentList {
         @Nested
         @DisplayName("storeId가 null일 경우")
@@ -191,7 +243,7 @@ class VideoCommentServiceTest {
             @Test
             @DisplayName("해당 멤버의 댓글 리스트를 id 값이 큰 순서대로 페이지 사이즈만큼 반환")
             void getMyCommentList() {
-                Long memberId = 0L;
+                Long memberId = memberIds.get(1);
                 Long storeId = null;
                 Pageable pageable = Pageable.ofSize(2);
 

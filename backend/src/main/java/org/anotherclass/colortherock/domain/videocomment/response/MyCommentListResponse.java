@@ -1,12 +1,14 @@
 package org.anotherclass.colortherock.domain.videocomment.response;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Builder
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MyCommentListResponse {
     private Long commentId;
     private Long videoBoardId;

@@ -57,9 +57,9 @@ public class VideoCommentService {
     @Transactional
     public Long insertComment(Long memberId, NewCommentRequest newCommentRequest) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.NO_SUCH_USER));
+                .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.USER_NOT_FOUND));
         VideoBoard videoBoard = videoBoardRepository.findById(newCommentRequest.getVideoBoardId())
-                .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.NO_SUCH_POST));
+                .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
 
         VideoComment videoComment = videoCommentRepository.save(VideoComment.builder()
                 .content(newCommentRequest.getContent())
@@ -73,7 +73,7 @@ public class VideoCommentService {
     @Transactional
     public void updateComment(Long memberId, CommentUpdateRequest commentUpdateRequest) {
         VideoComment comment = videoCommentRepository.findById(commentUpdateRequest.getCommentId())
-                .orElseThrow(() -> new CommentNotFoundException(GlobalErrorCode.NO_SUCH_COMMENT));
+                .orElseThrow(() -> new CommentNotFoundException(GlobalErrorCode.COMMENT_NOT_FOUND));
         checkAuth(memberId, comment);
         comment.update(commentUpdateRequest.getContent(), commentUpdateRequest.getWrittenTime());
     }
@@ -81,7 +81,7 @@ public class VideoCommentService {
     @Transactional
     public void deleteComment(Long memberId, Long commentId) {
         VideoComment comment = videoCommentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException(GlobalErrorCode.NO_SUCH_COMMENT));
+                .orElseThrow(() -> new CommentNotFoundException(GlobalErrorCode.COMMENT_NOT_FOUND));
         checkAuth(memberId, comment);
         videoCommentRepository.delete(comment);
     }
@@ -106,7 +106,7 @@ public class VideoCommentService {
     // 받은 멤버가 수정권한이 있는지 확인하는 메서드
     private void checkAuth(Long memberId, VideoComment comment) {
         if (!comment.getMember().getId().equals(memberId)) {
-            throw new GlobalBaseException(GlobalErrorCode.WRITER_MISMATCH);
+            throw new GlobalBaseException(GlobalErrorCode.NOT_WRITER);
         }
     }
 

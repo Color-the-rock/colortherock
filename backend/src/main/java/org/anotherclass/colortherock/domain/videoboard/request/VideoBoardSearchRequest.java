@@ -1,10 +1,11 @@
 package org.anotherclass.colortherock.domain.videoboard.request;
 
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
-@Data
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class VideoBoardSearchRequest {
     private Long storeId;
     private String color;

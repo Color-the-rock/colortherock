@@ -105,30 +105,22 @@ public class RecordService {
     }
 
     @Transactional
-    public void addVideoCount(Member member) {
+    public void addVideoCount(Member member, Boolean isSuccess) {
         MemberRecord record = recordRepository.findByMember(member);
         record.addVideoCount();
+        if(isSuccess) {
+            record.addSuccessCount();
+        }
         recordRepository.save(record);
     }
 
     @Transactional
-    public void addSuccessCount(Member member) {
-        MemberRecord record = recordRepository.findByMember(member);
-        record.addSuccessCount();
-        recordRepository.save(record);
-    }
-
-    @Transactional
-    public void subVideoCount(Member member) {
+    public void subVideoCount(Member member, Boolean isSuccess) {
         MemberRecord record = recordRepository.findByMember(member);
         record.subVideoCount();
-        recordRepository.save(record);
-    }
-
-    @Transactional
-    public void subSuccessCount(Member member) {
-        MemberRecord record = recordRepository.findByMember(member);
-        record.subSuccessCount();
+        if(isSuccess) {
+            record.subSuccessCount();
+        }
         recordRepository.save(record);
     }
 
