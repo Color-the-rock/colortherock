@@ -1,8 +1,6 @@
 package org.anotherclass.colortherock.domain.video.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.global.common.BaseTime;
@@ -12,7 +10,7 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "video")
 public class Video extends BaseTime {
     @Id

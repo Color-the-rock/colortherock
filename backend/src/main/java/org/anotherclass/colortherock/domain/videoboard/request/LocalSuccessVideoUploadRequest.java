@@ -6,24 +6,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.video.entity.Video;
+import org.anotherclass.colortherock.global.common.BaseTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LocalSuccessVideoUploadRequest {
+public class LocalSuccessVideoUploadRequest extends BaseTime {
 
     @NotNull
     private String title;
-
-    @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime writtenTime;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")

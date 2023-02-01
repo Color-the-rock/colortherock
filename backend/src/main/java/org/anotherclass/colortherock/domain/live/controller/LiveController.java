@@ -10,6 +10,7 @@ import org.anotherclass.colortherock.domain.live.service.LiveService;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
+import org.jcodec.api.JCodecException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -57,7 +58,7 @@ public class LiveController {
     }
 
     @PostMapping("/live/{sessionId}/recording/save")
-    public BaseResponse<?> recordingSave(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String sessionId,@RequestBody RecordingSaveRequest request) throws IOException {
+    public BaseResponse<?> recordingSave(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String sessionId,@RequestBody RecordingSaveRequest request) throws IOException, JCodecException {
         liveService.recordingSave(memberDetails,sessionId,request);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }

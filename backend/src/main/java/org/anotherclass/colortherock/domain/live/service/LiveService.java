@@ -17,6 +17,7 @@ import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
+import org.jcodec.api.JCodecException;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
@@ -122,13 +123,16 @@ public class LiveService {
     }
 
     @Transactional
-    public void recordingSave(MemberDetails memberDetails, String sessionId, RecordingSaveRequest request) throws IOException {
+    public void recordingSave(MemberDetails memberDetails, String sessionId, RecordingSaveRequest request) throws IOException, JCodecException {
         dir += "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".webm";
         String videoName = DateTime.now() + request.getRecordingId() + ".webm";
-        String s3Url = s3Service.uploadFromLocal(dir, videoName);
+        String s3Url = s3Service.uploadFromOV(dir, videoName);
         Member member = memberRepository.findById(memberDetails.getMember().getId()).orElseThrow();
-        // TODO 썸네일 주소 필요
-        Video video = request.toEntity(s3Url, "섬네일 url", member);
+        // 썸네일 추가
+        String thumbnailName = "Thumb"+DateTime.now() + request.getRecordingId() + ".JPEG";
+        String thumbnailURL = s3Service.uploadThumbnailFromOV(dir, thumbnailName);
+        // 비디오 객체 생성
+        Video video = request.toEntity(s3Url, thumbnailURL, member);
         videoRepository.save(video);
     }
 

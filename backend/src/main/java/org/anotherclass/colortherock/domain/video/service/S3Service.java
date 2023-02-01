@@ -43,6 +43,7 @@ public class S3Service {
     @Value("${cloud.aws.region.static}")
     private String region;
 
+    // S3Client 생성
     @PostConstruct
     public void setS3Client() {
         AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
@@ -55,28 +56,42 @@ public class S3Service {
         log.log(Level.INFO, "s3Client 생성완료");
     }
 
+    // Upload user's local video
     public String upload(MultipartFile file, String videoName) throws IOException {
         s3Client.putObject(new PutObjectRequest(bucket, videoName, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
         return s3Client.getUrl(bucket, videoName).toString();
     }
 
-    public String uploadFromLocal(String dir, String videoName) throws IOException {
+    // Upload thumbnail from user's local video
+    public String uploadThumbnail(MultipartFile videoFile, String thumbnailName) throws IOException, JCodecException {
+        File file = convertMultipartFileToFile(videoFile);
+        return getThumbnailURL(thumbnailName, file);
+    }
+
+    // Upload video from Openvidu
+    public String uploadFromOV(String dir, String videoName) throws IOException {
+        
         Path filePath = Paths.get(dir);
         InputStream inputStream = Files.newInputStream(filePath);
         s3Client.putObject(new PutObjectRequest(bucket, videoName, inputStream, null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
         return s3Client.getUrl(bucket, videoName).toString();
     }
+    // Upload thumbnail from Openvidu recording video
+    public String uploadThumbnailFromOV(String dir, String thumbnailName) throws IOException, JCodecException {
+        File file = Paths.get(dir).toFile();
+        return getThumbnailURL(thumbnailName, file);
+    }
 
     public void deleteFile(String videoName) {
         s3Client.deleteObject(bucket, videoName);
     }
 
-    public String uploadThumbnail(MultipartFile videoFile, String thumbnailName) throws IOException, JCodecException {
-
-        // Convert the MultipartFile to a File
-        File file = convertMultipartFileToFile(videoFile);
+    /**
+     * S3에 썸네일 이미지를 저장하고 URL을 가져옴
+     */
+    private String getThumbnailURL(String thumbnailName, File file) throws IOException, JCodecException {
         // Get image from video
         FrameGrab grab = FrameGrab.createFrameGrab(NIOUtils.readableChannel(file));
         Picture picture = grab.seekToSecondPrecise(1.0).getNativeFrame();
@@ -94,7 +109,8 @@ public class S3Service {
         return s3Client.getUrl(bucket, thumbnailName).toString();
     }
 
-    private static File convertMultipartFileToFile(MultipartFile file) throws IOException {
+    // Convert MultipartFile to File
+    private File convertMultipartFileToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
         convFile.createNewFile();
         FileOutputStream fos = new FileOutputStream(convFile);
@@ -102,6 +118,4 @@ public class S3Service {
         fos.close();
         return convFile;
     }
-
-
 }

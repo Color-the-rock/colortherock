@@ -76,7 +76,6 @@ public class VideoBoardController {
         // 운동 게시글 업로드
         SuccessVideoUploadRequest request = SuccessVideoUploadRequest.builder()
                 .title(localSuccessVideoUploadRequest.getTitle())
-                .writtenTime(localSuccessVideoUploadRequest.getWrittenTime())
                 .videoId(videoId)
                 .build();
         Long videoBoardId = videoBoardService.uploadMySuccessVideoPost(member.getId(), request);
