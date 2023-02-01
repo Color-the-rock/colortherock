@@ -50,7 +50,7 @@ public class VideoCommentService {
                         .commentId(vc.getId())
                         .nickname(vc.getMember().getNickname())
                         .content(vc.getContent())
-                        .writtenTime(vc.getWrittenTime())
+                        .createdDate(vc.getCreatedDate())
                         .build()).collect(Collectors.toList());
     }
 
@@ -74,7 +74,7 @@ public class VideoCommentService {
         VideoComment comment = videoCommentRepository.findById(commentUpdateRequest.getCommentId())
                 .orElseThrow(() -> new CommentNotFoundException(GlobalErrorCode.COMMENT_NOT_FOUND));
         checkAuth(memberId, comment);
-        comment.update(commentUpdateRequest.getContent(), commentUpdateRequest.getWrittenTime());
+        comment.update(commentUpdateRequest.getContent());
     }
 
     @Transactional
@@ -93,13 +93,13 @@ public class VideoCommentService {
         }
 
         return slices.toList().stream()
-                        .map(vc -> MyCommentListResponse.builder()
-                                .commentId(vc.getId())
-                                .videoBoardId(vc.getVideoBoard().getId())
-                                .nickname(vc.getMember().getNickname())
-                                .content(vc.getContent())
-                                .writtenTime(vc.getWrittenTime())
-                                .build()).collect(Collectors.toList());
+                .map(vc -> MyCommentListResponse.builder()
+                        .commentId(vc.getId())
+                        .videoBoardId(vc.getVideoBoard().getId())
+                        .nickname(vc.getMember().getNickname())
+                        .content(vc.getContent())
+                        .createdDate(vc.getCreatedDate())
+                        .build()).collect(Collectors.toList());
     }
 
     // 받은 멤버가 수정권한이 있는지 확인하는 메서드
