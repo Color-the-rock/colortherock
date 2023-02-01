@@ -10,11 +10,11 @@ import javax.validation.constraints.Positive;
 public class RecordingSaveRequest {
     @Positive
     private Integer level;
-
     private String title;
     private String gymName;
     private Boolean isSuccess;
     private String color;
+    private String recordingId;
 
     public Video toEntity(String s3Url, String thumbnailUrl, Member member) {
 

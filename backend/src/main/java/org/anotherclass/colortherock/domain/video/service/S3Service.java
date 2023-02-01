@@ -15,6 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Log4j2
 @Service
@@ -47,6 +51,14 @@ public class S3Service {
 
     public String upload(MultipartFile file, String videoName) throws IOException {
         s3Client.putObject(new PutObjectRequest(bucket, videoName, file.getInputStream(), null)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
+        return s3Client.getUrl(bucket, videoName).toString();
+    }
+
+    public String uploadFromLocal(String dir, String videoName) throws IOException {
+        Path filePath = Paths.get(dir);
+        InputStream inputStream = Files.newInputStream(filePath);
+        s3Client.putObject(new PutObjectRequest(bucket, videoName, inputStream, null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
         return s3Client.getUrl(bucket, videoName).toString();
     }
