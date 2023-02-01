@@ -1,63 +1,109 @@
 import styled from "styled-components";
 
-export const HeaderWrap = styled.div`
-  height: 10vh;
-`;
-
 export const Container = styled.div`
   width: 100vw;
-  height: 90vh;
-`;
+  height: 100vh;
+  background-color: transparent;
+  
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`
 
-export const ArrowLeftBtnWrap = styled.div`
-  padding-left: 1rem;
-  max-width: 600px;
-  margin: 0 auto;
-`;
 
 export const ContentWrap = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
-`;
-export const ComponenentWrap = styled.div`
-  width: 100%;
-  margin-bottom: 1rem;
-`;
+`
 
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* background-color: red; */
-
+  position: relative;
+  
   padding: 0 1rem;
   @media (min-width: 992px) {
     width: 600px;
   }
   @media (max-width: 991px) {
-    width: 100vw;
-    height: 90vh;
-    min-width: 360px;
-    max-width: 600px;
+  width: 100vw;
+  height: 100vh;
+  min-width: 360px;
+  max-width: 600px;
+  }
+  .webcam {
+    width: auto;
+    height: calc(100% - 100px);
   }
 
-  div {
-    display: block;
+  .camera {
+    position: absolute;
+    right:  1rem;
+    top: calc(100% - 148px);
+    z-index: 1;
   }
-`;
+`
 
-export const SelectButtonWrap = styled.div`
-  width: 100%;
-  margin-bottom: 1rem;
-`;
+export const CaptureWrap = styled.div`
+  position: absolute;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  left: 1rem;
+  top: calc(100% - 296px);
+  
+  img {
+    width: auto;
+    height: 180px;
+    border-radius: 10px;
+  }  
+`
 
-export const selectBtnContent = styled.span`
+
+export const OverlapContent = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding: 1rem;
+`
+
+
+export const ArrowLeftBtnWrap = styled.span`
+  /* position: absolute; */
+  /* left: 16px; */
+  /* top: 16px; */
+  z-index: 1;
+  font-size: 2rem;
+`
+
+export const TitleWrap = styled.div`
+  z-index: 1;
+  border-radius: 20px;
+`
+
+export const ComponenentWrap = styled.div`
   width: 100%;
+  margin-top: 1rem;
+`
+
+export const AddPadding = styled.div`
+  padding-left: 1rem;
+  padding-right: 1rem;
+`
+
+export const IconWrap = styled.span`
+  /* display: flex; */
+  align-items: center;
+`
+
+export const SettingComponentWrap = styled.span`
+width: 100%;
   display: flex;
-  justify-content: space-between;
-  align-self: center;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 1rem;
-`;
+  align-items: center;
+`
+

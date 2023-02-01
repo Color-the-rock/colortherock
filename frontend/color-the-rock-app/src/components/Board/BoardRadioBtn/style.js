@@ -7,6 +7,8 @@ export const Container = styled.span`
   justify-content: center;
   align-items: center;
   grid-template-columns: 1fr 1fr;
+  opacity: ${(props) => 
+    props.opacity !== "100" ? `${props.opacity}%` : "100%"};
 `
 
 export const ContentWrap = styled.label`
@@ -51,8 +53,6 @@ export const ContentWrap = styled.label`
         color: var(--color-secondary);
       `
     }
-
-
 
 `
 

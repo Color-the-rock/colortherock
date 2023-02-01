@@ -1,14 +1,16 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.span`
   width:100%;
   height: 100%;
   min-width: 328px;
+  /* display: flex; */
 `
 export const DateWrap = styled.div`
-  display: flex;
+  /* display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: center; */
+  width: 100%;
   height: 40px;
   background-color: var(--color-background);
   color: var(--color-secondary);
@@ -25,6 +27,6 @@ export const DateWrap = styled.div`
     font-size: 14px;
     line-height: 1.5rem;
     height: 38px;
-    padding: 16px;
+    margin-left: 1rem;
   }
 `

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Desktop, Mobile } from "../../../components/layout/Template";
-import * as S from "./style";
-import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn";
-import SubTitle from "../../../components/Common/SubTitle";
+import React, {useState, useEffect} from "react";
+import { Desktop, Mobile } from "../../../components/layout/Template"
+import * as S from "./style"
+import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn"
+import SubTitle from "../../../components/Common/SubTitle"
 import CommentModal from "../../../components/Common/CommentModal";
 import CommentBtn from "../../../components/Common/CommentBtn";
 import { useNavigate } from "react-router";
@@ -11,6 +11,9 @@ import Thumbnail from "../../../components/Common/Thumbnail";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll";
 import Header from "../../../components/layout/Header";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
+
+import { defaultInstance } from "../../../api/utils";
+import requests from "../../../api/board"
 
 const dummy = [
   {
@@ -56,11 +59,34 @@ const dummy = [
 ];
 
 const BoardDetail = () => {
+  
+
+
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState(dummy);
+  
+  const config = {
+    params: {
+      
+    }
+  }
 
-  const updateFuncOnScroll = () => {
+  // 상세 정보 받아오기!!
+  useEffect(() => {
+    defaultInstance.get(requests.GetBoardDetail, config)
+      .then((res) => {
+        setData(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }, [])
+
+
+
+  const updateFuncOnScroll= () => {
+   
     try {
       setData((prev) => [...prev, ...dummy]);
     } catch (error) {
@@ -85,7 +111,7 @@ const BoardDetail = () => {
   };
 
   return (
-    <div>
+    <S.ContainerWrap>
       <Desktop>
         <S.HeaderWrap>
           <Header></Header>
@@ -103,11 +129,8 @@ const BoardDetail = () => {
             {/* 비디오 */}
             {/* <S.VideoWrap>
           </S.VideoWrap> */}
-            <S.Video controls>
-              <source
-                src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-                type="video/mp4"
-              />
+            <S.Video   controls>
+              <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"/>
             </S.Video>
 
             {isModalOpen ? (
@@ -130,7 +153,6 @@ const BoardDetail = () => {
                 <S.ComponenentWrap>
                   <BoardSubTitle text="다른영상도 봐주세요" />
                 </S.ComponenentWrap>
-
                 <S.ThumbnailList>
                   {data.map((item) => (
                     <Thumbnail
@@ -147,11 +169,11 @@ const BoardDetail = () => {
                 </S.ThumbnailList>
               </S.FalseWrap>
             )}
-          </S.ContentWrap>
-        </S.ContentContainer>
-      </S.Container>
-    </div>
-  );
+        </S.ContentWrap>
+      </S.ContentContainer>
+    </S.Container>
+    </S.ContainerWrap>
+  )
 };
 
 export default BoardDetail;

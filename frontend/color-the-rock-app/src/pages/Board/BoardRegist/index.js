@@ -13,6 +13,10 @@ import SearchBar from "../../../components/Common/KakaoKeywordSearch/SearchBar"
 import DatePickBtn from "../../../components/Board/DatePickBtn"
 import RegistBtn from "../../../components/Board/RegistBtn"
 
+
+import { defaultInstance } from "../../../api/utils"
+import requests from "../../../api/board"
+
 export default function BoardRegist() {
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState();
@@ -26,11 +30,27 @@ export default function BoardRegist() {
   };
 
   const submitHandler = () => {
-    navigate("/board");
+
+    defaultInstance.post(requests.RegistLocalVideo, {
+      header: {
+
+      },
+
+      data: {
+
+      }
+    })
+    .then(() => {
+      navigate("/board");
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    
   }
   
   return (
-    <div>
+    <S.ContainerWrap>
       <Desktop>
         <S.HeaderWrap>
           <Header></Header>
@@ -72,11 +92,11 @@ export default function BoardRegist() {
             <SearchBar location={location} setLocation={setLocation} />
           </S.ComponenentWrap>
 
-          <S.ComponenentWrap>
             <DatePickBtn
               startDate={startDate}
               setStartDate={setStartDate}
             />
+          <S.ComponenentWrap>
           </S.ComponenentWrap>
 
           <S.ComponenentWrap>
@@ -94,56 +114,6 @@ export default function BoardRegist() {
         </S.Content>
       </S.ContentWrap>
     </S.Container>
-    </div>
+    </S.ContainerWrap>
   );
 }
-
-      // <Desktop></Desktop>
-
-      // <Mobile>
-      //   <S.Container>
-      //     <S.CloseBtnContainer>
-      //       <S.CloseBtn>
-      //         <FiArrowLeft onClick={onClickHandler} />
-      //       </S.CloseBtn>
-      //     </S.CloseBtnContainer>
-
-      //     <S.ContentWrap>
-      //       <S.Content>
-      //         <SubTitle text="동영상" margin="16"></SubTitle>
-      //         <UploadForm></UploadForm>
-      //         <SubTitle text="글등록" margin="16"></SubTitle>
-      //         <InputComp placeholder="제목을 입력해주세요." setTitle={setTitle}></InputComp>
-      //         <S.SelectWrap>
-      //           <SelectButton />
-      //           <SelectButton />
-      //         </S.SelectWrap>
-      //         <KakaoKeywordSearch location={location} setLocation={setLocation} />
-      //         <DatePickBtn
-      //           startDate={startDate}
-      //           setStartDate={setStartDate}
-      //         ></DatePickBtn>
-      //         <RegistBtn btnName="등록하기" clickHandler={submitHandler}></RegistBtn>
-      //       </S.Content>
-      //     </S.ContentWrap>
-
-      //     {/*  <S.TitleContainer>
-      //         <S.Title>동영상</S.Title>
-      //       </S.TitleContainer>
-            
-      //       <S.UploadContainer>
-      //         <S.Upload>
-
-      //         </S.Upload>
-      //       </S.UploadContainer>
-
-      //       <S.TitleContainer>
-      //         <S.Title>글등록</S.Title>
-      //       </S.TitleContainer>
-
-      //       <S.ContentContainer>
-
-      //       </S.ContentContainer>
-      //       */}
-      //   </S.Container>
-      // </Mobile>
