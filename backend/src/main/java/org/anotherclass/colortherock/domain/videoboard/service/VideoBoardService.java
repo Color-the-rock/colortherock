@@ -13,7 +13,6 @@ import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundExc
 import org.anotherclass.colortherock.domain.videoboard.exception.WriterMismatchException;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardReadRepository;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
-import org.anotherclass.colortherock.domain.videoboard.request.LocalSuccessVideoUploadRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessPostUpdateRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessVideoUploadRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
@@ -57,20 +56,6 @@ public class VideoBoardService {
                         .gymName(vb.getVideo().getGymName())
                         .build()).collect(Collectors.toList());
 
-    }
-
-    @Transactional
-    public Long uploadLocalSuccessVideoPost(Member member, Long videoId, LocalSuccessVideoUploadRequest localSuccessVideoUploadRequest) {
-        Video video = videoRepository.findById(videoId)
-                .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND));
-
-        VideoBoard newVideoBoard = videoBoardRepository.save(VideoBoard.builder()
-                .title(localSuccessVideoUploadRequest.getTitle())
-                .video(video)
-                .member(member)
-                .writtenTime(localSuccessVideoUploadRequest.getWrittenTime())
-                .build());
-        return newVideoBoard.getId();
     }
 
     @Transactional
