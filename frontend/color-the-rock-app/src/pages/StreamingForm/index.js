@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Mobile, Desktop } from "../../components/layout/Template";
 import * as S from "./style";
 import { useNavigate } from "react-router-dom";
-
 import Header from "../../components/layout/Header";
 import ArrowLeftBtn from "../../components/Common/ArrowLeftBtn";
 import BoardSubTitle from "../../components/Board/BoardSubTitle";
@@ -12,6 +11,9 @@ import SelectButton from "../../components/Board/SelectButton";
 import SearchBar from "../../components/Common/KakaoKeywordSearch/SearchBar";
 import DatePickBtn from "../../components/Board/DatePickBtn";
 import RegistBtn from "../../components/Board/RegistBtn";
+import { OpenVidu } from "openvidu-browser";
+import { useDispatch } from "react-redux";
+import { setOV } from "../../stores/streaming/streamingSlice";
 
 export default function StreamingForm() {
   const navigate = useNavigate();
@@ -20,13 +22,22 @@ export default function StreamingForm() {
   const [level, setLevel] = useState("");
   const [color, setColor] = useState("");
   const [location, setLocation] = useState("");
+  const dispatch = useDispatch();
 
   const clickHandler = () => {
     navigate("/board");
   };
 
   const submitHandler = () => {
+    joinSession();
     navigate("/streaming/live/1");
+  };
+
+  // openVidu 설정
+  const joinSession = () => {
+    console.log("joinSession");
+    const ov = new OpenVidu();
+    dispatch(setOV({ ov }));
   };
 
   return (
