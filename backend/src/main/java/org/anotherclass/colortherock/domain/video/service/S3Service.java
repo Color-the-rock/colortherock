@@ -22,6 +22,9 @@ import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Log4j2
 @Service
@@ -58,6 +61,14 @@ public class S3Service {
         return s3Client.getUrl(bucket, videoName).toString();
     }
 
+    public String uploadFromLocal(String dir, String videoName) throws IOException {
+        Path filePath = Paths.get(dir);
+        InputStream inputStream = Files.newInputStream(filePath);
+        s3Client.putObject(new PutObjectRequest(bucket, videoName, inputStream, null)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
+        return s3Client.getUrl(bucket, videoName).toString();
+    }
+
     public void deleteFile(String videoName) {
         s3Client.deleteObject(bucket, videoName);
     }
@@ -89,7 +100,6 @@ public class S3Service {
         FileOutputStream fos = new FileOutputStream(convFile);
         fos.write(file.getBytes());
         fos.close();
-        //file.transferTo(convFile);
         return convFile;
     }
 

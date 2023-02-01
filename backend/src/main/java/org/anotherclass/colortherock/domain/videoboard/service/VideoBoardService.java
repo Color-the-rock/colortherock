@@ -53,7 +53,7 @@ public class VideoBoardService {
                         .title(vb.getTitle())
                         .thumbnailURL(vb.getVideo().getThumbnailURL())
                         .color(vb.getVideo().getColor())
-                        .writtenTime(vb.getWrittenTime())
+                        .createdDate(vb.getCreatedDate())
                         .gymName(vb.getVideo().getGymName())
                         .build()).collect(Collectors.toList());
 
@@ -87,7 +87,6 @@ public class VideoBoardService {
                 .title(successVideoUploadRequest.getTitle())
                 .video(video)
                 .member(member)
-                .writtenTime(successVideoUploadRequest.getWrittenTime())
                 .build());
 
         return newVideoBoard.getId();
@@ -102,7 +101,7 @@ public class VideoBoardService {
                 .videoBoardId(vb.getId())
                 .nickname(vb.getMember().getNickname())
                 .title(vb.getTitle())
-                .writtenTime(vb.getWrittenTime())
+                .createDate(vb.getCreatedDate())
                 .build();
     }
 
@@ -112,7 +111,7 @@ public class VideoBoardService {
         VideoBoard vb = videoBoardRepository.findById(successPostUpdateRequest.getVideoBoardId())
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
         checkAuth(memberId, vb);
-        vb.update(successPostUpdateRequest.getTitle(), successPostUpdateRequest.getWrittenTime());
+        vb.update(successPostUpdateRequest.getTitle());
     }
 
     // 완등 영상 게시글 삭제
@@ -139,7 +138,7 @@ public class VideoBoardService {
                         .title(vb.getTitle())
                         .thumbnailURL(vb.getVideo().getThumbnailURL())
                         .color(vb.getVideo().getColor())
-                        .writtenTime(vb.getWrittenTime())
+                        .createdDate(vb.getCreatedDate())
                         .build()).collect(Collectors.toList());
     }
 

@@ -16,9 +16,4 @@ public class SuccessPostUpdateRequest {
     private Long videoBoardId;
     @NotNull
     private String title;
-
-    @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime writtenTime;
-
 }
