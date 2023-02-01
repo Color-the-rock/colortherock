@@ -65,4 +65,9 @@ public class MemberController {
         return new BaseResponse<>(true);
     }
 
+    @GetMapping("/testuser")
+    @Operation(description = "요청받으면 토큰 생성해서 발급해줌 토큰 기한은 5분")
+    public String testuser() {
+        return memberService.testToken();
+    }
 }
