@@ -3,10 +3,12 @@ package org.anotherclass.colortherock.global.error;
 import com.nimbusds.jwt.JWT;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.global.common.BaseResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -19,6 +21,7 @@ public class GlobalExControllerAdvice {
      * 주로 @RequestBody, @RequestPart 어노테이션에서 발생
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public BaseResponse<?> InvalidArgumentValidResponse(MethodArgumentNotValidException e) {
         log.error("Exception : {}, 입력값 : {}", e.getBindingResult().getFieldError(), e.getBindingResult().getFieldError());
         return new BaseResponse<>(GlobalErrorCode.VALID_EXCEPTION, e.getBindingResult().getFieldError().getDefaultMessage());
@@ -29,6 +32,7 @@ public class GlobalExControllerAdvice {
      * 변수 Binding시 발생하는 오류
      **/
     @ExceptionHandler(BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public BaseResponse<?> InvalidArgumentBindResponse(BindException e) {
         log.error("Exception : {}, 입력값 : {}", e.getBindingResult().getFieldError(), e.getBindingResult().getFieldError());
         return new BaseResponse<>(GlobalErrorCode.VALID_EXCEPTION, e.getBindingResult().getFieldError().getDefaultMessage());
@@ -39,6 +43,7 @@ public class GlobalExControllerAdvice {
      * 지원하지 않은 HTTP method 호출 할 경우 발생
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected BaseResponse<?> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error("handleHttpRequestMethodNotSupportedException", e);
 
@@ -46,6 +51,7 @@ public class GlobalExControllerAdvice {
     }
 
     @ExceptionHandler(GlobalBaseException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected BaseResponse<?> handleGlobalBaseException(final GlobalBaseException e) {
         log.error("{} Exception {}: {}", e.getErrorCode(), e.getErrorCode().getCode(), e.getErrorCode().getMessage());
         return new BaseResponse<>(e.getErrorCode());
@@ -53,6 +59,7 @@ public class GlobalExControllerAdvice {
 
 
     @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected BaseResponse<?> handleException(Exception e) {
         log.error("Exception : {}", GlobalErrorCode.OTHER.getMessage(), e);
         return new BaseResponse<>(GlobalErrorCode.OTHER);
