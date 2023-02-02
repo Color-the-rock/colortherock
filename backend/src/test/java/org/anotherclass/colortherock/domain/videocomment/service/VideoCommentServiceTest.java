@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -92,12 +91,11 @@ class VideoCommentServiceTest {
                 CommentListRequest request = new CommentListRequest();
                 request.setStoreId(null);
                 request.setVideoBoardId(videoBoardIds.get(0));
-                Pageable pageable = Pageable.ofSize(2);
 
-                List<CommentListResponse> commentList = videoCommentService.getCommentList(request, pageable);
+                List<CommentListResponse> commentList = videoCommentService.getCommentList(request);
 
                 assertTrue(commentList.get(0).getCommentId() > commentList.get(1).getCommentId());
-                assertEquals(commentList.size(), 2);
+                assertEquals(commentList.size(), 15);
             }
         }
     }
@@ -238,12 +236,11 @@ class VideoCommentServiceTest {
             void getMyCommentList() {
                 Long memberId = memberIds.get(1);
                 Long storeId = null;
-                Pageable pageable = Pageable.ofSize(2);
 
-                List<MyCommentListResponse> result = videoCommentService.getMyCommentList(memberId, storeId, pageable);
+                List<MyCommentListResponse> result = videoCommentService.getMyCommentList(memberId, storeId);
 
                 assertTrue(result.get(0).getCommentId() > result.get(1).getCommentId());
-                assertEquals(result.size(), 2);
+                assertEquals(result.size(), 15);
             }
         }
     }

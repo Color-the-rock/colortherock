@@ -18,8 +18,6 @@ import org.anotherclass.colortherock.domain.videocomment.response.MyCommentListR
 import org.anotherclass.colortherock.domain.videocomment.service.VideoCommentService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,9 +40,8 @@ public class VideoCommentController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "댓글 조회 성공", content = @Content(schema = @Schema(implementation = CommentListResponse.class)))
     })
-    public BaseResponse<List<CommentListResponse>> getCommentList
-            (CommentListRequest condition, @PageableDefault(size = 15, sort = "id") Pageable pageable) {
-        List<CommentListResponse> commentList = videoCommentService.getCommentList(condition, pageable);
+    public BaseResponse<List<CommentListResponse>> getCommentList(CommentListRequest condition) {
+        List<CommentListResponse> commentList = videoCommentService.getCommentList(condition);
         return new BaseResponse<>(commentList);
     }
 
@@ -91,9 +88,9 @@ public class VideoCommentController {
             @ApiResponse(responseCode = "200", description = "나의 댓글 조회 완료")
     })
     public BaseResponse<List<MyCommentListResponse>> getMyCommentList
-            (@AuthenticationPrincipal MemberDetails memberDetails, @RequestParam(required = false) Long storeId, @PageableDefault(size = 15, sort = "id") Pageable pageable) {
+            (@AuthenticationPrincipal MemberDetails memberDetails, @RequestParam(required = false) Long storeId) {
         Member member = memberDetails.getMember();
-        List<MyCommentListResponse> myCommentList = videoCommentService.getMyCommentList(member.getId(), storeId, pageable);
+        List<MyCommentListResponse> myCommentList = videoCommentService.getMyCommentList(member.getId(), storeId);
         return new BaseResponse<>(myCommentList);
     }
 }
