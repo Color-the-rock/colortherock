@@ -1,13 +1,14 @@
 import styled from "styled-components"
 
 export const Container = styled.div`
-  @media(min-width: 992px) {
-  
-  }
-
-  @media(max-width: 991px) {
-    margin: 1px 1rem 0 1rem;
-  }
+  z-index: 2000;
+  display: block;
+  width: 100%;
+  background-color: var(--color-background);
+  position: relative;
+  z-index: 10;
+  opacity: ${(props) => 
+    props.opacity !== "100" ? `${props.opacity}%` : "100%"}
 `;
 
 export const OutSideArea = styled.div`
@@ -21,24 +22,25 @@ export const OutSideArea = styled.div`
 
 `
 
-export const SearchResultWrap = styled.div`
-  @media(min-width: 992px) {
-  
-  }
-
-  @media(max-width: 991px) {
-    z-index: 2000;
+export const SearchResultWrap = styled.ul`
+    list-style: none;
     width: 100%;
     display: flex;
+    margin-top: 2px;
+    z-index: 2000;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    border: 1px solid white;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-background);
     border-radius: 10px;
     padding: 10px;
-    
-    .button {
-      border: 1px solid white;
-    }
-  }
+    overflow: scroll;
+    overflow: hidden;
+    position: absolute;
 `;
+
+export const SearchResult =  styled.li`
+  width: 100%;
+  height: 30px;
+`

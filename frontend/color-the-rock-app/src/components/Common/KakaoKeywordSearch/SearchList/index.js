@@ -6,8 +6,8 @@ import * as S from "./style"
 
 const { kakao } = window;
 
-const KakaoSearchList = ({searchPlace, setOpenList}) => {
-
+const KakaoSearchList = ({searchPlace, setLocation, setOpenList, opacity}) => {
+  const [pickData, setPickData] = useState();
   const [searchData, setSearchData] = useState([]);
   
   useEffect(() => {
@@ -28,8 +28,9 @@ const KakaoSearchList = ({searchPlace, setOpenList}) => {
     setSearchData(data);
   }
 
-  const handleClick = () => {
-    
+  const handleClick = (e) => {
+    console.log(e.target.innerText);
+    setLocation(e.target.innerText);
     // 여기에 결과 설정...
     console.log("성공")
 
@@ -42,24 +43,29 @@ const KakaoSearchList = ({searchPlace, setOpenList}) => {
   }
 
   return (
-    <div>
-      <Desktop>
-
-      </Desktop>
-
-      <Mobile>
-        <S.Container>
-          <S.OutSideArea onClick={CloseKakaoSearch}/>
-          <S.SearchResultWrap>
-            {searchData.map((data, index) => (
-              <button key={index} onClick={handleClick}>{data.place_name}</button>
-              
-            ))}
-          </S.SearchResultWrap>
-        </S.Container>
-      </Mobile>
-    </div>
-  )
+    <S.Container opacity={opacity}>
+      <S.OutSideArea onClick={CloseKakaoSearch}/>
+      <S.SearchResultWrap>
+        {
+          searchData.length > 0 ?
+          (
+            searchData.map((data, index) => (
+              <S.SearchResult 
+                key={index} 
+                value={data.place_name}
+                onClick={handleClick}>
+              {data.place_name}
+              </S.SearchResult>
+            ))
+          )
+          :
+          (
+            <div>검색결과가 없습니다.</div>
+          )
+        }
+      </S.SearchResultWrap>
+    </S.Container>
+)
 
 }
 
