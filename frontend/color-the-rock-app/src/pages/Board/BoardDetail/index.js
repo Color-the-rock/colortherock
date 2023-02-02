@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
-import { Desktop, Mobile } from "../../../components/layout/Template"
-import * as S from "./style"
-import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn"
-import SubTitle from "../../../components/Common/SubTitle"
+import React, { useState, useEffect } from "react";
+import { Desktop, Mobile } from "../../../components/layout/Template";
+import * as S from "./style";
+import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn";
+import SubTitle from "../../../components/Common/SubTitle";
 import CommentModal from "../../../components/Common/CommentModal";
 import CommentBtn from "../../../components/Common/CommentBtn";
 import { useNavigate } from "react-router";
@@ -13,8 +13,9 @@ import Header from "../../../components/layout/Header";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
 
 import { defaultInstance } from "../../../api/utils";
-import requests from "../../../api/board"
+import requests from "../../../api/board";
 
+import TestVideo from "../../../assets/video/test.mp4";
 const dummy = [
   {
     id: 1,
@@ -59,34 +60,27 @@ const dummy = [
 ];
 
 const BoardDetail = () => {
-  
-
-
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState(dummy);
-  
+
   const config = {
-    params: {
-      
-    }
-  }
+    params: {},
+  };
 
   // 상세 정보 받아오기!!
   useEffect(() => {
-    defaultInstance.get(requests.GetBoardDetail, config)
+    defaultInstance
+      .get(requests.GetBoardDetail, config)
       .then((res) => {
         setData(res);
       })
       .catch((err) => {
         console.log(err);
-      })
-  }, [])
+      });
+  }, []);
 
-
-
-  const updateFuncOnScroll= () => {
-   
+  const updateFuncOnScroll = () => {
     try {
       setData((prev) => [...prev, ...dummy]);
     } catch (error) {
@@ -129,8 +123,9 @@ const BoardDetail = () => {
             {/* 비디오 */}
             {/* <S.VideoWrap>
           </S.VideoWrap> */}
-            <S.Video   controls>
-              <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"/>
+            <S.Video controls>
+              <source src={TestVideo} type="video/mp4" />
+              {/* <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"/> */}
             </S.Video>
 
             {isModalOpen ? (
@@ -169,11 +164,11 @@ const BoardDetail = () => {
                 </S.ThumbnailList>
               </S.FalseWrap>
             )}
-        </S.ContentWrap>
-      </S.ContentContainer>
-    </S.Container>
+          </S.ContentWrap>
+        </S.ContentContainer>
+      </S.Container>
     </S.ContainerWrap>
-  )
+  );
 };
 
 export default BoardDetail;

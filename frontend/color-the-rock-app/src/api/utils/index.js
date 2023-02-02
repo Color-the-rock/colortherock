@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // url 설정 수정 필요
-const BASE_URL = "https://www.colortherock.com";
+const BASE_URL = "https://www.colortherock.com/api";
 
 const defaultApi = (option) => {
   const instance = axios.create({
@@ -77,4 +77,4 @@ defaultApi().interceptors.response.use(
   }
 );
 
-export const defaultInstance = defaultApi(BASE_URL);
+export const defaultInstance = defaultApi();
