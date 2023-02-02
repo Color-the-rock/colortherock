@@ -58,10 +58,20 @@ public class MemberRecordTest extends IntegrationTest {
         token = jwtTokenUtils.createTokens(savedMember, List.of(new SimpleGrantedAuthority("ROLE_USER")));
         // 영상 추가
         for (int i = 1; i <= 9; i++) {
-            video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 강남", true, "노랑", savedMember, "videoTitle").toEntity();
+            video = UploadVideoRequest.builder()
+                    .shootingDate(LocalDate.parse("2023-01-17"))
+                    .level(i)
+                    .gymName("더클라임 강남")
+                    .isSuccess(true)
+                    .color("노랑").build().toEntity(savedMember, "s3URL", "thumbURL", "videoName");
             Video save = videoRepository.save(video);
             videoId = save.getId();
-            video = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 홍대", true, "노랑", savedMember).toEntity();
+            video = UploadVideoRequest.builder()
+                    .shootingDate(LocalDate.parse("2023-01-17"))
+                    .level(i)
+                    .gymName("더클라임 홍대")
+                    .isSuccess(true)
+                    .color("노랑").build().toEntity(savedMember, "s3URL", "thumbURL", "videoName");
             videoRepository.save(video);
         }
     }
@@ -102,18 +112,15 @@ public class MemberRecordTest extends IntegrationTest {
     @DisplayName("[GET]전체 운동 기록 누적 통계 조회")
     public void 사용자_누적통계_조회() throws Exception {
         recordService.saveNewRecord(member.getId());
-        recordService.addVideoCount(member);
-        recordService.addVideoCount(member);
-        recordService.addVideoCount(member);
-        recordService.addSuccessCount(member);
-        recordService.addSuccessCount(member);
+        recordService.addVideoCount(member, true);
+        recordService.addVideoCount(member, true);
+        recordService.addVideoCount(member, false);
         mockMvc.perform(
                 get(url + "/record/total")
                         .header("Authorization", AUTHORIZATION_HEADER + token))
-                .andExpect(jsonPath("$.status", is(200)));
-//                .andExpect(jsonPath("$.result.videoCount").value(3))
-//                .andExpect(jsonPath("$.result.successCount").value(2));
-
+                .andExpect(jsonPath("$.status", is(200)))
+                .andExpect(jsonPath("$.result.videoCount").value(3))
+                .andExpect(jsonPath("$.result.successCount").value(2));
     }
 
     @Test
@@ -182,7 +189,12 @@ public class MemberRecordTest extends IntegrationTest {
     @Test
     @DisplayName("[GET] 암장 방문 통계 반환")
     public void 통계반환_성공() throws Exception {
-        video = new UploadVideoRequest(LocalDate.parse("2023-01-18"), 1, "더클라임 강남", true, "노랑", member).toEntity();
+        video = UploadVideoRequest.builder()
+                .shootingDate(LocalDate.parse("2023-01-18"))
+                .level(1)
+                .gymName("더클라임 강남")
+                .isSuccess(true)
+                .color("노랑").build().toEntity(member);
         videoRepository.save(video);
         mockMvc.perform(
                         get(url + "/record/visit")
@@ -196,7 +208,12 @@ public class MemberRecordTest extends IntegrationTest {
     @Test
     @DisplayName("[GET] 날짜별 완등 레벨 색상 반환")
     public void 레벨색상반환_성공() throws Exception {
-        video = new UploadVideoRequest(LocalDate.parse("2023-01-18"), 1, "더클라임 강남", true, "노랑", member).toEntity();
+        video = UploadVideoRequest.builder()
+                .shootingDate(LocalDate.parse("2023-01-18"))
+                .level(1)
+                .gymName("더클라임 강남")
+                .isSuccess(true)
+                .color("노랑").build().toEntity(member);
         videoRepository.save(video);
         mockMvc.perform(
                 get(url + "/record/calendar/2023-01")

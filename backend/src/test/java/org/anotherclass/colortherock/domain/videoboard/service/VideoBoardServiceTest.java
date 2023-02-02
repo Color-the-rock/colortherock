@@ -101,14 +101,13 @@ class VideoBoardServiceTest {
                     cond.setStoreId(null);
                     cond.setGymName("");
                     cond.setColor("");
-                    Pageable pageable = Pageable.ofSize(2); // 사이즈 임의로 2로 지정
 
                     // when
-                    List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond, pageable);
+                    List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond);
 
                     // then
                     assertTrue(successVideos.get(0).getVideoBoardId() > successVideos.get(1).getVideoBoardId());
-                    assertEquals(successVideos.size(), 2);
+                    assertEquals(successVideos.size(), 8);
                 }
             }
 
@@ -124,14 +123,13 @@ class VideoBoardServiceTest {
                     cond.setStoreId(videoBoardIds.get(7));
                     cond.setGymName("");
                     cond.setColor("");
-                    Pageable pageable = Pageable.ofSize(2); // 사이즈 임의로 2로 지정
-
+|
                     // when
-                    List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond, pageable);
+                    List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond);
 
                     // then
                     assertTrue(cond.getStoreId() > successVideos.get(0).getVideoBoardId());
-                    assertEquals(successVideos.size(), 2);
+                    assertEquals(successVideos.size(), 8);
                 }
             }
 
@@ -146,10 +144,9 @@ class VideoBoardServiceTest {
                     cond.setStoreId(0L);
                     cond.setGymName("");
                     cond.setColor("");
-                    Pageable pageable = Pageable.ofSize(2); // 사이즈 임의로 2로 지정
 
                     // when
-                    List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond, pageable);
+                    List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond);
 
                     // then
                     assertEquals(successVideos.size(), 0);
@@ -172,15 +169,14 @@ class VideoBoardServiceTest {
                     cond.setStoreId(null);
                     cond.setGymName("");
                     cond.setColor("초록");
-                    Pageable pageable = Pageable.ofSize(2); // 사이즈 임의로 2로 지정
 
                     // when
-                    List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond, pageable);
+                    List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond);
 
                     // then
                     assertEquals(successVideos.get(0).getColor(), cond.getColor());
                     assertEquals(successVideos.get(1).getColor(), cond.getColor());
-                    assertEquals(successVideos.size(), 2);
+                    assertEquals(successVideos.size(), 8);
                 }
 
             }
@@ -200,14 +196,13 @@ class VideoBoardServiceTest {
                     cond.setStoreId(null);
                     cond.setGymName("더클라임 강남점");
                     cond.setColor("");
-                    Pageable pageable = Pageable.ofSize(2); // 사이즈 임의로 2로 지정
 
                     // when
-                    List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond, pageable);
+                    List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond);
 
                     // then
                     assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
-                    assertEquals(successVideos.size(), 2);
+                    assertEquals(successVideos.size(), 8);
                 }
             }
         }
@@ -228,15 +223,14 @@ class VideoBoardServiceTest {
                     cond.setStoreId(null);
                     cond.setGymName("더클라임 홍대점");
                     cond.setColor("파랑");
-                    Pageable pageable = Pageable.ofSize(2); // 사이즈 임의로 2로 지정
 
                     // when
-                    List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond, pageable);
+                    List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond);
 
                     // then
                     assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
                     assertEquals(successVideos.get(0).getColor(), cond.getColor());
-                    assertEquals(successVideos.size(), 2);
+                    assertEquals(successVideos.size(), 8);
                 }
             }
 
@@ -426,11 +420,11 @@ class VideoBoardServiceTest {
             void getMySuccessVideoPosts() {
                 Long memberId = memberIds.get(0);
                 Long storeId = null;
-                Pageable pageable = Pageable.ofSize(2);
-                List<VideoBoardSummaryResponse> result = videoBoardService.getMySuccessVideoPosts(memberId, storeId, pageable);
+
+                List<VideoBoardSummaryResponse> result = videoBoardService.getMySuccessVideoPosts(memberId, storeId);
 
                 assertTrue(result.get(0).getVideoBoardId() > result.get(1).getVideoBoardId());
-                assertEquals(result.size(), 2);
+                assertEquals(result.size(), 8);
             }
         }
     }
