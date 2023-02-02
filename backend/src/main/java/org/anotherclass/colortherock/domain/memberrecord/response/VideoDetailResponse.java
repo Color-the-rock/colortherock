@@ -10,7 +10,7 @@ public class VideoDetailResponse {
     private Integer level;
     private String gymName;
     private String s3URL;
-    private boolean isSuccess;
+    private Boolean isSuccess;
     private String color;
 
     @Builder

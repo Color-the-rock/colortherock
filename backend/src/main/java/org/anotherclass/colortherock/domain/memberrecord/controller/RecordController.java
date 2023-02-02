@@ -102,7 +102,7 @@ public class RecordController {
         @ApiResponse(responseCode = "500", description = "잘못된 날짜 형식으로 인한 영상 조회 실패")
     })
     @GetMapping("/videos")
-    public BaseResponse<List<VideoListResponse>> MyVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody MyVideoRequest myVideoRequest) {
+    public BaseResponse<List<VideoListResponse>> MyVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, MyVideoRequest myVideoRequest) {
         List<VideoListResponse> videoListResponses = recordService.getMyVideos(memberDetails, myVideoRequest);
         return new BaseResponse<>(videoListResponses);
     }

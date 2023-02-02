@@ -33,7 +33,7 @@ public class MemberController {
         return "ok";
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("/api/refresh")
     @Operation(description = "액세스 재발급 API")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "재발급 성공", content = @Content(schema = @Schema(implementation = ReGenerateAccessTokenResponse.class)))
@@ -56,6 +56,7 @@ public class MemberController {
     }
 
     @PostMapping("/api/duplicateNickname")
+    @Operation(description = "닉네임 중복 확인 API")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "닉네임 중복 검사 통과"),
             @ApiResponse(responseCode = "400", description = "닉네임 중복 검사 실패"),
