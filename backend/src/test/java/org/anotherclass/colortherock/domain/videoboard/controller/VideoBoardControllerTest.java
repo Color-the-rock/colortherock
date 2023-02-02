@@ -74,6 +74,7 @@ class VideoBoardControllerTest extends IntegrationTest {
             VideoBoard videoBoard = VideoBoard.builder()
                     .video(video)
                     .title("제목" + i)
+                    .isHidden(false)
                     .member(member)
                     .build();
             em.persist(videoBoard);
@@ -122,7 +123,7 @@ class VideoBoardControllerTest extends IntegrationTest {
                 .andReturn()
                 .getResponse();
         BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        assertEquals(arrayList.getResult().size(), 1);
+        assertEquals(1, arrayList.getResult().size());
     }
 
     @Test
@@ -136,7 +137,7 @@ class VideoBoardControllerTest extends IntegrationTest {
                 .andReturn()
                 .getResponse();
         BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        assertEquals(arrayList.getResult().size(), 1);
+        assertEquals(1, arrayList.getResult().size());
     }
 
     @Test

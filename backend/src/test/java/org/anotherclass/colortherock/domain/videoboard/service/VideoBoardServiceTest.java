@@ -33,16 +33,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class VideoBoardServiceTest {
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
     @Autowired
-    VideoRepository videoRepository;
+    private VideoRepository videoRepository;
     @Autowired
     private VideoBoardService videoBoardService;
     @Autowired
     private VideoBoardRepository videoBoardRepository;
-    ArrayList<Long> memberIds;
-    ArrayList<Long> videoIds;
-    ArrayList<Long> videoBoardIds;
+    private ArrayList<Long> memberIds;
+    private ArrayList<Long> videoIds;
+    private ArrayList<Long> videoBoardIds;
 
     @BeforeEach
     public void setMemberAndVideo() {
@@ -58,22 +58,30 @@ class VideoBoardServiceTest {
         memberIds.add(saveB.getId());
 
         // Video, VideoBoard 생성
-        for(int i = 1; i <= 8; i++){
-            Video video = new Video(LocalDate.parse("2023-01-29"), 4, "더클라임 강남점", "s3url", true, "thumbnail", "초록", saveA, "videoName");
+        for(int i = 1; i <= 32; i++){
+            Video video = new Video(LocalDate.parse("2023-01-29"), 4, "더클라임 강남점", "s3url", true, "thumbnail", "name","초록", saveA, "videoName");
             Video saveVideo = videoRepository.save(video);
             videoIds.add(saveVideo.getId());
             if(i % 2 == 0) {
-                VideoBoard videoBoard = new VideoBoard("성공했습니다.", video, memberA);
+                VideoBoard videoBoard = VideoBoard.builder()
+                        .title("성공했습니다.")
+                        .member(memberA)
+                        .video(video)
+                        .isHidden(false).build();
                 VideoBoard saveVideoBoard = videoBoardRepository.save(videoBoard);
                 videoBoardIds.add(saveVideoBoard.getId());
             }
         }
-        for(int i = 9; i <= 16; i++){
-            Video video = new Video(LocalDate.parse("2023-01-29"),5, "더클라임 홍대점", "s3url", true, "thumbnail", "파랑", saveB, "videoName");
+        for(int i = 33; i <= 64; i++){
+            Video video = new Video(LocalDate.parse("2023-01-29"),5, "더클라임 홍대점", "s3url", true, "thumbnail", "name","파랑", saveB, "videoName");
             Video saveVideo = videoRepository.save(video);
             videoIds.add(saveVideo.getId());
             if(i % 2 == 0){
-                VideoBoard videoBoard = new VideoBoard("완등 인증!", video, memberB);
+                VideoBoard videoBoard = VideoBoard.builder()
+                        .video(video)
+                        .member(memberB)
+                        .title("완등했습니다.")
+                        .isHidden(false).build();
                 VideoBoard saveVideoBoard = videoBoardRepository.save(videoBoard);
                 videoBoardIds.add(saveVideoBoard.getId());
             }
@@ -106,7 +114,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertTrue(successVideos.get(0).getVideoBoardId() > successVideos.get(1).getVideoBoardId());
-                    assertEquals(successVideos.size(), 8);
+                    assertEquals(16, successVideos.size());
                 }
             }
 
@@ -128,7 +136,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertTrue(cond.getStoreId() > successVideos.get(0).getVideoBoardId());
-                    assertEquals(successVideos.size(), 8);
+                    assertEquals(7, successVideos.size());
                 }
             }
 
@@ -148,7 +156,7 @@ class VideoBoardServiceTest {
                     List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond);
 
                     // then
-                    assertEquals(successVideos.size(), 0);
+                    assertEquals(0, successVideos.size());
                 }
             }
 
@@ -175,7 +183,7 @@ class VideoBoardServiceTest {
                     // then
                     assertEquals(successVideos.get(0).getColor(), cond.getColor());
                     assertEquals(successVideos.get(1).getColor(), cond.getColor());
-                    assertEquals(successVideos.size(), 8);
+                    assertEquals(16,successVideos.size());
                 }
 
             }
@@ -201,7 +209,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
-                    assertEquals(successVideos.size(), 8);
+                    assertEquals(16,successVideos.size());
                 }
             }
         }
@@ -229,7 +237,7 @@ class VideoBoardServiceTest {
                     // then
                     assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
                     assertEquals(successVideos.get(0).getColor(), cond.getColor());
-                    assertEquals(successVideos.size(), 8);
+                    assertEquals(16, successVideos.size());
                 }
             }
 
@@ -280,7 +288,7 @@ class VideoBoardServiceTest {
             void videoUserMismatchException() {
                 Long memberId = memberIds.get(0);
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
-                request.setVideoId(videoIds.get(10));
+                request.setVideoId(videoIds.get(33));
                 request.setTitle("성공했습니다.");
 
                 assertThrows(VideoUserMismatchException.class, () -> videoBoardService.uploadMySuccessVideoPost(memberId, request));
@@ -362,7 +370,7 @@ class VideoBoardServiceTest {
             void WriterMismatchException() {
                 Long memberId = memberIds.get(0);
                 SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
-                request.setVideoBoardId(videoBoardIds.get(6)); // 해당 게시글의 작성자는 0L
+                request.setVideoBoardId(videoBoardIds.get(17)); // 해당 게시글의 작성자는 1번째
                 request.setTitle("수정했습니다.");
 
                 assertThrows(WriterMismatchException.class, () -> videoBoardService.updateSuccessPost(memberId, request));
@@ -419,11 +427,10 @@ class VideoBoardServiceTest {
             void getMySuccessVideoPosts() {
                 Long memberId = memberIds.get(0);
                 Long storeId = null;
-
                 List<VideoBoardSummaryResponse> result = videoBoardService.getMySuccessVideoPosts(memberId, storeId);
 
                 assertTrue(result.get(0).getVideoBoardId() > result.get(1).getVideoBoardId());
-                assertEquals(result.size(), 8);
+                assertEquals(8, result.size());
             }
         }
     }

@@ -65,9 +65,9 @@ class VideoCommentServiceTest {
 
         // Video, VideoBoard, VideoComment 생성
         for (int i = 1; i <= 4; i++) {
-            Video video = new Video(LocalDate.parse("2023-01-30"), 4, "더클라임 강남점", "s3url", true, "thumbnail", "초록", saveA, "videoName");
+            Video video = new Video(LocalDate.parse("2023-01-30"), 4, "더클라임 강남점", "s3url", true, "thumbnail","name", "초록", saveA, "videoName");
             Video saveVideo = videoRepository.save(video);
-            VideoBoard videoBoard = new VideoBoard("성공했습니다.", saveVideo, memberA);
+            VideoBoard videoBoard = new VideoBoard("성공했습니다", false, saveVideo, memberA);
             VideoBoard saveVideoBoard = videoBoardRepository.save(videoBoard);
             videoBoardIds.add(saveVideoBoard.getId());
             for (int j = 1; j <= 4; j++) {

@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.live.entity.Live;
+import org.anotherclass.colortherock.domain.report.entity.Report;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.domain.videocomment.entity.VideoComment;
@@ -34,13 +35,14 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Video> videos = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VideoBoard> videoBoards = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VideoComment> videoComments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reports = new ArrayList<>();
 
     @Builder
     public Member(Long id,String email, String nickname, RegistrationId registrationId) {
