@@ -5,8 +5,7 @@ export const Container = styled(motion.div)`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 600px;
-  max-height: 65%;
+  height: calc(100vh - 18.75rem);
   background-color: var(--color-background);
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
