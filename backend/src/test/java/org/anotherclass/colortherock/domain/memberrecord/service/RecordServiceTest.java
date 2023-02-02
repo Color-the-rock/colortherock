@@ -37,12 +37,22 @@ class RecordServiceTest {
         member = new Member("johan@rock.com", "조한", Member.RegistrationId.kakao);
         em.persist(member);
         for (int i = 1; i <= 9; i++) {
-            UploadVideoRequest saveDto = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 강남", true, "노랑", member);
-            em.persist(saveDto.toEntity());
+            UploadVideoRequest saveDto = UploadVideoRequest.builder()
+                    .shootingDate(LocalDate.parse("2023-01-17"))
+                    .level(i)
+                    .gymName("더클라임 강남")
+                    .color("노랑")
+                    .isSuccess(true).build();
+            em.persist(saveDto.toEntity(member));
         }
         for (int i = 1; i <= 9; i++) {
-            UploadVideoRequest saveDto = new UploadVideoRequest(LocalDate.parse("2023-01-17"), i, "더클라임 강남", false, "노랑", member);
-            em.persist(saveDto.toEntity());
+            UploadVideoRequest saveDto = UploadVideoRequest.builder()
+                    .shootingDate(LocalDate.parse("2023-01-17"))
+                    .level(i)
+                    .gymName("더클라임 강남")
+                    .color("노랑")
+                    .isSuccess(true).build();
+            em.persist(saveDto.toEntity(member));
         }
         em.flush();
         em.clear();
@@ -76,8 +86,13 @@ class RecordServiceTest {
     public void videoDetailTest() {
         // given
         LocalDate date = LocalDate.parse("2023-01-19");
-        UploadVideoRequest saveDto = new UploadVideoRequest(date, 1, "더클라임 강남", false, "노랑", member);
-        Video video = saveDto.toEntity();
+        UploadVideoRequest saveDto = UploadVideoRequest.builder()
+                .shootingDate(date)
+                .level(1)
+                .gymName("더클라임 강남")
+                .isSuccess(false)
+                .color("노랑").build();
+        Video video = saveDto.toEntity(member);
         Long videoId = videoRepository.save(video).getId();
         // when
         VideoDetailResponse videoDetail = recordService.getVideoDetail(videoId);
@@ -90,8 +105,13 @@ class RecordServiceTest {
     public void videoDetailExceptionTest() {
         // given
         LocalDate date = LocalDate.parse("2023-01-19");
-        UploadVideoRequest saveDto = new UploadVideoRequest(date, 1, "더클라임 강남", false, "노랑", member);
-        Video video = saveDto.toEntity();
+        UploadVideoRequest saveDto = UploadVideoRequest.builder()
+                .shootingDate(date)
+                .level(1)
+                .gymName("더클라임 강남")
+                .isSuccess(false)
+                .color("노랑").build();
+        Video video = saveDto.toEntity(member);
         Long videoId = videoRepository.save(video).getId();
         // when
         Assertions.assertThrows(VideoNotFoundException.class, () -> recordService.getVideoDetail(videoId + 1));

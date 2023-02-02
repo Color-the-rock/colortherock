@@ -24,8 +24,7 @@ import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.apache.commons.io.FilenameUtils;
 import org.jcodec.api.JCodecException;
 import org.joda.time.DateTime;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,12 +51,12 @@ public class VideoBoardController {
             @ApiResponse(responseCode = "200", description = "완등 영상 목록 조회 성공", content = @Content(schema = @Schema(implementation = VideoBoardSummaryResponse.class)))
     })
     public BaseResponse<List<VideoBoardSummaryResponse>> getVideoList
-            (VideoBoardSearchRequest condition, @PageableDefault(size = 16) Pageable pageable) {
-        List<VideoBoardSummaryResponse> successVideoList = videoBoardService.getSuccessVideos(condition, pageable);
+            (VideoBoardSearchRequest condition) {
+        List<VideoBoardSummaryResponse> successVideoList = videoBoardService.getSuccessVideos(condition);
         return new BaseResponse<>(successVideoList);
     }
 
-    @PostMapping("/board/local")
+    @PostMapping(value = "/board/local" , consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @Operation(description = "완등 영상 게시글 올리기(로컬 파일에서 영상 가져오기)")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "운동 영상 올리기 성공", content = @Content(schema = @Schema(implementation = Long.class)))
@@ -140,9 +139,9 @@ public class VideoBoardController {
             @ApiResponse(responseCode = "200", description = "내 완등 영상 글 목록 불러오기 성공")
     })
     public BaseResponse<List<VideoBoardSummaryResponse>> getMySuccessVideoPosts
-            (@AuthenticationPrincipal MemberDetails memberDetails, @RequestParam Long storeId, @PageableDefault(size = 8, sort = "id") Pageable pageable) {
+            (@AuthenticationPrincipal MemberDetails memberDetails, @RequestParam Long storeId) {
         Member member = memberDetails.getMember();
-        List<VideoBoardSummaryResponse> mySuccessPosts = videoBoardService.getMySuccessVideoPosts(member.getId(), storeId, pageable);
+        List<VideoBoardSummaryResponse> mySuccessPosts = videoBoardService.getMySuccessVideoPosts(member.getId(), storeId);
         return new BaseResponse<>(mySuccessPosts);
     }
 
