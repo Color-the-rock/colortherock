@@ -62,8 +62,8 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "닉네임 중복 검사 실패"),
     })
     public BaseResponse<?> duplicateNickname(@RequestBody String nickname) {
-        memberService.duplicateNickname(nickname);
-        return new BaseResponse<>(true);
+        Boolean isDuplicate = memberService.duplicateNickname(nickname);
+        return new BaseResponse<>(isDuplicate);
     }
 
     @GetMapping("/testuser")
