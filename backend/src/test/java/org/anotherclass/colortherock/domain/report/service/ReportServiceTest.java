@@ -3,6 +3,7 @@ package org.anotherclass.colortherock.domain.report.service;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.report.entity.Report;
+import org.anotherclass.colortherock.domain.report.repository.ReportReadRepository;
 import org.anotherclass.colortherock.domain.report.repository.ReportRepository;
 import org.anotherclass.colortherock.domain.report.request.PostReportRequest;
 import org.anotherclass.colortherock.domain.video.entity.Video;
@@ -38,6 +39,8 @@ class ReportServiceTest {
     private ReportService reportService;
     @Autowired
     private ReportRepository reportRepository;
+    @Autowired
+    private ReportReadRepository reportReadRepository;
 
     private ArrayList<Long> memberIds;
     private ArrayList<Long> videoBoardIds;
@@ -99,7 +102,7 @@ class ReportServiceTest {
         // when
         reportService.reportPost(member, request);
         // then
-        Long cnt = reportRepository.countReport(videoBoardId);
+        Long cnt = reportReadRepository.countReport(videoBoardId);
         assertEquals(3, cnt);
     }
 
@@ -116,7 +119,7 @@ class ReportServiceTest {
             reportService.reportPost(member, request);
         }
         // then
-        Long cnt = reportRepository.countReport(videoBoard.getId());
+        Long cnt = reportReadRepository.countReport(videoBoard.getId());
         assertEquals(5, cnt);
         assertTrue(videoBoard.getIsHidden());
     }
@@ -134,7 +137,7 @@ class ReportServiceTest {
             reportService.reportPost(member, request);
         }
         // then
-        Long cnt = reportRepository.countReport(videoBoard.getId());
+        Long cnt = reportReadRepository.countReport(videoBoard.getId());
         assertEquals(4, cnt);
         assertFalse(videoBoard.getIsHidden());
     }

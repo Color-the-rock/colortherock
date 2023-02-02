@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.report.entity.Report;
+import org.anotherclass.colortherock.domain.report.repository.ReportReadRepository;
 import org.anotherclass.colortherock.domain.report.repository.ReportRepository;
 import org.anotherclass.colortherock.domain.report.request.PostReportRequest;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReportService {
     private final ReportRepository reportRepository;
+    private final ReportReadRepository reportReadRepository;
     private final VideoBoardRepository videoBoardRepository;
     public void reportPost(Member member, PostReportRequest request) {
         VideoBoard videoBoard = videoBoardRepository.findById(request.getVideoBoardId())
@@ -34,7 +36,7 @@ public class ReportService {
 
     // 해당 게시글이 몇 명의 유저로부터 신고 당했는지 확인
     private Boolean checkReportNum(Long videoBoardId) {
-        Long reportCnt = reportRepository.countReport(videoBoardId);
+        Long reportCnt = reportReadRepository.countReport(videoBoardId);
         if(reportCnt >= 5) {
             return true;
         }
