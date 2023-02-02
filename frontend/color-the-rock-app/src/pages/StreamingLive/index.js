@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import UserVideoComponent from "../../components/Live/UserVideo";
 import * as S from "./style";
 import { useInput } from "../../hooks/useInput";
@@ -8,6 +9,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOV } from "../../stores/streaming/streamingSlice";
 import CommentBtn from "../../components/Common/CommentBtn";
 import ChattingModal from "../../components/Live/ChattingModal";
+import {
+  FiLogOut,
+  FiMic,
+  FiMicOff,
+  FiRefreshCcw,
+  FiVideoOff,
+  FiVideo,
+} from "react-icons/fi";
 
 const APPLICATION_SERVER_URL = "http://localhost:5000/";
 
@@ -23,12 +32,19 @@ const StreamingLive = () => {
   const [subscribers, setSubscribers] = useState([]);
   const [userNickName, onChangeUserNickName] = useInput("");
 
-  // 채팅 관련 설정
+  // 세션 종료 관리
+  const navigate = useNavigate();
+
+  // 채팅 관리
   const [isShowChattingModal, setShowChattingModal] = useState(false);
   const [messages, setMessages] = useState([]);
 
+  // 비디오 설정 관리
+  const [isOnVideo, setOnVideo] = useState(true);
+  const [isOnMic, setOnMic] = useState(true);
+
   useEffect(() => {
-    if (ov !== null) {
+    if (ov !== null && ov !== undefined) {
       setSession(ov.initSession());
     }
   }, [ov]);
@@ -142,6 +158,8 @@ const StreamingLive = () => {
     }
   };
 
+  // 비디오 설정 메뉴 관리
+
   const leaveSession = () => {
     // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
 
@@ -156,6 +174,10 @@ const StreamingLive = () => {
     setSessionTitle("SessionA");
     setMainStreamManager(undefined);
     setPublisher(undefined);
+
+    // 목록 페이지로 이동
+    alert("방송이 종료되었습니다:)");
+    navigate("/streaming");
   };
 
   const switchCamera = async () => {
@@ -194,6 +216,19 @@ const StreamingLive = () => {
     }
   };
 
+  // video 설정
+  const handleSetVideo = () => {
+    publisher.publishVideo(!isOnVideo);
+    setOnVideo((prev) => !prev);
+  };
+
+  // audio 설정
+  const handleSetAudio = () => {
+    publisher.publishAudio(!isOnMic);
+    setOnMic((prev) => !prev);
+  };
+
+  // 채팅 관리
   const onSessionCreated = () => {
     console.log("onSessionCreated!");
     session.on(`signal:signal`, (event) => {
@@ -227,24 +262,37 @@ const StreamingLive = () => {
       )}
 
       <S.OwnerVideoWrapper>
-        <S.VideoMenu></S.VideoMenu>
+        <S.VideoMenu>
+          <S.VideoMenuItem onClick={leaveSession}>
+            <FiLogOut size="16px" />
+          </S.VideoMenuItem>
+          <S.VideoMenuItem onClick={handleSetVideo}>
+            {isOnVideo ? <FiVideo size="16px" /> : <FiVideoOff size="16px" />}
+          </S.VideoMenuItem>
+          <S.VideoMenuItem onClick={handleSetAudio}>
+            {isOnMic ? <FiMic size="16px" /> : <FiMicOff size="16px" />}
+          </S.VideoMenuItem>
+          <S.VideoMenuItem onClick={switchCamera}>
+            <FiRefreshCcw size="16px" />
+          </S.VideoMenuItem>
+        </S.VideoMenu>
         {session !== undefined ? (
           mainStreamManager !== undefined ? (
             <UserVideoComponent streamManager={mainStreamManager} />
           ) : null
         ) : null}
       </S.OwnerVideoWrapper>
-      <S.VideoMenuWrapper>
+      <S.SettingWrapper>
         <S.CommentWrapper>
           <CommentBtn
             isReadOnly={true}
             onClick={() => setShowChattingModal(true)}
           />
         </S.CommentWrapper>
-        <S.VideoMenuItem />
-        <S.VideoMenuItem />
-        <S.VideoMenuItem />
-      </S.VideoMenuWrapper>
+        <S.SettingMenuItem />
+        <S.SettingMenuItem />
+        <S.SettingMenuItem />
+      </S.SettingWrapper>
     </S.Container>
   );
 };

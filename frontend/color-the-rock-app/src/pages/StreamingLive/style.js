@@ -44,12 +44,27 @@ export const OwnerVideoWrapper = styled.div`
 `;
 
 export const VideoMenu = styled.div`
+  z-index: 100;
   position: absolute;
   top: 32px;
   right: 16px;
   width: 2.5rem;
   min-height: 200px;
-  background-color: #fff;
+  background-color: transparent;
+`;
+
+export const VideoMenuItem = styled.div`
+  display: inline-block;
+  width: 2.25rem;
+  height: 2.25rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  text-align: center;
+  line-height: 2.25rem;
+  border-radius: 50%;
+  margin: 0.65rem 0;
+  &:last-child {
+    margin-right: 0;
+  }
 `;
 
 export const CommentWrapper = styled.div`
@@ -67,7 +82,7 @@ export const VideoSettingWrapper = styled.div`
   position: absolute;
 `;
 
-export const VideoMenuWrapper = styled.div`
+export const SettingWrapper = styled.div`
   position: fixed;
   bottom: 0px;
   width: 100%;
@@ -78,7 +93,7 @@ export const VideoMenuWrapper = styled.div`
   background-color: var(--color-background);
 `;
 
-export const VideoMenuItem = styled.div`
+export const SettingMenuItem = styled.div`
   display: inline-block;
   width: 2.25rem;
   height: 2.25rem;

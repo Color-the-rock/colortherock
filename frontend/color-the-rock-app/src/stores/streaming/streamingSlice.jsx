@@ -6,7 +6,6 @@ export const streamingSlice = createSlice({
   },
   reducers: {
     setOV: (state, action) => {
-      console.log("setOV? ", action.payload);
       state.ov = action.payload.ov;
     },
   },
