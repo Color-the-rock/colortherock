@@ -39,7 +39,8 @@ public class VideoCommentService {
 
 
     @Transactional(readOnly = true)
-    public List<CommentListResponse> getCommentList(CommentListRequest condition, Pageable pageable) {
+    public List<CommentListResponse> getCommentList(CommentListRequest condition) {
+        Pageable pageable = Pageable.ofSize(15);
         Slice<VideoComment> slices = videoCommentReadRepository.searchByCond(condition, pageable);
         if (slices.isEmpty()) {
             return new ArrayList<>();
@@ -86,7 +87,8 @@ public class VideoCommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<MyCommentListResponse> getMyCommentList(Long memberId, Long storeId, Pageable pageable) {
+    public List<MyCommentListResponse> getMyCommentList(Long memberId, Long storeId) {
+        Pageable pageable = Pageable.ofSize(15);
         Slice<VideoComment> slices = videoCommentReadRepository.getMyComments(memberId, storeId, pageable);
         if (slices.isEmpty()) {
             return new ArrayList<>();
