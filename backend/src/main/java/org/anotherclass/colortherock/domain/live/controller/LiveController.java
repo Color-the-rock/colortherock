@@ -28,12 +28,12 @@ public class LiveController {
     private final LiveService liveService;
 
     @GetMapping("/live/list")
-    public BaseResponse<List<LiveListResponse>> getLiveList(@RequestParam Long liveId, @PageableDefault(size = 15) Pageable pageable) {
+    public BaseResponse<List<LiveListResponse>> getLiveList(@RequestParam(required = false) Long liveId, @PageableDefault(size = 15) Pageable pageable) {
         List<LiveListResponse> liveList = liveService.getLiveList(liveId, pageable);
         return new BaseResponse<>(liveList);
     }
 
-    @GetMapping("/live")
+    @PostMapping("/live")
     public BaseResponse<String> createLive(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody CreateLiveRequest request) {
         String token = liveService.createLiveRoom(memberDetails, request);
         return new BaseResponse<>(token);
