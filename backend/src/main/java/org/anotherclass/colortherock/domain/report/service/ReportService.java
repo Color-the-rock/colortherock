@@ -6,8 +6,8 @@ import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.report.entity.Report;
 import org.anotherclass.colortherock.domain.report.repository.ReportRepository;
 import org.anotherclass.colortherock.domain.report.request.PostReportRequest;
-import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
+import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundException;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class ReportService {
     private final VideoBoardRepository videoBoardRepository;
     public void reportPost(Member member, PostReportRequest request) {
         VideoBoard videoBoard = videoBoardRepository.findById(request.getVideoBoardId())
-                .orElseThrow(()-> new VideoNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
+                .orElseThrow(()-> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
         Report newReport = Report.builder()
                 .categoryName(request.getCategory())
                 .videoBoard(videoBoard)
