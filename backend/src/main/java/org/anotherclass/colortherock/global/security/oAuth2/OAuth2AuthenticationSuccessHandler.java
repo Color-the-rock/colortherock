@@ -59,7 +59,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     .queryParam("registrationId", memberInfo.getRegistrationId()).toUriString();
         }
         response.sendRedirect(targetUrl);
-//        super.onAuthenticationSuccess(request, response, authentication);
         super.onAuthenticationSuccess(request, response, authentication);
     }
     // HttpCookie 삭제
