@@ -23,8 +23,18 @@ public class VideoService {
     // 완등 영상 게시판에서 동영상 업로드
     @Transactional
     public Long uploadSuccessVideo(Member member, String s3URL, String thumbnailURL, LocalSuccessVideoUploadRequest request) {
-        Video newVideo = videoRepository.save(request.toEntity(member, s3URL, thumbnailURL, request));
-        return newVideo.getId();
+        Video newVideo = Video.builder()
+                    .shootingDate(request.getShootingTime())
+                    .level(request.getLevel())
+                    .gymName(request.getGymName())
+                    .isSuccess(true)
+                    .color(request.getColor())
+                    .member(member)
+                    .s3URL(s3URL)
+                    .thumbnailURL(thumbnailURL)
+                    .build();
+        Video saveVideo = videoRepository.save(newVideo);
+        return saveVideo.getId();
     }
 
     @Transactional
