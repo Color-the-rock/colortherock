@@ -11,10 +11,7 @@ import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
 import org.anotherclass.colortherock.domain.memberrecord.exception.WrongMemberException;
-import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatResponse;
-import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatResponse;
-import org.anotherclass.colortherock.domain.memberrecord.response.VideoDetailResponse;
-import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
+import org.anotherclass.colortherock.domain.memberrecord.response.*;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
@@ -176,5 +173,22 @@ public class RecordController {
         // 영상 누적 통계에서 영상 갯수 줄이기
         recordService.subVideoCount(member, video.getIsSuccess());
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
+    }
+
+    @GetMapping("/visit")
+    public BaseResponse<List<VisitListResponse>> getVisitList(@AuthenticationPrincipal MemberDetails memberDetails) {
+        Member member = memberDetails.getMember();
+        List<VisitListResponse> visitList = recordService.getVisitList(member);
+        return new BaseResponse<>(visitList);
+    }
+
+    @GetMapping("/calendar/{yearMonth}")
+    public BaseResponse<List<DailyColorResponse>> getCalendarColor(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String yearMonth) {
+        if(!yearMonth.matches("\\d{4}-(0[1-9]|1[012])")) {
+            throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
+        }
+        Member member = memberDetails.getMember();
+        List<DailyColorResponse> calendarColor = recordService.getCalendarColor(member, yearMonth);
+        return new BaseResponse<>(calendarColor);
     }
 }

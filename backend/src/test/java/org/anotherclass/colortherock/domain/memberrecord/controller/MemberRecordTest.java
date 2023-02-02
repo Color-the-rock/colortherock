@@ -179,4 +179,31 @@ public class MemberRecordTest extends IntegrationTest {
                 .andExpect(jsonPath("$.status", is(200)));
     }
 
+    @Test
+    @DisplayName("[GET] 암장 방문 통계 반환")
+    public void 통계반환_성공() throws Exception {
+        video = new UploadVideoRequest(LocalDate.parse("2023-01-18"), 1, "더클라임 강남", true, "노랑", member).toEntity();
+        videoRepository.save(video);
+        mockMvc.perform(
+                        get(url + "/record/visit")
+                                .header("Authorization", AUTHORIZATION_HEADER + token))
+                .andExpect(jsonPath("$.status", is(200)))
+                .andExpect(jsonPath("$.result").isArray())
+                .andExpect(jsonPath("$.result[0].gymName", is("더클라임 강남")))
+                .andExpect(jsonPath("$.result[0].count", is(2)));
+    }
+
+    @Test
+    @DisplayName("[GET] 날짜별 완등 레벨 색상 반환")
+    public void 레벨색상반환_성공() throws Exception {
+        video = new UploadVideoRequest(LocalDate.parse("2023-01-18"), 1, "더클라임 강남", true, "노랑", member).toEntity();
+        videoRepository.save(video);
+        mockMvc.perform(
+                get(url + "/record/calendar/2023-01")
+                        .header("Authorization", AUTHORIZATION_HEADER + token))
+                .andExpect(jsonPath("$.status", is(200)))
+                .andExpect(jsonPath("$.result").isArray())
+                .andExpect(jsonPath("$.result[0].date", is("2023-01-17")));
+    }
+
 }
