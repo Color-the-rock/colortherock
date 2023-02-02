@@ -31,25 +31,26 @@ public class VideoReadRepository {
 
     QVideo video = QVideo.video;
 
-    public Slice<Video> searchBySlice(Pageable pageable, MyVideoRequest request) {
+    public Slice<Video> searchBySlice(Pageable pageable, MyVideoRequest request, Member member) {
         List<Video> results = queryFactory.selectFrom(video)
                 .where(
                         // no-offset 페이지 처리
-                        gtVideoId(request.getVideoId()),
+                        ltVideoId(request.getVideoId()),
                         // 다른 조건
-                        video.member.eq(request.getMember()),
+                        video.member.eq(member),
                         video.shootingDate.eq(request.getShootingDate()),
                         video.isSuccess.eq(request.getIsSuccess())
                 )
+                .orderBy(video.id.desc())
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
         return checkLastPage(pageable, results);
     }
 
     // videoId를 통한 no-offset 처리 메소드
-    private BooleanExpression gtVideoId(Long videoId) {
+    private BooleanExpression ltVideoId(Long videoId) {
         if(videoId == null) return null;
-        return video.id.gt(videoId);
+        return video.id.lt(videoId);
     }
 
     // 무한 스크롤 방식을 처리하는 메소드

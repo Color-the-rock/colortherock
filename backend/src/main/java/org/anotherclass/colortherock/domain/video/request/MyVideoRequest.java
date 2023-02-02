@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
@@ -19,7 +18,6 @@ public class MyVideoRequest {
     private Long videoId;
     @NotNull @DateTimeFormat(pattern = "YYYY-MM-DD")
     private LocalDate shootingDate;
-    private Member member;
     @NotNull
     private Boolean isSuccess;
 }
