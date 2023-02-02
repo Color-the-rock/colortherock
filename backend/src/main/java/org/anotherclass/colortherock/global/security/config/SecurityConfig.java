@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/login/test").authenticated()
                 .anyRequest().permitAll();
         http.oauth2Login()
+                .loginPage("/login")
                 .userInfoEndpoint().and()
                 .successHandler(oAuth2AuthenticationSuccessHandler);
         http.httpBasic().disable();
