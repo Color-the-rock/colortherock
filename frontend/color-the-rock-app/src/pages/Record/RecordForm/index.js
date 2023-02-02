@@ -1,27 +1,24 @@
-import React, {useState} from 'react'
-import * as S from "./style"
-import { Desktop, Mobile } from "../../../components/layout/Template"
-import Header from '../../../components/layout/Header'
-import ArrowLeftBtn from '../../../components/Common/ArrowLeftBtn'
-import BoardSubTitle from "../../../components/Board/BoardSubTitle"
-import InputComp from "../../../components/Board/InputComp"
-import UploadForm from "../../../components/Board/UploadForm"
-import KakaoKeywordSearch from "../../../components/Common/KakaoKeywordSearch/SearchBar"
-import RegistBtn from "../../../components/Board/RegistBtn"
+import React, { useState } from "react";
+import * as S from "./style";
+import { Desktop, Mobile } from "../../../components/layout/Template";
+import Header from "../../../components/layout/Header";
+import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn";
+import BoardSubTitle from "../../../components/Board/BoardSubTitle";
+import InputComp from "../../../components/Board/InputComp";
+import UploadForm from "../../../components/Board/UploadForm";
+import KakaoKeywordSearch from "../../../components/Common/KakaoKeywordSearch/SearchBar";
+import RegistBtn from "../../../components/Board/RegistBtn";
 import { useNavigate } from "react-router-dom";
 import SelectButton from "../../../components/Board/SelectButton";
-import DatePickBtn from "../../../components/Board/DatePickBtn"
-import CustomSelect from "../../../components/Common/CustomSelect"
-import CustomCalendar from "../../../components/Board/CustomCalendar"
+import DatePickBtn from "../../../components/Board/DatePickBtn";
+import CustomSelect from "../../../components/Common/CustomSelect";
+import CustomCalendar from "../../../components/Board/CustomCalendar";
 
-import 'react-datepicker/dist/react-datepicker.css';
-import 'react-datepicker/dist/react-datepicker-cssmodules.css';
-
-
+import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker-cssmodules.css";
 
 import { ko } from "date-fns/esm/locale";
-import BoardRadioBtn from '../../../components/Board/BoardRadioBtn/index'
-
+import BoardRadioBtn from "../../../components/Board/BoardRadioBtn/index";
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
@@ -45,9 +42,7 @@ const colorValues = [
   { key: "검정", value: "black" },
 ];
 
-
 const RecordForm = () => {
-
   const navigate = useNavigate();
   const [title, setTitle] = useState();
   const [location, setLocation] = useState("");
@@ -58,27 +53,25 @@ const RecordForm = () => {
   const [isSuccess, setIsSuccess] = useState(true);
 
   console.log("selectDate: ", selectDate);
-  console.log(typeof(selectDate));
+  console.log(typeof selectDate);
   const clickHandler = () => {
     navigate("/record");
-  }
+  };
 
   const submitHandler = () => {
     navigate("/record");
-  }
+  };
 
   const check = () => {
-
     const val = document.getElementById("dd");
     console.log(val.value);
-
-  }
+  };
   const handler = (e) => {
     // console.log(e.target.value);
     setSelectDate(e.target.value);
     // setStartDate(e.target.value);
     console.log(selectDate);
-  }
+  };
 
   return (
     <S.ContainerWrap>
@@ -88,64 +81,64 @@ const RecordForm = () => {
         </S.HeaderWrap>
       </Desktop>
       <Mobile> */}
-        {/* <S.ArrowLeftBtnWrap>
+      {/* <S.ArrowLeftBtnWrap>
         </S.ArrowLeftBtnWrap> */}
       {/* </Mobile> */}
-    
-    <S.Container>
-      <S.ContentWrap>
-        <S.Content>
-        <S.ArrowLeftBtnWrap>
-          <ArrowLeftBtn clickHandler={clickHandler}></ArrowLeftBtn>
-        </S.ArrowLeftBtnWrap>
-          <S.ComponenentWrap>
-            <BoardSubTitle text="동영상" />
-          </S.ComponenentWrap>
-          
-          <S.ComponenentWrap>
-            <UploadForm></UploadForm>
-          </S.ComponenentWrap>
-          
-          <S.ComponenentWrap>
-            <BoardSubTitle text="글등록" />
-          </S.ComponenentWrap>
-          
-          <S.ComponenentWrap>  
-            <CustomCalendar
-              selectDate={selectDate}
-              setSelectDate={setSelectDate}
-            />
-          </S.ComponenentWrap>
 
+      <S.Container>
+        <S.ContentWrap>
+          <S.Content>
+            <S.ArrowLeftBtnWrap>
+              <ArrowLeftBtn clickHandler={clickHandler}></ArrowLeftBtn>
+            </S.ArrowLeftBtnWrap>
+            <S.ComponenentWrap>
+              <BoardSubTitle text="동영상" />
+            </S.ComponenentWrap>
 
-          <S.SelectButtonWrap>
-            <S.selectBtnContent>
+            <S.ComponenentWrap>
+              <UploadForm></UploadForm>
+            </S.ComponenentWrap>
+
+            <S.ComponenentWrap>
+              <BoardSubTitle text="글등록" />
+            </S.ComponenentWrap>
+
+            <S.ComponenentWrap>
+              <CustomCalendar
+                selectDate={selectDate}
+                setSelectDate={setSelectDate}
+              />
+            </S.ComponenentWrap>
+
+            <S.SelectButtonWrap>
+              <S.selectBtnContent>
                 <CustomSelect optionValues={levelValues} />
                 <CustomSelect optionValues={colorValues} />
-            </S.selectBtnContent>
-          </S.SelectButtonWrap>
+              </S.selectBtnContent>
+            </S.SelectButtonWrap>
 
+            <S.ComponenentWrap>
+              {/* 라디오 버튼 만들어보자 */}
+              <BoardRadioBtn
+                isPublic={isSuccess}
+                setIsPublic={setIsSuccess}
+              ></BoardRadioBtn>
+            </S.ComponenentWrap>
 
-          <S.ComponenentWrap>
-            {/* 라디오 버튼 만들어보자 */}
-            <BoardRadioBtn isPublic={isSuccess} setIsPublic={setIsSuccess}></BoardRadioBtn>
-          </S.ComponenentWrap>
-          
+            <S.ComponenentWrap>
+              <KakaoKeywordSearch
+                location={location}
+                setLocation={setLocation}
+              />
+            </S.ComponenentWrap>
 
-
-
-          <S.ComponenentWrap>
-            <KakaoKeywordSearch location={location} setLocation={setLocation} />
-          </S.ComponenentWrap>
-
-          {/* <S.ComponenentWrap>
+            {/* <S.ComponenentWrap>
             <DatePickBtn
               startDate={startDate}
               setStartDate={setStartDate}
             />
           </S.ComponenentWrap> */}
 
-    
             {/* <S.PickDate 
               id="dd"
               type="date"
@@ -156,7 +149,7 @@ const RecordForm = () => {
               min="2018-01-01" max={dateString}
             /> */}
 
-          {/* <input
+            {/* <input
             id="dd"
             type="date"
             datE-placeholder='날짜를 선택해주세요.'
@@ -167,16 +160,14 @@ const RecordForm = () => {
           >
           </input> */}
 
-          <S.ComponenentWrap>
-          <RegistBtn btnName="등록하기" clickHandler={submitHandler} />
-          </S.ComponenentWrap>
-
-
-        </S.Content>
-      </S.ContentWrap>
-    </S.Container>
+            <S.ComponenentWrap>
+              <RegistBtn btnName="등록하기" clickHandler={submitHandler} />
+            </S.ComponenentWrap>
+          </S.Content>
+        </S.ContentWrap>
+      </S.Container>
     </S.ContainerWrap>
-  )
-}
+  );
+};
 
 export default RecordForm;

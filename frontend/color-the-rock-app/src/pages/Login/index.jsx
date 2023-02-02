@@ -29,7 +29,7 @@ const Login = () => {
             <S.LogoContainer>
               <S.LogoImg src={AppLogo} alt="app logo"></S.LogoImg>
               <S.SecondLogo>
-              {`Color the Rock,\nColor your Rock!`}
+                {`Color the Rock,\nColor your Rock!`}
                 {/* <div>Color the Rock,</div>
                 <div>Color your Rock!</div> */}
               </S.SecondLogo>

@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components"
-
+import { FiSettings } from "react-icons/fi";
 
 const slideIn = keyframes`
   from {
@@ -9,6 +9,14 @@ const slideIn = keyframes`
     margin-top: 0%;
   }
 `
+
+export const Settings = styled(FiSettings)`
+  right: 16px;
+  top: 16px;
+  z-index: 2;
+  font-size: 24px;
+`
+
 
 export const ContainerWrap = styled.div`
   width: 100vw;
@@ -47,6 +55,15 @@ export const ContentWrap = styled.div`
   align-items: center;
   min-width: 360px;
   max-width: 600px;
+  position: relative;
+
+  .fiSettings {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    z-index: 1111;
+    font-size: 1.5rem;
+  }
 `
 
 export const ArrowLeftBtnWrap = styled.div`
@@ -65,11 +82,9 @@ export const Video = styled.video`
   object-fit: cover;
 `
 
-export const ComponenentWrap = styled.div`
+export const ComponentWrap = styled.div`
   width: 100%;
   padding: 1rem;
-  display: flex;
-  justify-content: space-between;
 `
 
 export const FalseWrap = styled.div`
@@ -122,3 +137,10 @@ export const ThumbnailList = styled.div`
     grid-template-columns: 1fr 1fr;
   }
 `
+
+export const RowWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+`
+
