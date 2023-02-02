@@ -16,8 +16,8 @@ public class VideoService {
 
     // 마이페이지에서 동영상 업로드
     @Transactional
-    public void uploadVideo(Member member, String s3URL, String thumbnailURL, UploadVideoRequest request) {
-        videoRepository.save(request.toEntity(member, s3URL, thumbnailURL));
+    public void uploadVideo(Member member, String s3URL, String thumbnailURL, UploadVideoRequest request, String videoName) {
+        videoRepository.save(request.toEntity(member, s3URL, thumbnailURL, videoName));
     }
 
     // 완등 영상 게시판에서 동영상 업로드

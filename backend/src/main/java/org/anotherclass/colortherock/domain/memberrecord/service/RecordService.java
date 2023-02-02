@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.memberrecord.service;
 
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
 import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
@@ -74,8 +75,12 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public List<VideoListResponse> getMyVideos(Pageable pageable, MyVideoRequest request) {
-        Slice<Video> slices = videoReadRepository.searchBySlice(pageable, request);
+    public List<VideoListResponse> getMyVideos(MemberDetails memberDetails, MyVideoRequest request) {
+        Pageable pageable = Pageable.ofSize(15);
+
+        Member member = memberDetails.getMember();
+
+        Slice<Video> slices = videoReadRepository.searchBySlice(pageable, request, member);
 
         if(slices.isEmpty()) return new ArrayList<>();
 
@@ -148,8 +153,7 @@ public class RecordService {
         LocalDate currentDate = null;
         Set<Integer> levels = new HashSet<>();
         List<DateLevelDto> dtos = videoReadRepository.searchDailyColor(member, firstDate, lastDate);
-        for (int i = 0; i < dtos.size(); i++) {
-            DateLevelDto dto = dtos.get(i);
+        for (DateLevelDto dto : dtos) {
             if(currentDate == null) currentDate = dto.getDate();
             if(currentDate != null && !dto.getDate().isEqual(currentDate)) {
                 dailyColors.add(dtoToResponse(currentDate, levels));
@@ -165,7 +169,7 @@ public class RecordService {
 
     public DailyColorResponse dtoToResponse(LocalDate currentDate, Set<Integer> levels) {
         List<String> colors = new ArrayList<>();
-        levels.stream().forEach(level -> colors.add(ColorCode.getColor(level)));
+        levels.forEach(level -> colors.add(ColorCode.getColor(level)));
         return DailyColorResponse.builder()
                 .date(currentDate)
                 .colors(colors).build();

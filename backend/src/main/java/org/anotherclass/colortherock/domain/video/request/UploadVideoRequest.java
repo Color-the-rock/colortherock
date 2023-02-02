@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class UploadVideoRequest {
@@ -17,46 +16,32 @@ public class UploadVideoRequest {
     @NotNull
     private Integer level;
     @NotNull
+    private String color;
+    @NotNull
     private String gymName;
     @NotNull
     private Boolean isSuccess;
-    @NotNull
-    private String color;
-    private Member member;
-    private String s3URL;
-    private String videoName;
 
-    public UploadVideoRequest(LocalDate shootingDate, Integer level, String gymName, Boolean isSuccess, String color, Member member) {
+    @Builder
+    public UploadVideoRequest(LocalDate shootingDate, Integer level, String color, String gymName, Boolean isSuccess) {
         this.shootingDate = shootingDate;
         this.level = level;
+        this.color = color;
         this.gymName = gymName;
         this.isSuccess = isSuccess;
-        this.color = color;
-        this.member = member;
     }
 
-    public UploadVideoRequest(LocalDate shootingDate, Integer level, String gymName, Boolean isSuccess, String color, Member member, String videoName) {
-        this.shootingDate = shootingDate;
-        this.level = level;
-        this.gymName = gymName;
-        this.isSuccess = isSuccess;
-        this.color = color;
-        this.member = member;
-        this.videoName = videoName;
-    }
-
-    public Video toEntity() {
+    public Video toEntity(Member member) {
         return Video.builder()
                 .shootingDate(this.shootingDate)
                 .level(this.level)
                 .gymName(this.gymName)
                 .isSuccess(this.isSuccess)
                 .color(this.color)
-                .member(this.member)
-                .videoName(this.videoName).build();
+                .member(member).build();
     }
 
-    public Video toEntity(Member member, String s3URL, String thumbnailURL) {
+    public Video toEntity(Member member, String s3URL, String thumbnailURL, String videoName) {
         return Video.builder()
                 .shootingDate(this.shootingDate)
                 .level(this.level)
@@ -66,6 +51,7 @@ public class UploadVideoRequest {
                 .member(member)
                 .s3URL(s3URL)
                 .thumbnailURL(thumbnailURL)
+                .videoName(videoName)
                 .build();
     }
 

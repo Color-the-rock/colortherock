@@ -25,8 +25,6 @@ import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.apache.commons.io.FilenameUtils;
 import org.jcodec.api.JCodecException;
 import org.joda.time.DateTime;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -104,10 +102,8 @@ public class RecordController {
         @ApiResponse(responseCode = "500", description = "잘못된 날짜 형식으로 인한 영상 조회 실패")
     })
     @GetMapping("/videos")
-    public BaseResponse<List<VideoListResponse>> MyVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody MyVideoRequest myVideoRequest, @PageableDefault(size = 15)Pageable pageable) {
-        Member member = memberDetails.getMember();
-        myVideoRequest.setMember(member);
-        List<VideoListResponse> videoListResponses = recordService.getMyVideos(pageable, myVideoRequest);
+    public BaseResponse<List<VideoListResponse>> MyVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody MyVideoRequest myVideoRequest) {
+        List<VideoListResponse> videoListResponses = recordService.getMyVideos(memberDetails, myVideoRequest);
         return new BaseResponse<>(videoListResponses);
     }
 
@@ -129,7 +125,7 @@ public class RecordController {
      */
     @Operation(description = "로컬 영상 개인 기록용 업로드")
     @ApiResponse(responseCode = "200", description = "영상 업로드 성공")
-    @PostMapping(value = "/video", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/video", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails
             , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
         Member member = memberDetails.getMember();
@@ -137,12 +133,11 @@ public class RecordController {
         // 영상 식별을 위해 파일 앞에 현재 시각 추가
         String videoName = DateTime.now() + newVideo.getOriginalFilename();
         String s3URL = s3Service.upload(newVideo, videoName);
-        uploadVideoRequest.setVideoName(videoName);
         // 썸네일 이미지 생성하여 S3 저장
         String thumbnailName = "Thumb"+DateTime.now() + FilenameUtils.getBaseName(newVideo.getOriginalFilename()) + ".JPEG";
         String thumbnailURL = s3Service.uploadThumbnail(newVideo, thumbnailName);
         // request와 URL을 통해 DB에 저장
-        videoService.uploadVideo(member, s3URL, thumbnailURL, uploadVideoRequest);
+        videoService.uploadVideo(member, s3URL, thumbnailURL, uploadVideoRequest, videoName);
         // 영상 누적 통계에서 영상 갯수 올리기
         recordService.addVideoCount(member, uploadVideoRequest.getIsSuccess());
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
@@ -175,6 +170,13 @@ public class RecordController {
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 
+    /**
+     * 암장 방문 통계 반환 메소드
+     * @param memberDetails JWT 토큰을 통한 memberId 조회
+     * @return VisitListResponse의 List형태로 반환
+     */
+    @Operation(description = "암장 방문 통계 반환 메소드")
+    @ApiResponse(responseCode = "200", description = "방문 통계 반환 성공", content = @Content(schema = @Schema(implementation = VisitListResponse.class)))
     @GetMapping("/visit")
     public BaseResponse<List<VisitListResponse>> getVisitList(@AuthenticationPrincipal MemberDetails memberDetails) {
         Member member = memberDetails.getMember();
@@ -182,6 +184,17 @@ public class RecordController {
         return new BaseResponse<>(visitList);
     }
 
+    /**
+     * 해당 월의 각 날짜에 대한 완등 영상 상위 레벨 3개의 색상 반환
+     * @param memberDetails JWT 토큰을 통한 memberId 조회
+     * @param yearMonth 조회할 연도와 월을 입력
+     * @return 완등 영상이 있는 날짜에 대해 DailyColorResponse를 List형태로 반환
+     */
+    @Operation(description = "운동 기록 캘린더 색상 반환")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "색상 반환 성공", content = @Content(schema = @Schema(implementation = DailyColorResponse.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 날짜 형식으로 인한 조회 실패 YYYY-MM 형태 입력 필요")
+    })
     @GetMapping("/calendar/{yearMonth}")
     public BaseResponse<List<DailyColorResponse>> getCalendarColor(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String yearMonth) {
         if(!yearMonth.matches("\\d{4}-(0[1-9]|1[012])")) {
