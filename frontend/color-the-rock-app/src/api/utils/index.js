@@ -57,9 +57,7 @@ defaultApi().interceptors.response.use(
             accessToken: `Bearer ${token}`,
             refreshToken: `Bearer ${refreshToken}`,
           },
-          // 이거 맞아???
           {
-            // header에 넣지?? 흠....
             "Content-Type": "application/json",
           }
         );
