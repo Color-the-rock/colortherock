@@ -21,7 +21,6 @@ public class VideoBoardReadRepository {
     private final EntityManager em;
     private final JPAQueryFactory query;
 
-
     public VideoBoardReadRepository(EntityManager em) {
         this.em = em;
         this.query = new JPAQueryFactory(em);
@@ -41,6 +40,8 @@ public class VideoBoardReadRepository {
                 .join(videoBoard.video, video)
                 .fetchJoin()
                 .where(
+                        // 숨김처리 되어 있지 않은 영상만 가져오기
+                        videoBoard.isHidden.eq(false),
                         // no-offset 페이징 처리
                         checkStoreId(lastStoreId),
                         // 암장 검색
@@ -62,6 +63,8 @@ public class VideoBoardReadRepository {
                 .join(videoBoard.member, member)
                 .fetchJoin()
                 .where(
+                        // 숨김처리 되어 있지 않은 영상만 가져오기
+                        videoBoard.isHidden.eq(false),
                         // no-offset 페이징 처리
                         checkStoreId(storeId),
                         // 유저 검색
