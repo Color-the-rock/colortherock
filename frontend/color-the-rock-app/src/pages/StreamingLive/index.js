@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,12 @@ import {
   FiRefreshCcw,
   FiVideoOff,
   FiVideo,
+  FiEdit,
+  FiFilm,
+  FiDisc,
+  FiLink,
 } from "react-icons/fi";
+import { Desktop, Mobile } from "../../components/layout/Template";
 
 const APPLICATION_SERVER_URL = "http://localhost:5000/";
 
@@ -42,6 +47,8 @@ const StreamingLive = () => {
   // 비디오 설정 관리
   const [isOnVideo, setOnVideo] = useState(true);
   const [isOnMic, setOnMic] = useState(true);
+  const [isShowSettingModal, setShowSettingModal] = useState(false);
+  const [isRecordStart, setRecordStart] = useState();
 
   useEffect(() => {
     if (ov !== null && ov !== undefined) {
@@ -218,6 +225,11 @@ const StreamingLive = () => {
 
   // video 설정
   const handleSetVideo = () => {
+    if (isRecordStart) {
+      alert("녹화를 중지해주세요!");
+      return;
+    }
+
     publisher.publishVideo(!isOnVideo);
     setOnVideo((prev) => !prev);
   };
@@ -245,54 +257,109 @@ const StreamingLive = () => {
       );
     });
   };
+
+  const handleSetVideoRecord = () => {
+    // 카메라가 꺼져있다면
+    if (!isOnVideo) {
+      alert("카메라를 켜주세요:)");
+      return;
+    }
+
+    setRecordStart((prev) => !prev);
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert("링크가 복사되었습니다:)");
+  };
   return (
     <S.Container>
-      {isShowChattingModal && (
-        <S.DragModal>
-          <S.CommentModalWrap>
-            <ChattingModal
-              setShowChattingModal={setShowChattingModal}
-              getToken={getToken}
-              onSessionCreated={onSessionCreated}
-              session={session}
-              messages={messages}
-            />
-          </S.CommentModalWrap>
-        </S.DragModal>
-      )}
-
+      <Mobile>
+        {isShowChattingModal && (
+          <S.DragModal>
+            <S.CommentModalWrap>
+              <ChattingModal
+                setShowChattingModal={setShowChattingModal}
+                getToken={getToken}
+                onSessionCreated={onSessionCreated}
+                session={session}
+                messages={messages}
+                isShowChattingModal={isShowChattingModal}
+              />
+            </S.CommentModalWrap>
+          </S.DragModal>
+        )}
+      </Mobile>
       <S.OwnerVideoWrapper>
-        <S.VideoMenu>
-          <S.VideoMenuItem onClick={leaveSession}>
-            <FiLogOut size="16px" />
-          </S.VideoMenuItem>
-          <S.VideoMenuItem onClick={handleSetVideo}>
-            {isOnVideo ? <FiVideo size="16px" /> : <FiVideoOff size="16px" />}
-          </S.VideoMenuItem>
-          <S.VideoMenuItem onClick={handleSetAudio}>
-            {isOnMic ? <FiMic size="16px" /> : <FiMicOff size="16px" />}
-          </S.VideoMenuItem>
-          <S.VideoMenuItem onClick={switchCamera}>
-            <FiRefreshCcw size="16px" />
-          </S.VideoMenuItem>
-        </S.VideoMenu>
+        <S.StreamTitle>방송제목이다.</S.StreamTitle>
+        <S.VideoSettingsIcon
+          color="#ffffff"
+          size="24px"
+          onClick={() => setShowSettingModal((prev) => !prev)}
+        />
+        {isShowSettingModal && (
+          <S.VideoSettingsMenu>
+            <S.VideoSettingsMenuItem onClick={handleSetVideo}>
+              {isOnVideo ? <FiVideo size="16px" /> : <FiVideoOff size="16px" />}
+              <S.MenuTitle>카메라</S.MenuTitle>
+            </S.VideoSettingsMenuItem>
+            <S.VideoSettingsMenuItem onClick={handleSetAudio}>
+              {isOnMic ? <FiMic size="16px" /> : <FiMicOff size="16px" />}
+              <S.MenuTitle>마이크</S.MenuTitle>
+            </S.VideoSettingsMenuItem>
+            <S.VideoSettingsMenuItem onClick={switchCamera}>
+              <FiRefreshCcw size="16px" />
+              <S.MenuTitle>카메라 전환</S.MenuTitle>
+            </S.VideoSettingsMenuItem>
+            <S.VideoSettingsMenuItem onClick={leaveSession}>
+              <FiLogOut size="16px" />
+              <S.MenuTitle>방송종료</S.MenuTitle>
+            </S.VideoSettingsMenuItem>
+          </S.VideoSettingsMenu>
+        )}
+
         {session !== undefined ? (
           mainStreamManager !== undefined ? (
             <UserVideoComponent streamManager={mainStreamManager} />
           ) : null
         ) : null}
       </S.OwnerVideoWrapper>
-      <S.SettingWrapper>
-        <S.CommentWrapper>
-          <CommentBtn
-            isReadOnly={true}
-            onClick={() => setShowChattingModal(true)}
-          />
-        </S.CommentWrapper>
-        <S.SettingMenuItem />
-        <S.SettingMenuItem />
-        <S.SettingMenuItem />
-      </S.SettingWrapper>
+      <Mobile>
+        <S.SettingWrapper>
+          <S.CommentWrapper>
+            <CommentBtn
+              isReadOnly={true}
+              onClick={() => setShowChattingModal(true)}
+            />
+          </S.CommentWrapper>
+        </S.SettingWrapper>
+        <S.VideoMenu position="bottom">
+          <S.VideoMenuItem onClick={leaveSession}>
+            <S.IconWrapper>
+              <FiEdit size="24px" />
+            </S.IconWrapper>
+            피드백
+          </S.VideoMenuItem>
+          <S.VideoMenuItem onClick={handleSetVideo}>
+            <S.IconWrapper>
+              <FiFilm size="24px" />
+            </S.IconWrapper>
+            이전 영상
+          </S.VideoMenuItem>
+          <S.VideoMenuItem onClick={handleSetVideoRecord}>
+            <S.IconWrapper>
+              <FiDisc size="24px" color={isRecordStart ? "red" : "#ffffff"} />
+            </S.IconWrapper>
+            녹화 시작
+          </S.VideoMenuItem>
+          <S.VideoMenuItem onClick={handleCopyLink}>
+            <S.IconWrapper>
+              <FiLink size="24px" />
+            </S.IconWrapper>
+            링크 공유
+          </S.VideoMenuItem>
+        </S.VideoMenu>
+      </Mobile>
     </S.Container>
   );
 };

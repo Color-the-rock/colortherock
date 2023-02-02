@@ -15,7 +15,7 @@ export const Container = styled(motion.div)`
 
 export const ChattingWrapper = styled.div`
   width: 100%;
-  height: 300px;
+  height: 100%;
   overflow-y: scroll;
   background-color: transparent;
 `;
@@ -31,6 +31,10 @@ export const InputWrapper = styled.div`
   padding: 0.25rem 1rem;
   border: none;
   margin-bottom: 1rem;
+
+  #ov-videoconference {
+    width: calc(100% - 3.5rem);
+  }
 `;
 
 export const CommentInput = styled.input`
@@ -57,7 +61,6 @@ export const SendButton = styled.button`
 export const Test = styled.div`
   width: 100%;
   height: 100vh;
-
   background: #000;
   overflow-y: scroll;
 `;
@@ -73,19 +76,20 @@ export const ChattingContent = styled.div`
   flex-direction: column;
   width: 100%;
   min-height: 1.25rem;
+  margin-bottom: 0.25rem;
 `;
 
 export const ChattingUserNickname = styled.label`
   font-style: normal;
-  font-weight: 700;
+  font-weight: bold;
   font-size: 0.813rem;
   line-height: 1.25rem;
   letter-spacing: -0.01em;
 `;
 
 export const ChattingText = styled.label`
-  font-weight: 500;
-  font-size: 0.813rem;
+  font-weight: 400;
+  font-size: 0.85rem;
   line-height: 1.25rem;
   letter-spacing: -0.01em;
 `;
