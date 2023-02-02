@@ -5,6 +5,7 @@ import org.anotherclass.colortherock.domain.member.service.MemberDetailsServiceI
 import org.anotherclass.colortherock.global.security.jwt.JwtAuthenticationProvider;
 import org.anotherclass.colortherock.global.security.jwt.JwtAuthorizeFilter;
 import org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils;
+import org.anotherclass.colortherock.global.security.oAuth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import org.anotherclass.colortherock.global.security.oAuth2.OAuth2AuthenticationFailureHandler;
 import org.anotherclass.colortherock.global.security.oAuth2.OAuth2AuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,7 @@ public class SecurityConfig {
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final MemberDetailsServiceImpl memberDetailsService;
     private final JwtTokenUtils jwtTokenUtils;
+    private final HttpCookieOAuth2AuthorizationRequestRepository authorizationRequestRepository;
 
 
     @Bean
@@ -50,6 +52,9 @@ public class SecurityConfig {
                 .anyRequest().permitAll();
         http.oauth2Login()
                 .loginPage("/login")
+                .authorizationEndpoint()
+                .authorizationRequestRepository(authorizationRequestRepository)
+                .and()
                 .userInfoEndpoint().and()
                 .successHandler(oAuth2AuthenticationSuccessHandler)
                 .failureHandler(oAuth2AuthenticationFailureHandler);
