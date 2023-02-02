@@ -29,6 +29,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtTokenUtils jwtTokenUtils;
     private final MemberRepository memberRepository;
 
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -59,6 +61,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         response.sendRedirect(targetUrl);
 //        super.onAuthenticationSuccess(request, response, authentication);
         super.onAuthenticationSuccess(request, response, authentication);
+    }
+    // HttpCookie 삭제
+    protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
+        super.clearAuthenticationAttributes(request);
+        httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 }
 
