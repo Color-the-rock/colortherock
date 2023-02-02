@@ -11,6 +11,8 @@ const defaultApi = (option) => {
   return instance;
 };
 
+defaultApi().defaults.headers.common["Content-Type"] = "application/json";
+
 defaultApi().interceptors.request.use(function (config) {
   const accessToken = sessionStorage.getItem("accessToken");
 
