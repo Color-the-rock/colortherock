@@ -28,18 +28,19 @@ public class LiveReadRepository {
     public Slice<Live> searchBySlice(Long liveId, Pageable pageable) {
         List<Live> results = queryFactory.selectFrom(live)
                 .where(
-                        gtLiveId(liveId),
+                        ltLiveId(liveId),
                         live.isPublic.eq(true),
                         live.isLive.eq(true)
                 )
+                .orderBy(live.id.desc())
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
         return checkLastPage(pageable, results);
     }
 
-    private BooleanExpression gtLiveId(Long liveId) {
+    private BooleanExpression ltLiveId(Long liveId) {
         if(liveId == null) return null;
-        return live.id.gt(liveId);
+        return live.id.lt(liveId);
     }
 
     private Slice<Live> checkLastPage(Pageable pageable, List<Live> results) {

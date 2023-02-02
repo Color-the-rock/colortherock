@@ -16,7 +16,7 @@ spring:
           kakao:
             client-id: ${KAKAO_ID}
             client-secret: ${KAKAO_SECRET}
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            redirect-uri: https://colortherock.com/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             client-authentication-method: POST
             client-name: kakao
@@ -25,6 +25,7 @@ spring:
           google:
             client-id: ${GOOGLE_ID}
             client-secret: ${GOOGLE_SECRET}
+            redirect-uri: https://colortherock.com/login/oauth2/code/google
             scope:
               - profile
               - email
@@ -56,3 +57,5 @@ cloud:
 OPENVIDU_URL: ${OPENVIDU_URL}
 OPENVIDU_SECRET : ${OPENVIDU_SECRET}
 RECORDING_PATH: ${RECORDING_PATH}
+
+CLOUDFRONT_URL: ${CLOUDFRONT_URL}

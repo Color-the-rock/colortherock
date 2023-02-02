@@ -39,7 +39,9 @@ public class VideoBoardService {
 
     // 완등 영상 전체 리스트 조회
     @Transactional(readOnly = true)
-    public List<VideoBoardSummaryResponse> getSuccessVideos(VideoBoardSearchRequest condition, Pageable pageable) {
+    public List<VideoBoardSummaryResponse> getSuccessVideos(VideoBoardSearchRequest condition) {
+        Pageable pageable = Pageable.ofSize(16);
+
         Slice<VideoBoard> slices = videoBoardReadRepository.searchByCond(condition, pageable);
 
         if (slices.isEmpty()) {
@@ -111,7 +113,9 @@ public class VideoBoardService {
 
     // 내가 작성한 완등 게시글 조회
     @Transactional(readOnly = true)
-    public List<VideoBoardSummaryResponse> getMySuccessVideoPosts(Long memberId, Long storeId, Pageable pageable) {
+    public List<VideoBoardSummaryResponse> getMySuccessVideoPosts(Long memberId, Long storeId) {
+        Pageable pageable = Pageable.ofSize(8);
+
         Slice<VideoBoard> slices = videoBoardReadRepository.getMySuccessPosts(memberId, storeId, pageable);
 
         if (slices.isEmpty()) {
