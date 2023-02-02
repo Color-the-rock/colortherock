@@ -44,9 +44,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             RefreshToken token = jwtTokenUtils.generateRefreshToken(tokens);
             response.setHeader(AUTHORIZATION, tokens);
             targetUrl = UriComponentsBuilder.newInstance()
-                    .scheme("http")
-                    .host("localhost:8080")
-                    .path("/oauth2")
+                    .path("/oauth")
                     .queryParam("refresh", token.getRefreshToken())
                     .queryParam("access", token.getAccessToken())
                     .queryParam("email", member.getEmail())
@@ -54,15 +52,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     .queryParam("nickname", member.getNickname()).build().toUriString();
         } else {
             targetUrl = UriComponentsBuilder.newInstance()
-                    .scheme("http")
-                    .host("localhost:8080")
-                    .path("/oauth2")
+                    .path("/oauth")
                     .queryParam("email", memberInfo.getEmail())
                     .queryParam("registrationId", memberInfo.getRegistrationId()).toUriString();
         }
         response.sendRedirect(targetUrl);
-
 //        super.onAuthenticationSuccess(request, response, authentication);
+        super.onAuthenticationSuccess(request, response, authentication);
     }
 }
 
