@@ -31,18 +31,11 @@ import java.nio.file.Paths;
 public class S3Service {
     private AmazonS3 s3Client;
 
-    @Value("${cloud.aws.credentials.access-key}")
-    private String accessKey;
-
-    @Value("${cloud.aws.credentials.secret-key}")
-    private String secretKey;
-
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
-
-    @Value("${cloud.aws.region.static}")
-    private String region;
-
+    @Value("${cloud.aws.credentials.access-key}") private String accessKey;
+    @Value("${cloud.aws.credentials.secret-key}") private String secretKey;
+    @Value("${cloud.aws.s3.bucket}") private String bucket;
+    @Value("${cloud.aws.region.static}") private String region;
+    @Value("${CLOUDFRONT_URL}") private String cloudFrontUrl;
     // S3Client 생성
     @PostConstruct
     public void setS3Client() {
@@ -60,7 +53,7 @@ public class S3Service {
     public String upload(MultipartFile file, String videoName) throws IOException {
         s3Client.putObject(new PutObjectRequest(bucket, videoName, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-        return s3Client.getUrl(bucket, videoName).toString();
+        return cloudFrontUrl + videoName;
     }
 
     // Upload thumbnail from user's local video
@@ -71,12 +64,12 @@ public class S3Service {
 
     // Upload video from Openvidu
     public String uploadFromOV(String dir, String videoName) throws IOException {
-        
+
         Path filePath = Paths.get(dir);
         InputStream inputStream = Files.newInputStream(filePath);
         s3Client.putObject(new PutObjectRequest(bucket, videoName, inputStream, null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-        return s3Client.getUrl(bucket, videoName).toString();
+        return cloudFrontUrl + videoName;
     }
     // Upload thumbnail from Openvidu recording video
     public String uploadThumbnailFromOV(String dir, String thumbnailName) throws IOException, JCodecException {
@@ -106,7 +99,7 @@ public class S3Service {
 
         // Upload the object to S3
         s3Client.putObject(new PutObjectRequest(bucket, thumbnailName, is, null));
-        return s3Client.getUrl(bucket, thumbnailName).toString();
+        return cloudFrontUrl + thumbnailName;
     }
 
     // Convert MultipartFile to File
