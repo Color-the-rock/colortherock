@@ -137,7 +137,9 @@ public class LiveService {
     }
 
     @Transactional(readOnly = true)
-    public List<LiveListResponse> getLiveList(Long liveId, Pageable pageable) {
+    public List<LiveListResponse> getLiveList(Long liveId) {
+        Pageable pageable = Pageable.ofSize(15);
+
         Slice<Live> slices = liveReadRepository.searchBySlice(liveId, pageable);
 
         if(slices.isEmpty()) return new ArrayList<>();

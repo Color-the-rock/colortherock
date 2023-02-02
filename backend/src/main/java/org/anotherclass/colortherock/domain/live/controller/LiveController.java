@@ -11,8 +11,6 @@ import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.jcodec.api.JCodecException;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +26,8 @@ public class LiveController {
     private final LiveService liveService;
 
     @GetMapping("/live/list")
-    public BaseResponse<List<LiveListResponse>> getLiveList(@RequestParam(required = false) Long liveId, @PageableDefault(size = 15) Pageable pageable) {
-        List<LiveListResponse> liveList = liveService.getLiveList(liveId, pageable);
+    public BaseResponse<List<LiveListResponse>> getLiveList(@RequestParam(required = false) Long liveId) {
+        List<LiveListResponse> liveList = liveService.getLiveList(liveId);
         return new BaseResponse<>(liveList);
     }
 
