@@ -14,4 +14,7 @@ public class MemberSignUpResponse {
     private String email;
     private RegistrationId registrationId;
     private String nickname;
+
+    private String accessToken;
+    private String refreshToken;
 }
