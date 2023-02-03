@@ -37,6 +37,7 @@ export const Content = styled.div`
   }
   .webcam {
     width: auto;
+    max-width: 600px;
     height: calc(100% - 100px);
   }
 

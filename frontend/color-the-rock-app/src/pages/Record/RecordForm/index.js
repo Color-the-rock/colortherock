@@ -9,8 +9,6 @@ import UploadForm from "../../../components/Board/UploadForm";
 import KakaoKeywordSearch from "../../../components/Common/KakaoKeywordSearch/SearchBar";
 import RegistBtn from "../../../components/Board/RegistBtn";
 import { useNavigate } from "react-router-dom";
-import SelectButton from "../../../components/Board/SelectButton";
-import DatePickBtn from "../../../components/Board/DatePickBtn";
 import CustomSelect from "../../../components/Common/CustomSelect";
 import CustomCalendar from "../../../components/Board/CustomCalendar";
 
@@ -19,6 +17,12 @@ import "react-datepicker/dist/react-datepicker-cssmodules.css";
 
 import { ko } from "date-fns/esm/locale";
 import BoardRadioBtn from "../../../components/Board/BoardRadioBtn/index";
+
+// ------------- test ----------------------//
+import RecordVideoFormModal from "../../../components/Streaming/RecordVideoFormModal";
+import ModifyRoomSettingModal from "../../../components/Streaming/ModifyRoomSettingModal";
+
+// ----------------------------------------------------------------- //
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
@@ -52,6 +56,24 @@ const RecordForm = () => {
   const [selectDate, setSelectDate] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
 
+  ////////////////////////////////////////////////////////////////
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen2, setModalOpen2] = useState(false);
+  const [modalOpen3, setModalOpen3] = useState(false);
+
+  const handleModalStateChange = () => {
+    setModalOpen((prev) => !prev);
+  };
+
+  const handleModalStateChange2 = () => {
+    setModalOpen2((prev) => !prev);
+  };
+
+  const handleModalStateChange3 = () => {
+    setModalOpen3((prev) => !prev);
+  };
+  //////////////////////////////////////////////////////////////////
+
   console.log("selectDate: ", selectDate);
   console.log(typeof selectDate);
   const clickHandler = () => {
@@ -75,16 +97,27 @@ const RecordForm = () => {
 
   return (
     <S.ContainerWrap>
-      {/* <Desktop>
-        <S.HeaderWrap>
-          <Header></Header>
-        </S.HeaderWrap>
-      </Desktop>
-      <Mobile> */}
-      {/* <S.ArrowLeftBtnWrap>
-        </S.ArrowLeftBtnWrap> */}
-      {/* </Mobile> */}
+      {/* ---------------------모달 테스트 중입니다.-------------------- */}
+      {modalOpen && (
+        <RecordVideoFormModal
+          onClick={handleModalStateChange}
+          setModalOpen={setModalOpen}
+        />
+      )}
+      {modalOpen2 && (
+        <ModifyRoomSettingModal
+          onClick={handleModalStateChange2}
+          setModalOpen={setModalOpen2}
+        />
+      )}
+      {modalOpen3 && (
+        <RecordVideoFormModal
+          onClick={handleModalStateChange3}
+          setModalOpen={setModalOpen3}
+        />
+      )}
 
+      {/* ------------------------------------------------------------- */}
       <S.Container>
         <S.ContentWrap>
           <S.Content>
@@ -132,33 +165,30 @@ const RecordForm = () => {
               />
             </S.ComponenentWrap>
 
-            {/* <S.ComponenentWrap>
-            <DatePickBtn
-              startDate={startDate}
-              setStartDate={setStartDate}
-            />
-          </S.ComponenentWrap> */}
-
-            {/* <S.PickDate 
-              id="dd"
-              type="date"
-              datE-placeholder='날짜를 선택해주세요.'
-              onChange={e => setSelectDate(e.target.value)}
-              onFocus={(e) => (e.target.type = "date")}
-              onBlur={(e) => (e.target.type = "text")}
-              min="2018-01-01" max={dateString}
-            /> */}
-
-            {/* <input
-            id="dd"
-            type="date"
-            datE-placeholder='날짜를 선택해주세요.'
-            onChange={e => setSelectDate(e.target.value)}
-            onFocus={(e) => (e.target.type = "date")}
-            onBlur={(e) => (e.target.type = "text")}
-            min="2018-01-01" max={dateString}
-          >
-          </input> */}
+            <S.ComponenentWrap>
+              <button
+                onClick={handleModalStateChange}
+                style={{
+                  fontSize: "20px",
+                  color: "white",
+                  border: "1px solid white",
+                  margin: "1rem",
+                }}
+              >
+                영상 등록 모달
+              </button>
+              <button
+                onClick={handleModalStateChange2}
+                style={{
+                  fontSize: "20px",
+                  color: "white",
+                  border: "1px solid white",
+                  margin: "1rem",
+                }}
+              >
+                영상 수정 모달
+              </button>
+            </S.ComponenentWrap>
 
             <S.ComponenentWrap>
               <RegistBtn btnName="등록하기" clickHandler={submitHandler} />

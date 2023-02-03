@@ -37,8 +37,11 @@ defaultApi().interceptors.response.use(
   },
 
   // error 가 오면
+
   async (error) => {
     // error에 담겨있는 config와 response 구조 분해 할당
+
+    // 여기 코드 수정 error는 모두 400으로 날아옴...
     const {
       config,
       response: { status },

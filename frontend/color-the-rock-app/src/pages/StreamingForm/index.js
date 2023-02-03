@@ -91,7 +91,6 @@ const StreamingForm = () => {
   const handleCapture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
-    console.log("찰칵찰칵");
   }, [webcamRef, setImgSrc]);
 
   return (
@@ -112,7 +111,7 @@ const StreamingForm = () => {
           />
           {imgSrc && (
             <S.CaptureWrap>
-              <img src={imgSrc} />
+              <img src={imgSrc} alt="capture" />
             </S.CaptureWrap>
           )}
           <S.ComponenentWrap>

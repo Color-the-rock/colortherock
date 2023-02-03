@@ -36,10 +36,10 @@ const Login = () => {
             </S.LogoContainer>
 
             <S.LoginContainer>
-              <S.LoginWrap href={KAKAO_AUTH_URL}>
+              <S.LoginWrap href="https://colortherock.com/oauth2/authorization/kakao">
                 <img src={KakaoBtn} alt="Kakao login Btn" />
               </S.LoginWrap>
-              <S.LoginWrap href={GOOGLE_AUTH_URL}>
+              <S.LoginWrap href="https://colortherock.com/oauth2/authorization/google">
                 <img src={GoogleBtn} alt="Google Loin Btn" />
               </S.LoginWrap>
             </S.LoginContainer>
