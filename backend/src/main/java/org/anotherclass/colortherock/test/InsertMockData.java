@@ -39,6 +39,7 @@ public class InsertMockData {
     private final String thumbnail1 = "thumbnail1.png";
     private final String thumbnail2 = "thumbnail2.jpg";
 
+    private List<Member> members;
 
 
     @PostConstruct
@@ -48,15 +49,11 @@ public class InsertMockData {
                 .nickname("닉네임1").registrationId(Member.RegistrationId.kakao).build();
         Member member2 = Member.builder().email("example2@colortherock.com")
                 .nickname("닉네임2").registrationId(Member.RegistrationId.google).build();
-        List<Member> members = Arrays.asList(
+        members = Arrays.asList(
             member1, member2
         );
         memberRepository.saveAll(members);
-        String token1 = jwtTokenUtils.createTokens(member1, List.of(new SimpleGrantedAuthority("ROLE_USER")));
-        String token2 = jwtTokenUtils.createTokens(member1, List.of(new SimpleGrantedAuthority("ROLE_USER")));
-        response = new ArrayList<>();
-        response.add(TokensResponse.builder().token(token1).nickname(member1.getNickname()).build());
-        response.add(TokensResponse.builder().token(token2).nickname(member2.getNickname()).build());
+
 
         // Video
         List<Long> videoNums = new ArrayList<>();
@@ -71,6 +68,8 @@ public class InsertMockData {
             videos.add(Video.builder().videoName(videoName2).level(i).isSuccess(false).gymName("더클라임 홍대").member(member2).shootingDate(LocalDate.parse("2023-01-1"+ (i))).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("보라").build());
             videos.add(Video.builder().videoName(videoName2).level(i).isSuccess(true).gymName("더클라임 홍대").member(member2).shootingDate(LocalDate.parse("2023-01-1"+ (i))).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("갈색").build());
         }
+        videos.add(Video.builder().videoName(videoName2).level(2).isSuccess(true).gymName("더클라임 홍대").member(member1).shootingDate(LocalDate.parse("2023-01-20")).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("빨강").build());
+        videos.add(Video.builder().videoName(videoName2).level(3).isSuccess(true).gymName("더클라임 강남").member(member2).shootingDate(LocalDate.parse("2023-01-20")).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("노랑").build());
         videoRepository.saveAll(videos);
         for (int i = 0; i < videos.size(); i++) {
             if(videos.get(i).getIsSuccess()) videoNums.add(videos.get(i).getId());
@@ -96,6 +95,11 @@ public class InsertMockData {
 
     @GetMapping("/api/test/tokens")
     public BaseResponse<List<TokensResponse>> getTestTokens() {
+        String token1 = jwtTokenUtils.createTokens(members.get(0), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        String token2 = jwtTokenUtils.createTokens(members.get(1), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        response = new ArrayList<>();
+        response.add(TokensResponse.builder().token(token1).nickname(members.get(0).getNickname()).build());
+        response.add(TokensResponse.builder().token(token2).nickname(members.get(1).getNickname()).build());
         return new BaseResponse<>(response);
     }
 }
