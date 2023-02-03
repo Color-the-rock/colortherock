@@ -31,22 +31,13 @@ export const Content = styled.div`
   }
   @media (max-width: 991px) {
     width: 100vw;
-<<<<<<< HEAD
-    height: 100vh;
-=======
     height: calc(var(--vh, 1vh) * 100);
->>>>>>> 352d1c24a4a3ffaaae740e575a46fcd2bb95bc8e
     min-width: 360px;
     max-width: 600px;
   }
   .webcam {
     width: auto;
-<<<<<<< HEAD
-    max-width: 600px;
-    height: calc(100% - 100px);
-=======
     height: calc(100% - 80px);
->>>>>>> 352d1c24a4a3ffaaae740e575a46fcd2bb95bc8e
   }
 
   .camera {
@@ -95,10 +86,7 @@ export const TitleWrap = styled.div`
 export const ComponenentWrap = styled.div`
   width: 100%;
   margin-top: 1rem;
-<<<<<<< HEAD
-=======
   background-color: transparent;
->>>>>>> 352d1c24a4a3ffaaae740e575a46fcd2bb95bc8e
 `;
 
 export const AddPadding = styled.div`

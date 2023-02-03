@@ -28,7 +28,7 @@ export const BoardApi = {
   // 전체 완등 영상 전체 리스트 조회
   // 이거 뭐임??
   getAllVideo: ({ storeId, color, gymName }) =>
-    defaultInstance.get(`/video/baord`, {
+    defaultInstance.get(`/video/board`, {
       params: {
         storeId,
         color,

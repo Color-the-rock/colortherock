@@ -21,7 +21,7 @@ import BoardRadioBtn from "../../../components/Board/BoardRadioBtn/index";
 // ------------- test ----------------------//
 import RecordVideoFormModal from "../../../components/Streaming/RecordVideoFormModal";
 import ModifyRoomSettingModal from "../../../components/Streaming/ModifyRoomSettingModal";
-
+import FeedbackModal from "../../../components/Streaming/FeedbackModal";
 // ----------------------------------------------------------------- //
 
 const levelValues = [
@@ -105,7 +105,7 @@ const RecordForm = () => {
         />
       )}
       {modalOpen2 && (
-        <ModifyRoomSettingModal
+        <FeedbackModal
           onClick={handleModalStateChange2}
           setModalOpen={setModalOpen2}
         />

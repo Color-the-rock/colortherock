@@ -16,6 +16,7 @@ import RegistBtn from "../../Board/RegistBtn";
 import { registfuc } from "../../../api/streaming";
 import { Form, useNavigate } from "react-router-dom";
 import BoardApi from "../../../api/board";
+
 const levelValues = [
   { key: "난이도 레벨", value: "" },
   { key: "LEVEL1", value: "level-1" },
@@ -71,16 +72,31 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
       formData.get("localSuccessVideoUploadRequest")
     );
 
-    BoardApi.postRegisterLocalVideo(FormData)
-      .then(() => {
-        console.log("성공");
-        setModalOpen((prev) => !prev);
+    const data = {
+      storeId: 0,
+      color: "red",
+      gymName: "더클라임",
+    };
+
+    BoardApi.getAllVideo(data)
+      .then((response) => {
+        console.log(response);
       })
       .catch((err) => {
         console.log("실패");
         console.log("err: ", err);
-        console.log("formData: ", formData);
       });
+
+    // BoardApi.postRegisterLocalVideo(FormData)
+    //   .then(() => {
+    //     console.log("성공");
+    //     setModalOpen((prev) => !prev);
+    //   })
+    //   .catch((err) => {
+    //     console.log("실패");
+    //     console.log("err: ", err);
+    //     console.log("formData: ", formData);
+    //   });
   };
 
   return (
