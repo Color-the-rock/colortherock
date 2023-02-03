@@ -18,7 +18,8 @@ export const Container = styled.div`
   // common
   display: flex;
   width: 100%;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  background-color: #fff;
   overflow: hidden;
 
   // web
