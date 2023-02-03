@@ -51,7 +51,7 @@ class RecordServiceTest {
                     .level(i)
                     .gymName("더클라임 강남")
                     .color("노랑")
-                    .isSuccess(true).build();
+                    .isSuccess(false).build();
             em.persist(saveDto.toEntity(member));
         }
         em.flush();

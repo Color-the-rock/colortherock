@@ -72,6 +72,7 @@ public class VideoBoardService {
 
         VideoBoard newVideoBoard = videoBoardRepository.save(VideoBoard.builder()
                 .title(successVideoUploadRequest.getTitle())
+                .isHidden(false)
                 .video(video)
                 .member(member)
                 .build());

@@ -29,6 +29,8 @@ public class Video extends BaseTime {
 
     @Column(name = "s_3_url", length = 100)
     private String s3URL;
+    @Column(name = "video_name", length = 100)
+    private String videoName;
 
     @Column(name = "is_success")
     private Boolean isSuccess;
@@ -36,10 +38,11 @@ public class Video extends BaseTime {
     @Column(name = "thumbnail_url", length = 100)
     private String thumbnailURL;
 
+    @Column(name = "thumbnail_name", length = 100)
+    private String thumbnailName;
+
     @Column(name = "color", length = 20)
     private String color;
-    @Column(name = "video_name", length = 100)
-    private String videoName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -49,13 +52,14 @@ public class Video extends BaseTime {
     private VideoBoard videoBoard;
 
     @Builder
-    public Video(LocalDate shootingDate, Integer level, String gymName, String s3URL, Boolean isSuccess, String thumbnailURL, String color, Member member, String videoName) {
+    public Video(LocalDate shootingDate, Integer level, String gymName, String s3URL, Boolean isSuccess, String thumbnailURL, String thumbnailName, String color, Member member, String videoName) {
         this.shootingDate = shootingDate;
         this.level = level;
         this.gymName = gymName;
         this.s3URL = s3URL;
         this.isSuccess = isSuccess;
         this.thumbnailURL= thumbnailURL;
+        this.thumbnailName = thumbnailName;
         this.color = color;
         this.member = member;
         this.videoName = videoName;

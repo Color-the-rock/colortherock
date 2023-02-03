@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.report.entity.Report;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.videocomment.entity.VideoComment;
 import org.anotherclass.colortherock.global.common.BaseTime;
@@ -26,6 +27,9 @@ public class VideoBoard extends BaseTime {
     @Column(name = "title", length = 30)
     private String title;
 
+    @Column(name = "is_hidden")
+    private Boolean isHidden;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "video_id")
     private Video video;
@@ -37,8 +41,12 @@ public class VideoBoard extends BaseTime {
     @OneToMany(mappedBy = "videoBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VideoComment> videoComments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "videoBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reports = new ArrayList<>();
+
     @Builder
-    public VideoBoard(String title, Video video, Member member) {
+    public VideoBoard(String title, Boolean isHidden, Video video, Member member) {
+        this.isHidden = isHidden;
         this.title = title;
         this.video = video;
         this.member = member;
@@ -46,6 +54,10 @@ public class VideoBoard extends BaseTime {
 
     public void update(String title) {
         this.title = title;
+    }
+
+    public void changeToHidden() {
+        this.isHidden = true;
     }
 
 }
