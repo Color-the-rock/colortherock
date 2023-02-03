@@ -34,14 +34,13 @@ public class MemberService {
     public MemberSignUpResponse signup(MemberSignUpRequest request) {
         Member member = request.toEntity();
         Member save = memberRepository.save(member);
-        return new MemberSignUpResponse(save.getId(), save.getEmail(), save.getRegistrationId(), save.getNickname());
+        String token = "Bearer " + jwtTokenUtils.createTokens(save, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(token);
+        return new MemberSignUpResponse(save.getId(), save.getEmail(), save.getRegistrationId(), save.getNickname(), refreshToken.getAccessToken(), refreshToken.getRefreshToken());
     }
 
     public boolean duplicateNickname(String nickname) {
-        if (memberRepository.existsByNickname(nickname)) {
-            return false;
-        }
-        return true;
+        return !memberRepository.existsByNickname(nickname);
     }
 
     @PostConstruct
@@ -55,6 +54,7 @@ public class MemberService {
         Member save = memberRepository.save(member);
         memberId = save.getId();
     }
+
     public String testToken() {
         Member member = memberRepository.findById(memberId).orElseThrow();
         return jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
