@@ -6,11 +6,11 @@ import SubTitle from "../../components/Common/SubTitle";
 import * as S from "./style";
 import CustomCalendar from "../../components/Record/Calendar";
 import { useInput } from "../../hooks/useInput";
-import MyPost from "../../components/Mypage/MyPost";
 import { Mobile, Desktop } from "../../components/layout/Template";
 import StatisticGraph from "../../components/Record/StatisticGraph";
 import { recordApi } from "../../api/record";
 import { useDispatch, useSelector } from "react-redux";
+import MyRecordVideoList from "../../components/Record/MyRecordVideoList";
 
 const Record = () => {
   const dispatch = useDispatch();
@@ -18,10 +18,14 @@ const Record = () => {
   const [radioValue, onChangeRadioButton] = useInput("success");
 
   const getVideoListByCalendar = () => {
-    // recordApi
-    //   .getRecordVideo()
-    //   .then(({ data }) => console.log("data", data))
-    //   .catch((error) => console.log("error :", error));
+    recordApi
+      .getRecordVideo({
+        videoId: 0,
+        shootingDate: "2023-02-03",
+        isSuccess: true,
+      })
+      .then(({ data }) => console.log("data", data))
+      .catch((error) => console.log("error :", error));
   };
 
   useEffect(() => {
@@ -77,7 +81,7 @@ const Record = () => {
             업로드
           </S.UploadButton>
         </S.RadioGroup>
-        <MyPost />
+        <MyRecordVideoList />
       </Mobile>
       <Desktop>
         <S.ContentWrapper>
@@ -125,7 +129,7 @@ const Record = () => {
                   업로드
                 </S.UploadButton>
               </S.RadioGroup>
-              <MyPost />
+              <MyRecordVideoList />
             </div>
           </S.RecordWrapper>
         </S.ContentWrapper>

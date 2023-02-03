@@ -36,6 +36,7 @@ const StatisticGraph = ({ count = 3 }) => {
       .getVisitedGymData()
       .then(({ data: { status, result } }) => {
         if (status === 200) {
+          console.log("statusCode : 200 ", result);
           setResult(result);
         }
       })

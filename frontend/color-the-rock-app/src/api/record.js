@@ -14,8 +14,10 @@ export const recordApi = {
   getVisitedGymData: () => api.get(`/record/visit`),
 
   // 영상 재생을 위한 영상 상세 정보 조회
-  getRecordVideo: (id) => api.get(`/record/video/${id}`),
-
+  getRecordVideo: ({ videoId, shootingDate, isSuccess }) =>
+    api.get(
+      `/record/videos?videoId=${videoId}&shootingDate=${shootingDate}&isSuccess=${isSuccess}`
+    ),
   // 전체 운동 기록 누적 통계 조회 API
   getTotalStatistics: () => api.get(`/record/total`),
 
