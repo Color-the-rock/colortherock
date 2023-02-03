@@ -2,11 +2,7 @@ import React from "react";
 import * as S from "./style";
 import PropTypes from "prop-types";
 
-const InputComp = ({ title, placeholder, setTitle, opacity = "100" }) => {
-  const handleChange = (e) => {
-    setTitle(e.target.value);
-  };
-
+const InputComp = ({ title, placeholder, handleChange, opacity = "100" }) => {
   return (
     <S.Container opacity={opacity}>
       <S.InputContent

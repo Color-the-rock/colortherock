@@ -4,7 +4,6 @@ import { Desktop, Mobile } from "../../../components/layout/Template";
 import Header from "../../../components/layout/Header";
 import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
-import InputComp from "../../../components/Board/InputComp";
 import UploadForm from "../../../components/Board/UploadForm";
 import KakaoKeywordSearch from "../../../components/Common/KakaoKeywordSearch/SearchBar";
 import RegistBtn from "../../../components/Board/RegistBtn";

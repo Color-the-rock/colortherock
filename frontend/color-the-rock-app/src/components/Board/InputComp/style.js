@@ -11,10 +11,9 @@ export const Container = styled.div`
   border-radius: 20px;
   /* min-width: 328px; */
   max-width: 600px;
-  opacity: ${(props) => 
+  opacity: ${(props) =>
     props.opacity !== "100" ? `${props.opacity}%` : "100%"};
-
-`  
+`;
 export const InputContent = styled.input`
   border: none;
   width: 100%;
@@ -23,13 +22,11 @@ export const InputContent = styled.input`
   border-radius: 20px;
   /* min-width: 280px; */
   background-color: var(--color-background);
-  color: var(--color-tertiary); 
+  color: var(--color-tertiary);
   letter-spacing: -0.01em;
-  font-family: 'Noto Sans KR';
+  font-family: "Noto Sans KR";
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 1.5rem;
-
-
-`
+`;
