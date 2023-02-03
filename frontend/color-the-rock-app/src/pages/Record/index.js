@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import StackedGraph from "../../components/Record/StackedGraph";
 import Title from "../../components/Common/Title";
 import "react-calendar/dist/Calendar.css";
@@ -9,6 +9,7 @@ import { useInput } from "../../hooks/useInput";
 import MyPost from "../../components/Mypage/MyPost";
 import { Mobile, Desktop } from "../../components/layout/Template";
 import StatisticGraph from "../../components/Record/StatisticGraph";
+
 const Record = () => {
   const [radioValue, onChangeRadioButton] = useInput("success");
 

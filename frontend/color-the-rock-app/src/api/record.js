@@ -1,6 +1,7 @@
 // record(운동기록) API 직성
 import { defaultInstance as api } from "./utils/index";
-const recordApi = {
+
+export const recordApi = {
   // 날짜별 운동 기록 색상 별 조회
 
   // 로컬 영상 개인 기록 업로드 API
@@ -9,6 +10,8 @@ const recordApi = {
   // 날짜별 성공 및 실패 영상 목록 API
   getALlRecordVideo: () => api.get(`/record/videos`),
 
+  // 방문한 암장 통계 API
+  getVisitedGymData: () => api.get(`/record/visit`, {}),
   // 영상 재생을 위한 영상 상세 정보 조회
   getRecordVideo: (id) => api.get(`/record/video/${id}`),
 
@@ -24,5 +27,3 @@ const recordApi = {
   // 영상 삭제 API
   deleteRecordVideo: (videoId) => api.delete(`/record/vodep/${videoId}`),
 };
-
-export default recordApi;

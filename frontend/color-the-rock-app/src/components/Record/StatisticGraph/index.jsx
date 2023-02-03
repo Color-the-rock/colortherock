@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { recordApi } from "../../../api/record";
 import * as S from "./style";
 
 const homeGymData = {
@@ -28,6 +29,24 @@ const homeGymData = {
 };
 
 const StatisticGraph = ({ count = 3 }) => {
+  const [result, setResult] = useState([]);
+  const handleGetGymData = () => {
+    console.log("handleGetGym");
+    recordApi
+      .getVisitedGymData()
+      .then(({ data: { status, result } }) => {
+        if (status === 200) {
+          setResult(result);
+        }
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  useEffect(() => {
+    console.log("??????");
+    handleGetGymData();
+  }, []);
+
   return (
     <S.GraphWrapper>
       <S.GraphTitle>모든 도전</S.GraphTitle>
@@ -38,21 +57,21 @@ const StatisticGraph = ({ count = 3 }) => {
       </S.ChallengeBar>
 
       <S.GraphTitle>방문한 홈짐</S.GraphTitle>
-      <S.HomeGymGraph>
-        {homeGymData &&
-          homeGymData.gyms.length > 0 &&
-          homeGymData.gyms.map((gym, index) => (
-            <S.VisitedState
-              className="visited_state"
-              key={gym.id}
-              percent={(gym.visitedCount / homeGymData.totalCount) * 100}
-              count={
-                0.01 *
-                (100 / homeGymData.gyms.length) *
-                (homeGymData.gyms.length - (index + 1))
-              }
-            />
-          ))}
+      <S.HomeGymGraph isResult={result.length === 0 && 0}>
+        {result && result.length > 0
+          ? result.map((gym, index) => (
+              <S.VisitedState
+                className="visited_state"
+                key={gym.id}
+                percent={(gym.visitedCount / homeGymData.totalCount) * 100}
+                count={
+                  0.01 *
+                  (100 / homeGymData.gyms.length) *
+                  (homeGymData.gyms.length - (index + 1))
+                }
+              />
+            ))
+          : null}
       </S.HomeGymGraph>
     </S.GraphWrapper>
   );
