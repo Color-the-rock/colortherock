@@ -29,7 +29,6 @@ export const Container = styled.header`
   z-index: 10;
   transition: ${(props) =>
     props.scrollPosition < 80 ? "0.5s ease-in" : "0.5s ease-in-out"};
-  /* box-shadow: 0px 1px 5px 2px rgba(0, 0, 0, 0.8); */
 `;
 
 export const LogoImg = styled.div`
@@ -67,14 +66,14 @@ export const MenuItem = styled.li`
 `;
 
 export const SLink = styled(Link)`
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   margin: auto 18px;
-  font-weight: 700;
+  font-weight: bold;
   text-decoration: ${(props) =>
     props.current === "true" ? "underline" : "none"};
   text-decoration-thickness: 5px;
   text-decoration-color: var(--color-brand-primary);
-  
+
   &:last-child {
     margin-right: 0px;
   }
