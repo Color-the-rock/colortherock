@@ -11,7 +11,8 @@ export const recordApi = {
   getALlRecordVideo: () => api.get(`/record/videos`),
 
   // 방문한 암장 통계 API
-  getVisitedGymData: () => api.get(`/record/visit`, {}),
+  getVisitedGymData: () => api.get(`/record/visit`),
+
   // 영상 재생을 위한 영상 상세 정보 조회
   getRecordVideo: (id) => api.get(`/record/video/${id}`),
 

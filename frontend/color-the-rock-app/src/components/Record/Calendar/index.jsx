@@ -4,17 +4,12 @@ import moment from "moment";
 import * as S from "./style";
 import "./calendar.css";
 import { recordApi } from "../../../api/record";
-const testData = [
-  { date: "2023-01-02", colors: ["#FF4E36", "#FFCF1B", "#C0FA87"] },
-  { date: "2023-01-03", colors: ["#FFCF1B", "#C0FA87"] },
-  { date: "2023-01-12", colors: ["#FF6CAB", "#6EE2F5", "#C0FA87"] },
-  { date: "2023-01-17", colors: ["#FF4E36", "#FFA62E"] },
-  { date: "2023-01-23", colors: ["#FFA62E", "#FFCF1B", "#695F54"] },
-  { date: "2023-01-21", colors: ["#FF6CAB"] },
-  { date: "2023-01-28", colors: ["#6EE2F5", "#3C5DD3", "#FF6CAB"] },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentDate } from "../../../stores/record/recordSlice";
+
 const CustomCalendar = () => {
-  const [value, onChange] = useState(new Date());
+  const dispatch = useDispatch();
+  const date = useSelector((state) => state.record.currentDate);
   const [markers, setMarkers] = useState([]); // 컬러 마커 데이터
   const [prevYearMonth, setPrevYearMonth] = useState(new Date()); // 이전 호출 값 저장
   const handleOnChange = (e) => {
@@ -25,20 +20,20 @@ const CustomCalendar = () => {
     } else {
       console.log("다름");
       getCalendarData();
+      dispatch(setCurrentDate(e));
     }
-    onChange(e);
   };
 
   const getCalendarData = () => {
-    console.log("value? ", value);
-    console.log("value? ", moment(value).format("YYYY-MM"));
+    console.log("getCalendarData()... ? ", date);
+    console.log("date format? ", moment(date).format("YYYY-MM"));
     recordApi
-      .getCalendarData(moment(value).format("YYYY-MM"))
+      .getCalendarData(moment(date).format("YYYY-MM"))
       .then(({ data: { status, result } }) => {
         if (status === 200) {
           console.log("success!");
           setMarkers(result);
-          setPrevYearMonth(value);
+          setPrevYearMonth(date);
         }
       })
       .catch((error) => console.log("error", error));
@@ -48,6 +43,10 @@ const CustomCalendar = () => {
     getCalendarData();
   }, []);
 
+  useEffect(() => {
+    console.log("Dddd", markers);
+  }, [markers]);
+
   return (
     <S.Container>
       <Calendar
@@ -56,7 +55,7 @@ const CustomCalendar = () => {
         onClickMonth={handleOnChange}
         onClickYear={handleOnChange}
         onChange={handleOnChange}
-        value={value}
+        value={date}
         formatDay={(locale, date) => moment(date).format("DD")}
         tileContent={({ date }) => {
           let html = [];

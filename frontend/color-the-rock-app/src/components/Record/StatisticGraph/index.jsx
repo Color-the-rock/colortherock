@@ -43,7 +43,6 @@ const StatisticGraph = ({ count = 3 }) => {
   };
 
   useEffect(() => {
-    console.log("??????");
     handleGetGymData();
   }, []);
 
@@ -62,7 +61,7 @@ const StatisticGraph = ({ count = 3 }) => {
           ? result.map((gym, index) => (
               <S.VisitedState
                 className="visited_state"
-                key={gym.id}
+                key={index}
                 percent={(gym.visitedCount / homeGymData.totalCount) * 100}
                 count={
                   0.01 *
