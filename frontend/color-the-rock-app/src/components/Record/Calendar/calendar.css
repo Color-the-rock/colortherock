@@ -17,10 +17,10 @@
 
 /* Calendar Header */
 .react-calendar__navigation .react-calendar__navigation__arrow {
-  font-size: 1.5rem;
+  display: none;
 }
 .react-calendar__navigation__label__labelText {
-  font-size: 1.15rem;
+  font-size: 1.4rem;
   line-height: 3rem;
 }
 

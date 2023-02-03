@@ -21,8 +21,11 @@ export const recordApi = {
   // 전체 운동 영상 색상별 통계 조회 API
   getColorStatistics: () => api.get(`/record/color`),
 
-  // 캘린더 운동 영상 색상 조회 API
+  // 날짜별 운동 영상 색상 통계 조회 API
   getColorStatisticsByCalendar: (date) => api.get(`/record/color/${date}`),
+
+  // 캘린더 색상 조회 API(YYYY-mm)
+  getCalendarData: (yearMonth) => api.get(`record/calendar/${yearMonth}`),
 
   // 영상 삭제 API
   deleteRecordVideo: (videoId) => api.delete(`/record/vodep/${videoId}`),
