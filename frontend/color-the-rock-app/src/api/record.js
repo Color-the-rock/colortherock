@@ -19,10 +19,10 @@ const recordApi = {
   getColorStatistics: () => api.get(`/record/color`),
 
   // 캘린더 운동 영상 색상 조회 API
-  getColorStatisticsByCalendar: (date) => api.get(`/api/record/color/${date}`),
+  getColorStatisticsByCalendar: (date) => api.get(`/record/color/${date}`),
 
   // 영상 삭제 API
-  deleteRecordVideo: (videoId) => api.delete(`/api/record/vodep/${videoId}`),
+  deleteRecordVideo: (videoId) => api.delete(`/record/vodep/${videoId}`),
 };
 
 export default recordApi;

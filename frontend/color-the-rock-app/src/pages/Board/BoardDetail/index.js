@@ -11,9 +11,9 @@ import Thumbnail from "../../../components/Common/Thumbnail";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll";
 import Header from "../../../components/layout/Header";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
-
 import { defaultInstance } from "../../../api/utils";
 import requests from "../../../api/board";
+import { FiSettings } from "react-icons/fi";
 
 import TestVideo from "../../../assets/video/test.mp4";
 const dummy = [
@@ -123,9 +123,12 @@ const BoardDetail = () => {
             {/* 비디오 */}
             {/* <S.VideoWrap>
           </S.VideoWrap> */}
+            <FiSettings className="fiSettings" />
             <S.Video controls>
-              <source src={TestVideo} type="video/mp4" />
-              {/* <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"/> */}
+              <source
+                src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                type="video/mp4"
+              />
             </S.Video>
 
             {isModalOpen ? (
@@ -134,20 +137,22 @@ const BoardDetail = () => {
               </S.CommentModalWrap>
             ) : (
               <S.FalseWrap>
-                <S.ComponenentWrap>
-                  <div>
-                    <BoardSubTitle text="살려주세요." />
+                <S.ComponentWrap>
+                  <S.RowWrap>
+                    <BoardSubTitle text="살려주세요ㄴㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ." />
+                  </S.RowWrap>
+                  <S.RowWrap>
                     <div>SSAFY는 사람을 찢어</div>
-                  </div>
-                  <div>2023-01-29</div>
-                </S.ComponenentWrap>
+                    <div>2023-01-29</div>
+                  </S.RowWrap>
+                </S.ComponentWrap>
                 <S.CommentWrap>
                   <CommentBtn onClick={handleModal} />
                 </S.CommentWrap>
 
-                <S.ComponenentWrap>
+                <S.ComponentWrap>
                   <BoardSubTitle text="다른영상도 봐주세요" />
-                </S.ComponenentWrap>
+                </S.ComponentWrap>
                 <S.ThumbnailList>
                   {data.map((item) => (
                     <Thumbnail

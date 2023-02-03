@@ -5,9 +5,7 @@ export const Container = styled.div`
   border-radius: 10px;
   color: var(--color-tertiary);
   background-color: transparent;
-  min-width: 155px;
-
-
+  /* min-width: 155px; */
 `;
 
 export const SelectBox = styled.div`
