@@ -10,6 +10,7 @@ const KakaoSearchList = ({
   setLocation,
   setOpenList,
   opacity,
+  handleOnClick,
 }) => {
   const [pickData, setPickData] = useState();
   const [searchData, setSearchData] = useState([]);
@@ -27,19 +28,27 @@ const KakaoSearchList = ({
     // console.log("ps", ps);
   }, []);
 
+  // 완등 영상 목록 실시간 검색
+  useEffect(() => {
+    console.log("test");
+    const ps = new kakao.maps.services.Places();
+    console.log("searchPlace: ", searchPlace);
+    ps.keywordSearch(searchPlace, placesSearchCB);
+  }, [searchPlace]);
+
   const placesSearchCB = (data, status, pagination) => {
     console.log("data: ", data);
     setSearchData(data);
   };
 
-  const handleClick = (e) => {
-    console.log(e.target.innerText);
-    setLocation(e.target.innerText);
-    // 여기에 결과 설정...
-    console.log("성공");
+  // const handleClick = (e) => {
+  //   console.log(e.target.innerText);
+  //   setLocation(e.target.innerText);
+  //   // 여기에 결과 설정...
+  //   console.log("성공");
 
-    setOpenList(false);
-  };
+  //   setOpenList(false);
+  // };
 
   const CloseKakaoSearch = () => {
     console.log("close");
@@ -50,12 +59,12 @@ const KakaoSearchList = ({
     <S.Container opacity={opacity}>
       <S.OutSideArea onClick={CloseKakaoSearch} />
       <S.SearchResultWrap>
-        {searchData.length > 0 ? (
+        {searchData && searchData.length > 0 ? (
           searchData.map((data, index) => (
             <S.SearchResult
               key={index}
               value={data.place_name}
-              onClick={handleClick}
+              onClick={handleOnClick}
             >
               {data.place_name}
             </S.SearchResult>
