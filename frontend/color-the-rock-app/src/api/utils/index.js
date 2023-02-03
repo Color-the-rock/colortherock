@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // url 설정 수정 필요
-const BASE_URL = "https://www.colortherock.com";
+const BASE_URL = "https://www.colortherock.com/api";
 
 const defaultApi = (option) => {
   const instance = axios.create({
@@ -10,6 +10,8 @@ const defaultApi = (option) => {
   });
   return instance;
 };
+
+defaultApi().defaults.headers.common["Content-Type"] = "application/json";
 
 defaultApi().interceptors.request.use(function (config) {
   const accessToken = sessionStorage.getItem("accessToken");
@@ -37,6 +39,8 @@ defaultApi().interceptors.response.use(
   // error 가 오면
   async (error) => {
     // error에 담겨있는 config와 response 구조 분해 할당
+
+    // 여기 코드 수정 error는 모두 400으로 날아옴...
     const {
       config,
       response: { status },
@@ -57,7 +61,6 @@ defaultApi().interceptors.response.use(
             accessToken: `Bearer ${token}`,
             refreshToken: `Bearer ${refreshToken}`,
           },
-          // 이거 맞아???
           {
             // header에 넣지?? 흠....
             "Content-Type": "application/json",
@@ -77,4 +80,4 @@ defaultApi().interceptors.response.use(
   }
 );
 
-export const defaultInstance = defaultApi(BASE_URL);
+export const defaultInstance = defaultApi();

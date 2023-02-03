@@ -1,27 +1,27 @@
 import styled from "styled-components";
 
-
 export const Container = styled.div`
   display: flex;
   height: 35vh;
+  width: 100%;
   min-width: 328px;
   max-width: 600px;
   border: 1px solid var(--color-border);
   border-radius: 20px;
   margin-bottom: 8px;
   background-color: #000000;
-`
+`;
 
 export const UploadArea = styled.div`
-  width:100%;
+  width: 100%;
   height: 100%;
-  display:flex;
+  display: flex;
   justify-content: center;
   background-color: var(--color-background);
   border-radius: 20px;
   z-index: 1500;
   text-align: center;
-`
+`;
 
 export const VideoWrap = styled.div`
   width: 100%;
@@ -39,20 +39,18 @@ export const VideoWrap = styled.div`
   }
 
   video {
-      width: 100%;
-      height: 100%;
-      border-radius: 20px;
-      border: none;
-    }
-`
-
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    border: none;
+  }
+`;
 
 export const Input = styled.input`
   width: 100%;
   height: 100%;
-  overflow: hidden
-  ;
-`
+  overflow: hidden;
+`;
 export const InputWrap = styled.div`
   position: relative;
   width: 100%;
@@ -63,11 +61,10 @@ export const InputWrap = styled.div`
     position: absolute;
     transform: translateY(-50%);
     left: 0;
-    top:50%;
+    top: 50%;
     width: 100%;
     height: auto;
     font-size: 1.5rem;
-
   }
 
   input {
@@ -76,5 +73,4 @@ export const InputWrap = styled.div`
     width: 100%;
     height: 100%;
   }
-
-`
+`;
