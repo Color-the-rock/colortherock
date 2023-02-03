@@ -144,9 +144,14 @@ public class LiveService {
 
         if(slices.isEmpty()) return new ArrayList<>();
 
-        return slices.toList().stream()
-                .map(live ->
-                        LiveListResponse.builder()
+        // list를 받아와서 openvidu의 active session과 비교하여 없으면 DB 삭제하는 방식으로 DB를 최적화
+        List<String> activeSessions = openVidu.getActiveSessions().stream().map(session -> session.getSessionId()).collect(Collectors.toList());
+
+        List<LiveListResponse> responses = new ArrayList<>();
+
+        slices.toList().forEach(live -> {
+                    if(activeSessions.contains(live.getSessionId())) {
+                        responses.add(LiveListResponse.builder()
                                 .id(live.getId())
                                 .title(live.getTitle())
                                 .memberId(live.getMember().getId())
@@ -155,7 +160,12 @@ public class LiveService {
                                 .sessionId(live.getSessionId())
                                 .participantNum(
                                         openVidu.getActiveSession(live.getSessionId()).getActiveConnections().size()
-                                ).build())
-                .collect(Collectors.toList());
+                                ).build());
+                    } else {
+                        liveRepository.delete(live);
+                    }
+                });
+        return responses;
     }
+
 }
