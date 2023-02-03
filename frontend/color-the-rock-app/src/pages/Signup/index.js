@@ -3,8 +3,9 @@ import * as S from "./style";
 import { FiArrowLeft } from "react-icons/fi";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { useApi } from "../../api/user";
 
-export default function SinUp() {
+const SinUp = () => {
   const navigate = useNavigate();
   const [nickName, setNickname] = useState("");
   const [isValidateNickName, setValidateNickName] = useState(false);
@@ -66,4 +67,6 @@ export default function SinUp() {
       </S.Container>
     </div>
   );
-}
+};
+
+export default SinUp;

@@ -1,7 +1,7 @@
 import { defaultInstance } from "./utils/index";
 
 // board(성공 영상 모음) API 작성
-export const BoardApi = {
+const BoardApi = {
   // 완등 영상 글 상세보기(GET요청)
   getBoardDetail: ({ videoBoardId }) =>
     defaultInstance.get(`/video/board/detail`, {
@@ -28,7 +28,7 @@ export const BoardApi = {
   // 전체 완등 영상 전체 리스트 조회
   // 이거 뭐임??
   getAllVideo: ({ storeId, color, gymName }) =>
-    defaultInstance.get(`/video/board`, {
+    defaultInstance.get("/video/board", {
       params: {
         storeId,
         color,

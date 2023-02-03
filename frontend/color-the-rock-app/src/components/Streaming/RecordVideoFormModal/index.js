@@ -75,28 +75,19 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
     const data = {
       storeId: 0,
       color: "red",
-      gymName: "더클라임",
+      gymName: "bouldering",
     };
 
-    BoardApi.getAllVideo(data)
-      .then((response) => {
-        console.log(response);
+    BoardApi.postRegisterLocalVideo(FormData)
+      .then(() => {
+        console.log("성공");
+        setModalOpen((prev) => !prev);
       })
       .catch((err) => {
         console.log("실패");
         console.log("err: ", err);
+        console.log("formData: ", formData);
       });
-
-    // BoardApi.postRegisterLocalVideo(FormData)
-    //   .then(() => {
-    //     console.log("성공");
-    //     setModalOpen((prev) => !prev);
-    //   })
-    //   .catch((err) => {
-    //     console.log("실패");
-    //     console.log("err: ", err);
-    //     console.log("formData: ", formData);
-    //   });
   };
 
   return (
