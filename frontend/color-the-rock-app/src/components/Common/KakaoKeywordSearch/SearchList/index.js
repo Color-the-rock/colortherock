@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Desktop, Mobile } from "../../../layout/Template";
 import * as S from "./style";
-// import SearchData from "./style"
 
 const { kakao } = window;
 
@@ -12,20 +10,12 @@ const KakaoSearchList = ({
   opacity,
   handleOnClick,
 }) => {
-  const [pickData, setPickData] = useState();
   const [searchData, setSearchData] = useState([]);
 
   useEffect(() => {
     const ps = new kakao.maps.services.Places();
     console.log("searchPlace: ", searchPlace);
     ps.keywordSearch(searchPlace, placesSearchCB);
-
-    // function placesSearchCB(data, status, pagination) {
-    //   console.log("data", data);
-    //   setSearchData(data);
-    // }
-
-    // console.log("ps", ps);
   }, []);
 
   // 완등 영상 목록 실시간 검색
@@ -37,7 +27,6 @@ const KakaoSearchList = ({
   }, [searchPlace]);
 
   const placesSearchCB = (data, status, pagination) => {
-    console.log("data: ", data);
     setSearchData(data);
   };
 

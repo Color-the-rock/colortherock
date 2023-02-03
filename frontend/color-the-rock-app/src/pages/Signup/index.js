@@ -3,12 +3,16 @@ import * as S from "./style";
 import { FiArrowLeft } from "react-icons/fi";
 import { FiArrowRightCircle } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import UserApi from "../../api/user";
 
-export default function SinUp() {
+//  보류
+
+const SinUp = () => {
   const navigate = useNavigate();
   const [nickName, setNickname] = useState("");
   const [isValidateNickName, setValidateNickName] = useState(false);
 
+  // 정규표현식 적용하고,,
   const handleChange = (e) => {
     setNickname(e.target.value);
     // 데이터 입력여부도 확인 필요
@@ -16,8 +20,12 @@ export default function SinUp() {
     // const regex =
   };
 
+  // 중복확인을 하고, 중복확인되면
   const onClickConfirmButton = () => {
     // 여기서 닉네임 중복체크
+    UserApi.get({ nickName })
+      .then((response) => {})
+      .catch((err) => {});
     // 다른페이지로 이동
   };
 
@@ -66,4 +74,6 @@ export default function SinUp() {
       </S.Container>
     </div>
   );
-}
+};
+
+export default SinUp;

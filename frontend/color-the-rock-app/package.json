@@ -19,6 +19,7 @@
     "react": "^18.2.0",
     "react-calendar": "^4.0.0",
     "react-chartjs-2": "^5.2.0",
+    "react-cookie": "^4.1.1",
     "react-datepicker": "^4.8.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
