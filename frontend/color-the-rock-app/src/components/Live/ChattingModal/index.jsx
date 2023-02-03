@@ -1,15 +1,20 @@
 import React from "react";
 import * as S from "./style";
 import { HiOutlineArrowSmUp } from "react-icons/hi";
-import { useInput } from "../../../hooks/useInput";
+import { useState } from "react";
+import { useMediaQuery } from "react-responsive";
 
 const ChattingModal = ({
   setShowChattingModal,
   getToken,
   session,
   messages,
+  isShowChattingModal,
 }) => {
-  const [message, setMessage] = useInput("");
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
+
+  const [message, setMessage] = useState("");
 
   // 채팅 전송
   const sendMessage = () => {
@@ -21,6 +26,13 @@ const ChattingModal = ({
       };
       session.signal(signalOptions);
     }
+    setMessage(""); // 입력값 초기화
+  };
+
+  const handlePressEnter = () => {
+    if (window.event.keyCode === 13) {
+      sendMessage();
+    }
   };
 
   return (
@@ -31,19 +43,25 @@ const ChattingModal = ({
       dragConstraints={{ top: 10 }}
       onDirectionLock={{ bottom: 0 }}
       onDrag={(_, info) => {
-        console.log("onDrag", info.point.x, info.point.y);
-        if (info.point.y >= 700) {
+        if (isMobile && info.point.y >= 600) {
+          setShowChattingModal(false);
+        } else if (isTablet && info.point.y >= 960) {
           setShowChattingModal(false);
         }
       }}
     >
       <S.InputWrapper>
-        <ov-videoconference tokens={getToken} toolbarDisplaySessionName={false}>
+        <ov-videoconference
+          id="ov-videoconference"
+          tokens={getToken}
+          toolbarDisplaySessionName={false}
+        >
           <S.CommentInput
             type="text"
             placeholder="댓글을 입력하세요."
-            onChange={setMessage}
+            onChange={(e) => setMessage(e.target.value)}
             value={message}
+            onKeyUp={handlePressEnter}
           />
         </ov-videoconference>
         <S.SendButton onClick={sendMessage}>

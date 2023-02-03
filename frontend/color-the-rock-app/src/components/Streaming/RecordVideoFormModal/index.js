@@ -52,20 +52,24 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
 
   const registVideoToS3 = () => {
     let formData = new FormData();
-    const data = {
+    const localSuccessVideoUploadRequest = {
       color,
       level,
       isSuccess,
     };
-    formData.append("aa", "aa");
-    formData.append("file", "file");
-    formData.append("data", data);
+    formData.append("newVideo", "file");
+    formData.append(
+      "localSuccessVideoUploadRequest",
+      JSON.stringify(localSuccessVideoUploadRequest)
+    );
 
     console.log("잘만든건가?");
-    console.log("formData: ", formData);
-    // useEffect(() => {
-    //   console.log("formData: ", formData);
-    // }, [formdata]);
+    console.log("formData file: ", formData.get("newVideo"));
+
+    console.log(
+      "formData data: ",
+      formData.get("localSuccessVideoUploadRequest")
+    );
 
     BoardApi.postRegisterLocalVideo(FormData)
       .then(() => {
