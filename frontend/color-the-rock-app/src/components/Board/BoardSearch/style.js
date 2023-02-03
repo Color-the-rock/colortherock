@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { HiOutlineSearch } from "react-icons/hi";
 export const Container = styled.div`
+  position: relative;
   width: 100%;
   max-width: 600px;
   margin: 0px auto;
@@ -36,4 +37,12 @@ export const SearchButton = styled(HiOutlineSearch)`
   right: 16px;
   top: 50%;
   transform: translateY(-50%);
+`;
+
+export const SearchListWrapper = styled.div`
+  position: absolute;
+  top: 39.5px;
+  right: 0px;
+  width: calc(100% - 90px);
+  height: 10px;
 `;
