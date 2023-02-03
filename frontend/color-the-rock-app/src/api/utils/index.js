@@ -37,7 +37,6 @@ defaultApi().interceptors.response.use(
   },
 
   // error 가 오면
-
   async (error) => {
     // error에 담겨있는 config와 response 구조 분해 할당
 
