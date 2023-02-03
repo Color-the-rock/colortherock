@@ -3,19 +3,46 @@ import axios from "axios";
 // url 설정 수정 필요
 const BASE_URL = "https://www.colortherock.com/api";
 
-const defaultApi = (option) => {
-  const instance = axios.create({
-    baseURL: BASE_URL,
-    ...option,
-  });
-  return instance;
-};
+// const defaultApi = (option) => {
+//   const instance = axios.create({
+//     baseURL: BASE_URL,
+//     ...option,
+//   });
+//   return instance;
+// };
 
-defaultApi().defaults.headers.common["Content-Type"] = "application/json";
+const instance = axios.create({
+  baseURL: BASE_URL,
+});
 
-defaultApi().interceptors.request.use(function (config) {
-  const accessToken = sessionStorage.getItem("accessToken");
+// defaultApi().defaults.headers.common["Content-Type"] = "application/json";
+instance.defaults.headers.common["Content-Type"] = "application/json";
 
+// defaultApi().interceptors.request.use(function (config) {
+//   console.log("interceptors.request");
+//   const accessToken = sessionStorage.getItem("accessToken");
+
+//   // 요청시 AccessToken 계속 보내주기
+//   if (!accessToken) {
+//     config.headers.Authorization = null;
+//     // config.headers.refreshToken = null;
+//     return config;
+//   }
+
+//   if (config.headers && accessToken) {
+//     // config.headers.Authorization = `Bearer ${accessToken}`;
+//     config.headers.Authorization =
+//       "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJyZWdpc3RyYXRpb25JZCI6Imdvb2dsZSIsImlkIjoxLCJleHAiOjE2NzUzODk4NDQsImlhdCI6MTY3NTM4OTU0NCwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIn0.WgwEd3i49ExCFRXQ1LmKhHjSkx6wGayc85a85j4GG0s";
+//     // config.headers.refreshToken = `Bearer ${refreshToken}`;
+//     return config;
+//   }
+// });
+instance.interceptors.request.use(function (config) {
+  console.log("interceptors.request");
+  console.log("config: ", config);
+  // const accessToken = sessionStorage.getItem("accessToken");
+  const accessToken =
+    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJyZWdpc3RyYXRpb25JZCI6Imdvb2dsZSIsImlkIjoxLCJleHAiOjE2NzUzOTg0MzgsImlhdCI6MTY3NTM5NDgzOCwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIn0.VxkpCCYt6niyvGsVhksLBFtb8fkoWNP6fkm2eZ099WA";
   // 요청시 AccessToken 계속 보내주기
   if (!accessToken) {
     config.headers.Authorization = null;
@@ -24,20 +51,24 @@ defaultApi().interceptors.request.use(function (config) {
   }
 
   if (config.headers && accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
+    // config.headers.Authorization = `Bearer ${accessToken}`;
+    // config.headers.Authorization =
+    //   "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJyZWdpc3RyYXRpb25JZCI6Imdvb2dsZSIsImlkIjoxLCJleHAiOjE2NzUzOTQyOTcsImlhdCI6MTY3NTM5Mzk5NywiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIn0.UTSOsa2azA6rIRfPSSHOPV9bk7UqVX38pYXSn60p-us";
     // config.headers.refreshToken = `Bearer ${refreshToken}`;
     return config;
   }
 });
 
-defaultApi().interceptors.response.use(
+instance.interceptors.response.use(
   // 2xx 응답이 오면 return;
   (response) => {
+    console.log("interceptors check: response success");
     return response;
   },
 
   // error 가 오면
   async (error) => {
+    console.log("interceptors check: response fail");
     // error에 담겨있는 config와 response 구조 분해 할당
 
     // 여기 코드 수정 error는 모두 400으로 날아옴...
@@ -80,4 +111,5 @@ defaultApi().interceptors.response.use(
   }
 );
 
-export const defaultInstance = defaultApi();
+// export const defaultInstance = defaultApi();
+export const defaultInstance = instance;

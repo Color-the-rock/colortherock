@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   background-color: transparent;
 
   overflow-y: scroll;
@@ -31,14 +31,13 @@ export const Content = styled.div`
   }
   @media (max-width: 991px) {
     width: 100vw;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     min-width: 360px;
     max-width: 600px;
   }
   .webcam {
     width: auto;
-    max-width: 600px;
-    height: calc(100% - 100px);
+    height: calc(100% - 80px);
   }
 
   .camera {
@@ -87,6 +86,7 @@ export const TitleWrap = styled.div`
 export const ComponenentWrap = styled.div`
   width: 100%;
   margin-top: 1rem;
+  background-color: transparent;
 `;
 
 export const AddPadding = styled.div`
