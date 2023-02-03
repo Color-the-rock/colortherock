@@ -54,8 +54,11 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /api/swagger-ui.html
 OPENVIDU_URL: ${OPENVIDU_URL}
 OPENVIDU_SECRET: ${OPENVIDU_SECRET}
 RECORDING_PATH: ${RECORDING_PATH}
-
 CLOUDFRONT_URL: ${CLOUDFRONT_URL}
