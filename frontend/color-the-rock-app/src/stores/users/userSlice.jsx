@@ -2,15 +2,25 @@ import { createSlice } from "@reduxjs/toolkit";
 export const userSlice = createSlice({
   name: "user",
   initialState: {
-    userName: "",
+    nickName: "",
+    isLogin: false,
+    email: "",
   },
   reducers: {
-    setUserName: (state, action) => {
-      state.userName += action.payload;
+    setNickName: (state, action) => {
+      state.NickName += action.payload;
+    },
+    LogIn: (state, action) => {
+      state.nickName = action.payload.nickName;
+      state.isLogin = true;
+    },
+    LogOut: (state) => {
+      state.nickName = "";
+      state.isLogin = false;
     },
   },
 });
 
-export const { setUserName } = userSlice.actions;
+export const { setUserName, LogIn, LogOut } = userSlice.actions;
 
 export default userSlice.reducer;
