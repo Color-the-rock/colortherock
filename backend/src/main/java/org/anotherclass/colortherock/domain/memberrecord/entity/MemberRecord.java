@@ -18,9 +18,6 @@ public class MemberRecord {
     @Column(name = "video_count")
     private Integer videoCount;
 
-    @Column(name = "video_length_sum")
-    private Integer videoLengthSum;
-
     @Column(name = "success_count")
     private Integer successCount;
 
@@ -47,7 +44,6 @@ public class MemberRecord {
     public MemberRecord(Member member) {
         this.member = member;
         this.videoCount = 0;
-        this.videoLengthSum = 0;
         this.successCount = 0;
     }
 }
