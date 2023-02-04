@@ -74,4 +74,14 @@ public class VideoRepositoryTest {
         Assertions.assertEquals("2023-01-10", dtos.get(0).getDate().toString());
         Assertions.assertEquals(1, dtos.get(1).getLevel());
     }
+
+    @Test
+    @DisplayName("사용자별 암장 방문 일수 조회")
+    public void 방문횟수_조회_성공() {
+        // when
+        Integer visitCount = videoReadRepository.searchTotalVisit(member);
+        // then
+        Assertions.assertNotNull(visitCount);
+        Assertions.assertEquals(10, visitCount);
+    }
 }
