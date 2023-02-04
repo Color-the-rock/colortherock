@@ -1,5 +1,6 @@
 package org.anotherclass.colortherock.domain.memberrecord.entity;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import lombok.Getter;
@@ -45,5 +46,12 @@ public class MemberRecord {
         this.member = member;
         this.videoCount = 0;
         this.successCount = 0;
+    }
+    @Builder
+    public MemberRecord(Long id, Integer videoCount, Integer successCount, Member member) {
+        this.id = id;
+        this.videoCount = videoCount;
+        this.successCount = successCount;
+        this.member = member;
     }
 }

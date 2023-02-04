@@ -3,6 +3,8 @@ package org.anotherclass.colortherock.test;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
+import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
@@ -40,6 +42,7 @@ public class InsertMockData {
     private final String thumbnail2 = "thumbnail2.jpg";
 
     private List<Member> members;
+    private final RecordRepository recordRepository;
 
 
     @PostConstruct
@@ -58,8 +61,8 @@ public class InsertMockData {
         // Video
         List<Long> videoNums = new ArrayList<>();
         List<Video> videos = new ArrayList<>();
+            videos.add(Video.builder().videoName(videoName1).level(2).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("빨강").build());
         for (int i = 1; i < 10; i++) {
-            videos.add(Video.builder().videoName(videoName1).level(i).isSuccess(false).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-1"+ (i))).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("빨강").build());
             videos.add(Video.builder().videoName(videoName1).level(i).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-1"+ (i))).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("노랑").build());
             videos.add(Video.builder().videoName(videoName1).level(i).isSuccess(false).gymName("더클라임 홍대").member(member2).shootingDate(LocalDate.parse("2023-01-1"+ (i))).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("주황").build());
             videos.add(Video.builder().videoName(videoName1).level(i).isSuccess(true).gymName("더클라임 홍대").member(member2).shootingDate(LocalDate.parse("2023-01-1"+ (i))).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("초록").build());
@@ -69,6 +72,7 @@ public class InsertMockData {
             videos.add(Video.builder().videoName(videoName2).level(i).isSuccess(true).gymName("더클라임 홍대").member(member2).shootingDate(LocalDate.parse("2023-01-1"+ (i))).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("갈색").build());
         }
         videos.add(Video.builder().videoName(videoName2).level(2).isSuccess(true).gymName("더클라임 홍대").member(member1).shootingDate(LocalDate.parse("2023-01-20")).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("빨강").build());
+        videos.add(Video.builder().videoName(videoName2).level(5).isSuccess(true).gymName("더클라임 홍대").member(member1).shootingDate(LocalDate.parse("2023-01-24")).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("초록").build());
         videos.add(Video.builder().videoName(videoName2).level(3).isSuccess(true).gymName("더클라임 강남").member(member2).shootingDate(LocalDate.parse("2023-01-20")).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("노랑").build());
         videoRepository.saveAll(videos);
         for (int i = 0; i < videos.size(); i++) {
@@ -91,6 +95,14 @@ public class InsertMockData {
         }
         videoCommentRepository.saveAll(comments);
 
+        // MemberRecord
+        List<MemberRecord> memberRecords = Arrays.asList(
+                MemberRecord.builder()
+                        .member(member1).videoCount(30).successCount(21).build(),
+                MemberRecord.builder()
+                        .member(member2).videoCount(37).successCount(19).build()
+        );
+        recordRepository.saveAll(memberRecords);
     }
 
     @GetMapping("/api/test/tokens")
