@@ -1,67 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as S from "./style";
 import Video from "../../Mypage/Video";
-const videos = [
-  {
-    sources: [
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    ],
-    thumb:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfDH3NZZuW6DeOsQGNKBvtRiNULwHKaeLhtw&usqp=CAU",
-    title: "Big Buck Bunny",
-    color: "빨강",
-  },
-  {
-    sources: [
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    ],
-    thumb:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfDH3NZZuW6DeOsQGNKBvtRiNULwHKaeLhtw&usqp=CAU",
-    title: "Elephant Dream",
-    color: "노랑",
-  },
-  {
-    sources: [
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    ],
-    thumb:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfDH3NZZuW6DeOsQGNKBvtRiNULwHKaeLhtw&usqp=CAU",
-    title: "For Bigger Blazes",
-    color: "초록",
-  },
-  {
-    sources: [
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    ],
-    thumb:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfDH3NZZuW6DeOsQGNKBvtRiNULwHKaeLhtw&usqp=CAU",
-    title: "For Bigger Escape",
-    color: "보라",
-  },
-  {
-    sources: [
-      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    ],
-    thumb:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfDH3NZZuW6DeOsQGNKBvtRiNULwHKaeLhtw&usqp=CAU",
-    title: "For Bigger Fun",
-    color: "하늘",
-  },
-];
+import { recordApi } from "../../../api/record";
+import { useSelector } from "react-redux";
+import moment from "moment";
 
-const MyRecordVideoList = () => {
+const MyRecordVideoList = ({ isSuccess = true }) => {
+  const [videos, setVideos] = useState([]);
+  const date = useSelector((state) => state.record.date);
+
+  const getVideoListByCalendar = () => {
+    // requestBody
+    const data = {
+      videoId: videos.length > 0 ? videos[videos.length - 1].videoId : 0,
+      shootingDate: moment(date).format("YYYY-MM-DD"),
+      isSuccess: isSuccess === "success" ? true : false,
+    };
+
+    // call API
+    recordApi
+      .getAllRecordVideo(data)
+      .then(({ data: { status, result } }) => {
+        if (status === 200) {
+          console.log("[getRecordVideo()] statusCode : 200 ", result);
+          setVideos(result);
+        }
+      })
+      .catch((error) => console.log("error :", error));
+  };
+
+  useEffect(() => {
+    getVideoListByCalendar();
+  }, []);
+
   return (
     <S.VideoList>
-      {videos &&
+      {videos && videos.length > 0 ? (
         videos.map((item) => (
           <Video
             key={item.sources}
-            title={item.title}
+            id={item.videoId}
+            thumbnailURL={item.thumbnailURL}
+            level={item.level}
             color={item.color}
-            thumb={item.thumb}
-            sources={item.sources}
+            gymName={item.gymName}
           />
-        ))}
+        ))
+      ) : (
+        <S.Description>선택한 날짜에 기록된 영상이 없어요:) </S.Description>
+      )}
     </S.VideoList>
   );
 };

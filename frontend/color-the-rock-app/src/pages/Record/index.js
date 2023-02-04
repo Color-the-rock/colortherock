@@ -8,29 +8,10 @@ import CustomCalendar from "../../components/Record/Calendar";
 import { useInput } from "../../hooks/useInput";
 import { Mobile, Desktop } from "../../components/layout/Template";
 import StatisticGraph from "../../components/Record/StatisticGraph";
-import { recordApi } from "../../api/record";
-import { useDispatch, useSelector } from "react-redux";
 import MyRecordVideoList from "../../components/Record/MyRecordVideoList";
 
 const Record = () => {
-  const dispatch = useDispatch();
-  const date = useSelector((state) => state.record.currentDate);
   const [radioValue, onChangeRadioButton] = useInput("success");
-
-  const getVideoListByCalendar = () => {
-    recordApi
-      .getRecordVideo({
-        videoId: 0,
-        shootingDate: "2023-02-03",
-        isSuccess: true,
-      })
-      .then(({ data }) => console.log("data", data))
-      .catch((error) => console.log("error :", error));
-  };
-
-  useEffect(() => {
-    getVideoListByCalendar();
-  }, []);
 
   return (
     <S.Container>
@@ -81,7 +62,7 @@ const Record = () => {
             업로드
           </S.UploadButton>
         </S.RadioGroup>
-        <MyRecordVideoList />
+        <MyRecordVideoList isSuccess={radioValue} />
       </Mobile>
       <Desktop>
         <S.ContentWrapper>

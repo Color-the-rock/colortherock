@@ -8,16 +8,16 @@ export const recordApi = {
   uploadLocalVideo: () => api.post(`/record/video`),
 
   // 날짜별 성공 및 실패 영상 목록 API
-  getALlRecordVideo: () => api.get(`/record/videos`),
+  getAllRecordVideo: ({ videoId, shootingDate, isSuccess }) =>
+    api.get(
+      `/record/videos?videoId=${videoId}&shootingDate=${shootingDate}&isSuccess=${isSuccess}`
+    ),
 
   // 방문한 암장 통계 API
   getVisitedGymData: () => api.get(`/record/visit`),
 
   // 영상 재생을 위한 영상 상세 정보 조회
-  getRecordVideo: ({ videoId, shootingDate, isSuccess }) =>
-    api.get(
-      `/record/videos?videoId=${videoId}&shootingDate=${shootingDate}&isSuccess=${isSuccess}`
-    ),
+  getOneRecordVideo: (videoId) => api.get(`/record/video/${videoId}`),
   // 전체 운동 기록 누적 통계 조회 API
   getTotalStatistics: () => api.get(`/record/total`),
 
