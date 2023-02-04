@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import StackedGraph from "../../components/Record/StackedGraph";
 import Title from "../../components/Common/Title";
 import "react-calendar/dist/Calendar.css";
@@ -9,9 +9,29 @@ import { useInput } from "../../hooks/useInput";
 import { Mobile, Desktop } from "../../components/layout/Template";
 import StatisticGraph from "../../components/Record/StatisticGraph";
 import MyRecordVideoList from "../../components/Record/MyRecordVideoList";
+import { useSelector } from "react-redux";
+import { recordApi } from "../../api/record";
 
 const Record = () => {
   const [radioValue, onChangeRadioButton] = useInput("success");
+  const userNickName = useSelector((state) => state.user.nickName);
+  const [userRecordInfo, setUserRecordInfo] = useState({});
+
+  const getUserRecordInfo = () => {
+    recordApi
+      .getTotalStatistics()
+      .then(({ data: { status, result } }) => {
+        if (status === 200) {
+          console.log("success : 200", result);
+          setUserRecordInfo(result);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    getUserRecordInfo();
+  }, []);
 
   return (
     <S.Container>
@@ -19,10 +39,16 @@ const Record = () => {
       <S.Description>나의 도전 현황을 한 눈에 확인해보세요!</S.Description>
       <S.TextWrapper>
         <S.Text>
-          김싸피님은 <S.GradientText>30일</S.GradientText>동안
+          {userNickName === "" ? "사용자" : userNickName}님은
+          <S.GradientText> {userRecordInfo.videoCount}일</S.GradientText>동안
         </S.Text>
         <S.Text>
-          총 <S.GradientText>100개의 문제</S.GradientText>에 성공했어요!
+          <S.GradientText>{userRecordInfo.visitCount}개</S.GradientText>의
+          암장에서{" "}
+          <S.GradientText>
+            {userRecordInfo.successCount}개의 문제
+          </S.GradientText>
+          에 성공했어요!
         </S.Text>
       </S.TextWrapper>
       <Mobile>

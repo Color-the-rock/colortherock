@@ -2,42 +2,26 @@ import React, { useEffect, useState } from "react";
 import { recordApi } from "../../../api/record";
 import * as S from "./style";
 
-const homeGymData = {
-  totalCount: 11,
-  gyms: [
-    {
-      id: 1,
-      name: "더 클라이밍 강남",
-      visitedCount: 3,
-    },
-    {
-      id: 2,
-      name: "더 클라이밍 홍대",
-      visitedCount: 2,
-    },
-    {
-      id: 3,
-      name: "클라이밍짱짱",
-      visitedCount: 5,
-    },
-    {
-      id: 4,
-      name: "클클클",
-      visitedCount: 1,
-    },
-  ],
-};
-
 const StatisticGraph = ({ count = 3 }) => {
   const [result, setResult] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+
+  const getTotalCount = (_result) => {
+    let tmp = 0;
+    for (let item of _result) {
+      tmp += Number(item.count);
+    }
+    setTotalCount(tmp);
+  };
+
   const handleGetGymData = () => {
-    console.log("handleGetGym");
     recordApi
       .getVisitedGymData()
-      .then(({ data: { status, result } }) => {
+      .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("statusCode : 200 ", result);
-          setResult(result);
+          console.log("statusCode : 200 ", _result);
+          setResult(_result);
+          getTotalCount(_result);
         }
       })
       .catch((error) => console.log("error", error));
@@ -63,11 +47,9 @@ const StatisticGraph = ({ count = 3 }) => {
               <S.VisitedState
                 className="visited_state"
                 key={index}
-                percent={(gym.visitedCount / homeGymData.totalCount) * 100}
+                percent={(gym.count / totalCount) * 100}
                 count={
-                  0.01 *
-                  (100 / homeGymData.gyms.length) *
-                  (homeGymData.gyms.length - (index + 1))
+                  0.01 * (100 / result.length) * (result.length - (index + 1))
                 }
               />
             ))
