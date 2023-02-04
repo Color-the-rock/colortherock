@@ -71,7 +71,11 @@ public class RecordService {
     @Transactional(readOnly = true)
     public TotalStatResponse getTotalRecords(Member member) {
         MemberRecord memberRecord = recordRepository.findByMember(member);
-        return new TotalStatResponse(memberRecord.getVideoCount(), memberRecord.getVideoLengthSum(), memberRecord.getSuccessCount());
+        Integer visitCount = videoReadRepository.searchTotalVisit(member);
+        return TotalStatResponse.builder()
+                .visitCount(visitCount)
+                .videoCount(memberRecord.getVideoCount())
+                .successCount(memberRecord.getSuccessCount()).build();
     }
 
     @Transactional(readOnly = true)
