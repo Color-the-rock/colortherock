@@ -32,6 +32,13 @@ public class JwtTokenUtils {
         return createTokens(map);
     }
 
+    public String createTokens(String adminId, Collection<? extends GrantedAuthority> authorities) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("adminId", adminId);
+        map.put("roles", authorities);
+        return createTokens(map);
+    }
+
     public String createTokens(Map<String, Object> claims) {
         return createTokens(Jwts.claims(claims));
     }

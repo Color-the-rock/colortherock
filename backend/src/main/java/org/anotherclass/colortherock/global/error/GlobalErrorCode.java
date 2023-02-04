@@ -17,6 +17,7 @@ public enum GlobalErrorCode {
     ACCESS_DENIED(401, "G400", "허용되지 않은 사용자입니다"),
     // 멤버와 관련된 Exception
     DUPLICATE_NICKNAME(400, "M100", "중복 닉네임 입니다"),
+    INCORRECT_ADMIN_INFO(401, "M200", "관리자 로그인 정보가 틀렸습니다."),
     // 기록과 관련된 Exception
     // 영상과 관련된 Exception
     VIDEO_NOT_FOUND(404, "V100", "해당 id에 해당하는 영상이 없습니다."),
