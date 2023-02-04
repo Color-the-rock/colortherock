@@ -20,7 +20,7 @@ export const Settings = styled(FiSettings)`
 export const ContainerWrap = styled.div`
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   background-color: transparent;
 
   overflow-y: scroll;
@@ -31,12 +31,12 @@ export const ContainerWrap = styled.div`
 `;
 
 export const HeaderWrap = styled.div`
-  height: 10vh;
+  height: calc(var(--vh, 1vh) * 10);
 `;
 
 export const Container = styled.div`
   width: 100vw;
-  height: 90vh;
+  height: calc(var(--vh, 1vh) * 90);
 `;
 
 export const ContentContainer = styled.div`
@@ -48,7 +48,7 @@ export const ContentContainer = styled.div`
 
 export const ContentWrap = styled.div`
   width: 100%;
-  height: 90vh;
+  height: calc(var(--vh, 1vh) * 90);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -87,7 +87,7 @@ export const VideoWrap = styled.div`
 
 export const Video = styled.video`
   width: 100%;
-  height: 600px;
+  height: 37.5rem;
   object-fit: cover;
 `;
 

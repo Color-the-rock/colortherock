@@ -9,8 +9,6 @@ import Thumbnail from "../../../components/Common/Thumbnail";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll";
 import Header from "../../../components/layout/Header";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
-import { defaultInstance } from "../../../api/utils";
-import requests from "../../../api/board";
 import TestVideo from "../../../assets/video/test.mp4";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
