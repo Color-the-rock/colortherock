@@ -1,5 +1,6 @@
 package org.anotherclass.colortherock.domain.memberrecord.entity;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import lombok.Getter;
@@ -17,9 +18,6 @@ public class MemberRecord {
 
     @Column(name = "video_count")
     private Integer videoCount;
-
-    @Column(name = "video_length_sum")
-    private Integer videoLengthSum;
 
     @Column(name = "success_count")
     private Integer successCount;
@@ -47,7 +45,13 @@ public class MemberRecord {
     public MemberRecord(Member member) {
         this.member = member;
         this.videoCount = 0;
-        this.videoLengthSum = 0;
         this.successCount = 0;
+    }
+    @Builder
+    public MemberRecord(Long id, Integer videoCount, Integer successCount, Member member) {
+        this.id = id;
+        this.videoCount = videoCount;
+        this.successCount = successCount;
+        this.member = member;
     }
 }

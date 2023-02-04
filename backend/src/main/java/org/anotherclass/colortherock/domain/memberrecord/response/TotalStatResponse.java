@@ -1,12 +1,17 @@
 package org.anotherclass.colortherock.domain.memberrecord.response;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
 public class TotalStatResponse {
     Integer videoCount;
-    Integer videoLengthSum;
     Integer successCount;
+    Integer visitCount;
+    @Builder
+    public TotalStatResponse(Integer videoCount, Integer successCount, Integer visitCount) {
+        this.videoCount = videoCount;
+        this.successCount = successCount;
+        this.visitCount = visitCount;
+    }
 }

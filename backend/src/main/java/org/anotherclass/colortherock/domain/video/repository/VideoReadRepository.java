@@ -96,4 +96,12 @@ public class VideoReadRepository {
                 .distinct()
                 .fetch();
     }
+
+    // 사용자가 영상을 찍은 날짜의 수를 반환
+    public Integer searchTotalVisit(Member member) {
+        return Math.toIntExact(queryFactory.select(video.shootingDate.countDistinct())
+                .from(video)
+                .where(video.member.eq(member))
+                .fetchFirst());
+    }
 }
