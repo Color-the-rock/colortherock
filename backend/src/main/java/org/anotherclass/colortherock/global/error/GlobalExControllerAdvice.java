@@ -1,8 +1,8 @@
 package org.anotherclass.colortherock.global.error;
 
-import com.nimbusds.jwt.JWT;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.global.common.BaseResponse;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(annotations = RestController.class)
 @Slf4j
+@Profile("local")
 public class GlobalExControllerAdvice {
 
     /**
