@@ -3,19 +3,21 @@ package org.anotherclass.colortherock.global.mattermost;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.anotherclass.colortherock.global.mattermost.MatterMostMessageDto.Attachment;
+import org.anotherclass.colortherock.global.mattermost.MatterMostMessageDto.Attachments;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import static org.anotherclass.colortherock.global.mattermost.MatterMostMessageDto.*;
-
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@Profile("prod")
 public class MatterMostSender {
 
     @Value("${notification.mattermost.enabled}")
