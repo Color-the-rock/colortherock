@@ -15,7 +15,7 @@ const MyComment = ({ title, content, createdDate }) => {
 
 export default MyComment;
 
-MyComment.prototype = {
+MyComment.propTypes = {
   title: PropTypes.string,
   content: PropTypes.string,
   createdDate: PropTypes.string,
