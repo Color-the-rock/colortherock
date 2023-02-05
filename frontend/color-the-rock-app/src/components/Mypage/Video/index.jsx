@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import * as S from "./style";
 const Video = ({ id, thumbnailURL, gymName, level, color }) => {
@@ -18,3 +19,11 @@ const Video = ({ id, thumbnailURL, gymName, level, color }) => {
 };
 
 export default Video;
+
+Video.propTypes = {
+  id: PropTypes.string,
+  thumbnailURL: PropTypes.string,
+  gymName: PropTypes.string,
+  level: PropTypes.string,
+  color: PropTypes.string,
+};
