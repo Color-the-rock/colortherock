@@ -103,12 +103,13 @@ export const SecondLogo = styled.div`
 
 
   @media(min-width: 992px) {
-    display: flex;
-    justify-content: center;
-    
+    /* display: flex;
+    justify-content: center; */
+    width: 328px;
     margin-top: 10px;
-
+    min-width: 300px;
     white-space: pre-wrap;
+    text-align: center;
 
     font-family: 'Noto Sans KR';
     font-style: normal;

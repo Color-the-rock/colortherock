@@ -3,16 +3,15 @@ import styled from "styled-components"
 
 
 export const Container = styled.div`
-  
-  /* transform: translate(-16px, -40%); */
+
   transition: 1000;
   position: relative;
-  left: -16px;
+  left: 0;
   top: 0;
-  width: 100vw;
-  height: 40vh;
+  width: 100%;
+  height: 50vh;
   /* height: 30vh; */
-  /* background-color: var(--color-border); */
+  background-color: var(--color-border);
   border-radius: 10px 10px 0 0;
   background: #272727;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.7);
@@ -46,9 +45,7 @@ export const CloseBtnWrap = styled.div`
 `
 
 export const CommentBtnWrap = styled.div`
-  margin: 0 1rem 0 1rem;
-  /* width: 100%; */
-  
+  margin: 1rem;
   height: 2.25rem;
 `
 

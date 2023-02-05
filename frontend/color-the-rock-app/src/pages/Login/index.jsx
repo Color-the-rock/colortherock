@@ -9,6 +9,7 @@ import AppLogo from "../../assets/img/common/app-logo.png";
 import Header from "../../components/layout/Header";
 import { useNavigate } from "react-router-dom";
 import { VscChromeClose } from "react-icons/vsc";
+import AppLogo2 from "../../assets/img/common/web-logo.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,16 +29,17 @@ const Login = () => {
             <S.LogoContainer>
               <S.LogoImg src={AppLogo} alt="app logo"></S.LogoImg>
               <S.SecondLogo>
-                {`Color the Rock,
-              Color your Rock!`}
+                {`Color the Rock,\nColor your Rock!`}
+                {/* <div>Color the Rock,</div>
+                <div>Color your Rock!</div> */}
               </S.SecondLogo>
             </S.LogoContainer>
 
             <S.LoginContainer>
-              <S.LoginWrap href={KAKAO_AUTH_URL}>
+              <S.LoginWrap href="https://colortherock.com/oauth2/authorization/kakao">
                 <img src={KakaoBtn} alt="Kakao login Btn" />
               </S.LoginWrap>
-              <S.LoginWrap href={GOOGLE_AUTH_URL}>
+              <S.LoginWrap href="https://colortherock.com/oauth2/authorization/google">
                 <img src={GoogleBtn} alt="Google Loin Btn" />
               </S.LoginWrap>
             </S.LoginContainer>

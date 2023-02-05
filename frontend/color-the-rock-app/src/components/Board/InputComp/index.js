@@ -1,30 +1,24 @@
-import React, { useState } from 'react'
-import * as S from "./style"
-import { Desktop, Mobile } from "../../layout/Template"
+import React from "react";
+import * as S from "./style";
+import PropTypes from "prop-types";
 
-export default function InputComp({placeholder}) {
-  
-  const [value, setValue] = useState("");
-  
-  const handleChange = (e) => {
-    setValue(e.target.value);
-    // 여기에 추가할 조건 추가.....
-  }
-
+const InputComp = ({ title, placeholder, handleChange, opacity = "100" }) => {
   return (
-    <div>
-      <Desktop></Desktop>
-      <Mobile>
-        <S.Container>
-          <S.InputWrap>
-            <S.InputContent
-              type="text"
-              placeholder={placeholder}
-              onChange={handleChange}
-            />
-          </S.InputWrap>
-        </S.Container>
-      </Mobile>
-    </div>
-  )
-}
+    <S.Container opacity={opacity}>
+      <S.InputContent
+        type="text"
+        placeholder={placeholder}
+        defaultValue={title}
+        onChange={handleChange}
+      />
+    </S.Container>
+  );
+};
+
+InputComp.propTypes = {
+  placeholder: PropTypes.string.isRequired,
+  setTitle: PropTypes.func,
+  opacity: PropTypes.string,
+};
+
+export default React.memo(InputComp);

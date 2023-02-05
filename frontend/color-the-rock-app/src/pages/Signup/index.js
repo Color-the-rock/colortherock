@@ -1,72 +1,79 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import * as S from "./style";
-import { Mobile, Desktop } from "../../components/layout/Template";
-import  { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft } from "react-icons/fi";
 import { FiArrowRightCircle } from "react-icons/fi";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import UserApi from "../../api/user";
 
+//  보류
 
-export default function SinUp() {
+const SinUp = () => {
   const navigate = useNavigate();
   const [nickName, setNickname] = useState("");
-  const [nickNameValid, setNickNameValid] = useState(false);
-  
+  const [isValidateNickName, setValidateNickName] = useState(false);
+
+  // 정규표현식 적용하고,,
   const handleChange = (e) => {
     setNickname(e.target.value);
+    // 데이터 입력여부도 확인 필요
     // 여기에 정규표현식 적용해보자.
-    // const regex = 
-  }
+    // const regex =
+  };
 
+  // 중복확인을 하고, 중복확인되면
   const onClickConfirmButton = () => {
     // 여기서 닉네임 중복체크
+    UserApi.get({ nickName })
+      .then((response) => {})
+      .catch((err) => {});
     // 다른페이지로 이동
   };
 
   const onClickHandler = () => {
     navigate("/");
-  }
+  };
 
   return (
     <div>
-      <Desktop>
-
-      </Desktop>
-      
-      <Mobile>
       <S.Container>
         <S.CloseBtnContainer>
           <S.CloseBtn>
-            <FiArrowLeft
-              onClick={onClickHandler}/>
+            <FiArrowLeft onClick={onClickHandler} size="32px" />
           </S.CloseBtn>
         </S.CloseBtnContainer>
         <S.ContentWrap>
           <S.InputTitle>저는 닉네임</S.InputTitle>
-          <S.InputWrap>
-            <S.InputComp
-              type="text"
-              placeholder="사용하실 닉네임을 입력해주세요."
-              onChange={handleChange}
-            />
-          </S.InputWrap>
-          <S.InputButttonWrap>
-            <S.InputButton onClick={onClickConfirmButton}>
+
+          <S.InputWrapper>
+            <S.InputWrap>
+              <S.InputComp
+                type="text"
+                placeholder="사용하실 닉네임을 입력해주세요."
+                onChange={handleChange}
+              />
+            </S.InputWrap>
+            으로
+          </S.InputWrapper>
+          <S.InputButtonWrap>
+            <S.InputButton
+              onClick={onClickConfirmButton}
+              isValidate={isValidateNickName}
+            >
               시작할게요
-                <FiArrowRightCircle className='FiArrowRightCircle'/>
+              <FiArrowRightCircle className="FiArrowRightCircle" />
             </S.InputButton>
             <S.ErrorMessageWrap>
-              {
-                !nickNameValid && nickName.length > 0 && (
-                  <S.ErrorMessage>
-                    <div>!</div> <p>잘못된 형식의 닉네임</p>
-                  </S.ErrorMessage>
-                )
-              }
+              {!isValidateNickName && (
+                <S.ErrorMessage>
+                  <div>!</div> <p>사용할 수 없는 닉네임</p>
+                </S.ErrorMessage>
+              )}
             </S.ErrorMessageWrap>
-          </S.InputButttonWrap>
+          </S.InputButtonWrap>
         </S.ContentWrap>
-        </S.Container>
-      </Mobile>
+      </S.Container>
     </div>
-  )
-}
+  );
+};
+
+export default SinUp;

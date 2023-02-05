@@ -39,13 +39,18 @@ export const SelectOption = styled.ul`
   top: 32px;
   left: 0;
   width: 100%;
-  overflow: hidden;
-  max-height: ${(props) => (props.show ? "none" : 0)};
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  height: 200px;
+  max-height: ${(props) => (props.show ? "none" : "0")};
   padding: 0;
   border-radius: 8px;
   background: var(--color-background);
   color: #ffffff;
-  transition: 0.5s ease-in;
+  transition: 0.2s ease-in;
 `;
 
 export const OptionItem = styled.li`
@@ -53,6 +58,7 @@ export const OptionItem = styled.li`
   padding: 0.5rem 1rem;
   text-align: center;
   transition: 0.1s ease-in;
+  border-bottom: 1px dashed var(--color-border);
   &:hover {
     background-color: #667bf3;
   }
