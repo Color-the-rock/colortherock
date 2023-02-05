@@ -5,11 +5,13 @@ import * as S from "./style";
 import { HiPencil } from "react-icons/hi";
 import BoardSearchBar from "../../components/Board/BoardSearch";
 import boardApi from "../../api/board";
+import BasicButton from "../../components/Common/BasicButton";
+import RegistBtn from "../../components/Board/RegistBtn";
 
 const Board = () => {
   const [result, setResult] = useState([]);
   const [searchLocation, setSearchLocation] = useState("");
-
+  const [isShowRegisterModal, setShowRegisterModal] = useState(false);
   const getBoardList = () => {
     const requestData = {
       storeId: 0,
@@ -27,12 +29,28 @@ const Board = () => {
       .catch((error) => console.log(error));
   };
 
+  const handleProcessRegister = (e) => {
+    const { target } = e;
+
+    if (target.nodeName === "DIV") {
+      setShowRegisterModal(false);
+      return;
+    }
+
+    if (target.value === "local") {
+      console.log("로컬에서 가져오기 ");
+    } else {
+      console.log("클라우드에서 가져오기 ");
+    }
+    setShowRegisterModal(false);
+  };
+
   useEffect(() => {
     getBoardList();
   }, []);
 
   return (
-    <S.Container>
+    <S.Container id="board-container">
       <Title>완등 영상 보기</Title>
       <S.Description>완등 영상을 게시하고 피드백을 받아보세요!</S.Description>
       <BoardSearchBar
@@ -59,9 +77,22 @@ const Board = () => {
       ) : (
         <S.Message>등록된 게시글이 없어요!</S.Message>
       )}
-      <S.LiveButton to="/board/regist">
+      <S.RegisterButton onClick={() => setShowRegisterModal(true)}>
         <HiPencil size="24px" color="#C250D6" />
-      </S.LiveButton>
+      </S.RegisterButton>
+
+      {isShowRegisterModal && (
+        <S.RegisterModal onClick={handleProcessRegister}>
+          <S.ModalButtonWrapper>
+            <S.ModalButton value="local">
+              <S.GradientText>로컬에서 가져오기</S.GradientText>
+            </S.ModalButton>
+            <S.ModalButton value="cloud">
+              <S.GradientText>내 운동기록에서 가져오기</S.GradientText>
+            </S.ModalButton>
+          </S.ModalButtonWrapper>
+        </S.RegisterModal>
+      )}
     </S.Container>
   );
 };
