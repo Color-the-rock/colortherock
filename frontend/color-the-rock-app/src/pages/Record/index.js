@@ -11,12 +11,12 @@ import StatisticGraph from "../../components/Record/StatisticGraph";
 import MyRecordVideoList from "../../components/Record/MyRecordVideoList";
 import { useSelector } from "react-redux";
 import { recordApi } from "../../api/record";
-
+import GuideImg from "../../assets/img/record/img-record-guide.png";
 const Record = () => {
   const [radioValue, onChangeRadioButton] = useInput("success");
   const userNickName = useSelector((state) => state.user.nickName);
   const [userRecordInfo, setUserRecordInfo] = useState({});
-
+  const [isShowGuide, setShowGuide] = useState(false);
   const getUserRecordInfo = () => {
     recordApi
       .getTotalStatistics()
@@ -31,6 +31,16 @@ const Record = () => {
 
   useEffect(() => {
     getUserRecordInfo();
+
+    // show info guide
+    const infoGuide = document.getElementById("record-info-guide");
+    infoGuide.addEventListener("mouseover", function () {
+      setShowGuide(true);
+    });
+
+    infoGuide.addEventListener("mouseout", function () {
+      setShowGuide(false);
+    });
   }, []);
 
   return (
@@ -52,8 +62,13 @@ const Record = () => {
         </S.Text>
       </S.TextWrapper>
       <Mobile>
-        {/* 레벨별 도전 현황 */}
-        <SubTitle text="레벨별 도전 현황" />
+        <S.InfoWrapper>
+          {/* 레벨별 도전 현황 */}
+          <SubTitle text="레벨별 도전 현황">
+            <S.InfoButton id="record-info-guide" />
+          </SubTitle>
+          {isShowGuide && <S.InfoGuideImg src={GuideImg} alt="guide" />}
+        </S.InfoWrapper>
         <StackedGraph />
         {/* 활동 통계 */}
         <SubTitle text="활동 통계" />
