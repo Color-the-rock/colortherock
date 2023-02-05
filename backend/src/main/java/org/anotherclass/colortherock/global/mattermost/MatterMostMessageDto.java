@@ -13,7 +13,7 @@ public class MatterMostMessageDto {
     @Getter
     public static class Attachments {
         private Props props;
-        private List<Attachment> attachments;
+        private final List<Attachment> attachments;
 
         public Attachments() {
             attachments = new ArrayList<>();
@@ -57,36 +57,23 @@ public class MatterMostMessageDto {
 
         private String footer;
 
-        public Attachment addExceptionInfo(Exception e) {
+        public void addExceptionInfo(Exception e) {
             this.title = e.getClass().getSimpleName();
-            StringBuilder sb = new StringBuilder(text);
 
-            sb.append("**Error Message**").append("/n").append("/n").append("```").append(e.getMessage()).append("```")
-                    .append("/n").append("/n");
-
-            this.text = sb.toString();
-
-            return this;
+            this.text = text + "**Error Message**" + '\n' + '\n' + "```" + e.getMessage() + "```" +
+                    '\n' + '\n';
         }
 
-        public Attachment addExceptionInfo(Exception e, String uri) {
+        public void addExceptionInfo(Exception e, String uri) {
             this.addExceptionInfo(e);
-            StringBuilder sb = new StringBuilder(text);
 
-            sb.append("**Reqeust URL**").append("/n").append("/n").append(uri).append("/n").append("/n");
-
-            this.text = sb.toString();
-            return this;
+            this.text = text + "**Reqeust URL**" + '\n' + '\n' + uri + '\n' + '\n';
         }
 
-        public Attachment addExceptionInfo(Exception e, String uri, String params) {
+        public void addExceptionInfo(Exception e, String uri, String params) {
             this.addExceptionInfo(e, uri);
-            StringBuilder sb = new StringBuilder(text);
 
-            sb.append("**Parameters**").append("/n").append("/n").append(params.toString()).append("/n").append("/n");
-
-            this.text = sb.toString();
-            return this;
+            this.text = text + "**Parameters**" + '\n' + '\n' + params + '\n' + '\n';
         }
 
     }
@@ -101,9 +88,9 @@ public class MatterMostMessageDto {
 
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
-            text.append("**Stack Trace**").append("/n").append("/n").append("```");
-            text.append(sw.toString().substring(0,
-                    Math.min(5500, sw.toString().length())) + "/n...").append("/n").append("/n");
+            text.append("**Stack Trace**").append("\n").append('\n').append("```");
+//            text.append(sw.toString(), 0, Math.min(5500, sw.toString().length())).append("\n...").append('\n').append('\n');
+            text.append(sw).append("\n...").append('\n').append('\n');
 
             this.card = text.toString();
         }
