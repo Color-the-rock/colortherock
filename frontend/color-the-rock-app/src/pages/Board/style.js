@@ -76,3 +76,9 @@ export const LiveButton = styled(Link)`
   background-clip: content-box, border-box;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 `;
+
+export const Message = styled.p`
+  width: 100%;
+  text-align: center;
+  margin-top: 2rem;
+`;

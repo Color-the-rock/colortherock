@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import * as S from "./style";
 import TestImg from "../../../assets/img/intro/bg-intro.png";
 const Thumbnail = ({
@@ -25,3 +26,13 @@ const Thumbnail = ({
   );
 };
 export default Thumbnail;
+
+Thumbnail.propTypes = {
+  id: PropTypes.number,
+  title: PropTypes.string,
+  userNickname: PropTypes.string,
+  gymName: PropTypes.string,
+  imgUrl: PropTypes.string,
+  isLive: PropTypes.bool,
+  color: PropTypes.string,
+};
