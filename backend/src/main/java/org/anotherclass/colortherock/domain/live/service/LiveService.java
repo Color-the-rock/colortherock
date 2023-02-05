@@ -11,6 +11,7 @@ import org.anotherclass.colortherock.domain.live.request.RecordingSaveRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStartRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStopRequest;
 import org.anotherclass.colortherock.domain.live.response.LiveListResponse;
+import org.anotherclass.colortherock.domain.live.response.RecordingListResponse;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
@@ -28,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +41,7 @@ public class LiveService {
     private final LiveReadRepository liveReadRepository;
     private final MemberRepository memberRepository;
     private final VideoRepository videoRepository;
-
+    private ConcurrentMap<String, List<String>> recordingsForSession = new ConcurrentHashMap<>();
     private final OpenVidu openVidu;
 
     @Value("${RECORDING_PATH}") String dir;
@@ -104,7 +107,11 @@ public class LiveService {
         if (role.equals(OpenViduRole.PUBLISHER)) {
             try {
                 Recording recording = openVidu.startRecording(sessionId);
-                return recording.getId();
+                String recordingId = recording.getId();
+                List<String> recordings = recordingsForSession.getOrDefault(sessionId, new ArrayList<>());
+                recordings.add(recordingId);
+                recordingsForSession.replace(sessionId, recordings);
+                return recordingId;
             } catch (OpenViduJavaClientException | OpenViduHttpException e) {
                 throw new RuntimeException(e);
             }
@@ -168,4 +175,19 @@ public class LiveService {
         return responses;
     }
 
+    public List<RecordingListResponse> getRecordings(String sessionId) {
+        List<String> recordingIds = recordingsForSession.get(sessionId);
+        List<RecordingListResponse> response = new ArrayList<>();
+        recordingIds.forEach(recordingId -> {
+            try {
+                Recording recording = openVidu.getRecording(recordingId);
+                if(recording.getStatus() == Recording.Status.ready) {
+                    response.add(new RecordingListResponse(recording));
+                }
+            } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return response;
+    }
 }

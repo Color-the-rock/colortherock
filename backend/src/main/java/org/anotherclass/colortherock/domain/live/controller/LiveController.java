@@ -11,6 +11,7 @@ import org.anotherclass.colortherock.domain.live.request.RecordingSaveRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStartRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStopRequest;
 import org.anotherclass.colortherock.domain.live.response.LiveListResponse;
+import org.anotherclass.colortherock.domain.live.response.RecordingListResponse;
 import org.anotherclass.colortherock.domain.live.service.LiveService;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.global.common.BaseResponse;
@@ -88,5 +89,15 @@ public class LiveController {
     public BaseResponse<?> recordingSave(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String sessionId,@RequestBody RecordingSaveRequest request) throws IOException, JCodecException {
         liveService.recordingSave(memberDetails,sessionId,request);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
+    }
+
+    @Operation(description = "이전 녹화 목록 반환 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "녹화 목록 반환 성공", content = @Content(schema = @Schema(implementation = LiveListResponse.class))),
+    })
+    @GetMapping("/live/{sessionId}/recording/list")
+    public BaseResponse<?> recordingList(@PathVariable String sessionId) {
+        List<RecordingListResponse> response = liveService.getRecordings(sessionId);
+        return new BaseResponse<>(response);
     }
 }
