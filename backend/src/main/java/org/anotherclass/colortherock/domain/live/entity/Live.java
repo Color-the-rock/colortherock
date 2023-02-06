@@ -35,7 +35,7 @@ public class Live {
     private Boolean isLive;
 
     // Many : 1 관계 에서는 지연 로딩을 사용 하자
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
