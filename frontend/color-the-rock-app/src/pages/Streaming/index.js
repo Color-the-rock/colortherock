@@ -53,11 +53,11 @@ const Streaming = () => {
 
   const test = () => {
     streamingApi
-      .participateLiveSession("ses_Z7g1PyUMXF")
+      .participateLiveSession("ses_MfqaNOvd1w")
       .then(({ data: { status, result } }) => {
         if (status === 200) {
           dispatch(setOpenViduToken(result));
-          navigate(`/streaming/live/ses_Z7g1PyUMXF`);
+          navigate(`/streaming/live/ses_MfqaNOvd1w`);
         }
       })
       .catch((error) => console.log(error));

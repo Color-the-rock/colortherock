@@ -60,9 +60,8 @@ const StreamingLive = () => {
   useEffect(() => {
     if (ov !== null && ov !== undefined) {
       setSession(ov.initSession());
-      return;
     }
-  }, [ov]);
+  }, []);
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
@@ -79,13 +78,13 @@ const StreamingLive = () => {
         })
         .then(({ data }) => {
           console.log("openVidu get?  ", data);
-          console.log("zzz?", data.connections.content[0].publishers[0]);
-          dispatch(setOV(data));
-          const mySession = new Session(data);
-          mySession
-            .connect(token)
-            .then((data) => console.log("성공: ", data))
-            .catch((error) => console.log("error: ", error));
+          console.log("zzz?", data.connections.content[0]);
+          const ov = data.connections.content[0];
+          console.log("ov 할당 ", ov);
+          dispatch(setOV({ ov }));
+          const mySession = new Session(ov);
+          console.log("mySesison??", mySession);
+
           setSession(mySession);
         })
         .catch((error) => console.log("error", error));
@@ -97,13 +96,24 @@ const StreamingLive = () => {
   }, [subscribers]);
 
   useEffect(() => {
+    console.log("ov!!!!! ", ov);
+  }, [ov]);
+
+  useEffect(() => {
     console.log("useEffect()... session: ", session);
     console.log("useEffect()... ov : ", ov);
 
     if (session !== undefined) {
       console.log("있음 session ?", session);
+      console.log("있음()... ov : ", ov);
+
+      // mySession
+      //   .connect(token)
+      //   .then((data) => console.log("성공: ", data))
+      //   .catch((error) => console.log("error: ", error));
 
       session.on("streamCreated", (event) => {
+        console.log("streamCreated");
         const subscriber = session.subscribe(event.stream, undefined);
         setSubscribers((prev) => [subscriber, ...prev]);
       });

@@ -12,6 +12,7 @@ export const streamingSlice = createSlice({
   },
   reducers: {
     setOV: (state, action) => {
+      console.log("action : ", action.payload.ov);
       state.ov = action.payload.ov;
     },
     setOpenViduToken: (state, action) => {
