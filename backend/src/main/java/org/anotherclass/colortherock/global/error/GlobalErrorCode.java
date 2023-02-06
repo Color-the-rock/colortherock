@@ -31,8 +31,10 @@ public enum GlobalErrorCode {
     SESSION_NOT_FOUND(400, "L100", "세션을 찾을 수 없습니다."),
     RECORDING_START_BAD_REQUEST(400, "L101", "잘못된 녹화 요청입니다"),
     // 기록과 관련된 Exception
-    MALFORMED_DATE(400, "R100", "잘못된 날짜 형식입니다."),;
+    MALFORMED_DATE(400, "R100", "잘못된 날짜 형식입니다."),
     // 영상과 관련된 Exception
+    // 신고와 관련된 Exception
+    REPORT_ONESELF(403, "RP100", "본인 스스로를 신고할 수 없습니다.");
 
     private final String code;
     private final String message;
