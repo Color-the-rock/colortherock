@@ -83,7 +83,7 @@ const StreamingLive = () => {
           .connect(token, { clientData: userNickName })
           .then(async () => {
             onSessionCreated();
-
+            console.log("token: ", token);
             // --- 5) Get your own camera stream ---
             let publisher = await ov.initPublisherAsync(undefined, {
               audioSource: undefined, // The source of audio. If undefined default microphone

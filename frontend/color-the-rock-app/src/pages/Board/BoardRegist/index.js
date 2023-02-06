@@ -14,6 +14,8 @@ import CustomCalendar from "../../../components/Board/CustomCalendar";
 import BoardApi from "../../../api/board";
 import { recordApi } from "../../../api/record";
 
+import { useSelector } from "react-redux";
+
 const ALLOW_FILE_EXTENSION = "mp4,avi,wmv";
 const FILE_SIZE_MAX_LIMIT = 10 * 1024 * 1024; // 10MB
 
@@ -40,6 +42,9 @@ const colorValues = [
 ];
 
 const BoardForm = () => {
+  const users = useSelector((state) => state.users);
+  console.log(users);
+
   const navigate = useNavigate();
   const [title, setTitle] = useState();
   const [location, setLocation] = useState("");
