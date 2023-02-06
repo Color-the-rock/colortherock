@@ -14,7 +14,7 @@ import { recordApi } from "../../api/record";
 import GuideImg from "../../assets/img/record/img-record-guide.png";
 const Record = () => {
   const [radioValue, onChangeRadioButton] = useInput("success");
-  const userNickName = useSelector((state) => state.user.nickName);
+  const userNickName = useSelector((state) => state.users.nickName);
   const [userRecordInfo, setUserRecordInfo] = useState({});
   const [isShowGuide, setShowGuide] = useState(false);
   const getUserRecordInfo = () => {
@@ -56,8 +56,6 @@ const Record = () => {
           <S.GradientText> {userRecordInfo.videoCount}일</S.GradientText>동안
         </S.Text>
         <S.Text>
-          <S.GradientText>{userRecordInfo.visitCount}개</S.GradientText>의
-          암장에서{" "}
           <S.GradientText>
             {userRecordInfo.successCount}개의 문제
           </S.GradientText>
@@ -101,7 +99,7 @@ const Record = () => {
             />
             실패영상
           </S.RadioLabel>
-          <S.UploadButton>
+          <S.UploadButton to="/record/form">
             <S.UploadIcon size="20px" color="#ffffff" />
             업로드
           </S.UploadButton>
