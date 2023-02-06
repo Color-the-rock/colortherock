@@ -1,7 +1,9 @@
 package org.anotherclass.colortherock.global.error;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.global.common.BaseResponse;
+import org.anotherclass.colortherock.global.mattermost.NotificationManager;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -12,10 +14,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
+
 @RestControllerAdvice(annotations = RestController.class)
 @Slf4j
-@Profile("local")
-public class GlobalExControllerAdvice {
+@Profile("prod")
+@RequiredArgsConstructor
+public class ProdGlobalExControllerAdvice {
+
+    private final NotificationManager notificationManager;
 
     /**
      * Valid 검증 실패시 오류 발생
@@ -61,8 +69,20 @@ public class GlobalExControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected BaseResponse<?> handleException(Exception e) {
+    protected BaseResponse<?> handleException(Exception e, HttpServletRequest req) {
         log.error("Exception : {}", GlobalErrorCode.OTHER.getMessage(), e);
+        notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
         return new BaseResponse<>(GlobalErrorCode.OTHER);
+    }
+
+    private String getParams(HttpServletRequest req) {
+        StringBuilder params = new StringBuilder();
+        Enumeration<String> keys = req.getParameterNames();
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            params.append("- ").append(key).append(" : ").append(req.getParameter(key)).append('\n');
+        }
+
+        return params.toString();
     }
 }

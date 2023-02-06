@@ -10,6 +10,10 @@ spring:
     show-sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
   security:
+    user:
+      name: ${ADMIN_NAME}
+      password: ${ADMIN_PASSWORD}
+      roles: ADMIN
     oauth2:
       client:
         registration:
@@ -54,10 +58,16 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+notification:
+  mattermost:
+    enabled: true # mmSender를 사용할 지 여부, false면 알림이 오지 않는다
+    webhook-url: ${MM_WEBHOOK_URL} # 위의 Webhook URL을 기입
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true
     path: /api/swagger-ui.html
+  api-docs:
+    path: /api/post-docs
 OPENVIDU_URL: ${OPENVIDU_URL}
 OPENVIDU_SECRET: ${OPENVIDU_SECRET}
 RECORDING_PATH: ${RECORDING_PATH}

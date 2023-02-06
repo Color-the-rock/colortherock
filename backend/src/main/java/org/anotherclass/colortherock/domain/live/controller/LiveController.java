@@ -104,5 +104,14 @@ public class LiveController {
     public BaseResponse<?> recordingList(@PathVariable String sessionId) {
         List<RecordingListResponse> response = liveService.getRecordings(sessionId);
         return new BaseResponse<>(response);
+
+    @Operation(description = "라이브 종료 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "라이브 종료 성공"),
+    })
+    @DeleteMapping("/live/{sessionId}")
+    public BaseResponse<?> terminateLive(@PathVariable String sessionId) {
+        liveService.removeSession(sessionId);
+        return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 }

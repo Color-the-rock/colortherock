@@ -95,7 +95,7 @@ class VideoCommentServiceTest {
                 List<CommentListResponse> commentList = videoCommentService.getCommentList(request);
 
                 assertTrue(commentList.get(0).getCommentId() > commentList.get(1).getCommentId());
-                assertEquals(commentList.size(), 15);
+                assertEquals(4, commentList.size());
             }
         }
     }

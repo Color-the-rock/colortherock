@@ -200,4 +200,11 @@ public class LiveService {
             throw new RecordingDeleteException();
         }
     }
+
+    @Transactional
+    public void removeSession(String sessionId) {
+        if(liveRepository.findBySessionId(sessionId).isPresent())
+            liveRepository.deleteBySessionId(sessionId);
+    }
+
 }

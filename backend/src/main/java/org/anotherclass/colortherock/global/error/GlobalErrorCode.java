@@ -15,9 +15,10 @@ public enum GlobalErrorCode {
     METHOD_NOT_ALLOWED(405, "G200", "허용되지 않은 메서드입니다"),
     VALID_EXCEPTION(400, "G300", ""),
     ACCESS_DENIED(401, "G400", "허용되지 않은 사용자입니다"),
-    USER_NOT_FOUND(404, "G500", "유저 정보를 찾을 수 없음"),
+    TOKEN_EXPIRED(401, "G500", "토큰이 만료되었습니다."),
     // 멤버와 관련된 Exception
     DUPLICATE_NICKNAME(400, "M100", "중복 닉네임 입니다"),
+    INCORRECT_ADMIN_INFO(401, "M200", "관리자 로그인 정보가 틀렸습니다."),
     // 영상과 관련된 Exception
     VIDEO_NOT_FOUND(404, "V100", "해당 id에 해당하는 영상이 없습니다."),
     NOT_VIDEO_OWNER(400, "V200", "영상의 주인과 요청한 멤버가 다릅니다."),

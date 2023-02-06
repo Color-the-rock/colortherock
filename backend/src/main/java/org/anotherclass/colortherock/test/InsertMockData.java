@@ -83,7 +83,8 @@ public class InsertMockData {
         List<VideoBoard> videoBoards = new ArrayList<>();
         for (int i = 0; i < videoNums.size(); i++) {
             Video video = videoRepository.findById(videoNums.get(i)).orElseThrow();
-            videoBoards.add(VideoBoard.builder().video(video).title("테스트 제목입니다.").member(video.getMember()).build());
+            videoBoards.add(VideoBoard.builder().video(video).title(i + "번째 테스트 제목입니다. 화이팅~~~~~~!")
+                    .isHidden(false).member(video.getMember()).build());
         }
         videoBoardRepository.saveAll(videoBoards);
 
