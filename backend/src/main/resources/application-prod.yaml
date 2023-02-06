@@ -62,6 +62,8 @@ springdoc:
   swagger-ui:
     disable-swagger-default-url: true
     path: /api/swagger-ui.html
+  api-docs:
+    path: /api/post-docs
 OPENVIDU_URL: ${OPENVIDU_URL}
 OPENVIDU_SECRET : ${OPENVIDU_SECRET}
 RECORDING_PATH: ${RECORDING_PATH}
