@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as S from "./style";
 import { FiArrowLeft } from "react-icons/fi";
 import { FiArrowRightCircle } from "react-icons/fi";
@@ -6,49 +6,71 @@ import { useNavigate } from "react-router-dom";
 import UserApi from "../../api/user";
 import { setfulfilledLogin } from "../../stores/users/userSlice";
 import { useSelector, useDispatch } from "react-redux";
-//  보류
+import { useCookies } from "react-cookie";
 
-const SinUp = () => {
+const SignUp = () => {
+  const users = useSelector((state) => state.users);
+  console.log("users: ", users.registrationId);
+  console.log(typeof users.registrationId);
+
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [nickName, setNickname] = useState("");
-  const [isValidateNickName, setValidateNickName] = useState(false);
+  const [nickNameValid, setNickNameValid] = useState(false);
+  const [oK, setOK] = useState(false);
+  const [cookies, setCookie] = useCookies(["refreshToken"]);
 
-  // 정규표현식 적용하고,,
+  useEffect(() => {
+    if (oK) {
+      const data = {
+        email: users.email,
+        registrationId: users.registrationId,
+        nickname: nickName,
+      };
+
+      UserApi.SignUp(data)
+        .then((res) => {
+          alert("성공입니다.");
+          console.log(res);
+          dispatch(setfulfilledLogin({ nickName }));
+          const accessToken = res.data.result.accessToken;
+          sessionStorage.setItem("accessToken", accessToken);
+          const refreshToken = res.data.result.refreshToken;
+          setCookie("refreshToken", refreshToken);
+          navigate("/");
+        })
+        .catch((err) => {
+          alert("로그인 실패");
+          console.log("err: ", err);
+          navigate("/");
+        });
+    }
+  }, [oK]);
+
+  // 닉네임 정규표현식 적용.
   const handleChange = (e) => {
     setNickname(e.target.value);
-    // 데이터 입력여부도 확인 필요
-    // 여기에 정규표현식 적용해보자.
-    // const regex =
+    const regex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/;
+    if (regex.test(e.target.value)) {
+      setNickNameValid(true);
+    } else {
+      setNickNameValid(false);
+    }
   };
+
+  // 여기서 닉네임 중복체크
 
   // 중복확인을 하고, 중복확인되면
   const onClickConfirmButton = () => {
-    // 여기서 닉네임 중복체크
-    UserApi.CheckNickname({ nickName })
-      // 중복체크 성공시
+    UserApi.CheckNickname(nickName)
       .then((res) => {
-        if (res.result === false) {
-          alert("로그인 실패");
-          navigate("/");
-        } else {
-          UserApi.SignUp()
-            .then(() => {
-              alert("로그인 성공");
-
-              user["nickName"] = nickName;
-              dispatch(user);
-              navigate("/");
-            })
-            .catch(() => {
-              alert("로그인 실패");
-              navigate("/");
-            });
-        }
+        if (res.data.result === true) setOK(true);
+        else setOK(false);
       })
-      .catch((err) => {});
-    // 다른페이지로 이동
+      .catch((err) => {
+        setOK(false);
+        alert("중복된 닉네임입니다.");
+      });
   };
 
   const onClickHandler = () => {
@@ -78,14 +100,15 @@ const SinUp = () => {
           </S.InputWrapper>
           <S.InputButtonWrap>
             <S.InputButton
+              disabled={!nickNameValid}
               onClick={onClickConfirmButton}
-              isValidate={isValidateNickName}
+              isValidate={nickNameValid}
             >
               시작할게요
               <FiArrowRightCircle className="FiArrowRightCircle" />
             </S.InputButton>
             <S.ErrorMessageWrap>
-              {!isValidateNickName && (
+              {!nickNameValid && (
                 <S.ErrorMessage>
                   <div>!</div> <p>사용할 수 없는 닉네임</p>
                 </S.ErrorMessage>
@@ -98,4 +121,4 @@ const SinUp = () => {
   );
 };
 
-export default SinUp;
+export default SignUp;

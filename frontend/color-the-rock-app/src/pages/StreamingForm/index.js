@@ -20,6 +20,7 @@ import { setOV } from "../../stores/streaming/streamingSlice";
 import RecordVideoFormModal from "../../components/Streaming/RecordVideoFormModal";
 import ModifyRoomSettingModal from "../../components/Streaming/ModifyRoomSettingModal";
 import FeedbackModal from "../../components/Streaming/FeedbackModal";
+import VideoClip from "../../components/Streaming/VideoClip";
 // ----------------------------------------------------------------- //
 
 const levelValues = [
@@ -136,7 +137,7 @@ const StreamingForm = () => {
         />
       )}
       {modalOpen3 && (
-        <RecordVideoFormModal
+        <VideoClip
           onClick={handleModalStateChange3}
           setModalOpen={setModalOpen3}
         />
@@ -233,6 +234,17 @@ const StreamingForm = () => {
                     }}
                   >
                     영상 수정 모달
+                  </button>
+                  <button
+                    onClick={handleModalStateChange3}
+                    style={{
+                      fontSize: "20px",
+                      color: "white",
+                      border: "1px solid white",
+                      margin: "1rem",
+                    }}
+                  >
+                    클립 영상 모달
                   </button>
                 </S.ComponenentWrap>
               </S.AddPadding>

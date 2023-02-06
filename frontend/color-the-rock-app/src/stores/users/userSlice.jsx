@@ -16,7 +16,7 @@ export const userSlice = createSlice({
     },
     // 미완료 로그인 진행
     setfulfilledLogin: (state, action) => {
-      state.email = action.payload.nickName;
+      state.nickName = action.payload.nickName;
       state.fulfilled = true;
     },
     // 로그인 완료

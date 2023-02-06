@@ -9,27 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { VscChromeClose } from "react-icons/vsc";
 import axios from "axios";
 
-import KAKAO_AUTH_URL from "./Kakao";
-
 const Login = () => {
   const navigate = useNavigate();
   const onClickHandler = () => {
     navigate("/");
-  };
-
-  const LoginHandler = () => {
-    axios({
-      method: "get",
-      url: "https://colortherock.com/oauth2/authorization/kakao",
-    })
-      .then((res) => {
-        console.log("res: ", res);
-        console.log("성공");
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-        console.log("실패");
-      });
   };
 
   return (
@@ -72,21 +55,10 @@ const Login = () => {
             <S.LogoContainer>
               <S.LogoImg src={AppLogo} alt="app logo"></S.LogoImg>
               <S.SecondLogo>{`Color the Rock,\nColor your Rock!`}</S.SecondLogo>
-              <button
-                onClick={LoginHandler}
-                style={{
-                  color: "white",
-                  height: "20px",
-                  width: "30px",
-                }}
-              >
-                버튼
-              </button>
             </S.LogoContainer>
 
             <S.LoginContainer>
               <S.LoginWrap href="https://colortherock.com/oauth2/authorization/kakao">
-                {/* <S.LoginWrap href={KAKAO_AUTH_URL}> */}
                 <img src={KakaoBtn} alt="Kakao login Btn" />
               </S.LoginWrap>
               <S.LoginWrap href="https://colortherock.com/oauth2/authorization/google">
