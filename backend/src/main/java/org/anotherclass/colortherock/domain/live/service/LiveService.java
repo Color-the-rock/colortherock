@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.live.service;
 
 import io.openvidu.java.client.*;
 import org.anotherclass.colortherock.domain.live.entity.Live;
+import org.anotherclass.colortherock.domain.live.exception.RecordingDeleteException;
 import org.anotherclass.colortherock.domain.live.exception.RecordingStartBadRequestException;
 import org.anotherclass.colortherock.domain.live.exception.SessionNotFountException;
 import org.anotherclass.colortherock.domain.live.repository.LiveReadRepository;
@@ -131,13 +132,13 @@ public class LiveService {
 
     @Transactional
     public void recordingSave(MemberDetails memberDetails, String sessionId, RecordingSaveRequest request) throws IOException, JCodecException {
-        dir += "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".webm";
+        String newDir = dir + "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".webm";
         String videoName = DateTime.now() + request.getRecordingId() + ".webm";
-        String s3Url = s3Service.uploadFromOV(dir, videoName);
+        String s3Url = s3Service.uploadFromOV(newDir, videoName);
         Member member = memberRepository.findById(memberDetails.getMember().getId()).orElseThrow();
         // 썸네일 추가
         String thumbnailName = "Thumb"+DateTime.now() + request.getRecordingId() + ".JPEG";
-        String thumbnailURL = s3Service.uploadThumbnailFromOV(dir, thumbnailName);
+        String thumbnailURL = s3Service.uploadThumbnailFromOV(newDir, thumbnailName);
         // 비디오 객체 생성
         Video video = request.toEntity(s3Url, thumbnailURL, member);
         videoRepository.save(video);
@@ -152,7 +153,7 @@ public class LiveService {
         if(slices.isEmpty()) return new ArrayList<>();
 
         // list를 받아와서 openvidu의 active session과 비교하여 없으면 DB 삭제하는 방식으로 DB를 최적화
-        List<String> activeSessions = openVidu.getActiveSessions().stream().map(session -> session.getSessionId()).collect(Collectors.toList());
+        List<String> activeSessions = openVidu.getActiveSessions().stream().map(Session::getSessionId).collect(Collectors.toList());
 
         List<LiveListResponse> responses = new ArrayList<>();
 
@@ -189,5 +190,14 @@ public class LiveService {
             }
         });
         return response;
+    }
+
+    public void deleteRecording(String sessionId, String recordingId) {
+        recordingsForSession.get(sessionId).remove(recordingId);
+        try {
+            openVidu.deleteRecording(recordingId);
+        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+            throw new RecordingDeleteException();
+        }
     }
 }
