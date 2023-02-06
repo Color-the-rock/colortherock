@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import OpenViduVideoComponent from "../OpemViduVideo";
 import * as S from "./style";
 
 function UserVideoComponent({ streamManager }) {
+  useEffect(() => {
+    console.log("streamer ", streamManager);
+  }, [streamManager]);
+
   const getNicknameTag = () => {
     return JSON.parse(streamManager.stream.connection.data).clientData;
   };

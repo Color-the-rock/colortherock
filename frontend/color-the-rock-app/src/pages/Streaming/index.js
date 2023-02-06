@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Thumbnail from "../../components/Common/Thumbnail";
 import SearchBar from "../../components/Common/Search";
 import Title from "../../components/Common/Title";
 import * as S from "./style";
 import { HiOutlineVideoCamera } from "react-icons/hi";
+import streamingApi from "../../api/streaming";
+import { useDispatch, useSelector } from "react-redux";
+import { setOpenViduToken } from "../../stores/streaming/streamingSlice";
+import { useNavigate } from "react-router";
 const dummy = [
   {
     id: 1,
@@ -43,10 +47,30 @@ const dummy = [
 ];
 
 const Streaming = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const token = useSelector((state) => state.streaming.userOpenViduToken);
+
+  const test = () => {
+    streamingApi
+      .participateLiveSession("ses_Z7g1PyUMXF")
+      .then(({ data: { status, result } }) => {
+        if (status === 200) {
+          dispatch(setOpenViduToken(result));
+          navigate(`/streaming/live/ses_Z7g1PyUMXF`);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    console.log("참여자 토큰: ", token);
+  }, [token]);
+
   return (
     <S.Container>
       <Title text="실시간 도전">
-        <S.LiveTag>LIVE</S.LiveTag>
+        <S.LiveTag onClick={test}>LIVE</S.LiveTag>
       </Title>
       <S.Description>
         도전 중인 등반을 보고 실시간으로 피드백해줘요!
