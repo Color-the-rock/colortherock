@@ -2,7 +2,7 @@ package org.anotherclass.colortherock.domain.videoboard.response;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
 @Getter
@@ -16,5 +16,5 @@ public class VideoBoardSummaryResponse {
     private String thumbnailURL;
     private String color;
     private String gymName;
-    private LocalDateTime createdDate;
+    private LocalDate createdDate;
 }

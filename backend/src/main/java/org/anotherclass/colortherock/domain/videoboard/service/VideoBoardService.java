@@ -54,7 +54,7 @@ public class VideoBoardService {
                         .title(vb.getTitle())
                         .thumbnailURL(vb.getVideo().getThumbnailURL())
                         .color(vb.getVideo().getColor())
-                        .createdDate(vb.getCreatedDate())
+                        .createdDate(vb.getCreatedDate().toLocalDate())
                         .gymName(vb.getVideo().getGymName())
                         .build()).collect(Collectors.toList());
 
@@ -89,7 +89,7 @@ public class VideoBoardService {
                 .videoBoardId(vb.getId())
                 .nickname(vb.getMember().getNickname())
                 .title(vb.getTitle())
-                .createdDate(vb.getCreatedDate())
+                .createdDate(vb.getCreatedDate().toLocalDate())
                 .build();
     }
 
@@ -128,7 +128,7 @@ public class VideoBoardService {
                         .title(vb.getTitle())
                         .thumbnailURL(vb.getVideo().getThumbnailURL())
                         .color(vb.getVideo().getColor())
-                        .createdDate(vb.getCreatedDate())
+                        .createdDate(vb.getCreatedDate().toLocalDate())
                         .build()).collect(Collectors.toList());
     }
 

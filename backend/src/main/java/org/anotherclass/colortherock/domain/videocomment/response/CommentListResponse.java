@@ -2,7 +2,7 @@ package org.anotherclass.colortherock.domain.videocomment.response;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
 @Getter
@@ -10,9 +10,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentListResponse {
-
     private Long commentId;
     private String nickname;
     private String content;
-    private LocalDateTime createdDate;
+    private LocalDate createdDate;
 }
