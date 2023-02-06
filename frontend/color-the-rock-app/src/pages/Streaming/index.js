@@ -70,7 +70,7 @@ const Streaming = () => {
       ) : (
         <label>진행중인 방송이 없어요!</label>
       )}
-      <S.LiveButton to="/streaming/regist">
+      <S.LiveButton to="/streaming/form">
         <HiOutlineVideoCamera size="24px" color="#C250D6" />
       </S.LiveButton>
     </S.Container>
