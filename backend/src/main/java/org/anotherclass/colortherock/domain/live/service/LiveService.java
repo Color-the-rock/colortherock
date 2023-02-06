@@ -168,4 +168,11 @@ public class LiveService {
         return responses;
     }
 
+    @Transactional
+    public void removeSession(String sessionId) {
+        if(liveRepository.findBySessionId(sessionId).isPresent())
+            liveRepository.deleteBySessionId(sessionId);
+    }
+
+
 }
