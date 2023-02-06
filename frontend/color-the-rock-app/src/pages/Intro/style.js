@@ -22,37 +22,6 @@ export const Section = styled.section`
   position: relative;
 `;
 
-export const Parallax = styled.div`
-  overflow: hidden;
-  letter-spacing: -2px;
-  line-height: 0.8;
-  margin: 0;
-  white-space: nowrap;
-  display: flex;
-  flex-wrap: nowrap;
-
-  .scroller {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 9rem;
-    font-family: "Poppins";
-    font-style: italic;
-    display: flex;
-    white-space: nowrap;
-    display: flex;
-    flex-wrap: nowrap;
-    margin-bottom: 2rem;
-    @media (max-width: 992px) {
-      font-size: 7rem;
-    }
-  }
-
-  span {
-    display: block;
-    margin-right: 30px;
-  }
-`;
-
 export const BoardContent = styled.div`
   width: 100%;
   height: 100vh;
@@ -71,7 +40,7 @@ export const BoardImg = styled.img`
 export const BoardText = styled.h1`
   position: absolute;
   width: 100%;
-  top: 128px;
+  top: 112px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 1.5rem;

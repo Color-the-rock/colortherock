@@ -34,13 +34,16 @@ const Record = () => {
 
     // show info guide
     const infoGuide = document.getElementById("record-info-guide");
-    infoGuide.addEventListener("mouseover", function () {
-      setShowGuide(true);
-    });
 
-    infoGuide.addEventListener("mouseout", function () {
-      setShowGuide(false);
-    });
+    if (infoGuide !== null) {
+      infoGuide.addEventListener("mouseover", function () {
+        setShowGuide(true);
+      });
+
+      infoGuide.addEventListener("mouseout", function () {
+        setShowGuide(false);
+      });
+    }
   }, []);
 
   return (

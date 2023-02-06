@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 
 // url 설정 수정 필요
 const BASE_URL = "https://colortherock.com/api";
@@ -13,7 +13,7 @@ instance.defaults.headers.common["Content-Type"] = "application/json";
 instance.interceptors.request.use(function (config) {
   console.log("interceptors.request");
   const accessToken =
-    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJyZWdpc3RyYXRpb25JZCI6Imtha2FvIiwiaWQiOjIsImV4cCI6MTY3NTYxMDU2NCwiaWF0IjoxNjc1NjA2OTY0LCJlbWFpbCI6ImV4YW1wbGUxQGNvbG9ydGhlcm9jay5jb20ifQ.R6DByjGB2TcDUznQgarEW9XOnAOGtOkvIIKC5DZoaMA";
+    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJyZWdpc3RyYXRpb25JZCI6Imtha2FvIiwiaWQiOjIsImV4cCI6MTY3NTY0NDk5MCwiaWF0IjoxNjc1NjQxMzkwLCJlbWFpbCI6ImV4YW1wbGUxQGNvbG9ydGhlcm9jay5jb20ifQ.QxVuDwtBPkMU_Ya6jZqLRQKWeW-SYQ93dzVN-NzMXS4";
 
   config.headers.Authorization = `${accessToken}`;
   return config;
