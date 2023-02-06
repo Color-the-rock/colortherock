@@ -3,7 +3,11 @@ import * as S from "./style";
 import PropTypes from "prop-types";
 import "./calendar.css";
 
-const CustomCalendar = ({ selectDate, setSelectDate }) => {
+const CustomCalendar = ({
+  placeholder = "날짜 선택",
+  selectDate,
+  setSelectDate,
+}) => {
   const [maxDate, setMaxDate] = useState("");
 
   useEffect(() => {
@@ -18,13 +22,19 @@ const CustomCalendar = ({ selectDate, setSelectDate }) => {
   console.log("selectDate", selectDate);
 
   return (
-    <S.Container className="input_date_box">
-      <S.Calendar
+    <div className="input_date_box">
+      <input
         type="date"
-        id="date1"
+        data-placeholder={placeholder}
+        required
+        style={{
+          color: "var(--color-secondary)",
+          fontFamily: "Noto Sans KR",
+        }}
+        // value="날짜를 선택해주세요."
         onChange={(e) => setSelectDate(e.target.value)}
-      ></S.Calendar>
-    </S.Container>
+      ></input>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import StackedGraph from "../../components/Record/StackedGraph";
 import Title from "../../components/Common/Title";
 import "react-calendar/dist/Calendar.css";
@@ -9,8 +9,24 @@ import { useInput } from "../../hooks/useInput";
 import MyPost from "../../components/Mypage/MyPost";
 import { Mobile, Desktop } from "../../components/layout/Template";
 import StatisticGraph from "../../components/Record/StatisticGraph";
+import { recordApi } from "../../api/record";
+import { useDispatch, useSelector } from "react-redux";
+
 const Record = () => {
+  const dispatch = useDispatch();
+  const date = useSelector((state) => state.record.currentDate);
   const [radioValue, onChangeRadioButton] = useInput("success");
+
+  const getVideoListByCalendar = () => {
+    // recordApi
+    //   .getRecordVideo()
+    //   .then(({ data }) => console.log("data", data))
+    //   .catch((error) => console.log("error :", error));
+  };
+
+  useEffect(() => {
+    getVideoListByCalendar();
+  }, []);
 
   return (
     <S.Container>

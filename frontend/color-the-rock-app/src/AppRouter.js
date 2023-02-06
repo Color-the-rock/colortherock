@@ -20,6 +20,8 @@ import StreamingForm from "./pages/StreamingForm";
 import Preview from "./pages/Preview/inedx";
 import RecordForm from "./pages/Record/RecordForm";
 import StreamingLive from "./pages/StreamingLive";
+import UploadS3Form from "./pages/Board/UploadS3Form";
+
 const Layout = () => {
   return (
     <div>
@@ -52,6 +54,7 @@ const AppRouter = () => {
         <Route path="preview" element={<Preview />} />
         <Route path="/record/form" element={<RecordForm />} />
         <Route path="/streaming/live/:sessionId" element={<StreamingLive />} />
+        <Route path="/board/s3form" element={<UploadS3Form />} />
       </Routes>
       {/* <Footer /> */}
     </Router>

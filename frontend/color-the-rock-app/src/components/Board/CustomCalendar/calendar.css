@@ -2,8 +2,9 @@ input[type="date"] {
   position: relative;
   min-height: 30px;
   padding: 10px 12px;
-  color: var(--color-secondary);
   font-size: 14px;
+  font-family: "Noto Sans KR";
+  color: var(--color-secondary);
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
@@ -25,7 +26,7 @@ input[type="date"]::-webkit-inner-spin-button {
 }
 
 .input_date_box input {
-  width:100%;
+  width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -54,13 +55,31 @@ input[type="date"]::-webkit-inner-spin-button {
 /* 버튼 클릭시 input 나옴 */
 .all-date-setting-input input[type="date"] {
   position: relative;
-  font-size: 0;
+  font-size: 20;
   border: none;
-
   width: 2rem;
   height: 2rem;
-
   margin: 0 auto;
   padding: 0;
+  font-size: 14px;
+  font-family: "Noto Sans KR";
+  color: var(--color-secondary);
+}
 
+input[type="date"]::before {
+  content: attr(data-placeholder);
+  width: 100%;
+  font-size: 14px;
+  font-family: "Noto Sans KR";
+  color: var(--color-secondary);
+}
+input[type="date"]::after {
+  width: 100%;
+  font-size: 14px;
+  font-family: "Noto Sans KR";
+  color: var(--color-secondary);
+}
+
+input[type="date"]:valid::before {
+  display: none;
 }

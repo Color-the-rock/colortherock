@@ -6,39 +6,20 @@ export const ContainerWrap = styled.div`
   right: 0px;
   top: 0px;
   bottom: 0px;
-  display: flex;
-  justify-content: center;
   z-index: 1000;
-  /* background-color: var(--color-dark); */
-  background-color: transparent;
+  background-color: var(--color-dark);
 `;
 
 export const Container = styled.div`
   position: relative;
-  width: 100vw;
-  height: 100vh;
-  max-width: 600px;
-`;
-
-export const Background = styled.div`
-  width: 100vw;
-  height: 100vh;
-  z-index: 1000;
-  opacity: 30%;
-  background-color: var(--color-dark);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
 `;
 
 export const ContentBox = styled.div`
-  position: absolute;
-  left: 1rem;
-  right: 1rem;
-  top: 2rem;
-  padding: 1rem;
-  border-radius: 10px;
-  background-color: var(--color-dark);
-  background-color: white;
-  border-radius: 20px;
-  z-index: 3000;
+  width: calc(100% - 32px);
   max-width: 600px;
   display: flex;
   flex-direction: column;
