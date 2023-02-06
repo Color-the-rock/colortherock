@@ -2,110 +2,118 @@ import React, { useState, useEffect } from "react";
 import { Desktop, Mobile } from "../../../components/layout/Template";
 import * as S from "./style";
 import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn";
-import SubTitle from "../../../components/Common/SubTitle";
 import CommentModal from "../../../components/Common/CommentModal";
 import CommentBtn from "../../../components/Common/CommentBtn";
-import { useNavigate } from "react-router";
-import Title from "../../../components/Common/Title";
+import { useNavigate, useParams } from "react-router";
 import Thumbnail from "../../../components/Common/Thumbnail";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll";
 import Header from "../../../components/layout/Header";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
-import { defaultInstance } from "../../../api/utils";
-import requests from "../../../api/board";
-import { FiSettings } from "react-icons/fi";
-
 import TestVideo from "../../../assets/video/test.mp4";
-const dummy = [
-  {
-    id: 1,
-    title: "실시간 클라이밍 중",
-    userNickname: "공싸피",
-    gymName: "강남 더 클라이밍",
-    imgUrl: "",
-    color: "빨강",
-  },
-  {
-    id: 2,
-    title: "실시간 클라이밍 진행",
-    userNickname: "김싸피",
-    gymName: "역삼 더 클라이밍",
-    imgUrl: "",
-    color: "노랑",
-  },
-  {
-    id: 3,
-    title: "초보 클라이밍",
-    userNickname: "송싸피",
-    gymName: "홍대 더 클라이밍",
-    imgUrl: "",
-    color: "초록",
-  },
-  {
-    id: 4,
-    title: "클라이밍 마스터",
-    userNickname: "최싸피",
-    gymName: "인천 더 클라이밍",
-    imgUrl: "",
-    color: "파랑",
-  },
-  {
-    id: 5,
-    title: "실시간 클라이밍 중",
-    userNickname: "허싸피",
-    gymName: "신림 더 클라이밍",
-    imgUrl: "",
-    color: "보라",
-  },
-];
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import boardApi from "../../../api/board";
 
 const BoardDetail = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [data, setData] = useState(dummy);
-
-  const config = {
-    params: {},
-  };
-
-  // 상세 정보 받아오기!!
-  useEffect(() => {
-    defaultInstance
-      .get(requests.GetBoardDetail, config)
-      .then((res) => {
-        setData(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  const [isOpenBoardSettingModal, setOpenBoardSettingModal] = useState(false);
+  const [result, setResult] = useState({}); // 게시글 상세 정보 배열
+  const [commentList, setCommentList] = useState({}); // 게시글 댓글 정보 배열
+  const userNickname = useSelector((state) => state.user.nickName);
+  //const [isFetching, setIsFetching] = useInfiniteScroll(updateFuncOnScroll);
 
   const updateFuncOnScroll = () => {
-    try {
-      setData((prev) => [...prev, ...dummy]);
-    } catch (error) {
-    } finally {
-      setIsFetching(false);
-    }
+    // try {
+    //   setData((prev) => [...prev, ...dummy]);
+    // } catch (error) {
+    // } finally {
+    //   setIsFetching(false);
+    // }
   };
 
-  const [isFetching, setIsFetching] = useInfiniteScroll(updateFuncOnScroll);
-
-  const clickHandler = () => {
-    navigate("/board");
+  // 게시글 상세 조회 API
+  const getBoardDetail = () => {
+    console.log("param id: ", id);
+    boardApi
+      .getBoardDetail(id)
+      .then(({ data: { status, result: _result } }) => {
+        if (status === 200) {
+          console.log("statusCode : 200", _result);
+          setResult(_result);
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
-  const beforePage = () => {
-    navigate("/board");
+  // 게시글 댓글 조회 API
+  const getBoardCommentList = () => {
+    console.log("param id: ", id);
+
+    boardApi
+      .getVideoBoardCommentList(0, id)
+      .then(({ data: { status, result: _result } }) => {
+        if (status === 200) {
+          console.log("statusCode : 200", _result);
+          setCommentList(_result);
+        }
+      })
+      .catch((error) => console.log(error));
   };
+
+  useEffect(() => {
+    getBoardDetail();
+    getBoardCommentList();
+  }, []);
 
   const handleModal = () => {
     console.log("change");
     setIsModalOpen(true);
   };
 
+  const handleOnclickDelete = () => {
+    if (!window.confirm("정말로 삭제하시겠습니까")) return;
+
+    // 게시글 삭제 API 호출 및 처리 완료 후 페이지 이동
+    boardApi
+      .deleteBoardDetail()
+      .then(({ data: { status } }) => {
+        if (status === 200) {
+          alert("정상적으로 게시글이 삭제되었습니다.");
+        } else if (status === 404) {
+          alert("해당 글을 찾을 수 없습니다.");
+        }
+        navigate("/board");
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const handleReportBoard = () => {
+    // 게시글 신고를 위한 팝업 제공
+  };
+
   return (
     <S.ContainerWrap>
+      {isOpenBoardSettingModal && (
+        <S.SettingModal>
+          <S.SettingModalItem isSameAuthor={userNickname === result.nickname}>
+            <Link to={`/board/modify/${result.videoBoardId}`}>수정</Link>
+          </S.SettingModalItem>
+          <S.SettingModalItem
+            onClick={handleOnclickDelete}
+            isSameAuthor={userNickname === result.nickname}
+          >
+            삭제
+          </S.SettingModalItem>
+          <S.SettingModalReportItem
+            onClick={handleReportBoard}
+            isSameAuthor={userNickname === result.nickname}
+          >
+            신고
+          </S.SettingModalReportItem>
+        </S.SettingModal>
+      )}
       <Desktop>
         <S.HeaderWrap>
           <Header></Header>
@@ -113,22 +121,18 @@ const BoardDetail = () => {
       </Desktop>
       <Mobile>
         <S.ArrowLeftBtnWrap>
-          <ArrowLeftBtn clickHandler={clickHandler}></ArrowLeftBtn>
+          <ArrowLeftBtn clickHandler={() => navigate("/board")}></ArrowLeftBtn>
+          <S.BoardSettingBtn
+            onClick={() => setOpenBoardSettingModal((prev) => !prev)}
+          />
         </S.ArrowLeftBtnWrap>
       </Mobile>
 
       <S.Container>
         <S.ContentContainer>
           <S.ContentWrap>
-            {/* 비디오 */}
-            {/* <S.VideoWrap>
-          </S.VideoWrap> */}
-            <FiSettings className="fiSettings" />
             <S.Video controls>
-              <source
-                src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-                type="video/mp4"
-              />
+              <source src={TestVideo} type="video/mp4" />
             </S.Video>
 
             {isModalOpen ? (
@@ -139,19 +143,20 @@ const BoardDetail = () => {
               <S.FalseWrap>
                 <S.ComponentWrap>
                   <S.RowWrap>
-                    <BoardSubTitle text="살려주세요ㄴㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ." />
+                    <BoardSubTitle text={result.title} />
                   </S.RowWrap>
                   <S.RowWrap>
-                    <div>SSAFY는 사람을 찢어</div>
-                    <div>2023-01-29</div>
+                    <S.DetailInfo>{result.nickname}</S.DetailInfo>
+                    <S.DetailInfo color="var(--color-tertiary)">
+                      {result.createdDate}
+                    </S.DetailInfo>
                   </S.RowWrap>
                 </S.ComponentWrap>
                 <S.CommentWrap>
                   <CommentBtn onClick={handleModal} />
                 </S.CommentWrap>
-
-                <S.ComponentWrap>
-                  <BoardSubTitle text="다른영상도 봐주세요" />
+                {/* <S.ComponentWrap>
+                  <BoardSubTitle text="다른 완등 영상 보기" />
                 </S.ComponentWrap>
                 <S.ThumbnailList>
                   {data.map((item) => (
@@ -166,7 +171,7 @@ const BoardDetail = () => {
                       color={item.color}
                     />
                   ))}
-                </S.ThumbnailList>
+                </S.ThumbnailList> */}
               </S.FalseWrap>
             )}
           </S.ContentWrap>

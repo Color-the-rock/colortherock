@@ -1,14 +1,10 @@
 import { defaultInstance } from "./utils/index";
 
 // board(성공 영상 모음) API 작성
-const BoardApi = {
-  // 완등 영상 글 상세보기(GET요청)
-  getBoardDetail: ({ videoBoardId }) =>
-    defaultInstance.get(`/video/board/detail`, {
-      params: {
-        videoBoardId,
-      },
-    }),
+const boardApi = {
+  // 완등 영상 글 상세보기(GET요청) - 현주
+  getBoardDetail: (videoBoardId) =>
+    defaultInstance.get(`/video/board/detail?videoBoardId=${videoBoardId}`),
 
   // 완등 영상 글 수정하기(PUT 요청)
   PutBoardDetail: (videoBoardId, title) =>
@@ -17,24 +13,15 @@ const BoardApi = {
       title,
     }),
 
-  // 완등 영상 글 삭제하기(DELETE 요청)
-  DeleteBoardDetail: ({ videoBoardId }) =>
-    defaultInstance.delete("/video/board/detail", {
-      params: {
-        videoBoardId,
-      },
-    }),
+  // 완등 영상 글 삭제하기(DELETE 요청) - 현주
+  deleteBoardDetail: (videoBoardId) =>
+    defaultInstance.delete(`/video/board/detail?videoBoardId=${videoBoardId}`),
 
-  // 전체 완등 영상 전체 리스트 조회
-  // 이거 뭐임??
+  // 전체 완등 영상 전체 리스트 조회 - 현주
   getAllVideo: ({ storeId, color, gymName }) =>
-    defaultInstance.get("/video/board", {
-      params: {
-        storeId,
-        color,
-        gymName,
-      },
-    }),
+    defaultInstance.get(
+      `/video/board?storeId=${storeId}&color=${color}&gymName=${gymName}`
+    ),
 
   // 완등 영상 게시글 올리기(내 운동기록 동영상에서 영상 가져오기)
   postRegisterRecordVideo: ({ videoId, title }) =>
@@ -67,18 +54,11 @@ const BoardApi = {
       },
     }),
 
-  // 영상 댓글 조회 요청
-  getVideoBoardComment: ({ storeId, videoBoardId }) => {
-    defaultInstance.get("/videoboard/comment", {
-      params: {
-        storeId,
-        videoBoardId,
-      },
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-  },
+  // 영상 댓글 조회 요청 - 현주
+  getVideoBoardCommentList: (storeId, videoBoardId) =>
+    defaultInstance.get(
+      `/videoboard/comment?storeId=${storeId}&videoBoardId=${videoBoardId}`
+    ),
   // 영상 댓글 수정 요청
   putVideoBoardComment: ({ commentId, content }) =>
     defaultInstance.put("/videoboard/comment", {
@@ -111,4 +91,4 @@ const BoardApi = {
     }),
 };
 
-export default BoardApi;
+export default boardApi;

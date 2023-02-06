@@ -68,10 +68,9 @@ export const VideoMenuItem = styled.div`
 `;
 
 export const CommentWrapper = styled.div`
-  height: 100vh;
   display: flex;
   justify-content: space-between;
-  margin-right: 1rem;
+  align-items: center;
   @media (max-width: 992px) {
     width: 100%;
   }

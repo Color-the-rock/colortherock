@@ -4,8 +4,10 @@ export const Container = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: transparent;
-  margin: 0.5rem 0px;
+  background-color: var(--color-background);
+  margin: 1rem 0px;
+  padding: 1rem;
+  border-radius: 10px;
 `;
 export const Title = styled.h1`
   font-style: normal;
