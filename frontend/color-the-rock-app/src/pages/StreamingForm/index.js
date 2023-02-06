@@ -16,6 +16,12 @@ import { OpenVidu } from "openvidu-browser";
 import { useDispatch } from "react-redux";
 import { setOV } from "../../stores/streaming/streamingSlice";
 
+// ------------- test ----------------------//
+import RecordVideoFormModal from "../../components/Streaming/RecordVideoFormModal";
+import ModifyRoomSettingModal from "../../components/Streaming/ModifyRoomSettingModal";
+import FeedbackModal from "../../components/Streaming/FeedbackModal";
+// ----------------------------------------------------------------- //
+
 const levelValues = [
   { key: "난이도 레벨", value: "" },
   { key: "LEVEL1", value: "level-1" },
@@ -46,6 +52,24 @@ const videoConstraints = {
 };
 
 const StreamingForm = () => {
+  /////////////////////////// test ////////////////////////////////
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen2, setModalOpen2] = useState(false);
+  const [modalOpen3, setModalOpen3] = useState(false);
+
+  const handleModalStateChange = () => {
+    setModalOpen((prev) => !prev);
+  };
+
+  const handleModalStateChange2 = () => {
+    setModalOpen2((prev) => !prev);
+  };
+
+  const handleModalStateChange3 = () => {
+    setModalOpen3((prev) => !prev);
+  };
+  //////////////////////////////////////////////////////////////////
+
   const navigate = useNavigate();
 
   const webcamRef = useRef(null);
@@ -95,6 +119,28 @@ const StreamingForm = () => {
 
   return (
     <S.Container>
+      {/* ---------------------모달 테스트 중입니다.-------------------- */}
+      {modalOpen && (
+        <RecordVideoFormModal
+          onClick={handleModalStateChange}
+          setModalOpen={setModalOpen}
+        />
+      )}
+      {modalOpen2 && (
+        <FeedbackModal
+          onClick={handleModalStateChange2}
+          setModalOpen={setModalOpen2}
+        />
+      )}
+      {modalOpen3 && (
+        <RecordVideoFormModal
+          onClick={handleModalStateChange3}
+          setModalOpen={setModalOpen3}
+        />
+      )}
+
+      {/* ------------------------------------------------------------- */}
+
       <S.ContentWrap>
         <S.Content>
           <Webcam
@@ -160,6 +206,31 @@ const StreamingForm = () => {
                     setLocation={setGymName}
                     opacity="70"
                   />
+                </S.ComponenentWrap>
+
+                <S.ComponenentWrap>
+                  <button
+                    onClick={handleModalStateChange}
+                    style={{
+                      fontSize: "20px",
+                      color: "white",
+                      border: "1px solid white",
+                      margin: "1rem",
+                    }}
+                  >
+                    영상 등록 모달
+                  </button>
+                  <button
+                    onClick={handleModalStateChange2}
+                    style={{
+                      fontSize: "20px",
+                      color: "white",
+                      border: "1px solid white",
+                      margin: "1rem",
+                    }}
+                  >
+                    영상 수정 모달
+                  </button>
                 </S.ComponenentWrap>
               </S.AddPadding>
             )}

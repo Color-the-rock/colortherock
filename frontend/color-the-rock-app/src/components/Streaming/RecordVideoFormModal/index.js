@@ -5,6 +5,11 @@
   props
   : video => 녹화한 영상
   : handleModalStateChange => Modal on/off
+
+  할 일
+  : 등록요청
+  : video validation check
+  : 상태 관리
 */
 
 import * as S from "./style";
@@ -93,10 +98,6 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
   return (
     <S.ContainerWrap>
       <S.Container>
-        {/* 모달 밖 영역 */}
-        <S.Background onClick={handleModalStateChange}></S.Background>
-
-        {/* 모달 안 영역 */}
         <S.ContentBox>
           <S.ComponentWrap>
             <UploadForm></UploadForm>

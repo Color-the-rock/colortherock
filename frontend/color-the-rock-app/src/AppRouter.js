@@ -46,7 +46,7 @@ const AppRouter = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/board/regist" element={<BoardRegist />} />
         <Route path="/board/detail/:id" element={<BoardDetail />} />
-        <Route path="/oauth" element={<Oauth />} />
+        <Route path="/login/oauth2/code/kakao" element={<Oauth />} />
         <Route path="/streaming/:streamingId" element={<Streaming />} />
         <Route path="/streaming/regist" element={<StreamingForm />} />
         <Route path="preview" element={<Preview />} />

@@ -7,7 +7,7 @@ export const ContainerWrap = styled.div`
   top: 0px;
   bottom: 0px;
   z-index: 1000;
-  background-color: transparent;
+  background-color: var(--color-dark);
 `;
 
 export const Container = styled.div`
@@ -18,25 +18,7 @@ export const Container = styled.div`
   justify-content: center;
 `;
 
-export const Background = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: calc(40%);
-  left: 0;
-  right: 0;
-  width: 100vw;
-  height: 100%;
-  z-index: 1000;
-  opacity: 30%;
-  background-color: var(--color-dark);
-`;
-
 export const ContentBox = styled.div`
-  border-radius: 10px;
-  background-color: var(--color-dark);
-  background-color: white;
-  border-radius: 20px;
-  z-index: 3000;
   width: calc(100% - 32px);
   max-width: 600px;
   display: flex;

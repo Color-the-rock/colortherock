@@ -3,18 +3,34 @@ import * as S from "./style";
 import KakaoBtn from "../../assets/img/LogIn/kakao-login.png";
 import GoogleBtn from "../../assets/img/LogIn/google-login.png";
 import { Mobile, Desktop } from "../../components/layout/Template";
-import { KAKAO_AUTH_URL } from "./Kakao";
-import { GOOGLE_AUTH_URL } from "./Google";
+// import { KAKAO_AUTH_URL } from "./Kakao";
+// import { GOOGLE_AUTH_URL } from "./Google";
 import AppLogo from "../../assets/img/common/app-logo.png";
 import Header from "../../components/layout/Header";
 import { useNavigate } from "react-router-dom";
 import { VscChromeClose } from "react-icons/vsc";
 import AppLogo2 from "../../assets/img/common/web-logo.png";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
   const onClickHandler = () => {
     navigate("/");
+  };
+
+  const LoginHandler = () => {
+    axios({
+      method: "get",
+      url: "https://colortherock.com/oauth2/authorization/kakao",
+    })
+      .then((res) => {
+        console.log("res: ", res);
+        console.log("성공");
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+        console.log("실패");
+      });
   };
 
   return (
@@ -58,14 +74,24 @@ const Login = () => {
             <S.LogoContainer>
               <S.LogoImg src={AppLogo} alt="app logo"></S.LogoImg>
               <S.SecondLogo>{`Color the Rock,\nColor your Rock!`}</S.SecondLogo>
+              <button
+                onClick={LoginHandler}
+                style={{
+                  color: "white",
+                  height: "20px",
+                  width: "30px",
+                }}
+              >
+                버튼
+              </button>
             </S.LogoContainer>
 
             <S.LoginContainer>
-              <S.LoginWrap href={GOOGLE_AUTH_URL}>
-                <img src={GoogleBtn} alt="Google Loin Btn" />
-              </S.LoginWrap>
-              <S.LoginWrap href={KAKAO_AUTH_URL}>
+              <S.LoginWrap href="https://colortherock.com/oauth2/authorization/kakao">
                 <img src={KakaoBtn} alt="Kakao login Btn" />
+              </S.LoginWrap>
+              <S.LoginWrap href="https://colortherock.com/oauth2/authorization/google">
+                <img src={GoogleBtn} alt="Google Loin Btn" />
               </S.LoginWrap>
             </S.LoginContainer>
           </S.ContentWrap>

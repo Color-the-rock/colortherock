@@ -5,7 +5,6 @@ input[type="date"] {
   font-size: 14px;
   font-family: "Noto Sans KR";
   color: var(--color-secondary);
-  color: var(--color-tertiary);
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
