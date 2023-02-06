@@ -98,9 +98,9 @@ public class VideoCommentService {
                 .map(vc -> MyCommentListResponse.builder()
                         .commentId(vc.getId())
                         .videoBoardId(vc.getVideoBoard().getId())
-                        .nickname(vc.getMember().getNickname())
+                        .title(vc.getVideoBoard().getTitle())
                         .content(vc.getContent())
-                        .createdDate(vc.getCreatedDate())
+                        .createdDate(vc.getCreatedDate().toLocalDate())
                         .build()).collect(Collectors.toList());
     }
 
