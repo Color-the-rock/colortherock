@@ -1,58 +1,41 @@
-import React, { useEffect } from 'react';
-// import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { setPendingLogin, setLogin } from "../../stores/users/userSlice";
 
 export default function Oauth() {
   const navigate = useNavigate();
-  
+  const dispatch = useDispatch();
+  const [cookies, setCookie] = useCookies(["refreshToken"]);
+
+  //  refresh , access , email , registraionId, nickname.
+  // email, registraionId
   useEffect(() => {
-    const code = new URL(window.location.href).searchParams.get('code');
-    console.log("code: ", code);
-    navigate('/signup');
+    console.log("Oauth Page");
+    const params = new URL(window.location.href).searchParams;
 
-  })
-  // const parseHash = new URLSearchParams(window.location.hash.substring(1));
-  // const accessToken = parseHash.get("access_token");
-  // console.log("parseHash: ", parseHash);
-  // console.log("url: ", new URL(window.location.href));
- 
+    console.log("params :", params);
 
-  // const getToken = async () => {
-  //   try {
-  //     console.log("요청보냄")
-      // const refreshToken = sessionStorage.getItem("refreshToken");
-      // const res = await axios.get(`_____`, {
-      //   headers: {'refreshToken': refreshToken },
-      // });
-  //     const accessToken = res.headers.authorization.accessToken;
-  //     const refleshToken = res.headers.authorization.refleshToken;
-  //     const expiredTime = res.data.curtime;
-  //     window.sessionStorage.setItem('AccessToken', accessToken);
-  //     window.sesisonStorate.setItem('refleshToken', refleshToken);
-  //     window.sessionStorage.setItem('expiredTime', expiredTime);
-  //          
-  //
-              // nickname을 받아오는 요청을 보내고,
-              // nickname이 없으면 nickname 설정 페이지로 이동하고,
-              // nickname이 있으면 Intro 페이지로 이동하는 코드를 작성하는 부분.
-  //
-  //            
-  //     navigate('/');
-  //   } catch (e) {
-  //     console.error(e);
-  //     navigate('/');
-  //   }
-  // }
+    const nickName = params.get("nickName");
+    const email = params.get("email");
+    const registraionId = params.get("registraionId");
 
-  // useEffect(() => {
-  //   getToken();
-  // }, []);
+    if (nickName === null) {
+      //로그인 상태관리
+      dispatch(setPendingLogin({ email, registraionId }));
+      navigate("/signup");
+    } else {
+      // 로그인 상태관리
+      dispatch(setLogin({ nickName, email, registraionId }));
 
+      const accessToken = params.get("accessToken");
+      const refreshToken = params.get("refreshToken");
+      sessionStorage.setItem("accessToken", accessToken);
+      setCookie(refreshToken);
+      navigate("/");
+    }
+  }, []);
 
-  return (
-    <div>
-      로그인 중입니다.
-    </div>
-  )
+  return <div>로그인 중입니다.</div>;
 }

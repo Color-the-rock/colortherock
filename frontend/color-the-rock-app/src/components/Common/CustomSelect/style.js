@@ -50,6 +50,10 @@ export const SelectOption = styled.ul`
   color: #ffffff;
   transition: 0.2s ease-in;
   overflow: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
   /* 추가 */
   z-index: 1;

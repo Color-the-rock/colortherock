@@ -11,11 +11,11 @@ import Thumbnail from "../../../components/Common/Thumbnail";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll";
 import Header from "../../../components/layout/Header";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
-
 import { defaultInstance } from "../../../api/utils";
 import requests from "../../../api/board";
 import { FiSettings } from "react-icons/fi";
 
+import TestVideo from "../../../assets/video/test.mp4";
 const dummy = [
   {
     id: 1,
@@ -123,7 +123,6 @@ const BoardDetail = () => {
             {/* 비디오 */}
             {/* <S.VideoWrap>
           </S.VideoWrap> */}
-            {/* <S.Settings ></S.Settings> */}
             <FiSettings className="fiSettings" />
             <S.Video controls>
               <source

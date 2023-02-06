@@ -5,6 +5,11 @@
   props
   : video => 녹화한 영상
   : handleModalStateChange => Modal on/off
+
+  할 일
+  : 등록요청
+  : video validation check
+  : 상태 관리
 */
 
 import * as S from "./style";
@@ -16,6 +21,7 @@ import RegistBtn from "../../Board/RegistBtn";
 import { registfuc } from "../../../api/streaming";
 import { Form, useNavigate } from "react-router-dom";
 import BoardApi from "../../../api/board";
+
 const levelValues = [
   { key: "난이도 레벨", value: "" },
   { key: "LEVEL1", value: "level-1" },
@@ -52,20 +58,30 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
 
   const registVideoToS3 = () => {
     let formData = new FormData();
-    const data = {
+    const localSuccessVideoUploadRequest = {
       color,
       level,
       isSuccess,
     };
-    formData.append("aa", "aa");
-    formData.append("file", "file");
-    formData.append("data", data);
+    formData.append("newVideo", "file");
+    formData.append(
+      "localSuccessVideoUploadRequest",
+      JSON.stringify(localSuccessVideoUploadRequest)
+    );
 
     console.log("잘만든건가?");
-    console.log("formData: ", formData);
-    // useEffect(() => {
-    //   console.log("formData: ", formData);
-    // }, [formdata]);
+    console.log("formData file: ", formData.get("newVideo"));
+
+    console.log(
+      "formData data: ",
+      formData.get("localSuccessVideoUploadRequest")
+    );
+
+    const data = {
+      storeId: 0,
+      color: "red",
+      gymName: "bouldering",
+    };
 
     BoardApi.postRegisterLocalVideo(FormData)
       .then(() => {
@@ -82,13 +98,9 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
   return (
     <S.ContainerWrap>
       <S.Container>
-        {/* 모달 밖 영역 */}
-        <S.Background onClick={handleModalStateChange}></S.Background>
-
-        {/* 모달 안 영역 */}
         <S.ContentBox>
           <S.ComponentWrap>
-            <UploadForm></UploadForm>
+            <UploadForm video={video}></UploadForm>
           </S.ComponentWrap>
           <S.SelectButtonWrap>
             <S.selectBtnContent>

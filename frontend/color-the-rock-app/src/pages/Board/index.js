@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Thumbnail from "../../components/Common/Thumbnail";
 import Title from "../../components/Common/Title";
 import * as S from "./style";
@@ -48,11 +48,15 @@ const dummy = [
 ];
 
 const Board = () => {
+  const [searchLocation, setSearchLocation] = useState("");
   return (
     <S.Container>
       <Title>완등 영상 보기</Title>
       <S.Description>완등 영상을 게시하고 피드백을 받아보세요!</S.Description>
-      <BoardSearchBar />
+      <BoardSearchBar
+        searchLocation={searchLocation}
+        setSearchLocation={setSearchLocation}
+      />
       {/* list */}
       {dummy && dummy.length > 0 ? (
         <S.ThumbnailList>

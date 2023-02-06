@@ -19,6 +19,7 @@
     "react": "^18.2.0",
     "react-calendar": "^4.0.0",
     "react-chartjs-2": "^5.2.0",
+    "react-cookie": "^4.1.1",
     "react-datepicker": "^4.8.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
@@ -28,6 +29,7 @@
     "react-router-dom": "^6.6.2",
     "react-scripts": "5.0.1",
     "react-webcam": "^7.0.1",
+    "redux-persist": "^6.0.0",
     "styled-components": "^5.3.6",
     "styled-reset": "^4.4.5",
     "web-vitals": "^2.1.4"
