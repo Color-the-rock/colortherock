@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
+import org.anotherclass.colortherock.domain.member.request.DuplicateNicknameRequest;
 import org.anotherclass.colortherock.domain.member.request.MemberSignUpRequest;
 import org.anotherclass.colortherock.domain.member.request.ReGenerateAccessTokenRequest;
 import org.anotherclass.colortherock.domain.member.response.MemberSignUpResponse;
@@ -19,6 +20,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @RestController
 @Tag(name = "member", description = "Member API")
@@ -61,8 +64,10 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "닉네임 중복 검사 통과"),
             @ApiResponse(responseCode = "400", description = "닉네임 중복 검사 실패"),
     })
-    public BaseResponse<?> duplicateNickname(@RequestBody String nickname) {
-        Boolean isDuplicate = memberService.duplicateNickname(nickname);
+    public BaseResponse<?> duplicateNickname(@Valid
+                                             @RequestBody
+                                             DuplicateNicknameRequest request) {
+        Boolean isDuplicate = memberService.duplicateNickname(request.getNickname());
         return new BaseResponse<>(isDuplicate);
     }
 
