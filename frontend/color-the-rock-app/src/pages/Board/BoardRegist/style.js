@@ -74,19 +74,23 @@ export const selectBtnContent = styled.span`
   grid-gap: 1rem;
 `;
 
-export const PickDate = styled.input`
-  background-color: #0080ff;
+export const UploadVideoWrap = styled.span`
+  height: 35vh;
+  width: 100%;
+  min-width: 328px;
+  max-width: 600px;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  margin-bottom: 8px;
+  background-color: #000000;
+  display: flex;
+  justify-content: center;
 
-  &::before {
-  }
-
-  &::after {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  video {
+    width: auto;
+    height: 100%;
   }
 `;
-
 // import styled from "styled-components";
 
 // export const ContainerWrap = styled.div`

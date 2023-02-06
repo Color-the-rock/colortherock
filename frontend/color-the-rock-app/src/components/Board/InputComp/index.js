@@ -10,6 +10,7 @@ const InputComp = ({ title, placeholder, handleChange, opacity = "100" }) => {
         placeholder={placeholder}
         defaultValue={title}
         onChange={handleChange}
+        maxLength="20"
       />
     </S.Container>
   );

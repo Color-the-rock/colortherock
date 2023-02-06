@@ -100,7 +100,7 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
       <S.Container>
         <S.ContentBox>
           <S.ComponentWrap>
-            <UploadForm></UploadForm>
+            <UploadForm video={video}></UploadForm>
           </S.ComponentWrap>
           <S.SelectButtonWrap>
             <S.selectBtnContent>

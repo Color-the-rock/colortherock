@@ -32,39 +32,39 @@ instance.interceptors.response.use(
     // error에 담겨있는 config와 response 구조 분해 할당
 
     // 여기 코드 수정 error는 모두 400으로 날아옴...
-    const {
-      config,
-      response: { status },
-    } = error;
+    // const {
+    //   config,
+    //   response: { status },
+    // } = error;
 
-    // token 만료시 401 error
-    if (status === 401) {
-      const originalRequest = config;
-      const refreshToken = await sessionStorage.getItem("refreshToken");
+    // // token 만료시 401 error
+    // if (status === 401) {
+    //   const originalRequest = config;
+    //   const refreshToken = await sessionStorage.getItem("refreshToken");
 
-      // refreshToken이 있는 경우에만 재요청 시도
-      if (refreshToken) {
-        // token refresh 요청
-        const token = sessionStorage.getItem("token");
-        const data = await axios.post(
-          `https://colortherock.com/refresh`, // token refresh api
-          {
-            accessToken: `Bearer ${token}`,
-            refreshToken: `Bearer ${refreshToken}`,
-          },
-          {
-            // header에 넣지?? 흠....
-            "Content-Type": "application/json",
-          }
-        );
+    //   // refreshToken이 있는 경우에만 재요청 시도
+    //   if (refreshToken) {
+    //     // token refresh 요청
+    //     const token = sessionStorage.getItem("token");
+    //     const data = await axios.post(
+    //       `https://colortherock.com/refresh`, // token refresh api
+    //       {
+    //         accessToken: `Bearer ${token}`,
+    //         refreshToken: `Bearer ${refreshToken}`,
+    //       },
+    //       {
+    //         // header에 넣지?? 흠....
+    //         "Content-Type": "application/json",
+    //       }
+    //     );
 
-        const accessToken = data;
-        await sessionStorage.setItem(["accessToken", accessToken]);
+    //     const accessToken = data;
+    //     await sessionStorage.setItem(["accessToken", accessToken]);
 
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        return axios(originalRequest);
-      }
-    }
+    //     originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+    //     return axios(originalRequest);
+    //   }
+    // }
 
     console.log("response error", error);
     return Promise.reject(error);

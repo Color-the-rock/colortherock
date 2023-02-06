@@ -3,24 +3,40 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     nickName: "",
-    isLogin: false,
+    registrationId: "",
     email: "",
+    fulfilled: false,
   },
   reducers: {
-    setNickName: (state, action) => {
-      state.NickName += action.payload;
+    // 로그인 진행중 상황
+    setPendingLogin: (state, action) => {
+      state.email = action.payload.email;
+      state.registrationId = action.payload.registrationId;
+      state.fulfilled = false;
     },
-    LogIn: (state, action) => {
+    // 미완료 로그인 진행
+    setfulfilledLogin: (state, action) => {
+      state.email = action.payload.nickName;
+      state.fulfilled = true;
+    },
+    // 로그인 완료
+    setLogin: (state, action) => {
       state.nickName = action.payload.nickName;
-      state.isLogin = true;
+      state.email = action.payload.email;
+      state.registrationId = action.payload.registrationId;
+      state.fulfilled = true;
     },
+    // 로그아웃
     LogOut: (state) => {
       state.nickName = "";
-      state.isLogin = false;
+      state.email = "";
+      state.registrationId = "";
+      state.fulfilled = false;
     },
   },
 });
 
-export const { setUserName, LogIn, LogOut } = userSlice.actions;
+export const { setPendingLogin, setfulfilledLogin, setLogin, LogOut } =
+  userSlice.actions;
 
 export default userSlice.reducer;

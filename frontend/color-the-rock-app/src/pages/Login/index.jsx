@@ -3,14 +3,13 @@ import * as S from "./style";
 import KakaoBtn from "../../assets/img/LogIn/kakao-login.png";
 import GoogleBtn from "../../assets/img/LogIn/google-login.png";
 import { Mobile, Desktop } from "../../components/layout/Template";
-// import { KAKAO_AUTH_URL } from "./Kakao";
-// import { GOOGLE_AUTH_URL } from "./Google";
 import AppLogo from "../../assets/img/common/app-logo.png";
 import Header from "../../components/layout/Header";
 import { useNavigate } from "react-router-dom";
 import { VscChromeClose } from "react-icons/vsc";
-import AppLogo2 from "../../assets/img/common/web-logo.png";
 import axios from "axios";
+
+import KAKAO_AUTH_URL from "./Kakao";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -50,7 +49,6 @@ const Login = () => {
                 <div>Color your Rock!</div> */}
               </S.SecondLogo>
             </S.LogoContainer>
-
             <S.LoginContainer>
               <S.LoginWrap href="https://colortherock.com/oauth2/authorization/kakao">
                 <img src={KakaoBtn} alt="Kakao login Btn" />
@@ -88,6 +86,7 @@ const Login = () => {
 
             <S.LoginContainer>
               <S.LoginWrap href="https://colortherock.com/oauth2/authorization/kakao">
+                {/* <S.LoginWrap href={KAKAO_AUTH_URL}> */}
                 <img src={KakaoBtn} alt="Kakao login Btn" />
               </S.LoginWrap>
               <S.LoginWrap href="https://colortherock.com/oauth2/authorization/google">

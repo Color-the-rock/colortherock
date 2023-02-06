@@ -1,27 +1,16 @@
 import React, { useState } from "react";
 import * as S from "./style";
-import { Desktop, Mobile } from "../../../components/layout/Template";
-import Header from "../../../components/layout/Header";
+import { useNavigate } from "react-router-dom";
+
 import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
 import UploadForm from "../../../components/Board/UploadForm";
 import KakaoKeywordSearch from "../../../components/Common/KakaoKeywordSearch/SearchBar";
 import RegistBtn from "../../../components/Board/RegistBtn";
-import { useNavigate } from "react-router-dom";
 import CustomSelect from "../../../components/Common/CustomSelect";
 import CustomCalendar from "../../../components/Board/CustomCalendar";
-
-import "react-datepicker/dist/react-datepicker.css";
-import "react-datepicker/dist/react-datepicker-cssmodules.css";
-
-import { ko } from "date-fns/esm/locale";
 import BoardRadioBtn from "../../../components/Board/BoardRadioBtn/index";
-
-// ------------- test ----------------------//
-import RecordVideoFormModal from "../../../components/Streaming/RecordVideoFormModal";
-import ModifyRoomSettingModal from "../../../components/Streaming/ModifyRoomSettingModal";
-import FeedbackModal from "../../../components/Streaming/FeedbackModal";
-// ----------------------------------------------------------------- //
+import { recordApi } from "../../../api/record";
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
@@ -33,6 +22,7 @@ const levelValues = [
   { key: "LEVEL6", value: "level-6" },
   { key: "LEVEL7", value: "level-7" },
 ];
+
 const colorValues = [
   { key: "난이도 색상", value: "" },
   { key: "빨강", value: "red" },
@@ -47,76 +37,54 @@ const colorValues = [
 
 const RecordForm = () => {
   const navigate = useNavigate();
-  const [title, setTitle] = useState();
-  const [location, setLocation] = useState("");
+
+  const [video, setVideo] = useState();
   const [level, setLevel] = useState("");
   const [color, setColor] = useState("");
-  // const [startDate, setStartDate] = useState(new Date());
+  const [location, setLocation] = useState("");
   const [selectDate, setSelectDate] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
 
-  /////////////////////////// test ////////////////////////////////
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalOpen2, setModalOpen2] = useState(false);
-  const [modalOpen3, setModalOpen3] = useState(false);
-
-  const handleModalStateChange = () => {
-    setModalOpen((prev) => !prev);
-  };
-
-  const handleModalStateChange2 = () => {
-    setModalOpen2((prev) => !prev);
-  };
-
-  const handleModalStateChange3 = () => {
-    setModalOpen3((prev) => !prev);
-  };
-  //////////////////////////////////////////////////////////////////
-
-  console.log("selectDate: ", selectDate);
-  console.log(typeof selectDate);
   const clickHandler = () => {
     navigate("/record");
   };
 
   const submitHandler = () => {
-    navigate("/record");
-  };
+    if (!video || !level || !color || !location || !selectDate || !isSuccess) {
+      alert("빈칸채워라  등록안해준다.");
+      return;
+    }
 
-  const check = () => {
-    const val = document.getElementById("dd");
-    console.log(val.value);
-  };
-  const handler = (e) => {
-    // console.log(e.target.value);
-    setSelectDate(e.target.value);
-    // setStartDate(e.target.value);
-    console.log(selectDate);
+    const data = {
+      level,
+      color,
+      gymName: location,
+      shootingTime: selectDate,
+      isSuccess,
+    };
+
+    const json = JSON.stringify(data);
+    const blob = new Blob([json], { type: "application/json" });
+
+    const formData = new FormData();
+    formData.append("uploadVideoRequest", blob);
+    formData.append("newVideo", video);
+
+    // recordApi.uploadLocalVideo(formData)
+    // .then((res) => {
+    //   console.log("res", res);
+    //   console.log("성공");
+    // })
+    // .catch((err) => {
+    //   console.log("err: ", err);
+    //   console.log("실패");
+    // });
+
+    navigate("/record");
   };
 
   return (
     <S.ContainerWrap>
-      {/* ---------------------모달 테스트 중입니다.-------------------- */}
-      {modalOpen && (
-        <RecordVideoFormModal
-          onClick={handleModalStateChange}
-          setModalOpen={setModalOpen}
-        />
-      )}
-      {modalOpen2 && (
-        <FeedbackModal
-          onClick={handleModalStateChange2}
-          setModalOpen={setModalOpen2}
-        />
-      )}
-      {modalOpen3 && (
-        <RecordVideoFormModal
-          onClick={handleModalStateChange3}
-          setModalOpen={setModalOpen3}
-        />
-      )}
-
-      {/* ------------------------------------------------------------- */}
       <S.Container>
         <S.ContentWrap>
           <S.Content>
@@ -128,7 +96,7 @@ const RecordForm = () => {
             </S.ComponenentWrap>
 
             <S.ComponenentWrap>
-              <UploadForm></UploadForm>
+              <UploadForm video={video} setVideo={setVideo}></UploadForm>
             </S.ComponenentWrap>
 
             <S.ComponenentWrap>
@@ -144,8 +112,8 @@ const RecordForm = () => {
 
             <S.SelectButtonWrap>
               <S.selectBtnContent>
-                <CustomSelect optionValues={levelValues} />
-                <CustomSelect optionValues={colorValues} />
+                <CustomSelect setter={setLevel} optionValues={levelValues} />
+                <CustomSelect setter={setColor} optionValues={colorValues} />
               </S.selectBtnContent>
             </S.SelectButtonWrap>
 
@@ -162,31 +130,6 @@ const RecordForm = () => {
                 location={location}
                 setLocation={setLocation}
               />
-            </S.ComponenentWrap>
-
-            <S.ComponenentWrap>
-              <button
-                onClick={handleModalStateChange}
-                style={{
-                  fontSize: "20px",
-                  color: "white",
-                  border: "1px solid white",
-                  margin: "1rem",
-                }}
-              >
-                영상 등록 모달
-              </button>
-              <button
-                onClick={handleModalStateChange2}
-                style={{
-                  fontSize: "20px",
-                  color: "white",
-                  border: "1px solid white",
-                  margin: "1rem",
-                }}
-              >
-                영상 수정 모달
-              </button>
             </S.ComponenentWrap>
 
             <S.ComponenentWrap>

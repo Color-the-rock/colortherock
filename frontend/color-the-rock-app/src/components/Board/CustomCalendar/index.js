@@ -3,7 +3,11 @@ import * as S from "./style";
 import PropTypes from "prop-types";
 import "./calendar.css";
 
-const CustomCalendar = ({ selectDate, setSelectDate }) => {
+const CustomCalendar = ({
+  placeholder = "날짜 선택",
+  selectDate,
+  setSelectDate,
+}) => {
   const [maxDate, setMaxDate] = useState("");
 
   useEffect(() => {
@@ -21,7 +25,7 @@ const CustomCalendar = ({ selectDate, setSelectDate }) => {
     <div className="input_date_box">
       <input
         type="date"
-        data-placeholder="날짜 선택"
+        data-placeholder={placeholder}
         required
         style={{
           color: "var(--color-secondary)",

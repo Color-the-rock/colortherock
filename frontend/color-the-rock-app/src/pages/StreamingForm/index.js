@@ -71,6 +71,7 @@ const StreamingForm = () => {
   //////////////////////////////////////////////////////////////////
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
@@ -80,15 +81,6 @@ const StreamingForm = () => {
   const [isPublic, setIsPublic] = useState(true);
   const [title, setTitle] = useState("");
   const [gymName, setGymName] = useState("");
-
-  const startStreaming = () => {
-    // 여기서 axios 요청 보내고 sessionId를 받아서 방생성
-    // navigate("/streaming");
-  };
-  const [level, setLevel] = useState("");
-  const [color, setColor] = useState("");
-  const [location, setLocation] = useState("");
-  const dispatch = useDispatch();
 
   const clickHandler = () => {
     navigate("/streaming");
@@ -100,6 +92,17 @@ const StreamingForm = () => {
   };
 
   const submitHandler = () => {
+    const data = {
+      isPublic,
+      gymName,
+      title,
+    };
+
+    // ----------------------------------------------- //
+    //api /api/live 요청 보내기
+    // 올바른 응답일 떄는 joinSsession 및 라이브 페이지로 이동...
+    // ---------------------------------------------- //
+
     joinSession();
     navigate("/streaming/live/1");
   };

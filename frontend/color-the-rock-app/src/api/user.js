@@ -12,8 +12,8 @@ const UserApi = {
   CheckNickname: ({ nickName }) =>
     defaultInstance.post("/duplicateNickname", nickName),
 
-  // 회원가입 마무리
-  finishSignup: "/member/signup",
+  // 회원가입 API
+  SignUp: (data) => defaultInstance.post("/member/signup", data),
 };
 
 export default UserApi;

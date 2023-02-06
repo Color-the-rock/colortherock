@@ -8,6 +8,7 @@ const CustomSelect = ({ setter, optionValues }) => {
   const handleChangeOption = (e) => {
     // console.log("e: ", e.target.__reactProps$lwgv3va7748.value);
     setCurrentOption(e.target.innerText);
+    setter(e.target.innerText);
     // setter(e.target.__reactProps$lwgv3va7748.value);
     setShowOption(!showOption);
   };
