@@ -15,6 +15,7 @@ public enum GlobalErrorCode {
     METHOD_NOT_ALLOWED(405, "G200", "허용되지 않은 메서드입니다"),
     VALID_EXCEPTION(400, "G300", ""),
     ACCESS_DENIED(401, "G400", "허용되지 않은 사용자입니다"),
+    TOKEN_EXPIRED(401, "G500", "토큰이 만료되었습니다."),
     // 멤버와 관련된 Exception
     DUPLICATE_NICKNAME(400, "M100", "중복 닉네임 입니다"),
     INCORRECT_ADMIN_INFO(401, "M200", "관리자 로그인 정보가 틀렸습니다."),
