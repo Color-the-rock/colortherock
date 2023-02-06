@@ -1,11 +1,11 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  height: 10vh;
+  height: calc(var(--vh, 1vh) * 10);
   margin-top: 1rem;
   background-color: transparent;
-`
+`;
 
 export const IconWrap = styled.div`
   display: flex;
@@ -14,4 +14,4 @@ export const IconWrap = styled.div`
   align-items: center;
   background-color: transparent;
   font-size: 2rem;
-`
+`;

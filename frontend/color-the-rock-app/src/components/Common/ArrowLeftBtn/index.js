@@ -5,8 +5,8 @@ import { FiArrowLeft } from "react-icons/fi";
 const ArrowLeftBtn = ({ clickHandler }) => {
   return (
     <S.Container>
-      <S.IconWrap onClick={clickHandler}>
-        <FiArrowLeft />
+      <S.IconWrap>
+        <FiArrowLeft onClick={clickHandler} />
       </S.IconWrap>
     </S.Container>
   );

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 
 // url 설정 수정 필요
 const BASE_URL = "https://colortherock.com/api";

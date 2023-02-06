@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import * as S from "./style";
 const MyComment = ({ title, content, createdDate }) => {
   return (
@@ -13,3 +14,9 @@ const MyComment = ({ title, content, createdDate }) => {
 };
 
 export default MyComment;
+
+MyComment.propTypes = {
+  title: PropTypes.string,
+  content: PropTypes.string,
+  createdDate: PropTypes.string,
+};

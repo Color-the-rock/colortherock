@@ -1,46 +1,25 @@
-import React, { useState } from "react";
+import React from "react";
 import * as S from "./style";
 import Title from "../../components/Common/Title";
 import { useInput } from "../../hooks/useInput";
 import MyPost from "../../components/Mypage/MyPost";
 import MyCommentList from "../../components/Mypage/MyCommentList";
+import { useSelector } from "react-redux";
 
 const MyPage = () => {
-  const [userNickName, onChangeUserNickName] = useInput("김싸피");
+  const userNickName = useSelector((state) => state.user.nickName);
   const [radioValue, onChangeRadioButton] = useInput("post");
-  const [isUpdate, setUpdate] = useState(false);
 
   return (
     <S.Container>
       <Title>마이페이지</Title>
-      {isUpdate ? (
-        <S.InfoWrapper>
-          <S.NicknameInput
-            type="text"
-            defaultValue={userNickName}
-            onChange={onChangeUserNickName}
-          />
-          <S.ButtonWrapper>
-            <S.TextButton onClick={() => setUpdate((prev) => !prev)}>
-              저장
-            </S.TextButton>
-            <S.TextButton onClick={() => setUpdate((prev) => !prev)}>
-              취소
-            </S.TextButton>
-          </S.ButtonWrapper>
-        </S.InfoWrapper>
-      ) : (
-        <S.InfoWrapper>
-          <span>
-            <S.Text>안녕하세요:)</S.Text>
-            <S.NickName>{userNickName}</S.NickName>
-            <S.Text>님</S.Text>
-          </span>
-          <S.TextButton onClick={() => setUpdate((prev) => !prev)}>
-            수정
-          </S.TextButton>
-        </S.InfoWrapper>
-      )}
+
+      <S.InfoWrapper>
+        <span>
+          <S.NickName>{userNickName ? userNickName : "사용자"}</S.NickName>
+          <S.Text>님, 안녕하세요:)</S.Text>
+        </span>
+      </S.InfoWrapper>
 
       <S.RadioGroup>
         <S.RadioLabel checked={radioValue === "post"}>
