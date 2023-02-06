@@ -4,7 +4,7 @@ export const Container = styled.span`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 36px;
+  height: 2.625rem;
   width: 100%;
   background: #272727;
   border-radius: 20px;
@@ -16,6 +16,7 @@ export const InputBtn = styled.input`
   background-color: transparent;
   border: none;
   width: 80%;
+  height: 100%;
   padding-left: 1rem;
   color: white;
 `;

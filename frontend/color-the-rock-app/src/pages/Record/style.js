@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { HiOutlinePlusSm } from "react-icons/hi";
-
+import { MdInfo } from "react-icons/md";
 export const Container = styled.div`
   width: 100%;
   height: 100vh;
@@ -119,8 +119,29 @@ export const UploadButton = styled(Link)`
   align-items: center;
 `;
 
-// Desktop CSS
+export const InfoWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  z-index: 100;
+`;
+export const InfoButton = styled(MdInfo)`
+  align-self: center;
+  margin-left: 0.25rem;
+  font-size: 1.3rem;
+  color: var(--color-secondary);
+`;
 
+export const InfoGuideImg = styled.img`
+  position: absolute;
+  top: 0px;
+  left: 152px;
+  width: 200px;
+  height: 190px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+`;
+
+// Desktop CSS
 export const ContentWrapper = styled.div`
   width: 100%;
   display: flex;

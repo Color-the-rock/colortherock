@@ -66,9 +66,7 @@ export const HomeGymGraph = styled.div`
   height: 1.6rem;
   border-radius: 2rem;
   background-color: ${(props) =>
-    props.isResult === 0
-      ? "var(--color-border)"
-      : "var(--color-brand-gradient-end)"};
+    props.isResult === 0 ? "var(--color-border)" : "var(--color-brand-shade)"};
   margin-bottom: 1rem;
 `;
 

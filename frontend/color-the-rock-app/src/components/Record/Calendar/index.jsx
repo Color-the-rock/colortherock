@@ -12,26 +12,22 @@ const CustomCalendar = () => {
   const date = useSelector((state) => state.record.currentDate);
   const [markers, setMarkers] = useState([]); // 컬러 마커 데이터
   const [prevYearMonth, setPrevYearMonth] = useState(new Date()); // 이전 호출 값 저장
+
+  // 달력의 날짜가 변경된 경우 처리
   const handleOnChange = (e) => {
     if (
-      moment(e).format("YYYY-MM") === moment(prevYearMonth).format("YYYY-MM")
+      moment(e).format("YYYY-MM") !== moment(prevYearMonth).format("YYYY-MM")
     ) {
-      console.log("같음");
-    } else {
-      console.log("다름");
-      getCalendarData();
       dispatch(setCurrentDate(e));
     }
+    getCalendarData(e);
   };
 
-  const getCalendarData = () => {
-    console.log("getCalendarData()... ? ", date);
-    console.log("date format? ", moment(date).format("YYYY-MM"));
+  const getCalendarData = (e) => {
     recordApi
-      .getCalendarData(moment(date).format("YYYY-MM"))
+      .getCalendarData(moment(e).format("YYYY-MM"))
       .then(({ data: { status, result } }) => {
         if (status === 200) {
-          console.log("success!");
           setMarkers(result);
           setPrevYearMonth(date);
         }
@@ -42,10 +38,6 @@ const CustomCalendar = () => {
   useEffect(() => {
     getCalendarData();
   }, []);
-
-  useEffect(() => {
-    console.log("Dddd", markers);
-  }, [markers]);
 
   return (
     <S.Container>
