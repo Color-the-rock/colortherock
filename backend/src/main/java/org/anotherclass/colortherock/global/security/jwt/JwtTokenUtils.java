@@ -6,8 +6,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.exception.AccessDeniedException;
+import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.anotherclass.colortherock.global.redis.RefreshTokenRepository;
+import org.anotherclass.colortherock.global.security.exception.ExpiredJwtTokenException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +30,13 @@ public class JwtTokenUtils {
         map.put("email", member.getEmail());
         map.put("registrationId", member.getRegistrationId().name());
         map.put("id", member.getId());
+        map.put("roles", authorities);
+        return createTokens(map);
+    }
+
+    public String createTokens(String adminId, Collection<? extends GrantedAuthority> authorities) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("adminId", adminId);
         map.put("roles", authorities);
         return createTokens(map);
     }
@@ -66,7 +75,13 @@ public class JwtTokenUtils {
     }
 
     public Claims getAllClaims(String token) {
-        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        } catch(ExpiredJwtException e) {
+            throw new ExpiredJwtTokenException(GlobalErrorCode.TOKEN_EXPIRED);
+        } catch (Exception e) {
+            throw new GlobalBaseException(GlobalErrorCode.OTHER);
+        }
     }
 
     public boolean isExpired(String token) {
