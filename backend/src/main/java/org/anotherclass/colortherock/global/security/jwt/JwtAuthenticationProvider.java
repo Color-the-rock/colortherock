@@ -2,12 +2,14 @@ package org.anotherclass.colortherock.global.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.anotherclass.colortherock.domain.member.entity.AdminDetails;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -27,14 +29,21 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         Claims claims = jwtTokenUtils.getAllClaims(((JwtAuthenticationToken) authentication).getToken());
         Collection<? extends GrantedAuthority> grantedAuthorities = createGrantedAuthorities(claims);
 
-        MemberDetails memberDetails = new MemberDetails(Member.builder()
-                .email((String) claims.get("email"))
-                .id(Long.valueOf((Integer) claims.get("id")))
-                .registrationId(Member.RegistrationId.valueOf((String) claims.get("registrationId")))
-                .build());
+        String principal = (String) claims.get("email");
+        UserDetails userDetails = null;
+
+        if (principal != null) {
+            userDetails = new MemberDetails(Member.builder()
+                    .email((String) claims.get("email"))
+                    .id(Long.valueOf((Integer) claims.get("id")))
+                    .registrationId(Member.RegistrationId.valueOf((String) claims.get("registrationId")))
+                    .build());
+        } else {
+            userDetails = new AdminDetails((String) claims.get("adminId"));
+        }
 
         JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(grantedAuthorities, ((JwtAuthenticationToken) authentication).getToken());
-        jwtAuthenticationToken.setDetails(memberDetails);
+        jwtAuthenticationToken.setDetails(userDetails);
         jwtAuthenticationToken.setAuthenticated(true);
         return jwtAuthenticationToken;
     }

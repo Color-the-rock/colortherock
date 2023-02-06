@@ -59,5 +59,6 @@ public class VideoBoard extends BaseTime {
     public void changeToHidden() {
         this.isHidden = true;
     }
+    public void changeToPublic() { this.isHidden = false; }
 
 }
