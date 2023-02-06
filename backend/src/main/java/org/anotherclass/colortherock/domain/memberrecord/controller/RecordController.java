@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
-import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
 import org.anotherclass.colortherock.domain.memberrecord.exception.WrongMemberException;
 import org.anotherclass.colortherock.domain.memberrecord.response.*;
@@ -177,12 +176,12 @@ public class RecordController {
      * @return VisitListResponse의 List형태로 반환
      */
     @Operation(description = "암장 방문 통계 반환 메소드")
-    @ApiResponse(responseCode = "200", description = "방문 통계 반환 성공", content = @Content(schema = @Schema(implementation = VisitListResponse.class)))
+    @ApiResponse(responseCode = "200", description = "방문 통계 반환 성공", content = @Content(schema = @Schema(implementation = VisitListDto.class)))
     @GetMapping("/visit")
-    public BaseResponse<List<VisitListResponse>> getVisitList(@AuthenticationPrincipal MemberDetails memberDetails) {
+    public BaseResponse<VisitResponse> getVisitList(@AuthenticationPrincipal MemberDetails memberDetails) {
         Member member = memberDetails.getMember();
-        List<VisitListResponse> visitList = recordService.getVisitList(member);
-        return new BaseResponse<>(visitList);
+        VisitResponse visitResponse = recordService.getVisitList(member);
+        return new BaseResponse<>(visitResponse);
     }
 
     /**

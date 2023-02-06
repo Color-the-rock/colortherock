@@ -4,12 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class VisitListResponse {
+public class VisitListDto {
     private String gymName;
     private Long count;
 
     @Builder
-    public VisitListResponse(String gymName, Long count) {
+    public VisitListDto(String gymName, Long count) {
         this.gymName = gymName;
         this.count = count;
     }
