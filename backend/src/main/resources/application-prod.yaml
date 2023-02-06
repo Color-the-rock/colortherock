@@ -54,11 +54,15 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+notification:
+  mattermost:
+    enabled: true # mmSender를 사용할 지 여부, false면 알림이 오지 않는다
+    webhook-url: ${MM_WEBHOOK_URL} # 위의 Webhook URL을 기입
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true
     path: /api/swagger-ui.html
 OPENVIDU_URL: ${OPENVIDU_URL}
-OPENVIDU_SECRET: ${OPENVIDU_SECRET}
+OPENVIDU_SECRET : ${OPENVIDU_SECRET}
 RECORDING_PATH: ${RECORDING_PATH}
 CLOUDFRONT_URL: ${CLOUDFRONT_URL}
