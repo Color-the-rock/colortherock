@@ -9,28 +9,21 @@ export default function Oauth() {
   const dispatch = useDispatch();
   const [cookies, setCookie] = useCookies(["refreshToken"]);
 
-  //  refresh , access , email , registraionId, nickname.
-  // email, registraionId
   useEffect(() => {
     console.log("Oauth Page");
     const params = new URL(window.location.href).searchParams;
-
-    console.log("params :", params);
-
-    const nickName = params.get("nickName");
+    const nickname = params.get("nickname");
     const email = params.get("email");
-    const registraionId = params.get("registraionId");
+    const registrationId = params.get("registrationId");
 
-    if (nickName === null) {
-      //로그인 상태관리
-      dispatch(setPendingLogin({ email, registraionId }));
+    if (nickname === null) {
+      dispatch(setPendingLogin({ email, registrationId }));
       navigate("/signup");
     } else {
-      // 로그인 상태관리
-      dispatch(setLogin({ nickName, email, registraionId }));
+      dispatch(setLogin({ nickname, email, registrationId }));
 
-      const accessToken = params.get("accessToken");
-      const refreshToken = params.get("refreshToken");
+      const accessToken = params.get("access");
+      const refreshToken = params.get("refresh");
       sessionStorage.setItem("accessToken", accessToken);
       setCookie(refreshToken);
       navigate("/");

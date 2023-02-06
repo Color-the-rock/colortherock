@@ -15,21 +15,6 @@ const Login = () => {
     navigate("/");
   };
 
-  const LoginHandler = () => {
-    axios({
-      method: "get",
-      url: "https://colortherock.com/oauth2/authorization/kakao",
-    })
-      .then((res) => {
-        console.log("res: ", res);
-        console.log("성공");
-      })
-      .catch((err) => {
-        console.log("err: ", err);
-        console.log("실패");
-      });
-  };
-
   return (
     <div>
       <Desktop>
@@ -70,16 +55,6 @@ const Login = () => {
             <S.LogoContainer>
               <S.LogoImg src={AppLogo} alt="app logo"></S.LogoImg>
               <S.SecondLogo>{`Color the Rock,\nColor your Rock!`}</S.SecondLogo>
-              <button
-                onClick={LoginHandler}
-                style={{
-                  color: "white",
-                  height: "20px",
-                  width: "30px",
-                }}
-              >
-                버튼
-              </button>
             </S.LogoContainer>
 
             <S.LoginContainer>
