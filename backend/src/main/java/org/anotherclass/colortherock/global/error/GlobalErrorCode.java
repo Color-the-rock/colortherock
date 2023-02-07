@@ -19,6 +19,7 @@ public enum GlobalErrorCode {
     // 멤버와 관련된 Exception
     DUPLICATE_NICKNAME(400, "M100", "중복 닉네임 입니다"),
     INCORRECT_ADMIN_INFO(401, "M200", "관리자 로그인 정보가 틀렸습니다."),
+    USER_NOT_FOUND(400, "M300", "해당 id에 해당하는 사용자가 없습니다."),
     // 영상과 관련된 Exception
     VIDEO_NOT_FOUND(404, "V100", "해당 id에 해당하는 영상이 없습니다."),
     NOT_VIDEO_OWNER(400, "V200", "영상의 주인과 요청한 멤버가 다릅니다."),
@@ -37,7 +38,6 @@ public enum GlobalErrorCode {
 
     VIDEO_HAS_NOT_EXTENSION(400, "V101", "비디오 파일에 확장자가 존재하지 않습니다"),
     NOT_VIDEO_EXTENSION(400, "V102", "비디오 파일 확장자가 아닙니다");
-    // 영상과 관련된 Exception
 
     private final String code;
     private final String message;
