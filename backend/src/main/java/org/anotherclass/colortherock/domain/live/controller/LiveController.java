@@ -103,7 +103,7 @@ public class LiveController {
     @GetMapping("/live/{sessionId}/recording/list")
     public BaseResponse<?> recordingList(@PathVariable String sessionId) {
         List<RecordingListResponse> response = liveService.getRecordings(sessionId);
-        return new BaseResponse<>(response);
+        return new BaseResponse<>(response);}
 
     @Operation(description = "라이브 종료 API")
     @ApiResponses({
