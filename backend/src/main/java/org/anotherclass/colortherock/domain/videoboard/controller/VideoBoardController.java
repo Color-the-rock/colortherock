@@ -46,7 +46,7 @@ public class VideoBoardController {
     private final S3Service s3Service;
 
     @GetMapping("/board")
-    @Operation(description = "완등 영상 전체 리스트 조회 API")
+    @Operation(description = "완등 영상 전체 리스트 조회 API", summary = "완등 영상 전체 리스트 조회 API")
     @ApiResponse(responseCode = "200", description = "완등 영상 목록 조회 성공", content = @Content(schema = @Schema(implementation = VideoBoardSummaryResponse.class)))
     public BaseResponse<List<VideoBoardSummaryResponse>> getVideoList
             (VideoBoardSearchRequest condition) {
@@ -55,7 +55,7 @@ public class VideoBoardController {
     }
 
     @PostMapping(value = "/board/local", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    @Operation(description = "완등 영상 게시글 올리기(로컬 파일에서 영상 가져오기)")
+    @Operation(description = "완등 영상 게시글 올리기(로컬 파일에서 영상 가져오기)", summary = "완등 영상 게시글 올리기(로컬 파일에서 영상 가져오기)")
     @ApiResponse(responseCode = "200", description = "운동 영상 올리기 성공", content = @Content(schema = @Schema(implementation = Long.class)))
     public BaseResponse<Long> uploadSuccessPostFromLocalVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestPart LocalSuccessVideoUploadRequest localSuccessVideoUploadRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
         Member member = memberDetails.getMember();
@@ -80,7 +80,7 @@ public class VideoBoardController {
     }
 
     @PostMapping("/board")
-    @Operation(description = "완등 영상 게시글 올리기(내 운동기록 동영상에서 영상 가져오기)")
+    @Operation(description = "완등 영상 게시글 올리기(내 운동기록 동영상에서 영상 가져오기)", summary = "완등 영상 게시글 올리기(내 운동기록 동영상에서 영상 가져오기)")
     @ApiResponse(responseCode = "200", description = "운동 영상 올리기 성공", content = @Content(schema = @Schema(implementation = Long.class)))
     @ApiResponse(responseCode = "404", description = "유저 정보를 찾을 수 없음")
     @ApiResponse(responseCode = "404", description = "해당하는 영상을 찾을 수 없음")
@@ -91,7 +91,7 @@ public class VideoBoardController {
     }
 
     @GetMapping("/board/detail")
-    @Operation(description = "완등 영상 게시글 상세보기 API")
+    @Operation(description = "완등 영상 게시글 상세보기 API", summary = "완등 영상 게시글 상세보기 API")
     @ApiResponse(responseCode = "200", description = "완등 영상 상세 조회 성공", content = @Content(schema = @Schema(implementation = VideoBoardDetailResponse.class)))
     @ApiResponse(responseCode = "404", description = "해당하는 영상 게시글을 찾을 수 없음")
     public BaseResponse<VideoBoardDetailResponse> getVideoDetail(@NotNull @RequestParam(required = false) Long videoBoardId) {
@@ -100,7 +100,7 @@ public class VideoBoardController {
     }
 
     @PutMapping("/board/detail")
-    @Operation(description = "완등 영상 게시글 수정하기 API")
+    @Operation(description = "완등 영상 게시글 수정하기 API", summary = "완등 영상 게시글 수정하기 API")
     @ApiResponse(responseCode = "200", description = "완등 영상 게시글 수정 성공")
     @ApiResponse(responseCode = "404", description = "해당하는 영상 게시글을 찾을 수 없음")
     @ApiResponse(responseCode = "404", description = "작성자와 유저 정보가 일치하지 않음")
@@ -111,7 +111,7 @@ public class VideoBoardController {
     }
 
     @DeleteMapping("board/detail")
-    @Operation(description = "완등 영상 게시글 삭제하기 API")
+    @Operation(description = "완등 영상 게시글 삭제하기 API", summary = "완등 영상 게시글 삭제하기 API")
     @ApiResponse(responseCode = "200", description = "완등 영상 게시글 삭제 성공")
     @ApiResponse(responseCode = "404", description = "해당하는 영상 게시글을 찾을 수 없음")
     @ApiResponse(responseCode = "404", description = "작성자와 유저 정보가 일치하지 않음")
@@ -122,7 +122,7 @@ public class VideoBoardController {
     }
 
     @GetMapping("board/mypost")
-    @Operation(description = "내 완등 영상 게시글 목록 조회하기 API")
+    @Operation(description = "내 완등 영상 게시글 목록 조회하기 API", summary = "내 완등 영상 게시글 목록 조회하기 API")
     @ApiResponse(responseCode = "200", description = "내 완등 영상 글 목록 불러오기 성공")
     public BaseResponse<List<VideoBoardSummaryResponse>> getMySuccessVideoPosts
             (@AuthenticationPrincipal MemberDetails memberDetails, @RequestParam Long storeId) {

@@ -36,7 +36,7 @@ public class VideoCommentController {
     private final VideoCommentService videoCommentService;
 
     @GetMapping("/comment")
-    @Operation(description = "영상 댓글 조회 API")
+    @Operation(description = "영상 댓글 조회 API", summary = "영상 댓글 조회 API")
     @ApiResponse(responseCode = "200", description = "댓글 조회 성공", content = @Content(schema = @Schema(implementation = CommentListResponse.class)))
     public BaseResponse<List<CommentListResponse>> getCommentList(CommentListRequest condition) {
         List<CommentListResponse> commentList = videoCommentService.getCommentList(condition);
@@ -44,7 +44,7 @@ public class VideoCommentController {
     }
 
     @PostMapping("/comment")
-    @Operation(description = "영상 댓글 작성 API")
+    @Operation(description = "영상 댓글 작성 API", summary = "영상 댓글 작성 API")
     @ApiResponse(responseCode = "200", description = "댓글 등록 성공")
     public BaseResponse<?> addComment(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody NewCommentRequest newCommentRequest) {
         Member member = memberDetails.getMember();
@@ -53,7 +53,7 @@ public class VideoCommentController {
     }
 
     @PutMapping("/comment")
-    @Operation(description = "영상 댓글 수정 API")
+    @Operation(description = "영상 댓글 수정 API", summary = "영상 댓글 수정 API")
     @ApiResponse(responseCode = "200", description = "댓글 수정 완료")
     @ApiResponse(responseCode = "403", description = "유저 정보와 댓글 작성자 일치하지 않음")
     @ApiResponse(responseCode = "404", description = "해당하는 댓글 찾을 수 없음")
@@ -64,7 +64,7 @@ public class VideoCommentController {
     }
 
     @DeleteMapping("/comment")
-    @Operation(description = "영상 댓글 삭제 API")
+    @Operation(description = "영상 댓글 삭제 API", summary = "영상 댓글 삭제 API")
     @ApiResponse(responseCode = "200", description = "댓글 삭제 완료")
     @ApiResponse(responseCode = "403", description = "유저 정보와 댓글 작성자 일치하지 않음")
     @ApiResponse(responseCode = "404", description = "해당하는 댓글 찾을 수 없음")
@@ -75,7 +75,7 @@ public class VideoCommentController {
     }
 
     @GetMapping("/mycomment")
-    @Operation(description = "내 영상 댓글 조회 API")
+    @Operation(description = "내 영상 댓글 조회 API", summary = "내 영상 댓글 조회 API")
     @ApiResponse(responseCode = "200", description = "나의 댓글 조회 완료")
     public BaseResponse<List<MyCommentListResponse>> getMyCommentList
             (@AuthenticationPrincipal MemberDetails memberDetails, @RequestParam(required = false) Long storeId) {

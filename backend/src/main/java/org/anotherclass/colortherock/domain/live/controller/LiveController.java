@@ -32,7 +32,7 @@ public class LiveController {
 
     private final LiveService liveService;
 
-    @Operation(description = "진행중인 라이브 목록 반환 API")
+    @Operation(description = "진행중인 라이브 목록 반환 API", summary = "진행중인 라이브 목록 반환 API")
     @ApiResponse(responseCode = "200", description = "목록 반환 성공", content = @Content(schema = @Schema(implementation = LiveListResponse.class)))
     @GetMapping("/live/list")
     public BaseResponse<List<LiveListResponse>> getLiveList(@RequestParam(required = false) Long liveId) {
@@ -40,7 +40,7 @@ public class LiveController {
         return new BaseResponse<>(liveList);
     }
 
-    @Operation(description = "라이브 생성(방송 시작) API")
+    @Operation(description = "라이브 생성(방송 시작) API", summary = "라이브 생성(방송 시작) API")
     @ApiResponse(responseCode = "200", description = "라이브 생성 성공 시 PUBLISHER token 반환")
     @PostMapping("/live")
     public BaseResponse<String> createLive(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody CreateLiveRequest request) {
@@ -48,7 +48,7 @@ public class LiveController {
         return new BaseResponse<>(token);
     }
 
-    @Operation(description = "라이브 참가 API")
+    @Operation(description = "라이브 참가 API", summary = "라이브 참가 API")
     @ApiResponse(responseCode = "200", description = "해당 sessionId에 입장할 수 있는 SUBSCRIBER token 반환")
     @GetMapping("/live/{sessionId}")
     public BaseResponse<String> joinLive(@PathVariable String sessionId) {
@@ -56,7 +56,7 @@ public class LiveController {
         return new BaseResponse<>(token);
     }
 
-    @Operation(description = "라이브 녹화 시작 API")
+    @Operation(description = "라이브 녹화 시작 API", summary = "라이브 녹화 시작 API")
     @ApiResponse(responseCode = "200", description = "녹화를 시작하면서, 현재 녹화에 대한 recordingId를 반환")
     @PostMapping("/live/{sessionId}/recording/start")
     public BaseResponse<?> recordingStart(@PathVariable String sessionId, @RequestBody RecordingStartRequest request) {
@@ -64,7 +64,7 @@ public class LiveController {
         return new BaseResponse<>(recordingId);
     }
 
-    @Operation(description = "라이브 녹화 중단 API")
+    @Operation(description = "라이브 녹화 중단 API", summary = "라이브 녹화 중단 API")
     @ApiResponse(responseCode = "200", description = "녹화 중단 성공")
     @PostMapping("/live/{sessionId}/recording/stop")
     public BaseResponse<?> recordingStop(@RequestBody RecordingStopRequest request) {
@@ -72,7 +72,7 @@ public class LiveController {
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 
-    @Operation(description = "라이브 녹화 저장 API")
+    @Operation(description = "라이브 녹화 저장 API", summary = "라이브 녹화 저장 API")
     @ApiResponse(responseCode = "200", description = "녹화 저장 성공")
     @PostMapping("/live/{sessionId}/recording/save")
     public BaseResponse<?> recordingSave(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String sessionId, @Valid @RequestBody RecordingSaveRequest request) throws IOException, JCodecException {
@@ -84,7 +84,7 @@ public class LiveController {
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 
-    @Operation(description = "이전 녹화 목록 반환 API")
+    @Operation(description = "이전 녹화 목록 반환 API", summary = "이전 녹화 목록 반환 API")
     @ApiResponse(responseCode = "200", description = "녹화 목록 반환 성공", content = @Content(schema = @Schema(implementation = LiveListResponse.class)))
     @GetMapping("/live/{sessionId}/recording/list")
     public BaseResponse<?> recordingList(@PathVariable String sessionId) {
@@ -92,7 +92,7 @@ public class LiveController {
         return new BaseResponse<>(response);
     }
 
-    @Operation(description = "라이브 종료 API")
+    @Operation(description = "라이브 종료 API", summary = "라이브 종료 API")
     @ApiResponse(responseCode = "200", description = "라이브 종료 성공")
     @DeleteMapping("/live/{sessionId}")
     public BaseResponse<?> terminateLive(@PathVariable String sessionId) {
