@@ -51,7 +51,7 @@ public class VideoCommentService {
                         .commentId(vc.getId())
                         .nickname(vc.getMember().getNickname())
                         .content(vc.getContent())
-                        .createdDate(vc.getCreatedDate())
+                        .createdDate(vc.getCreatedDate().toLocalDate())
                         .build()).collect(Collectors.toList());
     }
 
