@@ -34,8 +34,6 @@ public enum GlobalErrorCode {
     RECORDING_DELETE_ERROR(400, "L200", "녹화 삭제 중 오류가 발생하였습니다."),
     // 기록과 관련된 Exception
     MALFORMED_DATE(400, "R100", "잘못된 날짜 형식입니다."),
-    USER_NOT_FOUND(404, "G400", "유저 정보를 찾을 수 없음"),
-
     VIDEO_HAS_NOT_EXTENSION(400, "V101", "비디오 파일에 확장자가 존재하지 않습니다"),
     NOT_VIDEO_EXTENSION(400, "V102", "비디오 파일 확장자가 아닙니다");
 
