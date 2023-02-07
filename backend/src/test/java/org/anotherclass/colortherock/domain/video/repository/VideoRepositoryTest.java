@@ -3,7 +3,7 @@ package org.anotherclass.colortherock.domain.video.repository;
 
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
-import org.anotherclass.colortherock.domain.memberrecord.response.VisitListResponse;
+import org.anotherclass.colortherock.domain.memberrecord.response.VisitListDto;
 import org.anotherclass.colortherock.domain.video.dto.DateLevelDto;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.junit.jupiter.api.Assertions;
@@ -57,7 +57,7 @@ public class VideoRepositoryTest {
     @DisplayName("암장 방문 통계 조회")
     public void 방문통계_조회_성공() {
         // when
-        List<VisitListResponse> visitList = videoReadRepository.searchVisitCount(member);
+        List<VisitListDto> visitList = videoReadRepository.searchVisitCount(member);
         // then
         Assertions.assertEquals(2, visitList.size());
         Assertions.assertEquals("tempGym1", visitList.get(0).getGymName());
