@@ -57,7 +57,7 @@ const StreamingForm = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
   const [modalOpen3, setModalOpen3] = useState(false);
-
+  const [hyunsu, setHyunsu] = useState("");
   const handleModalStateChange = () => {
     setModalOpen((prev) => !prev);
   };
@@ -69,6 +69,12 @@ const StreamingForm = () => {
   const handleModalStateChange3 = () => {
     setModalOpen3((prev) => !prev);
   };
+
+  const onChangeHandler = (e) => {
+    setHyunsu(e.target.value);
+  };
+
+  const submitHandlerUser = () => {};
   //////////////////////////////////////////////////////////////////
 
   const navigate = useNavigate();
@@ -104,7 +110,7 @@ const StreamingForm = () => {
     // 올바른 응답일 떄는 joinSsession 및 라이브 페이지로 이동...
     // ---------------------------------------------- //
 
-    joinSession();
+    // joinSession();
     navigate("/streaming/live/1");
   };
 
@@ -246,6 +252,12 @@ const StreamingForm = () => {
                   >
                     클립 영상 모달
                   </button>
+                  <input
+                    placeholder="sessionId 입력"
+                    value={hyunsu}
+                    onChange={onChangeHandler}
+                    onKeyDown={submitHandlerUser}
+                  />
                 </S.ComponenentWrap>
               </S.AddPadding>
             )}

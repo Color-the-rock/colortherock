@@ -9,9 +9,12 @@ const UserApi = {
   // GetRefleshToken: "/refresh",
 
   // 닉네임 중복체크
+  // CheckNickname: (nickName) =>
+  // defaultInstance.post("/duplicateNickname", {
+  //   nickName,
+  // }),
   CheckNickname: (nickName) =>
     defaultInstance.post("/duplicateNickname", nickName),
-
   // 회원가입 API
   SignUp: (data) => defaultInstance.post("/member/signup", data),
 };

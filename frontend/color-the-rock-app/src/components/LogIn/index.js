@@ -21,11 +21,12 @@ export default function Oauth() {
       navigate("/signup");
     } else {
       dispatch(setLogin({ nickname, email, registrationId }));
-
+      console.log(params.get("access"));
+      console.log(params.get("refresh"));
       const accessToken = params.get("access");
       const refreshToken = params.get("refresh");
       sessionStorage.setItem("accessToken", accessToken);
-      setCookie(refreshToken);
+      setCookie("refreshToken", refreshToken);
       navigate("/");
     }
   }, []);
