@@ -14,36 +14,14 @@ import { FiChevronUp } from "react-icons/fi";
 import { HiOutlineCamera } from "react-icons/hi2";
 import { OpenVidu } from "openvidu-browser";
 import { useDispatch } from "react-redux";
-import { setOV } from "../../stores/streaming/streamingSlice";
+import { setOV, setOpenViduToken } from "../../stores/streaming/streamingSlice";
 
 // ------------- test ----------------------//
 import RecordVideoFormModal from "../../components/Streaming/RecordVideoFormModal";
 import ModifyRoomSettingModal from "../../components/Streaming/ModifyRoomSettingModal";
 import FeedbackModal from "../../components/Streaming/FeedbackModal";
-import VideoClip from "../../components/Streaming/VideoClip";
+import streamingApi from "../../api/streaming";
 // ----------------------------------------------------------------- //
-
-const levelValues = [
-  { key: "난이도 레벨", value: "" },
-  { key: "LEVEL1", value: "level-1" },
-  { key: "LEVEL2", value: "level-2" },
-  { key: "LEVEL3", value: "level-3" },
-  { key: "LEVEL4", value: "level-4" },
-  { key: "LEVEL5", value: "level-5" },
-  { key: "LEVEL6", value: "level-6" },
-  { key: "LEVEL7", value: "level-7" },
-];
-const colorValues = [
-  { key: "난이도 색상", value: "" },
-  { key: "빨강", value: "red" },
-  { key: "주황", value: "orange" },
-  { key: "노랑", value: "yellow" },
-  { key: "연두", value: "green" },
-  { key: "하늘", value: "skyBlue" },
-  { key: "남색", value: "indigo" },
-  { key: "보리", value: "purple" },
-  { key: "검정", value: "black" },
-];
 
 const videoConstraints = {
   width: { min: 480 },
@@ -57,7 +35,9 @@ const StreamingForm = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpen2, setModalOpen2] = useState(false);
   const [modalOpen3, setModalOpen3] = useState(false);
-  const [hyunsu, setHyunsu] = useState("");
+
+  const [token, setToken] = useState("");
+
   const handleModalStateChange = () => {
     setModalOpen((prev) => !prev);
   };
@@ -69,12 +49,6 @@ const StreamingForm = () => {
   const handleModalStateChange3 = () => {
     setModalOpen3((prev) => !prev);
   };
-
-  const onChangeHandler = (e) => {
-    setHyunsu(e.target.value);
-  };
-
-  const submitHandlerUser = () => {};
   //////////////////////////////////////////////////////////////////
 
   const navigate = useNavigate();
@@ -110,7 +84,7 @@ const StreamingForm = () => {
     // 올바른 응답일 떄는 joinSsession 및 라이브 페이지로 이동...
     // ---------------------------------------------- //
 
-    // joinSession();
+    joinSession();
     navigate("/streaming/live/1");
   };
 
@@ -119,6 +93,28 @@ const StreamingForm = () => {
     console.log("joinSession");
     const ov = new OpenVidu();
     dispatch(setOV({ ov }));
+    createSession();
+  };
+
+  // 세션 만들기
+  const createSession = () => {
+    const requestBody = {
+      isPublic: true,
+      gymName: "더클라임 강남",
+      title: "클라이밍 하는 중~!",
+    };
+
+    console.log("createdSession!");
+
+    streamingApi
+      .createLiveSession(requestBody)
+      .then(({ data: { status, result } }) => {
+        if (status === 200) {
+          console.log("stausCode : 200 ", result);
+          dispatch(setOpenViduToken(result));
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   // 캡처
@@ -143,7 +139,7 @@ const StreamingForm = () => {
         />
       )}
       {modalOpen3 && (
-        <VideoClip
+        <RecordVideoFormModal
           onClick={handleModalStateChange3}
           setModalOpen={setModalOpen3}
         />
@@ -241,23 +237,6 @@ const StreamingForm = () => {
                   >
                     영상 수정 모달
                   </button>
-                  <button
-                    onClick={handleModalStateChange3}
-                    style={{
-                      fontSize: "20px",
-                      color: "white",
-                      border: "1px solid white",
-                      margin: "1rem",
-                    }}
-                  >
-                    클립 영상 모달
-                  </button>
-                  <input
-                    placeholder="sessionId 입력"
-                    value={hyunsu}
-                    onChange={onChangeHandler}
-                    onKeyDown={submitHandlerUser}
-                  />
                 </S.ComponenentWrap>
               </S.AddPadding>
             )}

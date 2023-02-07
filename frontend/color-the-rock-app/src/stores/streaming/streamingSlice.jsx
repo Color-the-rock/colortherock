@@ -8,14 +8,19 @@ export const streamingSlice = createSlice({
       roomName: "",
       drawingBackground: null,
     },
+    userOpenViduToken: "",
   },
   reducers: {
     setOV: (state, action) => {
+      console.log("action : ", action.payload.ov);
       state.ov = action.payload.ov;
+    },
+    setOpenViduToken: (state, action) => {
+      state.userOpenViduToken = action.payload;
     },
   },
 });
 
-export const { setOV } = streamingSlice.actions;
+export const { setOV, setOpenViduToken } = streamingSlice.actions;
 
 export default streamingSlice.reducer;

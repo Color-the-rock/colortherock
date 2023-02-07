@@ -8,6 +8,7 @@ import { useInput } from "../../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
 import { setOV } from "../../stores/streaming/streamingSlice";
 import CommentBtn from "../../components/Common/CommentBtn";
+import TestImg from "../../assets/img/common/app-logo.png";
 import ChattingModal from "../../components/Live/ChattingModal";
 import {
   FiLogOut,
@@ -22,7 +23,6 @@ import {
   FiLink,
 } from "react-icons/fi";
 import { Desktop, Mobile } from "../../components/layout/Template";
-const APPLICATION_SERVER_URL = "http://localhost:5000/";
 
 const StreamingLive = () => {
   // 기본 설정
@@ -38,8 +38,7 @@ const StreamingLive = () => {
 
   // 세션 종료 관리
   const navigate = useNavigate();
-  const { sessionId: __sessionId } = useParams();
-
+  const { sessionId: _sessionId } = useParams();
   // 채팅 관리
   const [isShowChattingModal, setShowChattingModal] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -52,23 +51,53 @@ const StreamingLive = () => {
 
   // 라이브 API 연결 설정 관리
   const [sessionId, setSessionId] = useState("");
-  const token = useSelector((state) => state.streaming.user);
+  const token = useSelector((state) => state.streaming.userOpenViduToken);
 
   useEffect(() => {
     if (ov !== null && ov !== undefined) {
+      console.log("ov 있음", ov, token);
       setSession(ov.initSession());
     }
-  }, [ov]);
+  }, []);
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
   }, []);
 
   useEffect(() => {
+    console.log("sub", subscribers);
+  }, [subscribers]);
+
+  // useEffect(() => {
+  //   if (testVideo !== null) testVideo.captureStream();
+  // }, [testVideo]);
+
+  useEffect(() => {
     if (session !== undefined) {
+      console.log("세션 존재, 세션: ", session);
+      console.log("오픈비두 객체: ", ov);
+      session
+        .connect(token)
+        .then((data) => console.log("성공: "))
+        .catch((error) => console.log("error: ", error));
+
       session.on("streamCreated", (event) => {
-        console.log("하하");
+        const testVideo = document.getElementById("test-video");
+
+        console.log("streamCreated 발생 ", event);
         const subscriber = session.subscribe(event.stream, undefined);
+
+        console.log("testVideo ? ", testVideo);
+
+        if (testVideo !== null) {
+          subscriber.addVideoElement(testVideo);
+        }
+
+        console.log("subscriber? ", subscriber);
+        // const { stream } = event;
+        // console.log("streamCreated stream : ", stream);
+        // const publisedMediaStream = stream.getMediaStream();
+        // console.log("streamCreated getMediaStream : ", publisedMediaStream);
         setSubscribers((prev) => [subscriber, ...prev]);
       });
 
@@ -81,81 +110,60 @@ const StreamingLive = () => {
       session.on("exception", (exception) => {
         console.warn(exception);
       });
-
-      // --- 4) Connect to the session with a valid user token ---
-      getToken().then((token) => {
-        session
-          .connect(token, { clientData: userNickName })
-          .then(async () => {
-            onSessionCreated();
-            console.log("token: ", token);
-            // --- 5) Get your own camera stream ---
-            let publisher = await ov.initPublisherAsync(undefined, {
-              audioSource: undefined, // The source of audio. If undefined default microphone
-              videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
-              resolution: "640x480", // The resolution of your video
-              frameRate: 30, // The frame rate of your video
-              insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-              mirror: false, // Whether to mirror your local video or not
-            });
-
-            session.publish(publisher);
-
-            // Obtain the current video device in use
-            let devices = await ov.getDevices();
-            let videoDevices = devices.filter(
-              (device) => device.kind === "videoinput"
-            );
-            let currentVideoDeviceId = publisher.stream
-              .getMediaStream()
-              .getVideoTracks()[0]
-              .getSettings().deviceId;
-            let CurrentVideoDevice = videoDevices.find(
-              (device) => device.deviceId === currentVideoDeviceId
-            );
-
-            setCurrentVideoDevice(CurrentVideoDevice);
-            setMainStreamManager(publisher);
-            setPublisher(publisher);
-          })
-          .catch((error) => {
-            console.log(
-              "There was an error connecting to the session:",
-              error.code,
-              error.message
-            );
-          });
-      });
     }
   }, [session]);
 
+  useEffect(() => {
+    if (token !== "" && session !== undefined) {
+      console.log("토큰 존재 && 세션 존재");
+
+      console.log("세션: ", session);
+      const { role } = ov;
+      console.log("오픈비두 객체 role: ", role);
+
+      // if (role === "PUBLISHER") {
+      session.connect(token, { clientData: userNickName }).then(async () => {
+        onSessionCreated();
+
+        // --- 5) Get your own camera stream ---
+        let publisher = await ov.initPublisherAsync(undefined, {
+          audioSource: undefined, // The source of audio. If undefined default microphone
+          videoSource: undefined, // The source of video. If undefined default webcam
+          publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+          publishVideo: true, // Whether you want to start publishing with your video enabled or not
+          resolution: "640x480", // The resolution of your video
+          frameRate: 30, // The frame rate of your video
+          insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+          mirror: false, // Whether to mirror your local video or not
+        });
+
+        session.publish(publisher); // publisher는 본인의 화면을 송출
+
+        console.log("session???", session.sessionId);
+
+        // Obtain the current video device in use
+        let devices = await ov.getDevices();
+        let videoDevices = devices.filter(
+          (device) => device.kind === "videoinput"
+        );
+        let currentVideoDeviceId = publisher.stream
+          .getMediaStream()
+          .getVideoTracks()[0]
+          .getSettings().deviceId;
+        let CurrentVideoDevice = videoDevices.find(
+          (device) => device.deviceId === currentVideoDeviceId
+        );
+
+        setCurrentVideoDevice(CurrentVideoDevice);
+        setMainStreamManager(publisher);
+        setPublisher(publisher);
+      });
+      // }
+    }
+  }, [token]);
+
   const getToken = async () => {
-    const sessionTitle = await createSession("SessionA");
-    return await createToken(sessionTitle);
-  };
-
-  const createSession = async (sessionId) => {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions",
-      { customSessionId: sessionId },
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    return response.data; // The sessionId
-  };
-
-  const createToken = async (sessionId) => {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
-      {},
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    return response.data; // The token
+    return token;
   };
 
   const onbeforeunload = (event) => {
@@ -171,10 +179,7 @@ const StreamingLive = () => {
   };
 
   // 비디오 설정 메뉴 관리
-
   const leaveSession = () => {
-    // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
-
     if (session) {
       session.disconnect();
     }
@@ -326,7 +331,9 @@ const StreamingLive = () => {
         {session !== undefined ? (
           mainStreamManager !== undefined ? (
             <UserVideoComponent streamManager={mainStreamManager} />
-          ) : null
+          ) : (
+            <S.VideoTest id="test-video" />
+          )
         ) : null}
       </S.OwnerVideoWrapper>
       <Mobile>
