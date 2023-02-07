@@ -67,10 +67,8 @@ public class RecordController {
      * 날짜별 운동 기록 색상 별 통계 조회
      */
     @Operation(description = "사용자별 선택 날짜에 대한 운동 영상 색상 별 통계 조회")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "전체 통계 조회 성공", content = @Content(schema = @Schema(implementation = LevelStatResponse.class))),
-            @ApiResponse(responseCode = "400", description = "잘못된 날짜 형식으로 인한 통계 조회 실패")
-    })
+    @ApiResponse(responseCode = "200", description = "전체 통계 조회 성공", content = @Content(schema = @Schema(implementation = LevelStatResponse.class)))
+    @ApiResponse(responseCode = "400", description = "잘못된 날짜 형식으로 인한 통계 조회 실패")
     @GetMapping("/color/{date}")
     public BaseResponse<List<LevelStatResponse>> recordsByColorAndDate(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String date) throws MalformedDateException {
         Member member = memberDetails.getMember();
@@ -99,10 +97,8 @@ public class RecordController {
      * 날짜별 운동 영상 목록 조회(성공 / 실패 영상)
      */
     @Operation(description = "사용자별 날짜별 성공/실패 영상 조회")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "해당 날짜 영상 조회 성공", content = @Content(schema = @Schema(implementation = VideoListResponse.class))),
-            @ApiResponse(responseCode = "500", description = "잘못된 날짜 형식으로 인한 영상 조회 실패")
-    })
+    @ApiResponse(responseCode = "200", description = "해당 날짜 영상 조회 성공", content = @Content(schema = @Schema(implementation = VideoListResponse.class)))
+    @ApiResponse(responseCode = "500", description = "잘못된 날짜 형식으로 인한 영상 조회 실패")
     @GetMapping("/videos")
     public BaseResponse<List<VideoListResponse>> MyVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @Valid MyVideoRequest myVideoRequest) {
         Member member = memberDetails.getMember();
@@ -163,10 +159,8 @@ public class RecordController {
      * @param videoId       삭제하고자 하는 videoId
      */
     @Operation(description = "개인 영상 기록 삭제 요청")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "개인 영상 기록 삭제 성공"),
-            @ApiResponse(responseCode = "400", description = "해당 videoId에 맞는 Video가 존재하지 않음")
-    })
+    @ApiResponse(responseCode = "200", description = "개인 영상 기록 삭제 성공")
+    @ApiResponse(responseCode = "400", description = "해당 videoId에 맞는 Video가 존재하지 않음")
     @DeleteMapping("/video/{videoId}")
     public BaseResponse<Void> deleteVideo(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable @Positive Long videoId) {
         Member member = memberDetails.getMember();
@@ -208,10 +202,8 @@ public class RecordController {
      * @return 완등 영상이 있는 날짜에 대해 DailyColorResponse를 List형태로 반환
      */
     @Operation(description = "운동 기록 캘린더 색상 반환")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "색상 반환 성공", content = @Content(schema = @Schema(implementation = DailyColorResponse.class))),
-            @ApiResponse(responseCode = "400", description = "잘못된 날짜 형식으로 인한 조회 실패 YYYY-MM 형태 입력 필요")
-    })
+    @ApiResponse(responseCode = "200", description = "색상 반환 성공", content = @Content(schema = @Schema(implementation = DailyColorResponse.class)))
+    @ApiResponse(responseCode = "400", description = "잘못된 날짜 형식으로 인한 조회 실패 YYYY-MM 형태 입력 필요")
     @GetMapping("/calendar/{yearMonth}")
     public BaseResponse<List<DailyColorResponse>> getCalendarColor(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String yearMonth) {
         if (!yearMonth.matches("\\d{4}-(0[1-9]|1[012])")) {

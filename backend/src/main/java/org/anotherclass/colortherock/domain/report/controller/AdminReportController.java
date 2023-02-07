@@ -27,9 +27,7 @@ public class AdminReportController {
 
     @GetMapping("/list")
     @Operation(description = "관리자 - 숨김처리된 영상 게시글 보기 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "영상게시글 불러오기 성공")
-    })
+    @ApiResponse(responseCode = "200", description = "영상게시글 불러오기 성공")
     public BaseResponse<List<AdminReportedPostResponse>> getReportList(@AuthenticationPrincipal AdminDetails adminDetails) {
         if (adminDetails == null) {
             throw new GlobalBaseException(GlobalErrorCode.ACCESS_DENIED);
@@ -40,9 +38,7 @@ public class AdminReportController {
 
     @GetMapping("/list/detail")
     @Operation(description = "관리자 - 신고 내용 확인하기 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "신고 내용 불러오기 성공")
-    })
+    @ApiResponse(responseCode = "200", description = "신고 내용 불러오기 성공")
     public BaseResponse<List<AdminReportDetailResponse>> getReportDetail(@AuthenticationPrincipal AdminDetails adminDetails, @RequestParam Long videoBoardId) {
         if (adminDetails == null) {
             throw new GlobalBaseException(GlobalErrorCode.ACCESS_DENIED);
@@ -53,9 +49,7 @@ public class AdminReportController {
 
     @GetMapping("list/detail/unhidden")
     @Operation(description = "관리자 - 영상 숨김 해제 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "영상 숨김 해제 성공")
-    })
+    @ApiResponse(responseCode = "200", description = "영상 숨김 해제 성공")
     public BaseResponse<?> cancelHiddenStatus(@AuthenticationPrincipal AdminDetails adminDetails, @RequestParam Long videoBoardId) {
         if (adminDetails == null) {
             throw new GlobalBaseException(GlobalErrorCode.ACCESS_DENIED);
@@ -66,9 +60,7 @@ public class AdminReportController {
 
     @DeleteMapping("list/detail")
     @Operation(description = "관리자 - 영상 삭제 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "영상 삭제 성공")
-    })
+    @ApiResponse(responseCode = "200", description = "영상 삭제 성공")
     public BaseResponse<?> deleteVideo(@AuthenticationPrincipal AdminDetails adminDetails, @RequestParam Long videoBoardId) {
         if (adminDetails == null) {
             throw new GlobalBaseException(GlobalErrorCode.ACCESS_DENIED);
