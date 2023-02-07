@@ -19,3 +19,14 @@ export const Text = styled.p`
   letter-spacing: -0.01em;
   color: var(--color-tertiary);
 `;
+
+export const Section = styled.section`
+  height: 100%;
+  padding: 1rem 0;
+`;
+
+export const BoardImg = styled.img`
+  width: 280vw;
+  height: 100%;
+  opacity: 0.6;
+`;

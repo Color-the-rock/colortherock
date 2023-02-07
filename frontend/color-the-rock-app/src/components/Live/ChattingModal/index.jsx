@@ -9,6 +9,7 @@ const ChattingModal = ({
   getToken,
   session,
   messages,
+  onSessionCreated,
 }) => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
@@ -59,6 +60,7 @@ const ChattingModal = ({
           id="ov-videoconference"
           tokens={getToken}
           toolbarDisplaySessionName={false}
+          onSessionCreated={onSessionCreated}
         >
           <S.CommentInput
             type="text"
