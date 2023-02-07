@@ -14,7 +14,11 @@ const UserApi = {
   //   nickName,
   // }),
   CheckNickname: (nickName) =>
-    defaultInstance.post("/duplicateNickname", nickName),
+    defaultInstance.post("/duplicateNickname", nickName, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }),
   // 회원가입 API
   SignUp: (data) => defaultInstance.post("/member/signup", data),
 };
