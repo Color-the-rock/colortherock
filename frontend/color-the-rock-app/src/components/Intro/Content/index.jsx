@@ -7,7 +7,6 @@ const Content = () => {
     <S.Container>
       <img src={IntroColorTheRockMobile} alt="intro-logo" width="280px" />
       <S.Text>컬러더락과 함께 클라이밍 레벨을 채워봐요!</S.Text>
-      {/* <S.Text>나만의 클라이밍 레벨을 채워봐요!</S.Text> */}
     </S.Container>
   );
 };

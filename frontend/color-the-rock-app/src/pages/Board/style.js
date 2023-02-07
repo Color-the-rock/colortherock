@@ -104,6 +104,7 @@ export const ModalButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  align-items: center;
 `;
 
 export const ModalButton = styled.div`

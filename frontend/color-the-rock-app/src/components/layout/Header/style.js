@@ -32,8 +32,8 @@ export const Container = styled.header`
 `;
 
 export const LogoImg = styled.div`
-  width: 250px;
-  min-height: 42px;
+  width: 207px;
+  min-height: 34px;
   background-image: url(${WebLogo});
   background-position: center;
   background-size: contain;
@@ -66,9 +66,9 @@ export const MenuItem = styled.li`
 `;
 
 export const SLink = styled(Link)`
-  font-size: 1.3rem;
+  font-size: 1.125rem;
   margin: auto 18px;
-  font-weight: bold;
+  font-weight: 500;
   text-decoration: ${(props) =>
     props.current === "true" ? "underline" : "none"};
   text-decoration-thickness: 5px;
@@ -107,7 +107,7 @@ export const SideMenu = styled.ul`
 
 export const SideMenuItem = styled.li`
   font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 28px;
   margin: 1rem 0.5rem;
 `;

@@ -12,7 +12,7 @@ let menuItems = [
   },
   {
     id: 2,
-    name: "완등 영상 모음",
+    name: "완등 영상",
     path: "/board",
   },
   {
@@ -22,7 +22,7 @@ let menuItems = [
   },
   {
     id: 4,
-    name: "로그인/회원가입",
+    name: "로그인",
     path: "/login",
   },
 ];
