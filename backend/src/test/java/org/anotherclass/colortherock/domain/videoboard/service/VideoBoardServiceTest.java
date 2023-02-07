@@ -136,7 +136,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertTrue(cond.getStoreId() > successVideos.get(0).getVideoBoardId());
-                    assertEquals(7, successVideos.size());
+                    assertEquals(16, successVideos.size());
                 }
             }
 
@@ -256,9 +256,9 @@ class VideoBoardServiceTest {
             @DisplayName("USER_NOT_FOUND 예외를 발생시킴")
             void noSuchUserException() {
                 // given
-                Long memberId = 2L; //DB에 없는 id
+                Long memberId = 100L; //DB에 없는 id
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
-                request.setVideoId(1L);
+                request.setVideoId(videoIds.get(0));
                 request.setTitle("성공했습니다.");
 
                 assertThrows(GlobalBaseException.class, () -> videoBoardService.uploadMySuccessVideoPost(memberId, request));
@@ -273,7 +273,7 @@ class VideoBoardServiceTest {
             void noSuchVideoException() {
                 Long memberId = memberIds.get(0);
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
-                request.setVideoId(20L); // DB에 없는 ID
+                request.setVideoId(100L); // DB에 없는 ID
                 request.setTitle("성공했습니다.");
 
                 assertThrows(VideoNotFoundException.class, () -> videoBoardService.uploadMySuccessVideoPost(memberId, request));
@@ -325,7 +325,7 @@ class VideoBoardServiceTest {
             @Test
             @DisplayName("PostNotFound예외를 발생시킨다")
             void postNotFoundException() {
-                Long videoBoardId = 20L;
+                Long videoBoardId = 100L;
                 assertThrows(PostNotFoundException.class, () -> videoBoardService.getVideoDetail(videoBoardId));
             }
         }
@@ -353,9 +353,9 @@ class VideoBoardServiceTest {
             @Test
             @DisplayName("Post Not Found 예외를 발생시킴")
             void PostNotFoundException() {
-                Long memberId = 1L;
+                Long memberId = memberIds.get(0);
                 SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
-                request.setVideoBoardId(20L); // 없는 게시글 번호
+                request.setVideoBoardId(100L); // 없는 게시글 번호
                 request.setTitle("수정했습니다.");
 
                 assertThrows(PostNotFoundException.class, () -> videoBoardService.updateSuccessPost(memberId, request));
