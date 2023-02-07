@@ -143,10 +143,15 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public List<VisitListResponse> getVisitList(Member member) {
-        List<VisitListResponse> visitListResponses = videoReadRepository.searchVisitCount(member);
-        visitListResponses.sort((r1, r2) -> (int)(r2.getCount() - r1.getCount()));
-        return visitListResponses;
+    public VisitResponse getVisitList(Member member) {
+        List<VisitListDto> visitListResponse = videoReadRepository.searchVisitCount(member);
+        Long totalCount = 0L;
+        for (VisitListDto dto:
+             visitListResponse) {
+            totalCount += dto.getCount();
+        }
+        visitListResponse.sort((r1, r2) -> (int)(r2.getCount() - r1.getCount()));
+        return VisitResponse.builder().totalCount(totalCount).data(visitListResponse).build();
     }
 
     @Transactional(readOnly = true)

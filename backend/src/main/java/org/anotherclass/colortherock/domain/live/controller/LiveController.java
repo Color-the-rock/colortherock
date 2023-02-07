@@ -11,6 +11,7 @@ import org.anotherclass.colortherock.domain.live.request.RecordingSaveRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStartRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStopRequest;
 import org.anotherclass.colortherock.domain.live.response.LiveListResponse;
+import org.anotherclass.colortherock.domain.live.response.RecordingListResponse;
 import org.anotherclass.colortherock.domain.live.service.LiveService;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.global.common.BaseResponse;
@@ -19,6 +20,7 @@ import org.jcodec.api.JCodecException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -85,10 +87,23 @@ public class LiveController {
             @ApiResponse(responseCode = "200", description = "녹화 저장 성공"),
     })
     @PostMapping("/live/{sessionId}/recording/save")
-    public BaseResponse<?> recordingSave(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String sessionId,@RequestBody RecordingSaveRequest request) throws IOException, JCodecException {
-        liveService.recordingSave(memberDetails,sessionId,request);
+    public BaseResponse<?> recordingSave(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable String sessionId, @Valid @RequestBody RecordingSaveRequest request) throws IOException, JCodecException {
+        if(request.getIsSaved()) {
+            liveService.recordingSave(memberDetails, sessionId, request);
+        } else {
+            liveService.deleteRecording(sessionId, request.getRecordingId());
+        }
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
+
+    @Operation(description = "이전 녹화 목록 반환 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "녹화 목록 반환 성공", content = @Content(schema = @Schema(implementation = LiveListResponse.class))),
+    })
+    @GetMapping("/live/{sessionId}/recording/list")
+    public BaseResponse<?> recordingList(@PathVariable String sessionId) {
+        List<RecordingListResponse> response = liveService.getRecordings(sessionId);
+        return new BaseResponse<>(response);
 
     @Operation(description = "라이브 종료 API")
     @ApiResponses({
