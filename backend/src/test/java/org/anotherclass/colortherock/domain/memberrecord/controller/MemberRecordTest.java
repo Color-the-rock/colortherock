@@ -18,6 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -126,12 +128,16 @@ public class MemberRecordTest extends IntegrationTest {
     @Test
     @DisplayName("[GET]사용자 날짜별 성공/실패 영상 조회")
     public void 날짜별_성공_실패_영상조회() throws Exception {
+
+        MultiValueMap<String, String> info = new LinkedMultiValueMap<>();
+
+        info.add("shootingDate", "2023-01-17");
+        info.add("isSuccess", "true");
+
         mockMvc.perform(
                         get(url + "/record/videos")
                                 .header("Authorization", AUTHORIZATION_HEADER + token)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{ \"shootingDate\": \"2023-01-17\", " +
-                                        "\"isSuccess\": true }"))
+                                .params(info))
                 .andExpect(jsonPath("$.status", is(200)))
                 .andExpect(jsonPath("$.result.size()").value(15));
     }
@@ -150,7 +156,7 @@ public class MemberRecordTest extends IntegrationTest {
     @DisplayName("[GET] 영상 상세 조회 - 실패(해당 아이디의 영상 없음)")
     public void 영상_상세_조회_실패() throws Exception {
         mockMvc.perform(
-                get(url + "/record/video/1")
+                get(url + "/record/video/-1")
                         .header("Authorization", AUTHORIZATION_HEADER + token)
         ).andExpect(jsonPath("$.status", is(404)));
     }
