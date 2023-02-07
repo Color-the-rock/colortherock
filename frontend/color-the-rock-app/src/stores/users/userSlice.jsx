@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const userSlice = createSlice({
   name: "user",
   initialState: {
-    nickName: "",
+    nickname: "",
     registrationId: "",
     email: "",
     fulfilled: false,
@@ -16,19 +16,19 @@ export const userSlice = createSlice({
     },
     // 미완료 로그인 진행
     setfulfilledLogin: (state, action) => {
-      state.nickName = action.payload.nickName;
+      state.nickname = action.payload.nickname;
       state.fulfilled = true;
     },
     // 로그인 완료
     setLogin: (state, action) => {
-      state.nickName = action.payload.nickName;
+      state.nickname = action.payload.nickname;
       state.email = action.payload.email;
       state.registrationId = action.payload.registrationId;
       state.fulfilled = true;
     },
     // 로그아웃
     LogOut: (state) => {
-      state.nickName = "";
+      state.nickname = "";
       state.email = "";
       state.registrationId = "";
       state.fulfilled = false;
