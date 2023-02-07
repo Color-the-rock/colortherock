@@ -9,6 +9,7 @@ export const streamingSlice = createSlice({
       drawingBackground: null,
     },
     userOpenViduToken: "",
+    picture: "",
   },
   reducers: {
     setOV: (state, action) => {
@@ -17,6 +18,9 @@ export const streamingSlice = createSlice({
     },
     setOpenViduToken: (state, action) => {
       state.userOpenViduToken = action.payload;
+    },
+    setPicture: (state, action) => {
+      state.picture = action.payload;
     },
   },
 });

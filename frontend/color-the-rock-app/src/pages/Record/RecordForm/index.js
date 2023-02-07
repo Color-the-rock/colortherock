@@ -51,7 +51,7 @@ const RecordForm = () => {
 
   const submitHandler = () => {
     if (!video || !level || !color || !location || !selectDate || !isSuccess) {
-      alert("빈칸채워라  등록안해준다.");
+      alert("모든 항목을 채워주세요.");
       return;
     }
 
@@ -63,24 +63,23 @@ const RecordForm = () => {
       isSuccess,
     };
 
-    const json = JSON.stringify(data);
-    const blob = new Blob([json], { type: "application/json" });
-
     const formData = new FormData();
+    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+
     formData.append("uploadVideoRequest", blob);
     formData.append("newVideo", video);
 
-    // recordApi.uploadLocalVideo(formData)
-    // .then((res) => {
-    //   console.log("res", res);
-    //   console.log("성공");
-    // })
-    // .catch((err) => {
-    //   console.log("err: ", err);
-    //   console.log("실패");
-    // });
-
-    navigate("/record");
+    recordApi
+      .uploadLocalVideo(formData)
+      .then((res) => {
+        console.log("res", res);
+        console.log("성공");
+        navigate("/record");
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+        console.log("실패");
+      });
   };
 
   return (

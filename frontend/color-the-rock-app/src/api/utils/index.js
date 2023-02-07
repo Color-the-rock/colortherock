@@ -9,7 +9,7 @@ const instance = axios.create({
 });
 
 instance.defaults.headers.common["Content-Type"] = "application/json";
-
+instance.defaults.headers["Content-Type"] = "application/json";
 // // 원본 코드(삭제 금지)
 instance.interceptors.request.use(function (config) {
   console.log("interceptor request");
