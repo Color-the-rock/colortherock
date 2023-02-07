@@ -139,7 +139,7 @@ public class VideoBoardController {
             @ApiResponse(responseCode = "200", description = "내 완등 영상 글 목록 불러오기 성공")
     })
     public BaseResponse<List<VideoBoardSummaryResponse>> getMySuccessVideoPosts
-            (@AuthenticationPrincipal MemberDetails memberDetails, @RequestParam Long storeId) {
+            (@AuthenticationPrincipal MemberDetails memberDetails, @RequestParam(required = false) Long storeId) {
         Member member = memberDetails.getMember();
         List<VideoBoardSummaryResponse> mySuccessPosts = videoBoardService.getMySuccessVideoPosts(member.getId(), storeId);
         return new BaseResponse<>(mySuccessPosts);
