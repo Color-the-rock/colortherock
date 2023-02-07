@@ -8,7 +8,7 @@ import org.anotherclass.colortherock.domain.video.entity.Video;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-@Data @Getter
+@Data
 public class RecordingSaveRequest {
 
     @NotNull
