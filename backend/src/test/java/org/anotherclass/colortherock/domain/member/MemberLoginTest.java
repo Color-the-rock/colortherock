@@ -16,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -92,6 +93,16 @@ public class MemberLoginTest extends IntegrationTest {
         System.out.println("refreshToken.getRefreshToken() = " + refreshToken.getRefreshToken());
         System.out.println("refreshToken.getAccessToken() = " + refreshToken.getAccessToken());
 
+    }
+
+    @Test
+    @DisplayName("값이 이상한 토큰")
+    void 이상한_토큰() throws Exception {
+        url += "test";
+        mockMvc.perform(get(url)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer awefaefs"))
+                .andDo(print())
+                .andExpect(status().is(401));
     }
 
     @Test

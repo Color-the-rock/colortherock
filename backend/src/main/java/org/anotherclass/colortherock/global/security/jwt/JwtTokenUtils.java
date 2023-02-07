@@ -1,15 +1,10 @@
 package org.anotherclass.colortherock.global.security.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.exception.AccessDeniedException;
-import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.anotherclass.colortherock.global.redis.RefreshTokenRepository;
-import org.anotherclass.colortherock.global.security.exception.ExpiredJwtTokenException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
@@ -75,13 +70,7 @@ public class JwtTokenUtils {
     }
 
     public Claims getAllClaims(String token) {
-        try {
-            return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
-        } catch(ExpiredJwtException e) {
-            throw new ExpiredJwtTokenException(GlobalErrorCode.TOKEN_EXPIRED);
-        } catch (Exception e) {
-            throw new GlobalBaseException(GlobalErrorCode.OTHER);
-        }
+        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
     }
 
     public boolean isExpired(String token) {

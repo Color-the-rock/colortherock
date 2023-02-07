@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.global.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.service.MemberDetailsServiceImpl;
+import org.anotherclass.colortherock.global.security.jwt.JwtAuthenticationEntryPoint;
 import org.anotherclass.colortherock.global.security.jwt.JwtAuthenticationProvider;
 import org.anotherclass.colortherock.global.security.jwt.JwtAuthorizeFilter;
 import org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils;
@@ -32,6 +33,7 @@ public class SecurityConfig {
     private final MemberDetailsServiceImpl memberDetailsService;
     private final JwtTokenUtils jwtTokenUtils;
     private final HttpCookieOAuth2AuthorizationRequestRepository authorizationRequestRepository;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
 
     @Bean
@@ -42,6 +44,7 @@ public class SecurityConfig {
         http.userDetailsService(memberDetailsService);
         http.formLogin().disable();
         http.csrf().disable();
+        http.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(new JwtAuthorizeFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtTokenUtils), BasicAuthenticationFilter.class);
         http.authorizeRequests()
