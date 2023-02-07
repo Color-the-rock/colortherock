@@ -14,9 +14,11 @@ import javax.validation.constraints.NotNull;
 public class LoginInfo {
 
     @NotNull
+    @Schema(description = "관리자 계정 id")
     private String id;
 
     @NotNull
+    @Schema(description = "관리자 계정 비밀번호")
     private String password;
 
 }
