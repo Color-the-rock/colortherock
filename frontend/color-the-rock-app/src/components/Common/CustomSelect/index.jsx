@@ -5,11 +5,12 @@ const CustomSelect = ({ setter, optionValues }) => {
   const [showOption, setShowOption] = useState(false);
   const [currentOption, setCurrentOption] = useState(optionValues[0].key);
 
-  const handleChangeOption = (e) => {
-    // console.log("e: ", e.target.__reactProps$lwgv3va7748.value);
-    setCurrentOption(e.target.innerText);
-    setter(e.target.innerText);
-    // setter(e.target.__reactProps$lwgv3va7748.value);
+  const handleChangeOption = (value, e) => {
+    console.log(value);
+    console.log(e);
+    // setCurrentOption(e.target.innerText);
+    // console.log("뭐야:", e.target.value);
+    setter(value);
     setShowOption(!showOption);
   };
 
@@ -25,7 +26,7 @@ const CustomSelect = ({ setter, optionValues }) => {
                 <S.OptionItem
                   key={option.key}
                   value={option.value}
-                  onClick={handleChangeOption}
+                  onClick={(e) => handleChangeOption(option.value, e)}
                 >
                   {option.key}
                 </S.OptionItem>

@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import CustomSelect from "../../../components/Common/CustomSelect";
 import CustomCalendar from "../../../components/Board/CustomCalendar";
 
-import BoardApi from "../../../api/board";
+import boardApi from "../../../api/board";
 import { recordApi } from "../../../api/record";
 
 import { useSelector } from "react-redux";
@@ -21,13 +21,13 @@ const FILE_SIZE_MAX_LIMIT = 10 * 1024 * 1024; // 10MB
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
-  { key: "LEVEL1", value: "level-1" },
-  { key: "LEVEL2", value: "level-2" },
-  { key: "LEVEL3", value: "level-3" },
-  { key: "LEVEL4", value: "level-4" },
-  { key: "LEVEL5", value: "level-5" },
-  { key: "LEVEL6", value: "level-6" },
-  { key: "LEVEL7", value: "level-7" },
+  { key: "LEVEL1", value: "1" },
+  { key: "LEVEL2", value: "2" },
+  { key: "LEVEL3", value: "3" },
+  { key: "LEVEL4", value: "4" },
+  { key: "LEVEL5", value: "5" },
+  { key: "LEVEL6", value: "6" },
+  { key: "LEVEL7", value: "7" },
 ];
 const colorValues = [
   { key: "난이도 색상", value: "" },
@@ -51,7 +51,7 @@ const BoardForm = () => {
   const [level, setLevel] = useState("");
   const [color, setColor] = useState("");
   const [selectDate, setSelectDate] = useState("");
-  const [video, setVideo] = useState();
+  const [video, setVideo] = useState(null);
   console.log(typeof selectDate);
   const clickHandler = () => {
     navigate("/board");
@@ -59,19 +59,21 @@ const BoardForm = () => {
 
   // 라우터로부터 내려받은  props 데이터
   let { state, id } = useLocation();
-
+  state = false;
   // state = true => s3upload
   // state = true;
   // 받아온 id에 대한 요청을 보낸다.
   useEffect(() => {
-    recordApi
-      .getRecordVideo(id)
-      .then((res) => {
-        setVideo(res);
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
+    if (state) {
+      recordApi
+        .getRecordVideo(id)
+        .then((res) => {
+          setVideo(res);
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    }
   }, []);
 
   const submitHandler = () => {
@@ -88,23 +90,27 @@ const BoardForm = () => {
       gymName: location,
       shootingTime: selectDate,
     };
-    const json = JSON.stringify(data);
-    const blob = new Blob([json], { type: "application/json" });
 
-    console.log("data: ", data);
     const formData = new FormData();
+    // Blob 객체 생성
+    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+
+    console.log("blob: ", blob);
+    console.log("video: ", video);
+
     formData.append("localSuccessVideoUploadRequest", blob);
     formData.append("newVideo", video);
-    BoardApi.postRegisterLocalVideo(formData)
+    boardApi
+      .postRegisterLocalVideo(formData)
       .then((res) => {
         console.log("res", res);
         console.log("성공");
+        navigate("/board");
       })
       .catch((err) => {
         console.log("err: ", err);
         console.log("실패");
       });
-    // navigate("/board");
   };
 
   const titleHandler = (e) => {

@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import UserVideoComponent from "../../components/Live/UserVideo";
 import * as S from "./style";
 import { useInput } from "../../hooks/useInput";
@@ -22,7 +22,6 @@ import {
   FiLink,
 } from "react-icons/fi";
 import { Desktop, Mobile } from "../../components/layout/Template";
-
 const APPLICATION_SERVER_URL = "http://localhost:5000/";
 
 const StreamingLive = () => {
@@ -39,6 +38,7 @@ const StreamingLive = () => {
 
   // 세션 종료 관리
   const navigate = useNavigate();
+  const { sessionId: __sessionId } = useParams();
 
   // 채팅 관리
   const [isShowChattingModal, setShowChattingModal] = useState(false);
@@ -49,6 +49,10 @@ const StreamingLive = () => {
   const [isOnMic, setOnMic] = useState(true);
   const [isShowSettingModal, setShowSettingModal] = useState(false);
   const [isRecordStart, setRecordStart] = useState();
+
+  // 라이브 API 연결 설정 관리
+  const [sessionId, setSessionId] = useState("");
+  const token = useSelector((state) => state.streaming.user);
 
   useEffect(() => {
     if (ov !== null && ov !== undefined) {
@@ -63,6 +67,7 @@ const StreamingLive = () => {
   useEffect(() => {
     if (session !== undefined) {
       session.on("streamCreated", (event) => {
+        console.log("하하");
         const subscriber = session.subscribe(event.stream, undefined);
         setSubscribers((prev) => [subscriber, ...prev]);
       });

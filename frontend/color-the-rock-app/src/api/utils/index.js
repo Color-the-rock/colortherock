@@ -22,7 +22,7 @@ instance.interceptors.request.use(function (config) {
   }
 
   if (config.headers && accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
+    config.headers.Authorization = `${accessToken}`;
     return config;
   }
 });
@@ -58,8 +58,8 @@ instance.interceptors.response.use(
         const data = await axios.post(
           `https://colortherock.com/refresh`, // token refresh api
           {
-            accessToken: `Bearer ${token}`,
-            refreshToken: `Bearer ${refreshToken}`,
+            accessToken: `${token}`,
+            refreshToken: `${refreshToken}`,
           },
           {
             headers: {
