@@ -1,7 +1,9 @@
 package org.anotherclass.colortherock.domain.live.response;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Builder;
 
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class LiveListResponse {
     private Long id;
     private String title;
