@@ -52,7 +52,6 @@ const StreamingLive = () => {
   // 라이브 API 연결 설정 관리
   const [sessionId, setSessionId] = useState("");
   const token = useSelector((state) => state.streaming.userOpenViduToken);
-  const testVideo = document.getElementById("test-video");
 
   useEffect(() => {
     if (ov !== null && ov !== undefined) {
@@ -69,6 +68,10 @@ const StreamingLive = () => {
     console.log("sub", subscribers);
   }, [subscribers]);
 
+  // useEffect(() => {
+  //   if (testVideo !== null) testVideo.captureStream();
+  // }, [testVideo]);
+
   useEffect(() => {
     if (session !== undefined) {
       console.log("세션 존재, 세션: ", session);
@@ -79,8 +82,17 @@ const StreamingLive = () => {
         .catch((error) => console.log("error: ", error));
 
       session.on("streamCreated", (event) => {
+        const testVideo = document.getElementById("test-video");
+
         console.log("streamCreated 발생 ", event);
         const subscriber = session.subscribe(event.stream, undefined);
+
+        console.log("testVideo ? ", testVideo);
+
+        if (testVideo !== null) {
+          subscriber.addVideoElement(testVideo);
+        }
+
         console.log("subscriber? ", subscriber);
         // const { stream } = event;
         // console.log("streamCreated stream : ", stream);
@@ -319,10 +331,10 @@ const StreamingLive = () => {
         {session !== undefined ? (
           mainStreamManager !== undefined ? (
             <UserVideoComponent streamManager={mainStreamManager} />
-          ) : null
+          ) : (
+            <S.VideoTest id="test-video" />
+          )
         ) : null}
-
-        <video id="test-video" autoPlay />
       </S.OwnerVideoWrapper>
       <Mobile>
         <S.SettingWrapper>
