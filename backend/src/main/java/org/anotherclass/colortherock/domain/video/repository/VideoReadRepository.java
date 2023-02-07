@@ -4,7 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.anotherclass.colortherock.domain.member.entity.Member;
-import org.anotherclass.colortherock.domain.memberrecord.response.VisitListResponse;
+import org.anotherclass.colortherock.domain.memberrecord.response.VisitListDto;
 import org.anotherclass.colortherock.domain.video.dto.DateLevelDto;
 import org.anotherclass.colortherock.domain.video.entity.QVideo;
 import org.anotherclass.colortherock.domain.video.entity.Video;
@@ -67,9 +67,9 @@ public class VideoReadRepository {
     }
 
     // 사용자 암장 방문 횟수
-    public List<VisitListResponse> searchVisitCount(Member member) {
+    public List<VisitListDto> searchVisitCount(Member member) {
         return queryFactory.select(
-                        Projections.constructor(VisitListResponse.class,
+                        Projections.constructor(VisitListDto.class,
                                 video.gymName.as("gymName"),
                                 video.shootingDate.countDistinct().as("count"))
                 )
