@@ -94,7 +94,7 @@ class VideoBoardControllerTest extends IntegrationTest {
                 .getResponse();
 
         BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        assertEquals(arrayList.getResult().size(), 5);
+        assertEquals(arrayList.getResult().size(), 16);
     }
 
     @Test
@@ -109,7 +109,7 @@ class VideoBoardControllerTest extends IntegrationTest {
                 .getResponse();
 
         BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        assertEquals(2, arrayList.getResult().size());
+        assertEquals(16, arrayList.getResult().size());
     }
 
     @Test
@@ -188,5 +188,22 @@ class VideoBoardControllerTest extends IntegrationTest {
         Optional<VideoBoard> byId = videoBoardRepository.findById(videoBoardId);
         assertTrue(byId.isEmpty());
     }
+
+    @Test
+    @DisplayName("내 완등 영상 조회 param 미입력시 최신순 16개까지 반환")
+    void getMySuccessPostList() throws Exception {
+        url += "mypost";
+        MockHttpServletResponse response = mockMvc.perform(
+                        get(url)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header(HttpHeaders.AUTHORIZATION, token)
+                ).andDo(print())
+                .andExpect(jsonPath("$.status", is(200)))
+                .andReturn().getResponse();
+
+        BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
+        assertEquals(5, arrayList.getResult().size());
+    }
+
 
 }
