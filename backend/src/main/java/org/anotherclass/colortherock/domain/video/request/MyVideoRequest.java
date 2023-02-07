@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Getter @Setter
 @NoArgsConstructor
 public class MyVideoRequest {
-    @NotNull @Positive
+    @Positive
     private Long videoId;
     @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate shootingDate;
