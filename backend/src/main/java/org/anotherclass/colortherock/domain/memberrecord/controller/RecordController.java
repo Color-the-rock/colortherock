@@ -105,7 +105,8 @@ public class RecordController {
     })
     @GetMapping("/videos")
     public BaseResponse<List<VideoListResponse>> MyVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, MyVideoRequest myVideoRequest) {
-        List<VideoListResponse> videoListResponses = recordService.getMyVideos(memberDetails, myVideoRequest);
+        Member member = memberDetails.getMember();
+        List<VideoListResponse> videoListResponses = recordService.getMyVideos(member, myVideoRequest);
         return new BaseResponse<>(videoListResponses);
     }
 

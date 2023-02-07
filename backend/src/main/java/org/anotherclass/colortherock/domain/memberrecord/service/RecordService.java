@@ -2,7 +2,6 @@ package org.anotherclass.colortherock.domain.memberrecord.service;
 
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
-import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
 import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
@@ -80,10 +79,8 @@ public class RecordService {
     }
 
     @Transactional(readOnly = true)
-    public List<VideoListResponse> getMyVideos(MemberDetails memberDetails, MyVideoRequest request) {
+    public List<VideoListResponse> getMyVideos(Member member, MyVideoRequest request) {
         Pageable pageable = Pageable.ofSize(15);
-
-        Member member = memberDetails.getMember();
 
         Slice<Video> slices = videoReadRepository.searchBySlice(pageable, request, member);
 
