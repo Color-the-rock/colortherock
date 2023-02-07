@@ -1,7 +1,11 @@
 package org.anotherclass.colortherock.domain.memberrecord.service;
 
 import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
+import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
+import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
 import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatResponse;
+import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatResponse;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoDetailResponse;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
@@ -20,6 +24,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
@@ -30,8 +35,10 @@ class RecordServiceTest {
     private VideoRepository videoRepository;
     @Autowired
     EntityManager em;
-
     Member member;
+    @Autowired
+    private RecordRepository recordRepository;
+
     @BeforeEach
     public void setMember() {
         member = new Member("johan@rock.com", "조한", Member.RegistrationId.kakao);
@@ -82,6 +89,20 @@ class RecordServiceTest {
     }
 
     @Test
+    @DisplayName("사용자 운동 통계 반환")
+    public void totalRecordsTest() {
+        // given
+        MemberRecord testRecord = MemberRecord.builder().member(member).videoCount(18).successCount(9).build();
+        em.persist(testRecord);
+        em.flush();
+        em.clear();
+        // when
+        TotalStatResponse totalRecords = recordService.getTotalRecords(member);
+        // then
+        assertEquals(testRecord.getVideoCount(), totalRecords.getVideoCount());
+    }
+
+    @Test
     @DisplayName("영상 상세 조회")
     public void videoDetailTest() {
         // given
@@ -116,4 +137,59 @@ class RecordServiceTest {
         // when
         Assertions.assertThrows(VideoNotFoundException.class, () -> recordService.getVideoDetail(videoId + 1));
     }
+
+    @Test
+    @DisplayName("영상 갯수 증가")
+    public void addVideoCountTest() {
+        // given
+        MemberRecord testRecord = MemberRecord.builder().member(member).videoCount(18).successCount(9).build();
+        em.persist(testRecord);
+        em.flush();
+        em.clear();
+        // when
+        recordService.addVideoCount(member, true);
+        // then
+        MemberRecord insertedRecord = recordRepository.findByMember(member);
+        assertEquals(19, insertedRecord.getVideoCount());
+        assertEquals(10, insertedRecord.getSuccessCount());
+    }
+
+    @Test
+    @DisplayName("영상 갯수 감소")
+    public void subVideoCountTest() {
+        // given
+        MemberRecord testRecord = MemberRecord.builder().member(member).videoCount(18).successCount(9).build();
+        em.persist(testRecord);
+        em.flush();
+        em.clear();
+        // when
+        recordService.subVideoCount(member, true);
+        // then
+        MemberRecord insertedRecord = recordRepository.findByMember(member);
+        assertEquals(17, insertedRecord.getVideoCount());
+        assertEquals(8, insertedRecord.getSuccessCount());
+    }
+
+    @Test
+    @DisplayName("새로운 record 생성")
+    public void saveNewRecordTest() {
+        // given
+        Long memberId = member.getId();
+        // when
+        recordService.saveNewRecord(memberId);
+        // then
+        MemberRecord insertedRecord = recordRepository.findByMember(member);
+        assertEquals(0, insertedRecord.getVideoCount());
+        assertEquals(0, insertedRecord.getSuccessCount());
+    }
+
+    @Test
+    @DisplayName("새로운 record 생성 실패")
+    public void noUserTest() {
+        // given
+        Long memberId = member.getId() * -1;
+        // when & then
+        assertThrows(UserNotFoundException.class, () -> recordService.saveNewRecord(memberId));
+    }
+
 }

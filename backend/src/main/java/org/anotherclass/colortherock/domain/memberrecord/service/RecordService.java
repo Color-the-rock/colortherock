@@ -5,6 +5,7 @@ import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
+import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
 import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
 import org.anotherclass.colortherock.domain.memberrecord.response.*;
 import org.anotherclass.colortherock.domain.video.dto.DateLevelDto;
@@ -136,7 +137,7 @@ public class RecordService {
 
     @Transactional
     public void saveNewRecord(Long memberId) {
-        Member member = memberRepository.findById(memberId).get();
+        Member member = memberRepository.findById(memberId).orElseThrow(UserNotFoundException::new);
         MemberRecord memberRecord = new MemberRecord(member);
         recordRepository.save(memberRecord);
     }
