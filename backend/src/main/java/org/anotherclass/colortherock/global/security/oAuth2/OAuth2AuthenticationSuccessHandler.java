@@ -18,6 +18,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
 
@@ -55,7 +57,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     .queryParam("access", token.getAccessToken())
                     .queryParam("email", member.getEmail())
                     .queryParam("registrationId", member.getRegistrationId())
-                    .queryParam("nickname", member.getNickname()).build().toUriString();
+                    .queryParam("nickname", URLEncoder.encode(member.getNickname(), StandardCharsets.UTF_8)).toUriString();
         } else {
             targetUrl = UriComponentsBuilder.newInstance()
                     .scheme("http")
@@ -66,8 +68,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     .queryParam("registrationId", memberInfo.getRegistrationId()).toUriString();
         }
         log.info("{}", targetUrl);
-        String encode = UriEncoder.encode(targetUrl);
-        response.sendRedirect(encode);
+
+        clearAuthenticationAttributes(request,response);
+        response.sendRedirect(targetUrl);
     }
 
     // HttpCookie 삭제
