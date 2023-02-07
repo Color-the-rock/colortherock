@@ -65,39 +65,22 @@ const StreamingLive = () => {
   }, []);
 
   useEffect(() => {
-    console.log("sub", subscribers);
-  }, [subscribers]);
-
-  // useEffect(() => {
-  //   if (testVideo !== null) testVideo.captureStream();
-  // }, [testVideo]);
-
-  useEffect(() => {
     if (session !== undefined) {
       console.log("세션 존재, 세션: ", session);
       console.log("오픈비두 객체: ", ov);
       session
         .connect(token)
-        .then((data) => console.log("성공: "))
+        .then(() => console.log("success Connect"))
         .catch((error) => console.log("error: ", error));
 
       session.on("streamCreated", (event) => {
         const testVideo = document.getElementById("test-video");
-
-        console.log("streamCreated 발생 ", event);
         const subscriber = session.subscribe(event.stream, undefined);
-
-        console.log("testVideo ? ", testVideo);
 
         if (testVideo !== null) {
           subscriber.addVideoElement(testVideo);
         }
 
-        console.log("subscriber? ", subscriber);
-        // const { stream } = event;
-        // console.log("streamCreated stream : ", stream);
-        // const publisedMediaStream = stream.getMediaStream();
-        // console.log("streamCreated getMediaStream : ", publisedMediaStream);
         setSubscribers((prev) => [subscriber, ...prev]);
       });
 
@@ -115,13 +98,6 @@ const StreamingLive = () => {
 
   useEffect(() => {
     if (token !== "" && session !== undefined) {
-      console.log("토큰 존재 && 세션 존재");
-
-      console.log("세션: ", session);
-      const { role } = ov;
-      console.log("오픈비두 객체 role: ", role);
-
-      // if (role === "PUBLISHER") {
       session.connect(token, { clientData: userNickName }).then(async () => {
         onSessionCreated();
 
@@ -158,7 +134,6 @@ const StreamingLive = () => {
         setMainStreamManager(publisher);
         setPublisher(publisher);
       });
-      // }
     }
   }, [token]);
 
@@ -267,6 +242,11 @@ const StreamingLive = () => {
       );
     });
   };
+
+  // test
+  useEffect(() => {
+    console.log("messages::", messages);
+  }, [messages]);
 
   const handleSetVideoRecord = () => {
     // 카메라가 꺼져있다면

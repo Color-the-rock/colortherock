@@ -22,6 +22,7 @@ import Preview from "./pages/Preview/inedx";
 import RecordForm from "./pages/Record/RecordForm";
 import StreamingLive from "./pages/StreamingLive";
 import UploadS3Form from "./pages/Board/UploadS3Form";
+import ErrorPage from "./pages/Error";
 
 const Layout = () => {
   return (
@@ -33,7 +34,25 @@ const Layout = () => {
 };
 
 const AppRouter = () => {
-  // 로그인 여부에 따라 router 설정
+  console.log("로그인 상태", sessionStorage.getItem("accessToken"));
+  if (sessionStorage.getItem("accessToken") === null) {
+    return (
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Intro />} />
+            <Route path="/board" element={<Board />} />
+            <Route path="/streaming" element={<Streaming />} />
+          </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/oauth" element={<Oauth />} />
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
+        {/* <Footer /> */}
+      </Router>
+    );
+  }
   return (
     <Router>
       <Routes>
@@ -57,6 +76,7 @@ const AppRouter = () => {
         <Route path="/record/form" element={<RecordForm />} />
         <Route path="/streaming/live/:sessionId" element={<StreamingLive />} />
         <Route path="/board/s3form" element={<UploadS3Form />} />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
       {/* <Footer /> */}
     </Router>
