@@ -12,7 +12,7 @@ import org.anotherclass.colortherock.domain.live.request.RecordingSaveRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStartRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStopRequest;
 import org.anotherclass.colortherock.domain.live.response.LiveListResponse;
-import org.anotherclass.colortherock.domain.live.response.RecordingListResponse;
+import org.anotherclass.colortherock.domain.live.response.PrevRecordingListResponse;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
@@ -176,14 +176,14 @@ public class LiveService {
         return responses;
     }
 
-    public List<RecordingListResponse> getRecordings(String sessionId) {
+    public List<PrevRecordingListResponse> getRecordings(String sessionId) {
         List<String> recordingIds = recordingsForSession.get(sessionId);
-        List<RecordingListResponse> response = new ArrayList<>();
+        List<PrevRecordingListResponse> response = new ArrayList<>();
         recordingIds.forEach(recordingId -> {
             try {
                 Recording recording = openVidu.getRecording(recordingId);
                 if(recording.getStatus() == Recording.Status.ready) {
-                    response.add(new RecordingListResponse(recording));
+                    response.add(new PrevRecordingListResponse(recording));
                 }
             } catch (OpenViduJavaClientException | OpenViduHttpException e) {
                 throw new RuntimeException(e);
