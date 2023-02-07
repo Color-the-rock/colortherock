@@ -8,6 +8,7 @@ import { useInput } from "../../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
 import { setOV } from "../../stores/streaming/streamingSlice";
 import CommentBtn from "../../components/Common/CommentBtn";
+import TestImg from "../../assets/img/common/app-logo.png";
 import ChattingModal from "../../components/Live/ChattingModal";
 import {
   FiLogOut,
@@ -22,11 +23,6 @@ import {
   FiLink,
 } from "react-icons/fi";
 import { Desktop, Mobile } from "../../components/layout/Template";
-import streamingApi from "../../api/streaming";
-import { OpenVidu, Session, StreamManager } from "openvidu-browser";
-import { to } from "@react-spring/core";
-
-const APPLICATION_SERVER_URL = "http://localhost:5000/";
 
 const StreamingLive = () => {
   // 기본 설정
@@ -56,39 +52,17 @@ const StreamingLive = () => {
   // 라이브 API 연결 설정 관리
   const [sessionId, setSessionId] = useState("");
   const token = useSelector((state) => state.streaming.userOpenViduToken);
+  const testVideo = document.getElementById("test-video");
 
   useEffect(() => {
     if (ov !== null && ov !== undefined) {
+      console.log("ov 있음", ov, token);
       setSession(ov.initSession());
     }
   }, []);
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
-
-    if (ov === null || ov === undefined) {
-      let base64data = "Q09MT1JUSEVST0NLCg==";
-      console.log("참여자라면 요청", _sessionId, " ", base64data);
-      // 참여자라면, sessionId로 요청
-      axios
-        .get(`https://i8a407.p.ssafy.io/openvidu/api/sessions/${_sessionId}`, {
-          headers: {
-            Authorization: `Basic T1BFTlZJRFVBUFA6Q09MT1JUSEVST0NL`,
-          },
-        })
-        .then(({ data }) => {
-          console.log("openVidu get?  ", data);
-          console.log("zzz?", data.connections.content[0]);
-          const ov = data.connections.content[0];
-          console.log("ov 할당 ", ov);
-          dispatch(setOV({ ov }));
-          const mySession = new Session(ov);
-          console.log("mySesison??", mySession);
-
-          setSession(mySession);
-        })
-        .catch((error) => console.log("error", error));
-    }
   }, []);
 
   useEffect(() => {
@@ -96,25 +70,22 @@ const StreamingLive = () => {
   }, [subscribers]);
 
   useEffect(() => {
-    console.log("ov!!!!! ", ov);
-  }, [ov]);
-
-  useEffect(() => {
-    console.log("useEffect()... session: ", session);
-    console.log("useEffect()... ov : ", ov);
-
     if (session !== undefined) {
-      console.log("있음 session ?", session);
-      console.log("있음()... ov : ", ov);
-
-      // mySession
-      //   .connect(token)
-      //   .then((data) => console.log("성공: ", data))
-      //   .catch((error) => console.log("error: ", error));
+      console.log("세션 존재, 세션: ", session);
+      console.log("오픈비두 객체: ", ov);
+      session
+        .connect(token)
+        .then((data) => console.log("성공: "))
+        .catch((error) => console.log("error: ", error));
 
       session.on("streamCreated", (event) => {
-        console.log("streamCreated");
+        console.log("streamCreated 발생 ", event);
         const subscriber = session.subscribe(event.stream, undefined);
+        console.log("subscriber? ", subscriber);
+        // const { stream } = event;
+        // console.log("streamCreated stream : ", stream);
+        // const publisedMediaStream = stream.getMediaStream();
+        // console.log("streamCreated getMediaStream : ", publisedMediaStream);
         setSubscribers((prev) => [subscriber, ...prev]);
       });
 
@@ -132,7 +103,13 @@ const StreamingLive = () => {
 
   useEffect(() => {
     if (token !== "" && session !== undefined) {
-      console.log("토큰 존재 createSession()...", token);
+      console.log("토큰 존재 && 세션 존재");
+
+      console.log("세션: ", session);
+      const { role } = ov;
+      console.log("오픈비두 객체 role: ", role);
+
+      // if (role === "PUBLISHER") {
       session.connect(token, { clientData: userNickName }).then(async () => {
         onSessionCreated();
 
@@ -148,7 +125,7 @@ const StreamingLive = () => {
           mirror: false, // Whether to mirror your local video or not
         });
 
-        session.publish(publisher);
+        session.publish(publisher); // publisher는 본인의 화면을 송출
 
         console.log("session???", session.sessionId);
 
@@ -169,34 +146,13 @@ const StreamingLive = () => {
         setMainStreamManager(publisher);
         setPublisher(publisher);
       });
+      // }
     }
   }, [token]);
 
   const getToken = async () => {
-    // if (token === "") {
-    //   await createSession("SessionA");
-    // }
     return token;
   };
-
-  // const createSession = async () => {
-  //   const requestBody = {
-  //     isPublic: true,
-  //     gymName: "더클라임 강남",
-  //     title: "클라이밍 하는 중~!",
-  //   };
-
-  //   streamingApi
-  //     .createLiveSession(requestBody)
-  //     .then(({ data: { status, result } }) => {
-  //       if (status === 200) {
-  //         console.log("stausCode : 200 ", result);
-  //         setToken(result);
-  //         return result;
-  //       }
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
 
   const onbeforeunload = (event) => {
     leaveSession();
@@ -212,8 +168,6 @@ const StreamingLive = () => {
 
   // 비디오 설정 메뉴 관리
   const leaveSession = () => {
-    // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
-
     if (session) {
       session.disconnect();
     }
@@ -367,6 +321,8 @@ const StreamingLive = () => {
             <UserVideoComponent streamManager={mainStreamManager} />
           ) : null
         ) : null}
+
+        <video id="test-video" autoPlay />
       </S.OwnerVideoWrapper>
       <Mobile>
         <S.SettingWrapper>

@@ -104,6 +104,8 @@ const StreamingForm = () => {
       title: "클라이밍 하는 중~!",
     };
 
+    console.log("createdSession!");
+
     streamingApi
       .createLiveSession(requestBody)
       .then(({ data: { status, result } }) => {

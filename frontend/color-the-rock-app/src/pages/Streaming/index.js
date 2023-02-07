@@ -6,8 +6,9 @@ import * as S from "./style";
 import { HiOutlineVideoCamera } from "react-icons/hi";
 import streamingApi from "../../api/streaming";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpenViduToken } from "../../stores/streaming/streamingSlice";
+import { setOpenViduToken, setOV } from "../../stores/streaming/streamingSlice";
 import { useNavigate } from "react-router";
+import { OpenVidu } from "openvidu-browser";
 const dummy = [
   {
     id: 1,
@@ -51,13 +52,21 @@ const Streaming = () => {
   const navigate = useNavigate();
   const token = useSelector((state) => state.streaming.userOpenViduToken);
 
+  // openVidu 설정
+  const joinSession = () => {
+    console.log("joinSession");
+    const ov = new OpenVidu();
+    dispatch(setOV({ ov }));
+  };
+
   const test = () => {
+    joinSession();
     streamingApi
-      .participateLiveSession("ses_MfqaNOvd1w")
+      .participateLiveSession("ses_T4qAMWSjji")
       .then(({ data: { status, result } }) => {
         if (status === 200) {
           dispatch(setOpenViduToken(result));
-          navigate(`/streaming/live/ses_MfqaNOvd1w`);
+          navigate(`/streaming/live/ses_T4qAMWSjji`);
         }
       })
       .catch((error) => console.log(error));
