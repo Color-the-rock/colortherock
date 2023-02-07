@@ -40,6 +40,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         Optional<Member> optionalMember = memberRepository.findByRegistrationIdAndEmail(memberInfo.getRegistrationId(), memberInfo.getEmail());
         String targetUrl;
+        request.setCharacterEncoding("UTF-8");
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
             String tokens = "Bearer " + jwtTokenUtils.createTokens(member, oAuth2User.getAuthorities());
