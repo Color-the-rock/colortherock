@@ -94,7 +94,7 @@ class VideoBoardControllerTest extends IntegrationTest {
                 .getResponse();
 
         BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        assertEquals(arrayList.getResult().size(), 16);
+        assertEquals(16, arrayList.getResult().size());
     }
 
     @Test
