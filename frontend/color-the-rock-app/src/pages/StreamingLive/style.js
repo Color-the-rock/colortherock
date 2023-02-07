@@ -176,11 +176,7 @@ export const IconWrapper = styled.div`
 `;
 
 export const VideoTest = styled.video`
-  width: 100vw;
-  height: 100vh;
-  z-index: 1000;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  background-color: #fff;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
 `;

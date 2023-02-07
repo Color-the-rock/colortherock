@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Thumbnail from "../../components/Common/Thumbnail";
 import SearchBar from "../../components/Common/Search";
 import Title from "../../components/Common/Title";
@@ -9,48 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOpenViduToken, setOV } from "../../stores/streaming/streamingSlice";
 import { useNavigate } from "react-router";
 import { OpenVidu } from "openvidu-browser";
-const dummy = [
-  {
-    id: 1,
-    title: "실시간 클라이밍 중",
-    userNickname: "공싸피",
-    gymName: "강남 더 클라이밍",
-    imgUrl: "",
-  },
-  {
-    id: 2,
-    title: "실시간 클라이밍 진행",
-    userNickname: "김싸피",
-    gymName: "역삼 더 클라이밍",
-    imgUrl: "",
-  },
-  {
-    id: 3,
-    title: "초보 클라이밍",
-    userNickname: "송싸피",
-    gymName: "홍대 더 클라이밍",
-    imgUrl: "",
-  },
-  {
-    id: 4,
-    title: "클라이밍 마스터",
-    userNickname: "최싸피",
-    gymName: "인천 더 클라이밍",
-    imgUrl: "",
-  },
-  {
-    id: 5,
-    title: "실시간 클라이밍 중",
-    userNickname: "허싸피",
-    gymName: "신림 더 클라이밍",
-    imgUrl: "",
-  },
-];
 
 const Streaming = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((state) => state.streaming.userOpenViduToken);
+  const [result, setResult] = useState([]);
 
   // openVidu 설정
   const joinSession = () => {
@@ -59,18 +23,34 @@ const Streaming = () => {
     dispatch(setOV({ ov }));
   };
 
-  const test = () => {
+  const handleParticipateSession = () => {
     joinSession();
     streamingApi
-      .participateLiveSession("ses_RZJ6vRIjM5")
+      .participateLiveSession("ses_C1O14q5DIs")
       .then(({ data: { status, result } }) => {
         if (status === 200) {
           dispatch(setOpenViduToken(result));
-          navigate(`/streaming/live/ses_RZJ6vRIjM5`);
+          navigate(`/streaming/live/ses_C1O14q5DIs`);
         }
       })
       .catch((error) => console.log(error));
   };
+
+  const getAllLiveList = () => {
+    streamingApi
+      .getAllLiveList()
+      .then(({ data: { status, result: _result } }) => {
+        if (status === 200) {
+          console.log("statusCode : 200 ", _result);
+          setResult(_result);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    getAllLiveList();
+  }, []);
 
   useEffect(() => {
     console.log("참여자 토큰: ", token);
@@ -79,16 +59,16 @@ const Streaming = () => {
   return (
     <S.Container>
       <Title text="실시간 도전">
-        <S.LiveTag onClick={test}>LIVE</S.LiveTag>
+        <S.LiveTag>LIVE</S.LiveTag>
       </Title>
       <S.Description>
         도전 중인 등반을 보고 실시간으로 피드백해줘요!
       </S.Description>
       <SearchBar />
       {/* list */}
-      {dummy && dummy.length > 0 ? (
+      {result && result.length > 0 ? (
         <S.ThumbnailList>
-          {dummy.map((item) => (
+          {result.map((item) => (
             <Thumbnail
               key={item.id}
               id={item.id}
@@ -97,11 +77,12 @@ const Streaming = () => {
               gymName={item.gymName}
               imgUrl={item.imgUrl}
               isLive={true}
+              onClick={handleParticipateSession(item.id)}
             />
           ))}
         </S.ThumbnailList>
       ) : (
-        <label>진행중인 방송이 없어요!</label>
+        <S.Message>진행중인 방송이 없어요!</S.Message>
       )}
       <S.LiveButton to="/streaming/form">
         <HiOutlineVideoCamera size="24px" color="#C250D6" />

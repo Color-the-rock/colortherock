@@ -73,17 +73,6 @@ const StreamingForm = () => {
   };
 
   const submitHandler = () => {
-    const data = {
-      isPublic,
-      gymName,
-      title,
-    };
-
-    // ----------------------------------------------- //
-    //api /api/live 요청 보내기
-    // 올바른 응답일 떄는 joinSsession 및 라이브 페이지로 이동...
-    // ---------------------------------------------- //
-
     joinSession();
     navigate("/streaming/live/1");
   };
@@ -100,11 +89,11 @@ const StreamingForm = () => {
   const createSession = () => {
     const requestBody = {
       isPublic: true,
-      gymName: "더클라임 강남",
-      title: "클라이밍 하는 중~!",
+      gymName: gymName,
+      title: title,
     };
 
-    console.log("createdSession!");
+    console.log("createdSession!", requestBody);
 
     streamingApi
       .createLiveSession(requestBody)
