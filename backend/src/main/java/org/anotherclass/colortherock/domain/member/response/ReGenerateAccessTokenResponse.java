@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ReGenerateAccessTokenResponse {
 
-    @Schema(description = "닉네임")
+    @Schema(description = "액세스 토큰 ")
     private String accessToken;
     public ReGenerateAccessTokenResponse(String accessToken) {
         this.accessToken = accessToken;

@@ -4,14 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.live.request.CreateLiveRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingSaveRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStartRequest;
 import org.anotherclass.colortherock.domain.live.request.RecordingStopRequest;
 import org.anotherclass.colortherock.domain.live.response.LiveListResponse;
-import org.anotherclass.colortherock.domain.live.response.RecordingListResponse;
+import org.anotherclass.colortherock.domain.live.response.PrevRecordingListResponse;
 import org.anotherclass.colortherock.domain.live.service.LiveService;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.global.common.BaseResponse;
@@ -87,8 +86,8 @@ public class LiveController {
     @Operation(description = "이전 녹화 목록 반환 API", summary = "이전 녹화 목록 반환 API")
     @ApiResponse(responseCode = "200", description = "녹화 목록 반환 성공", content = @Content(schema = @Schema(implementation = LiveListResponse.class)))
     @GetMapping("/live/{sessionId}/recording/list")
-    public BaseResponse<?> recordingList(@PathVariable String sessionId) {
-        List<RecordingListResponse> response = liveService.getRecordings(sessionId);
+    public BaseResponse<?> previousRecordingList(@PathVariable String sessionId) {
+        List<PrevRecordingListResponse> response = liveService.getRecordings(sessionId);
         return new BaseResponse<>(response);
     }
 
