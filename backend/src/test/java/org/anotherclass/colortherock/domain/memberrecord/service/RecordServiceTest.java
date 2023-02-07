@@ -4,17 +4,13 @@ import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
 import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
 import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
-import org.anotherclass.colortherock.domain.memberrecord.response.LevelStatResponse;
-import org.anotherclass.colortherock.domain.memberrecord.response.TotalStatResponse;
-import org.anotherclass.colortherock.domain.memberrecord.response.VideoDetailResponse;
+import org.anotherclass.colortherock.domain.memberrecord.response.*;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
+import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,6 +96,18 @@ class RecordServiceTest {
         TotalStatResponse totalRecords = recordService.getTotalRecords(member);
         // then
         assertEquals(testRecord.getVideoCount(), totalRecords.getVideoCount());
+    }
+
+    @Test
+    @DisplayName("나의 운동 기록 반환")
+    public void getMyVideosTest() {
+        // given
+        LocalDate localDate = LocalDate.parse("2023-01-17");
+        MyVideoRequest request = MyVideoRequest.builder().isSuccess(true).shootingDate(localDate).build();
+        // when
+        List<VideoListResponse> myVideos = recordService.getMyVideos(member, request);
+        // then
+        assertEquals(9, myVideos.size());
     }
 
     @Test
@@ -192,4 +200,43 @@ class RecordServiceTest {
         assertThrows(UserNotFoundException.class, () -> recordService.saveNewRecord(memberId));
     }
 
+    @Test
+    @DisplayName("암장 방문 기록 반환")
+    public void getVisitListTest() {
+        // given
+        UploadVideoRequest saveDto = UploadVideoRequest.builder()
+                .shootingDate(LocalDate.parse("2023-01-18"))
+                .level(3)
+                .gymName("볼더프렌즈 홍대")
+                .color("노랑")
+                .isSuccess(true).build();
+        em.persist(saveDto.toEntity(member));
+        em.flush();
+        em.clear();
+        // when
+        VisitResponse visitList = recordService.getVisitList(member);
+        // then
+        assertEquals(2, visitList.getTotalCount());
+        assertEquals(1, visitList.getData().get(0).getCount());
+    }
+
+    @Test
+    @DisplayName("달력 색상 반환")
+    public void getCalendarColorTest() {
+         // given
+        UploadVideoRequest saveDto = UploadVideoRequest.builder()
+                .shootingDate(LocalDate.parse("2023-01-17"))
+                .level(1)
+                .gymName("더클라임 강남")
+                .color("노랑")
+                .isSuccess(true).build();
+        em.persist(saveDto.toEntity(member));
+        em.flush();
+        em.clear();
+        // when
+        List<DailyColorResponse> calendarColor = recordService.getCalendarColor(member, "2023-01");
+        // then
+        assertEquals(1, calendarColor.size());
+        assertEquals("2023-01-17", calendarColor.get(0).getDate().toString());
+    }
 }
