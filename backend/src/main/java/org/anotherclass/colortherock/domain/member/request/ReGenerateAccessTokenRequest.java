@@ -1,6 +1,5 @@
 package org.anotherclass.colortherock.domain.member.request;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,10 +14,10 @@ import javax.validation.constraints.NotBlank;
 public class ReGenerateAccessTokenRequest {
 
     @NotBlank
-    @Parameter(description = "액세스 토큰", required = true)
+    @Schema(description = "리프레시 토큰")
     private String accessToken;
     @NotBlank
-    @Parameter(description = "리프레시 토큰", required = true)
+    @Schema(description = "리프레시 토큰")
     private String refreshToken;
 
 }

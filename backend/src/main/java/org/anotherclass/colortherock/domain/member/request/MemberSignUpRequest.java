@@ -1,6 +1,5 @@
 package org.anotherclass.colortherock.domain.member.request;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +10,7 @@ import org.anotherclass.colortherock.domain.member.entity.Member.RegistrationId;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,14 +19,16 @@ import javax.validation.constraints.NotNull;
 public class MemberSignUpRequest {
 
     @Email(message = "이메일을 필수 값입니다.")
-    @Schema(description = "이메일", required = true)
+    @Schema(description = "이메일")
     private String email;
     @NotNull(message = "가입경로는 필수 값입니다.")
-    @Schema(description = "가입경로", required = true)
+    @Schema(description = "가입경로")
     private RegistrationId registrationId;
 
     @NotBlank(message = "닉네임은 필수입니다.")
-    @Schema(description = "닉네임", required = true)
+    @Pattern(regexp = "^\\S*$", message = "닉네임에 공백이 있으면 안됩니다.")
+    @Pattern(regexp = "^[A-Za-z0-9가-힣]{2,16}$", message = "닉네임은 2글자 이상 16자 이하입니다.")
+    @Schema(description = "닉네임")
     private String nickname;
 
     public Member toEntity() {

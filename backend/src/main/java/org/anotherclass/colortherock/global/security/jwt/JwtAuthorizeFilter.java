@@ -1,6 +1,7 @@
 package org.anotherclass.colortherock.global.security.jwt;
 
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 import static org.aspectj.util.LangUtil.isEmpty;
 
+@Slf4j
 public class JwtAuthorizeFilter extends BasicAuthenticationFilter {
 
     private final JwtTokenUtils jwtTokenUtils;
@@ -41,8 +43,14 @@ public class JwtAuthorizeFilter extends BasicAuthenticationFilter {
             return;
         }
         String token = header.substring(7);
-
-        Claims claims = jwtTokenUtils.getAllClaims(token);
+        Claims claims;
+        try {
+            claims = jwtTokenUtils.getAllClaims(token);
+        } catch (Exception e) {
+            log.info("jwt exception message : {} token : {}", e.getMessage(), token);
+            chain.doFilter(request, response);
+            return;
+        }
         Collection<? extends GrantedAuthority> grantedAuthorities = createGrantedAuthorities(claims);
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(grantedAuthorities, token);
         Authentication authenticate = this.getAuthenticationManager().authenticate(authenticationToken);
