@@ -71,6 +71,7 @@ const StreamingLive = () => {
 
   useEffect(() => {
     if (session !== undefined) {
+      onSessionCreated();
       console.log("세션 존재, 세션: ", session);
       console.log("오픈비두 객체: ", ov);
       session
@@ -106,7 +107,7 @@ const StreamingLive = () => {
     if (token !== "" && session !== undefined) {
       console.log("??????");
       session.connect(token, { clientData: userNickName }).then(async () => {
-        onSessionCreated();
+        // onSessionCreated();
 
         // --- 5) Get your own camera stream ---
         let publisher = await ov.initPublisherAsync(undefined, {
@@ -140,6 +141,7 @@ const StreamingLive = () => {
           (device) => device.deviceId === currentVideoDeviceId
         );
 
+        setSubscribers((prev) => [publisher, ...prev]);
         setCurrentVideoDevice(CurrentVideoDevice);
         setMainStreamManager(publisher);
         setPublisher(publisher);
