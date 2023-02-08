@@ -18,6 +18,7 @@ export const recordApi = {
 
   // 영상 재생을 위한 영상 상세 정보 조회
   getOneRecordVideo: (videoId) => api.get(`/record/video/${videoId}`),
+  
   // 전체 운동 기록 누적 통계 조회 API
   getTotalStatistics: () => api.get(`/record/total`),
 
