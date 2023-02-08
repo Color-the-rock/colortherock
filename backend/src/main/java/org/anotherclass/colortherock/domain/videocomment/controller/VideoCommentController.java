@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +37,7 @@ public class VideoCommentController {
     @GetMapping("/comment")
     @Operation(description = "영상 댓글 조회 API", summary = "영상 댓글 조회 API")
     @ApiResponse(responseCode = "200", description = "댓글 조회 성공", content = @Content(schema = @Schema(implementation = CommentListResponse.class)))
-    public BaseResponse<List<CommentListResponse>> getCommentList(CommentListRequest condition) {
+    public BaseResponse<List<CommentListResponse>> getCommentList(@Valid CommentListRequest condition) {
         List<CommentListResponse> commentList = videoCommentService.getCommentList(condition);
         return new BaseResponse<>(commentList);
     }

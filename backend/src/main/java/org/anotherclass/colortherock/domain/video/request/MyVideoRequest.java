@@ -13,7 +13,8 @@ import java.time.LocalDate;
 @Schema(description = "내 영상 요청 ")
 public class MyVideoRequest {
     @Positive
-    @Schema(description = "영상 id")
+    @NotNull
+    @Schema(description = "페이지네이션용 video id")
     private Long videoId;
     @NotNull @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Schema(description = "찍은 날짜")

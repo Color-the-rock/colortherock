@@ -44,6 +44,7 @@ class VideoBoardServiceTest {
     private ArrayList<Long> videoIds;
     private ArrayList<Long> videoBoardIds;
     private final Integer PAGE_SIZE = 16;
+    private final Integer MYPAGE_SIZE = 8;
 
     @BeforeEach
     public void setMemberAndVideo() {
@@ -106,7 +107,7 @@ class VideoBoardServiceTest {
 
                     // given
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
-                    cond.setStoreId(null);
+                    cond.setStoreId(-1L);
                     cond.setGymName("");
                     cond.setColor("");
 
@@ -127,8 +128,9 @@ class VideoBoardServiceTest {
                 void getSuccessVideosWithStoreId() {
 
                     // given
+                    Long setId = 2L;
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
-                    cond.setStoreId(videoBoardIds.get(7));
+                    cond.setStoreId(setId);
                     cond.setGymName("");
                     cond.setColor("");
 
@@ -137,7 +139,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertTrue(cond.getStoreId() > successVideos.get(0).getVideoBoardId());
-                    assertEquals(PAGE_SIZE, successVideos.size());
+                    assertEquals(setId-1, successVideos.size());
                 }
             }
 
@@ -167,14 +169,14 @@ class VideoBoardServiceTest {
         @DisplayName("색상 검색 조건이 있고")
         class With_Color_Search_Condition {
             @Nested
-            @DisplayName("storeId가 null일 경우")
+            @DisplayName("storeId가 -1일 경우")
             class No_Store_ID {
                 @Test
                 @DisplayName("색상 조건에 해당하는 리스트를 Id값이 큰 순서대로 사이즈만큼 반환")
                 void getSuccessVideosWithColorWihtoutStoreID() {
                     // given
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
-                    cond.setStoreId(null);
+                    cond.setStoreId(-1L);
                     cond.setGymName("");
                     cond.setColor("초록");
 
@@ -194,14 +196,14 @@ class VideoBoardServiceTest {
         @DisplayName("암장 검색 조건이 있고")
         class With_Gym_Search_Condition {
             @Nested
-            @DisplayName("storeId가 null일 경우")
+            @DisplayName("storeId가 -1일 경우")
             class No_Store_Id {
                 @Test
                 @DisplayName("암장 조건에 해당하는 리스트를 Id값이 큰 순서대로 사이즈만큼 반환")
                 void getSuccessVideosWithGymNameWithoutStoreID() {
                     // given
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
-                    cond.setStoreId(null);
+                    cond.setStoreId(-1L);
                     cond.setGymName("더클라임 강남점");
                     cond.setColor("");
 
@@ -220,7 +222,7 @@ class VideoBoardServiceTest {
         class With_ALL_Condition {
 
             @Nested
-            @DisplayName("storeId가 null일 경우")
+            @DisplayName("storeId가 -1일 경우")
             class No_Store_Id {
 
                 @Test
@@ -228,7 +230,7 @@ class VideoBoardServiceTest {
                 void getSuccessVideosWithAllCondWithoutStoreID() {
                     // given
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
-                    cond.setStoreId(null);
+                    cond.setStoreId(-1L);
                     cond.setGymName("더클라임 홍대점");
                     cond.setColor("파랑");
 
@@ -421,17 +423,17 @@ class VideoBoardServiceTest {
     @DisplayName("내 완등 영상 게시글 가져오기 메소드는")
     class GetMySuccessVideoPosts {
         @Nested
-        @DisplayName("storeId가 null일 경우")
+        @DisplayName("storeId가 -1일 경우")
         class Store_Id_Null {
             @Test
             @DisplayName("멤버의 성공 영상 게시글의 id값이 큰 순서대로 사이즈만큼 반환")
             void getMySuccessVideoPosts() {
                 Long memberId = memberIds.get(0);
-                Long storeId = null;
+                Long storeId = -1L;
                 List<VideoBoardSummaryResponse> result = videoBoardService.getMySuccessVideoPosts(memberId, storeId);
 
                 assertTrue(result.get(0).getVideoBoardId() > result.get(1).getVideoBoardId());
-                assertEquals(8, result.size());
+                assertEquals(MYPAGE_SIZE, result.size());
             }
         }
     }
