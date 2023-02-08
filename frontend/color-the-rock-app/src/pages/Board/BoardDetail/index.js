@@ -131,10 +131,12 @@ const BoardDetail = () => {
       <S.Container>
         <S.ContentContainer>
           <S.ContentWrap>
-            <S.Video controls>
-              <source src={TestVideo} type="video/mp4" />
+            <S.Video controls autoPlay>
+              <source
+                src="https://dhw80hz67vj6n.cloudfront.net/20230203_091428077.mp4"
+                type="video/mp4"
+              />
             </S.Video>
-
             {isModalOpen ? (
               <S.CommentModalWrap isModalOpen>
                 <CommentModal setIsModalOpen={setIsModalOpen} />

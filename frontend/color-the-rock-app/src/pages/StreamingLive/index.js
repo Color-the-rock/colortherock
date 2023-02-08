@@ -27,9 +27,11 @@ import streamingApi from "../../api/streaming";
 const StreamingLive = () => {
   // 기본 설정
   const ov = useSelector((state) => state.streaming.ov);
+  const roomInfo = useSelector((state) => state.streaming.info);
   const dispatch = useDispatch();
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
-  const [sessionTitle, setSessionTitle] = useState("SessionA");
+  const [sessionTitle, setSessionTitle] = useState("testTitle");
+  const [connectionId, setConnectionId] = useState("");
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -38,7 +40,7 @@ const StreamingLive = () => {
 
   // 세션 종료 관리
   const navigate = useNavigate();
-  const { sessionId: _sessionId } = useParams();
+  // const { sessionId: _sessionId } = useParams();
   // 채팅 관리
   const [isShowChattingModal, setShowChattingModal] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -51,9 +53,10 @@ const StreamingLive = () => {
 
   // 라이브 API 연결 설정 관리
   const token = useSelector((state) => state.streaming.userOpenViduToken);
-
+  const [sessionId, setSessionId] = useState("");
   // 녹화 설정 관리
   const [recordId, setRecordId] = useState("");
+  let testRecordId = "";
 
   useEffect(() => {
     if (ov !== null && ov !== undefined) {
@@ -99,7 +102,9 @@ const StreamingLive = () => {
   }, [session]);
 
   useEffect(() => {
+    console.log("useEffect().....", session);
     if (token !== "" && session !== undefined) {
+      console.log("??????");
       session.connect(token, { clientData: userNickName }).then(async () => {
         onSessionCreated();
 
@@ -118,6 +123,9 @@ const StreamingLive = () => {
         session.publish(publisher); // publisher는 본인의 화면을 송출
 
         console.log("session???", session.sessionId);
+        setSessionId(session.sessionId);
+        setConnectionId(session.connection.connectionId);
+        console.log("ov???", ov);
 
         // Obtain the current video device in use
         let devices = await ov.getDevices();
@@ -250,46 +258,55 @@ const StreamingLive = () => {
     console.log("messages::", messages);
   }, [messages]);
 
-  const handleSetVideoRecord = () => {
+  const handleStartVideoRecord = () => {
     // 카메라가 꺼져있다면
     if (!isOnVideo) {
       alert("카메라를 켜주세요:)");
       return;
     }
 
-    if (_sessionId === null || _sessionId === undefined) return;
+    if (sessionId === null || sessionId === undefined) return;
 
-    console.log("_session ? ", _sessionId);
+    console.log("_session ? ", session, sessionId);
 
-    if (isRecordStart) {
-      const requestBody = {
-        token: token,
-      };
-      streamingApi
-        .startRecordVideo("ses_ATKMnDpKyk", requestBody)
-        .then(({ data: { status, result: _result } }) => {
-          if (status === 200) {
-            console.log("[startRecordVideo] statusCode : 200 ", _result);
-            setRecordId(_result);
-          }
-        })
-        .catch((error) => console.log(error));
-    } else {
-      const requestBody = {
-        token: token,
-        recordingId: recordId,
-      };
+    console.log("connectionId", connectionId);
+    const requestBody = {
+      token: connectionId,
+    };
+    streamingApi
+      .startRecordVideo(sessionId, requestBody)
+      .then(({ data: { status, result: _result } }) => {
+        if (status === 200) {
+          console.log("[녹화 시작] statusCode : 200 ", _result);
+          setRecordId(_result);
+          testRecordId = _result;
+          console.log("녹화 시작 후 결과 [testRecordId] ", testRecordId);
+          console.log("녹화 시작 후 결과 [recordId] ", recordId);
+        }
+      })
+      .catch((error) => console.log(error));
+    setRecordStart((prev) => !prev);
+  };
 
-      streamingApi
-        .quitRecordVideo("ses_YoeQbk4Sng", requestBody)
-        .then(({ data: { status, result: _result } }) => {
-          if (status === 200) {
-            console.log("[quitRecordVideo] statusCode : 200 ", _result);
-            setRecordId(_result);
-          }
-        })
-        .catch((error) => console.log(error));
-    }
+  const handleQuitRecord = () => {
+    console.log("녹화 종료 전 결과 [testRecordId] ", testRecordId);
+    console.log("녹화 종료 전 결과 [recordId] ", recordId);
+
+    console.log("recordId : ", testRecordId);
+    const requestBody = {
+      token: connectionId,
+      recordingId: recordId,
+    };
+
+    streamingApi
+      .quitRecordVideo(sessionId, requestBody)
+      .then(({ data: { status, result: _result } }) => {
+        if (status === 200) {
+          console.log("[quitRecordVideo] statusCode : 200 ", _result);
+        }
+      })
+      .catch((error) => console.log(error));
+
     setRecordStart((prev) => !prev);
   };
 
@@ -316,7 +333,7 @@ const StreamingLive = () => {
         )}
       </Mobile>
       <S.OwnerVideoWrapper>
-        <S.StreamTitle>방송제목이다.</S.StreamTitle>
+        <S.StreamTitle>{roomInfo.title}</S.StreamTitle>
         <S.VideoSettingsIcon
           color="#ffffff"
           size="24px"
@@ -373,7 +390,9 @@ const StreamingLive = () => {
             </S.IconWrapper>
             이전 영상
           </S.VideoMenuItem>
-          <S.VideoMenuItem onClick={handleSetVideoRecord}>
+          <S.VideoMenuItem
+            onClick={!isRecordStart ? handleStartVideoRecord : handleQuitRecord}
+          >
             <S.IconWrapper>
               <FiDisc size="24px" color={isRecordStart ? "red" : "#ffffff"} />
             </S.IconWrapper>

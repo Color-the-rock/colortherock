@@ -1,13 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
+
+// info 객체 내용
+// info: {
+//   title: "",
+//   gymName: "",
+//   drawingBackground: null,
+// },
+
 export const streamingSlice = createSlice({
   name: "streaming",
   initialState: {
     ov: null, // openVidu 객체
-    info: {
-      title: "",
-      roomName: "",
-      drawingBackground: null,
-    },
+    info: {},
     userOpenViduToken: "",
     picture: "",
   },
@@ -19,12 +23,18 @@ export const streamingSlice = createSlice({
     setOpenViduToken: (state, action) => {
       state.userOpenViduToken = action.payload;
     },
+<<<<<<< HEAD
     setPicture: (state, action) => {
       state.picture = action.payload;
+=======
+    setStreamingInfo: (state, action) => {
+      state.info = action.payload;
+>>>>>>> d09182074696f4a40ad8d14f935f554e9da80254
     },
   },
 });
 
-export const { setOV, setOpenViduToken } = streamingSlice.actions;
+export const { setOV, setOpenViduToken, setStreamingInfo } =
+  streamingSlice.actions;
 
 export default streamingSlice.reducer;

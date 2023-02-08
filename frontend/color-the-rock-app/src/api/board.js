@@ -18,7 +18,7 @@ const boardApi = {
     defaultInstance.delete(`/video/board/detail?videoBoardId=${videoBoardId}`),
 
   // 전체 완등 영상 전체 리스트 조회 - 현주
-  getAllVideo: ({ storeId, color, gymName }) =>
+  getAllVideo: ({ storeId = -1, color, gymName }) =>
     defaultInstance.get(
       `/video/board?storeId=${storeId}&color=${color}&gymName=${gymName}`
     ),
@@ -55,7 +55,7 @@ const boardApi = {
     }),
 
   // 영상 댓글 조회 요청 - 현주
-  getVideoBoardCommentList: (storeId, videoBoardId) =>
+  getVideoBoardCommentList: (storeId = -1, videoBoardId) =>
     defaultInstance.get(
       `/videoboard/comment?storeId=${storeId}&videoBoardId=${videoBoardId}`
     ),

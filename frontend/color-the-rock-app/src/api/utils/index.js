@@ -46,6 +46,8 @@ instance.interceptors.response.use(
       response: { status },
     } = error;
 
+    console.log("[api] util >> status : ", status);
+
     // token 만료시 401 error
     if (status === 401) {
       console.log("401 error 토큰 재발급");

@@ -4,7 +4,6 @@ import Webcam from "react-webcam";
 import * as S from "./style";
 import { FiArrowLeft } from "react-icons/fi";
 import InputComp from "../../components/Board/InputComp";
-// import ArrowLeftBtn from "../../components/Common/ArrowLeftBtn"
 import BoardSubTitle from "../../components/Board/BoardSubTitle";
 import SearchBar from "../../components/Common/KakaoKeywordSearch/SearchBar";
 import RegistBtn from "../../components/Board/RegistBtn";
@@ -14,7 +13,11 @@ import { FiChevronUp } from "react-icons/fi";
 import { HiOutlineCamera } from "react-icons/hi2";
 import { OpenVidu } from "openvidu-browser";
 import { useDispatch } from "react-redux";
-import { setOV, setOpenViduToken } from "../../stores/streaming/streamingSlice";
+import {
+  setOV,
+  setOpenViduToken,
+  setStreamingInfo,
+} from "../../stores/streaming/streamingSlice";
 
 // ------------- test ----------------------//
 import RecordVideoFormModal from "../../components/Streaming/RecordVideoFormModal";
@@ -78,7 +81,7 @@ const StreamingForm = () => {
       return;
     }
     joinSession();
-    navigate("/streaming/live/1");
+    navigate("/streaming/live");
   };
 
   // openVidu 설정
@@ -105,6 +108,11 @@ const StreamingForm = () => {
         if (status === 200) {
           console.log("stausCode : 200 ", result);
           dispatch(setOpenViduToken(result));
+          const params = new URL(result).searchParams;
+          console.log("param?? ", params.get("sessionId"));
+          const sessionId = params.get("sessionId");
+          console.log("sessionId? ???", sessionId);
+          dispatch(setStreamingInfo(requestBody));
         }
       })
       .catch((error) => console.log(error));
