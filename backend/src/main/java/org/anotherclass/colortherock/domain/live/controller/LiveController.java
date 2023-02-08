@@ -34,7 +34,7 @@ public class LiveController {
     @Operation(description = "진행중인 라이브 목록 반환 API", summary = "진행중인 라이브 목록 반환 API")
     @ApiResponse(responseCode = "200", description = "목록 반환 성공", content = @Content(schema = @Schema(implementation = LiveListResponse.class)))
     @GetMapping("/live/list")
-    public BaseResponse<List<LiveListResponse>> getLiveList(@RequestParam(required = false) Long liveId) {
+    public BaseResponse<List<LiveListResponse>> getLiveList(@RequestParam Long liveId) {
         List<LiveListResponse> liveList = liveService.getLiveList(liveId);
         return new BaseResponse<>(liveList);
     }

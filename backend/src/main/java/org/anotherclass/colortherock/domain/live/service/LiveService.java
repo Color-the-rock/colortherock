@@ -44,6 +44,7 @@ public class LiveService {
     private final VideoRepository videoRepository;
     private ConcurrentMap<String, List<String>> recordingsForSession = new ConcurrentHashMap<>();
     private final OpenVidu openVidu;
+    private final Integer PAGE_SIZE = 15;
 
     @Value("${RECORDING_PATH}") String dir;
 
@@ -146,7 +147,7 @@ public class LiveService {
 
     @Transactional(readOnly = true)
     public List<LiveListResponse> getLiveList(Long liveId) {
-        Pageable pageable = Pageable.ofSize(15);
+        Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
         Slice<Live> slices = liveReadRepository.searchBySlice(liveId, pageable);
 

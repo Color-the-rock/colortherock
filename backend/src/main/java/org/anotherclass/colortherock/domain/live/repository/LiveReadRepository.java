@@ -39,7 +39,7 @@ public class LiveReadRepository {
     }
 
     private BooleanExpression ltLiveId(Long liveId) {
-        if(liveId == null) return null;
+        if(liveId == -1L) return null;
         return live.id.lt(liveId);
     }
 
