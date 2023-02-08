@@ -73,6 +73,10 @@ const StreamingForm = () => {
   };
 
   const submitHandler = () => {
+    if (!isPublic || !title || !gymName || imgSrc) {
+      alert("모든 항목을 채워주세요.");
+      return;
+    }
     joinSession();
     navigate("/streaming/live/1");
   };

@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import * as S from "./style";
 import webCam from "react-webcam";
 
+import Canvas from "../Canvas";
+import { useSelector } from "react-redux";
+
 const FeedbackModal = ({ setModalOpen }) => {
   // 임시용
   const [isPublisher, setIsPublisher] = useState(true);
-
+  // const picture = useSelector(state => state.)
   const onClickHandler = () => {};
 
   return (
