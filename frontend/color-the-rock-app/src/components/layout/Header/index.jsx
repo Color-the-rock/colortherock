@@ -78,7 +78,7 @@ const Header = () => {
           <S.NavBar isShowNav>
             <S.CancelButton size="28px" onClick={handleSetShowNav} />
             <S.SideMenu isShowNav>
-              <S.SideMenuItem isLogin={true}>
+              <S.SideMenuItem isLogin={true} onClick={handleSetShowNav}>
                 <S.SLink
                   to="/streaming"
                   current={
@@ -88,7 +88,7 @@ const Header = () => {
                   실시간 라이브
                 </S.SLink>
               </S.SideMenuItem>
-              <S.SideMenuItem isLogin={true}>
+              <S.SideMenuItem isLogin={true} onClick={handleSetShowNav}>
                 <S.SLink
                   to="/board"
                   current={"/board" === location.pathname ? "true" : "false"}
@@ -96,7 +96,7 @@ const Header = () => {
                   완등 영상
                 </S.SLink>
               </S.SideMenuItem>
-              <S.SideMenuItem isLogin={isLogin}>
+              <S.SideMenuItem isLogin={isLogin} onClick={handleSetShowNav}>
                 <S.SLink
                   to="/record"
                   current={"/record" === location.pathname ? "true" : "false"}
@@ -104,7 +104,10 @@ const Header = () => {
                   운동 기록
                 </S.SLink>
               </S.SideMenuItem>
-              <S.SideMenuItem isLogin={!isLogin ? true : false}>
+              <S.SideMenuItem
+                isLogin={!isLogin ? true : false}
+                onClick={handleSetShowNav}
+              >
                 <S.SLink
                   to="/login"
                   current={"/login" === location.pathname ? "true" : "false"}
@@ -112,7 +115,7 @@ const Header = () => {
                   로그인
                 </S.SLink>
               </S.SideMenuItem>
-              <S.SideMenuItem isLogin={isLogin}>
+              <S.SideMenuItem isLogin={isLogin} onClick={handleSetShowNav}>
                 <S.SLink
                   to="/mypage"
                   current={"/mypage" === location.pathname ? "true" : "false"}
