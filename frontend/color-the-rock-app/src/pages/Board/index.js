@@ -75,7 +75,7 @@ const Board = () => {
               isLive={false}
               color={item.color}
               createdDate={item.createdDate}
-              //onClick={handleOnClickItem(item.videoBoardId)}
+              onClick={handleOnClickItem}
             />
           ))}
         </S.ThumbnailList>

@@ -13,7 +13,11 @@ import { FiChevronUp } from "react-icons/fi";
 import { HiOutlineCamera } from "react-icons/hi2";
 import { OpenVidu } from "openvidu-browser";
 import { useDispatch } from "react-redux";
-import { setOV, setOpenViduToken } from "../../stores/streaming/streamingSlice";
+import {
+  setOV,
+  setOpenViduToken,
+  setStreamingInfo,
+} from "../../stores/streaming/streamingSlice";
 
 // ------------- test ----------------------//
 import RecordVideoFormModal from "../../components/Streaming/RecordVideoFormModal";
@@ -72,8 +76,8 @@ const StreamingForm = () => {
   };
 
   const submitHandler = () => {
-    const sessionId = joinSession();
-    navigate(`/streaming/live/${sessionId}`);
+    joinSession();
+    navigate("/streaming/live");
   };
 
   // openVidu 설정
@@ -101,7 +105,10 @@ const StreamingForm = () => {
           console.log("stausCode : 200 ", result);
           dispatch(setOpenViduToken(result));
           const params = new URL(result).searchParams;
-          return params.get("sessionId");
+          console.log("param?? ", params.get("sessionId"));
+          const sessionId = params.get("sessionId");
+          console.log("sessionId? ???", sessionId);
+          dispatch(setStreamingInfo(requestBody));
         }
       })
       .catch((error) => console.log(error));

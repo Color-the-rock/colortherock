@@ -4,6 +4,7 @@ import * as S from "./style";
 import TestImg from "../../../assets/img/intro/bg-intro.png";
 const Thumbnail = ({
   id,
+  sessionId,
   title,
   userNickname,
   gymName,
@@ -13,7 +14,10 @@ const Thumbnail = ({
   onClick,
 }) => {
   return (
-    <S.Container id={id} onClick={onClick}>
+    <S.Container
+      id={isLive ? sessionId : id}
+      onClick={() => onClick(isLive ? sessionId : id)}
+    >
       <S.ThumbnailImg src={!imgUrl ? TestImg : imgUrl} />
       <S.VideoText isLive={true}>
         {title.length < 13 ? title : title.substring(0, 12) + "..."}
@@ -30,7 +34,8 @@ const Thumbnail = ({
 export default Thumbnail;
 
 Thumbnail.propTypes = {
-  id: PropTypes.string,
+  id: PropTypes.number,
+  sessionId: PropTypes.string,
   title: PropTypes.string,
   userNickname: PropTypes.string,
   gymName: PropTypes.string,

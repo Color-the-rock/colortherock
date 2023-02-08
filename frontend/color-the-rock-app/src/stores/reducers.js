@@ -8,7 +8,7 @@ import users from "./users/userSlice";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["users", "streaming"],
+  whitelist: ["users"],
 };
 
 const reducers = combineReducers({

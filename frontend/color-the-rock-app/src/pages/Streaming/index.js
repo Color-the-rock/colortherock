@@ -24,13 +24,14 @@ const Streaming = () => {
   };
 
   const handleParticipateSession = (sessionId) => {
+    console.log("sessionId ? ", sessionId);
     joinSession();
     streamingApi
       .participateLiveSession(sessionId)
       .then(({ data: { status, result } }) => {
         if (status === 200) {
           dispatch(setOpenViduToken(result));
-          navigate(`/streaming/live/${sessionId}`);
+          navigate(`/streaming/live`);
         }
       })
       .catch((error) => console.log(error));
@@ -38,7 +39,7 @@ const Streaming = () => {
 
   const getAllLiveList = () => {
     streamingApi
-      .getAllLiveList(25)
+      .getAllLiveList(-1)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
           console.log("statusCode : 200 ", _result);
@@ -81,14 +82,14 @@ const Streaming = () => {
           {result.map((item) => (
             <Thumbnail
               key={item.sessionId}
-              id={item.sessionId}
+              sessionId={item.sessionId}
               title={item.title}
               userNickname={item.memberName}
               gymName={item.gymName}
               imgUrl={item.imgUrl}
               isLive={true}
               participantNum={item.participantNum}
-              // onClick={handleParticipateSession(item.sessionId)}
+              onClick={handleParticipateSession}
             />
           ))}
         </S.ThumbnailList>

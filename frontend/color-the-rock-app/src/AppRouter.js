@@ -65,16 +65,16 @@ const AppRouter = () => {
         </Route>
 
         <Route path="/login" element={<Login />} />
+        <Route path="/oauth" element={<Oauth />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/board/form" element={<BoardRegist />} />
         <Route path="/board/modify/:id" element={<BoardModify />} />
         <Route path="/board/detail/:id" element={<BoardDetail />} />
-        <Route path="/oauth" element={<Oauth />} />
         <Route path="/streaming/:streamingId" element={<Streaming />} />
         <Route path="/streaming/form" element={<StreamingForm />} />
         <Route path="preview" element={<Preview />} />
         <Route path="/record/form" element={<RecordForm />} />
-        <Route path="/streaming/live/:sessionId" element={<StreamingLive />} />
+        <Route path="/streaming/live" element={<StreamingLive />} />
         <Route path="/board/s3form" element={<UploadS3Form />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
