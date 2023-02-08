@@ -24,6 +24,8 @@ public class MatterMostSender {
     private boolean mmEnabled;
     @Value("${notification.mattermost.webhook-url}")
     private String webhookUrl;
+    @Value("${report.mattermost.webhook-url}")
+    private String reportUrl;
 
     private final RestTemplate restTemplate;
     private final MattermostProperties mmProperties;
@@ -85,7 +87,7 @@ public class MatterMostSender {
             headers.set("Content-type", MediaType.APPLICATION_JSON_VALUE);
 
             HttpEntity<String> entity = new HttpEntity<>(payload, headers);
-            restTemplate.postForEntity(webhookUrl, entity, String.class);
+            restTemplate.postForEntity(reportUrl, entity, String.class);
 
         } catch (Exception e) {
             log.error("#### ERROR!! Notification Manager : {}", e.getMessage());
