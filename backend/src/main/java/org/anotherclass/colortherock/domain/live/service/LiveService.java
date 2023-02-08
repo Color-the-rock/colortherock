@@ -176,7 +176,8 @@ public class LiveService {
                                 .sessionId(live.getSessionId())
                                 .participantNum(
                                         openVidu.getActiveSession(live.getSessionId()).getActiveConnections().size()
-                                ).build());
+                                )
+                                .thumbnailUrl(live.getThumbnailURL()).build());
                     } else {
                         liveRepository.delete(live);
                     }
