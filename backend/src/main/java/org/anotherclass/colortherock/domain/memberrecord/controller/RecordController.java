@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
@@ -14,8 +13,6 @@ import org.anotherclass.colortherock.domain.memberrecord.exception.WrongMemberEx
 import org.anotherclass.colortherock.domain.memberrecord.response.*;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.domain.video.entity.Video;
-import org.anotherclass.colortherock.domain.video.exception.NotVideoExtensionException;
-import org.anotherclass.colortherock.domain.video.exception.VideoFileNameHasNotExtensionException;
 import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
@@ -24,9 +21,7 @@ import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
-import org.apache.commons.io.FilenameUtils;
 import org.jcodec.api.JCodecException;
-import org.joda.time.DateTime;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -132,18 +127,10 @@ public class RecordController {
         Member member = memberDetails.getMember();
         // S3 영상 저장 후 URL 얻어오기
         // 영상 식별을 위해 파일 앞에 현재 시각 추가
-        String videoName = DateTime.now() + newVideo.getOriginalFilename();
-        if (videoName.split("\\.").length < 2) {
-            throw new VideoFileNameHasNotExtensionException(GlobalErrorCode.VIDEO_HAS_NOT_EXTENSION);
-        }
-        String[] split = videoName.split("\\.");
-        String extension = split[split.length - 1];
-        if (!extension.matches("(mp4|mov|avi|wmv|flv|mkv|webm)$")) {
-            throw new NotVideoExtensionException(GlobalErrorCode.NOT_VIDEO_EXTENSION);
-        }
+        String videoName = videoService.extractValidVideoName(member, newVideo);
         String s3URL = s3Service.upload(newVideo, videoName);
         // 썸네일 이미지 생성하여 S3 저장
-        String thumbnailName = "Thumb" + DateTime.now() + FilenameUtils.getBaseName(newVideo.getOriginalFilename()) + ".JPEG";
+        String thumbnailName = videoService.extractValidThumbName(member);
         String thumbnailURL = s3Service.uploadThumbnail(newVideo, thumbnailName);
         // request와 URL을 통해 DB에 저장
         videoService.uploadVideo(member, s3URL, thumbnailURL, uploadVideoRequest, videoName);

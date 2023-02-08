@@ -20,6 +20,8 @@ public class MyCommentListResponse {
     private String nickname;
     @Schema(description = "게시글 제목")
     private String title;
+    @Schema(description = "댓글 내용")
+    private String content;
     @Schema(description = "생성 시간")
     private LocalDate createdDate;
 
