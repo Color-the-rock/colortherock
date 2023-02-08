@@ -7,19 +7,18 @@ import org.anotherclass.colortherock.domain.live.exception.RecordingStartBadRequ
 import org.anotherclass.colortherock.domain.live.exception.SessionNotFountException;
 import org.anotherclass.colortherock.domain.live.repository.LiveReadRepository;
 import org.anotherclass.colortherock.domain.live.repository.LiveRepository;
-import org.anotherclass.colortherock.domain.live.request.CreateLiveRequest;
-import org.anotherclass.colortherock.domain.live.request.RecordingSaveRequest;
-import org.anotherclass.colortherock.domain.live.request.RecordingStartRequest;
-import org.anotherclass.colortherock.domain.live.request.RecordingStopRequest;
+import org.anotherclass.colortherock.domain.live.request.*;
 import org.anotherclass.colortherock.domain.live.response.LiveListResponse;
 import org.anotherclass.colortherock.domain.live.response.PrevRecordingListResponse;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
+import org.anotherclass.colortherock.domain.member.exception.MemberNotFoundException;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
+import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.jcodec.api.JCodecException;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,20 +48,21 @@ public class LiveService {
     private final OpenVidu openVidu;
     private final Integer PAGE_SIZE = 15;
 
-    @Value("${RECORDING_PATH}") String dir;
+    @Value("${RECORDING_PATH}")
+    String dir;
 
     public LiveService(LiveRepository liveRepository,
                        MemberRepository memberRepository,
                        VideoRepository videoRepository,
                        S3Service s3Service,
-                       LiveReadRepository liveReadRepository, @Value("${OPENVIDU_URL}") String OPENVIDU_URL,
-                       @Value("${OPENVIDU_SECRET}") String OPENVIDU_SECRET) {
+                       LiveReadRepository liveReadRepository, @Value("${OPENVIDU_URL}") String openviduUrl,
+                       @Value("${OPENVIDU_SECRET}") String openviduSecret) {
         this.s3Service = s3Service;
         this.liveRepository = liveRepository;
         this.memberRepository = memberRepository;
         this.videoRepository = videoRepository;
         this.liveReadRepository = liveReadRepository;
-        this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+        this.openVidu = new OpenVidu(openviduUrl, openviduSecret);
     }
 
     public String createLiveRoom(MemberDetails memberDetails, CreateLiveRequest request) {
@@ -139,27 +140,13 @@ public class LiveService {
         throw new RecordingStartBadRequestException();
     }
 
-    @Transactional
-    public void recordingSave(MemberDetails memberDetails, String sessionId, RecordingSaveRequest request) throws IOException, JCodecException {
-        String newDir = dir + "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".webm";
-        String videoName = DateTime.now() + request.getRecordingId() + ".webm";
-        String s3Url = s3Service.uploadFromOV(newDir, videoName);
-        Member member = memberRepository.findById(memberDetails.getMember().getId()).orElseThrow();
-        // 썸네일 추가
-        String thumbnailName = "Thumb"+DateTime.now() + request.getRecordingId() + ".JPEG";
-        String thumbnailURL = s3Service.uploadThumbnailFromOV(newDir, thumbnailName);
-        // 비디오 객체 생성
-        Video video = request.toEntity(s3Url, thumbnailURL, member);
-        videoRepository.save(video);
-    }
-
     @Transactional(readOnly = true)
     public List<LiveListResponse> getLiveList(Long liveId) {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
         Slice<Live> slices = liveReadRepository.searchBySlice(liveId, pageable);
 
-        if(slices.isEmpty()) return new ArrayList<>();
+        if (slices.isEmpty()) return new ArrayList<>();
 
         // list를 받아와서 openvidu의 active session과 비교하여 없으면 DB 삭제하는 방식으로 DB를 최적화
         List<String> activeSessions = openVidu.getActiveSessions().stream().map(Session::getSessionId).collect(Collectors.toList());
@@ -192,7 +179,7 @@ public class LiveService {
         recordingIds.forEach(recordingId -> {
             try {
                 Recording recording = openVidu.getRecording(recordingId);
-                if(recording.getStatus() == Recording.Status.ready) {
+                if (recording.getStatus() == Recording.Status.ready) {
                     response.add(new PrevRecordingListResponse(recording));
                 }
             } catch (OpenViduJavaClientException | OpenViduHttpException e) {
@@ -219,4 +206,30 @@ public class LiveService {
             liveRepository.deleteBySessionId(sessionId);
     }
 
+    public void recordingSave(MemberDetails memberDetails, RecordingSaveRequest request) {
+
+        WebClient webClient = WebClient.create();
+        webClient
+                .post()
+                .uri("https://colorhtherock.com/api/live/uploadRecord")
+                .bodyValue(new RecordingUploadAtOpenviduServerRequest(request, memberDetails.getMember().getId()))
+                .retrieve();
+    }
+
+    @Transactional
+    public void uplooadAtOpenviduServer(RecordingUploadAtOpenviduServerRequest request) throws IOException, JCodecException {
+        String newDir = dir + "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".webm";
+        String videoName = DateTime.now() + request.getRecordingId() + ".webm";
+        String s3Url = s3Service.uploadFromOV(newDir, videoName);
+        Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> {
+            throw new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND);
+        });
+        // 썸네일 추가
+        String thumbnailName = "Thumb" + DateTime.now() + request.getRecordingId() + ".JPEG";
+        String thumbnailURL = s3Service.uploadThumbnailFromOV(newDir, thumbnailName);
+        // 비디오 객체 생성
+        Video video = request.toEntity(s3Url, thumbnailURL, member);
+        videoRepository.save(video);
+
+    }
 }
