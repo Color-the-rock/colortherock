@@ -61,4 +61,36 @@ public class MatterMostSender {
 
     }
 
+    public void sendMessage(String title, Long id) {
+        if (!mmEnabled)
+            return;
+
+        try {
+            Attachment attachment = Attachment.builder()
+                    .channel(mmProperties.getChannel())
+                    .authorIcon(mmProperties.getAuthorIcon())
+                    .authorName(mmProperties.getAuthorName())
+                    .color(mmProperties.getColor())
+                    .pretext(mmProperties.getPretext())
+                    .title(mmProperties.getTitle())
+                    .text(mmProperties.getText())
+                    .footer(mmProperties.getFooter())
+                    .build();
+
+            attachment.addReportInfo(title, id);
+            Attachments attachments = new Attachments(attachment);
+            String payload = new Gson().toJson(attachments);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-type", MediaType.APPLICATION_JSON_VALUE);
+
+            HttpEntity<String> entity = new HttpEntity<>(payload, headers);
+            restTemplate.postForEntity(webhookUrl, entity, String.class);
+
+        } catch (Exception e) {
+            log.error("#### ERROR!! Notification Manager : {}", e.getMessage());
+        }
+
+    }
+
 }
