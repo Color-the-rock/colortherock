@@ -18,16 +18,12 @@ public class AdminController {
     private final MemberService memberService;
 
     @PostMapping("/login/admin")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "로그인 성공"),
-            @ApiResponse(responseCode = "401", description = "아이디나 비밀번호 정보가 틀렸습니다.")
-    })
+    @ApiResponse(responseCode = "200", description = "로그인 성공")
+    @ApiResponse(responseCode = "401", description = "아이디나 비밀번호 정보가 틀렸습니다.")
     public BaseResponse<?> login(@RequestBody LoginInfo loginInfo) {
         String tokens = memberService.adminLogin(loginInfo);
         return new BaseResponse<>(tokens);
     }
-
-
 
 
 }

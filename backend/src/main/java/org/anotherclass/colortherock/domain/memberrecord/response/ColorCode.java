@@ -1,8 +1,11 @@
 package org.anotherclass.colortherock.domain.memberrecord.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Schema(description = "색깔 코드")
 public enum ColorCode {
     WHITE(1, "#FFFFFF"),
     RED(2, "#FF4E36"),
