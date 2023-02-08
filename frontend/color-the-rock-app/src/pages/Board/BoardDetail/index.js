@@ -21,7 +21,7 @@ const BoardDetail = () => {
   const [isOpenBoardSettingModal, setOpenBoardSettingModal] = useState(false);
   const [result, setResult] = useState({}); // 게시글 상세 정보 배열
   const [commentList, setCommentList] = useState({}); // 게시글 댓글 정보 배열
-  const userNickname = useSelector((state) => state.user.nickName);
+  const userNickname = useSelector((state) => state.users.nickName);
   //const [isFetching, setIsFetching] = useInfiniteScroll(updateFuncOnScroll);
 
   const updateFuncOnScroll = () => {
@@ -131,10 +131,12 @@ const BoardDetail = () => {
       <S.Container>
         <S.ContentContainer>
           <S.ContentWrap>
-            <S.Video controls>
-              <source src={TestVideo} type="video/mp4" />
+            <S.Video controls autoPlay>
+              <source
+                src="https://dhw80hz67vj6n.cloudfront.net/20230203_091428077.mp4"
+                type="video/mp4"
+              />
             </S.Video>
-
             {isModalOpen ? (
               <S.CommentModalWrap isModalOpen>
                 <CommentModal setIsModalOpen={setIsModalOpen} />

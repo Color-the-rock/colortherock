@@ -50,6 +50,7 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
   const [color, setColor] = useState("초록");
   console.log("level: ", level);
   console.log("color: ", color);
+
   const handleModalStateChange = () => {
     if (window.confirm("정말로 취소하시겠습니까?")) {
       setModalOpen((prev) => !prev);
@@ -57,31 +58,22 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
   };
 
   const registVideoToS3 = () => {
-    let formData = new FormData();
-    const localSuccessVideoUploadRequest = {
+    if (!color || !level || !isSuccess || !video) {
+      alert("모든 항목을 채워주세요.");
+      return;
+    }
+
+    const data = {
       color,
       level,
       isSuccess,
     };
-    formData.append("newVideo", "file");
-    formData.append(
-      "localSuccessVideoUploadRequest",
-      JSON.stringify(localSuccessVideoUploadRequest)
-    );
 
-    console.log("잘만든건가?");
-    console.log("formData file: ", formData.get("newVideo"));
+    const formData = new FormData();
+    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
 
-    console.log(
-      "formData data: ",
-      formData.get("localSuccessVideoUploadRequest")
-    );
-
-    const data = {
-      storeId: 0,
-      color: "red",
-      gymName: "bouldering",
-    };
+    formData.append("localSuccessVideoUploadRequest", blob);
+    formData.append("newVideo", video);
 
     BoardApi.postRegisterLocalVideo(FormData)
       .then(() => {
@@ -91,7 +83,6 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
       .catch((err) => {
         console.log("실패");
         console.log("err: ", err);
-        console.log("formData: ", formData);
       });
   };
 

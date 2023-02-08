@@ -1,16 +1,19 @@
 import React from "react";
-import BasicButton from "../../Common/BasicButton";
 import * as S from "./style";
+import IntroTitle from "../IntroTitle";
+import IntroButton from "../IntroButton";
 
 // props : imgURL
-const Content = () => {
+const LiveContent = () => {
   return (
     <S.Container>
+      <IntroTitle text="실시간 도전" />
+      <S.Text>외로운 혼클은 이제 안녕!</S.Text>
       <S.Text>실시간으로 소통하며</S.Text>
       <S.Text>함께 볼더링 문제를 풀어봐요!</S.Text>
-      <BasicButton text="실시간 도전 보러가기" link="/streaming" />
+      <IntroButton text="피드백 하러가기" />
     </S.Container>
   );
 };
 
-export default Content;
+export default LiveContent;

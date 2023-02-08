@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { FiArrowUpCircle } from "react-icons/fi";
 
 export const Container = styled.div`
   width: 100vw;
@@ -6,6 +7,7 @@ export const Container = styled.div`
   overflow-y: scroll;
   background-color: transparent;
   position: relative;
+  scroll-behavior: smooth;
 `;
 
 export const ContentWrapper = styled.div`
@@ -56,4 +58,14 @@ export const BoardText = styled.h1`
   @media (max-width: 1070px) {
     text-align: start;
   }
+`;
+
+export const BackToTop = styled(FiArrowUpCircle)`
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: 40px;
+  height: 40px;
+  color: var(--color-tertiary);
+  background-color: transparent;
 `;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as S from "./style";
 import { HiOutlineArrowSmUp } from "react-icons/hi";
 import { useState } from "react";
@@ -9,7 +9,7 @@ const ChattingModal = ({
   getToken,
   session,
   messages,
-  isShowChattingModal,
+  onSessionCreated,
 }) => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
@@ -35,6 +35,11 @@ const ChattingModal = ({
     }
   };
 
+  useEffect(() => {
+    console.log("session :: ", session);
+    console.log("messages :: ", messages);
+  }, [session, messages]);
+
   return (
     <S.Container
       drag="y"
@@ -55,6 +60,7 @@ const ChattingModal = ({
           id="ov-videoconference"
           tokens={getToken}
           toolbarDisplaySessionName={false}
+          onSessionCreated={onSessionCreated}
         >
           <S.CommentInput
             type="text"
@@ -70,14 +76,16 @@ const ChattingModal = ({
       </S.InputWrapper>
       <S.ChattingWrapper>
         <S.ChattingList>
-          {messages &&
-            messages.length > 0 &&
+          {messages && messages.length > 0 ? (
             messages.map((item, index) => (
               <S.ChattingContent key={item + index}>
                 <S.ChattingUserNickname>{item.userName}</S.ChattingUserNickname>
                 <S.ChattingText>{item.text}</S.ChattingText>
               </S.ChattingContent>
-            ))}
+            ))
+          ) : (
+            <div>채팅을 시작해보세요:)</div>
+          )}
         </S.ChattingList>
       </S.ChattingWrapper>
     </S.Container>

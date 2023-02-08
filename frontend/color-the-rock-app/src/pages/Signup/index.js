@@ -15,7 +15,7 @@ const SignUp = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [nickName, setNickname] = useState("");
+  const [nickname, setNickname] = useState("");
   const [nickNameValid, setNickNameValid] = useState(false);
   const [oK, setOK] = useState(false);
   const [cookies, setCookie] = useCookies(["refreshToken"]);
@@ -25,14 +25,14 @@ const SignUp = () => {
       const data = {
         email: users.email,
         registrationId: users.registrationId,
-        nickname: nickName,
+        nickname: nickname,
       };
 
       UserApi.SignUp(data)
         .then((res) => {
           alert("성공입니다.");
           console.log(res);
-          dispatch(setfulfilledLogin({ nickName }));
+          dispatch(setfulfilledLogin({ nickname }));
           const accessToken = res.data.result.accessToken;
           sessionStorage.setItem("accessToken", accessToken);
           const refreshToken = res.data.result.refreshToken;
@@ -62,7 +62,7 @@ const SignUp = () => {
 
   // 중복확인을 하고, 중복확인되면
   const onClickConfirmButton = () => {
-    UserApi.CheckNickname(nickName)
+    UserApi.CheckNickname(nickname)
       .then((res) => {
         if (res.data.result === true) setOK(true);
         else setOK(false);

@@ -7,7 +7,7 @@ import MyCommentList from "../../components/Mypage/MyCommentList";
 import { useSelector } from "react-redux";
 
 const MyPage = () => {
-  const userNickName = useSelector((state) => state.user.nickName);
+  const userNickName = useSelector((state) => state.users.nickName);
   const [radioValue, onChangeRadioButton] = useInput("post");
 
   return (

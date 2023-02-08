@@ -12,14 +12,17 @@ export default function Oauth() {
   useEffect(() => {
     console.log("Oauth Page");
     const params = new URL(window.location.href).searchParams;
-    const nickname = params.get("nickname");
+    console.log(window.location.href);
+    const nickname = decodeURIComponent(params.get("nickname"));
+    console.log("nickname: ", nickname);
     const email = params.get("email");
     const registrationId = params.get("registrationId");
 
-    if (nickname === null) {
+    if (nickname === "null") {
       dispatch(setPendingLogin({ email, registrationId }));
       navigate("/signup");
     } else {
+      console.log("nickname:::: ", nickname);
       dispatch(setLogin({ nickname, email, registrationId }));
       console.log(params.get("access"));
       console.log(params.get("refresh"));
