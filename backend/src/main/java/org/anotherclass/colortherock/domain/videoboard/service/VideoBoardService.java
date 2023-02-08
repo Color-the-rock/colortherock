@@ -90,6 +90,7 @@ public class VideoBoardService {
                 .videoBoardId(vb.getId())
                 .nickname(vb.getMember().getNickname())
                 .title(vb.getTitle())
+                .s3URL(vb.getVideo().getS3URL())
                 .createdDate(vb.getCreatedDate().toLocalDate())
                 .build();
     }

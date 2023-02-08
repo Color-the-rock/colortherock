@@ -18,6 +18,8 @@ public class VideoBoardDetailResponse {
     private String nickname;
     @Schema(description = "제목")
     private String title;
+    @Schema(description = "영상 URL")
+    private String s3URL;
     @Schema(description = "글 쓴 시간")
     private LocalDate createdDate;
 
