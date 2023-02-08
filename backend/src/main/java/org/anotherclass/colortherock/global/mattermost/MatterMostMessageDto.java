@@ -76,6 +76,18 @@ public class MatterMostMessageDto {
             this.text = text + "**Parameters**" + '\n' + '\n' + params + '\n' + '\n';
         }
 
+        public void addReportInfo(String title) {
+            this.title = "신고 누적 발생";
+
+            this.text = text + "**title**" + '\n' + '\n' + title + '\n' + '\n';
+        }
+
+        public void addReportInfo(String title, Long id) {
+            this.addReportInfo(title);
+
+            this.text = text + "**videoBoardId**" + '\n' + '\n' + id + "번 videoBoard" + '\n' + '\n';
+        }
+
     }
 
     @Getter

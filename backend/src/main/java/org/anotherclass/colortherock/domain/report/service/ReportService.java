@@ -12,6 +12,7 @@ import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundException;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
+import org.anotherclass.colortherock.global.mattermost.NotificationManager;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -21,8 +22,7 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final ReportReadRepository reportReadRepository;
     private final VideoBoardRepository videoBoardRepository;
-
-    // 신고하기 기능
+    private final NotificationManager notificationManager;
     public void reportPost(Member member, PostReportRequest request) {
         VideoBoard videoBoard = videoBoardRepository.findById(request.getVideoBoardId())
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
@@ -39,6 +39,8 @@ public class ReportService {
         reportRepository.save(newReport);
         if (checkReportNum(request.getVideoBoardId()) >= 5) {
             videoBoard.changeToHidden();
+            videoBoardRepository.save(videoBoard);
+            notificationManager.sendNotification(videoBoard);
         }
     }
 
