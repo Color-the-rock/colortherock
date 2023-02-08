@@ -236,6 +236,17 @@ const StreamingForm = () => {
                       margin: "1rem",
                     }}
                   >
+                    피드백 모달
+                  </button>
+                  <button
+                    onClick={handleModalStateChange3}
+                    style={{
+                      fontSize: "20px",
+                      color: "white",
+                      border: "1px solid white",
+                      margin: "1rem",
+                    }}
+                  >
                     영상 수정 모달
                   </button>
                 </S.ComponenentWrap>

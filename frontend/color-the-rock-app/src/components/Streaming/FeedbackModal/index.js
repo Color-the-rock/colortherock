@@ -1,92 +1,101 @@
-// import React, {
-//   useState,
-//   createRef,
-//   useEffect,
-//   useRef,
-//   useCallback,
-// } from "react";
-// import * as S from "./style";
+import React, {
+  useState,
+  createRef,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
+import * as S from "./style";
 
-// const FeedbackModal = ({ session }) => {
-//   const canvasRef = createRef(null);
-//   const contextRef = useRef(null); // 캔버스의 드로잉 컨텍스트
+const FeedbackModal = ({ session, picture = null }) => {
+  const canvasRef = createRef(null);
+  const contextRef = useRef(null); // 캔버스의 드로잉 컨텍스트
 
-//   const [ctx, setCtx] = useState();
-//   const [isDrawing, setIsDrawing] = useState(false);
+  const [ctx, setCtx] = useState();
+  const [isDrawing, setIsDrawing] = useState(false);
 
-//   useEffect(() => {
-//     const canvas = canvasRef.current;
-//     canvas.width = window.innerWidth;
-//     canvas.height = window.innerHeight;
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    // canvas.width = window.innerWidth;
+    // canvas.height = window.innerHeight;
 
-//     const context = canvas.getContext("2d");
-//     context.strokeStyle = "black";
-//     context.lineWidth = 2.5;
-//     contextRef.current = context;
+    const context = canvas.getContext("2d");
+    context.strokeStyle = "black";
+    context.lineWidth = 2.5;
 
-//     setCtx(context);
-//   }, []);
+    const image = new Image();
+    image.src = "data:image/png;base64," + picture;
+    image.onload = function () {
+      // context.clearRect(0, 0, canvas.width, canvas.height);
+      // context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      context.clearRect(0, 0);
+      context.drawImage(image, 0, 0);
+    };
+    contextRef.current = context;
 
-//   const sendDrawing = () => {
-//     const canvas = document.getElementById("canvas");
-//     const dataURL = canvas.toDataURL();
-//     const base64 = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-//     if (session !== undefined) {
-//       const signalOptions = {
-//         data: JSON.stringify({ image: base64 }),
-//         type: "drawingSignal",
-//         to: [],
-//       };
-//       session.signal(signalOptions);
-//     }
-//   };
+    setCtx(context);
+  }, []);
 
-//   const startDrawing = () => {
-//     setIsDrawing(true);
-//   };
+  const sendDrawing = () => {
+    const canvas = document.getElementById("canvas");
+    const dataURL = canvas.toDataURL();
+    const base64 = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    if (session !== undefined) {
+      const signalOptions = {
+        data: JSON.stringify({ image: base64 }),
+        type: "drawingSignal",
+        to: [],
+      };
+      session.signal(signalOptions);
+    }
+  };
 
-//   const finishDrawing = () => {
-//     setIsDrawing(false);
-//     sendDrawing();
-//   };
+  const startDrawing = () => {
+    setIsDrawing(true);
+  };
 
-//   const drawing = ({ nativeEvent }) => {
-//     const { offsetX, offsetY } = nativeEvent;
+  const finishDrawing = () => {
+    setIsDrawing(false);
+    sendDrawing();
+  };
 
-//     if (ctx) {
-//       if (!isDrawing) {
-//         ctx.beginPath();
-//         ctx.moveTo(offsetX, offsetY);
-//       } else {
-//         ctx.lineTo(offsetX, offsetY);
-//         ctx.stroke();
-//       }
-//     }
-//   };
+  const drawing = ({ nativeEvent }) => {
+    const { offsetX, offsetY } = nativeEvent;
 
-//   const onClickHandler = () => {};
+    if (ctx) {
+      if (!isDrawing) {
+        ctx.beginPath();
+        ctx.moveTo(offsetX, offsetY);
+      } else {
+        ctx.lineTo(offsetX, offsetY);
+        ctx.stroke();
+      }
+    }
+  };
 
-//   return (
-//     <S.ContainerWrap>
-//       <S.Container>
-//         <S.ContentBox>
-//           <ov-videoconference>
-//             <canvas
-//               id="canvas"
-//               style={{
-//                 zIndex: "5000",
-//               }}
-//               ref={canvasRef}
-//               onMouseDown={startDrawing}
-//               onMouseUp={finishDrawing}
-//               onMouseMove={drawing}
-//               onMouseLeave={finishDrawing}
-//             />
-//           </ov-videoconference>
-//         </S.ContentBox>
-//       </S.Container>
-//     </S.ContainerWrap>
-//   );
-// };
+  const onClickHandler = () => {};
 
-// export default FeedbackModal;
+  return (
+    <S.ContainerWrap>
+      <S.Container>
+        <S.ContentBox>
+          <ov-videoconference>
+            <S.Canvas
+              id="canvas"
+              style={{
+                zIndex: "5000",
+              }}
+              ref={canvasRef}
+              onMouseDown={startDrawing}
+              onMouseUp={finishDrawing}
+              onMouseMove={drawing}
+              onMouseLeave={finishDrawing}
+            />
+          </ov-videoconference>
+        </S.ContentBox>
+      </S.Container>
+    </S.ContainerWrap>
+  );
+};
+
+export default FeedbackModal;
