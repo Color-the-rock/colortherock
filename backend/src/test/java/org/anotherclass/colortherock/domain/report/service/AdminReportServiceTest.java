@@ -2,7 +2,6 @@ package org.anotherclass.colortherock.domain.report.service;
 
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
-import org.anotherclass.colortherock.domain.report.repository.ReportRepository;
 import org.anotherclass.colortherock.domain.report.request.PostReportRequest;
 import org.anotherclass.colortherock.domain.report.response.AdminReportDetailResponse;
 import org.anotherclass.colortherock.domain.report.response.AdminReportedPostResponse;
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 @Transactional
 class AdminReportServiceTest {
@@ -76,7 +76,7 @@ class AdminReportServiceTest {
         }
 
         // 신고 생성
-        for (int i = 0; i < 5; i++) {
+        for (int i = 1; i < 6; i++) {
             Member member = memberRepository.findById(memberIds.get(i))
                     .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.USER_NOT_FOUND));
             for (int j = 0; j < 2; j++) {
@@ -123,7 +123,7 @@ class AdminReportServiceTest {
 
     @Test
     @DisplayName("[관리자] 신고 영상 삭제")
-    void deleteReportedVideo(){
+    void deleteReportedVideo() {
         // given
         Long videoBoardId = videoBoardIds.get(0);
         // when

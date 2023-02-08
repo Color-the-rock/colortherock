@@ -83,13 +83,13 @@ class VideoCommentServiceTest {
     @DisplayName("댓글 가져오기 메소드는")
     class GetCommentList {
         @Nested
-        @DisplayName("storeId가 null일 경우")
+        @DisplayName("storeId가 -1일 경우")
         class No_Score_Id {
             @Test
             @DisplayName("해당 videoBoardId에 있는 댓글 리스트를 최신순으로 페이지 사이즈만큼 반환")
             void getCommentList() {
                 CommentListRequest request = new CommentListRequest();
-                request.setStoreId(null);
+                request.setStoreId(-1L);
                 request.setVideoBoardId(videoBoardIds.get(0));
 
                 List<CommentListResponse> commentList = videoCommentService.getCommentList(request);
@@ -109,7 +109,7 @@ class VideoCommentServiceTest {
             @Test
             @DisplayName("유효하지 않은 멤버는 No Such User 예외 발생")
             void noSuchUserException() {
-                Long memberId = 2L; // DB에 없는 유저
+                Long memberId = 2000000L; // DB에 없는 유저
                 NewCommentRequest request = new NewCommentRequest();
                 request.setVideoBoardId(videoBoardIds.get(0));
                 request.setContent("멋있어요!");
@@ -123,7 +123,7 @@ class VideoCommentServiceTest {
             void noSuchPostException() {
                 Long memberId = memberIds.get(0);
                 NewCommentRequest request = new NewCommentRequest();
-                request.setVideoBoardId(20L); // DB에 없는 id
+                request.setVideoBoardId(2000000L); // DB에 없는 id
                 request.setContent("멋있어요!");
                 assertThrows(PostNotFoundException.class, () -> {
                     videoCommentService.insertComment(memberId, request);
@@ -163,7 +163,7 @@ class VideoCommentServiceTest {
             void commentNotFoundException() {
                 Long memberId = memberIds.get(0);
                 CommentUpdateRequest request = new CommentUpdateRequest();
-                request.setCommentId(30L); // DB에 없는 commentId
+                request.setCommentId(100000000L); // DB에 없는 commentId
                 request.setContent("수정했어요");
 
                 assertThrows(CommentNotFoundException.class, () -> {
@@ -229,18 +229,18 @@ class VideoCommentServiceTest {
     @DisplayName("내 댓글 리스트 가져오기 메소드는")
     class GetMyCommentList {
         @Nested
-        @DisplayName("storeId가 null일 경우")
+        @DisplayName("storeId가 -1일 경우")
         class Store_Id_Null {
             @Test
             @DisplayName("해당 멤버의 댓글 리스트를 id 값이 큰 순서대로 페이지 사이즈만큼 반환")
             void getMyCommentList() {
                 Long memberId = memberIds.get(1);
-                Long storeId = null;
+                Long storeId = -1L;
 
                 List<MyCommentListResponse> result = videoCommentService.getMyCommentList(memberId, storeId);
 
                 assertTrue(result.get(0).getCommentId() > result.get(1).getCommentId());
-                assertEquals(result.size(), 15);
+                assertEquals(15, result.size());
             }
         }
     }

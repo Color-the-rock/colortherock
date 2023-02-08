@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,11 +51,14 @@ class VideoCommentControllerTest extends IntegrationTest {
     @Autowired
     JwtTokenUtils jwtTokenUtils;
     private String token;
+    List<VideoComment> videoComments;
+
+    private final Integer commentSize = 5;
 
     @BeforeEach()
     public void setup() {
 
-
+        videoComments = new ArrayList<>();
         member = Member.builder()
                 .nickname("이름")
                 .email("이메일")
@@ -81,15 +85,18 @@ class VideoCommentControllerTest extends IntegrationTest {
                 .build();
         em.persist(videoBoard);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < commentSize; i++) {
             VideoComment comment = VideoComment.builder()
                     .videoBoard(videoBoard)
                     .content("내용")
                     .member(member)
                     .build();
+            videoComments.add(comment);
             em.persist(comment);
         }
 
+        em.flush();
+        em.clear();
         token = TOKEN_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
     }
 
@@ -101,12 +108,13 @@ class VideoCommentControllerTest extends IntegrationTest {
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .param("videoBoardId", String.valueOf(videoBoard.getId()))
+                                .param("storeId", String.valueOf(-1))
                 )
                 .andReturn()
                 .getResponse();
 
         BaseResponse<List<CommentListResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        Assertions.assertEquals(arrayList.getResult().size(), 5);
+        Assertions.assertEquals(commentSize, arrayList.getResult().size());
     }
 
     @Test
@@ -117,14 +125,14 @@ class VideoCommentControllerTest extends IntegrationTest {
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .param("videoBoardId", String.valueOf(videoBoard.getId()))
-                                .param("storeId", String.valueOf(3))
+                                .param("storeId", String.valueOf(-1))
                 )
                 .andDo(print())
                 .andReturn()
                 .getResponse();
 
         BaseResponse<List<CommentListResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        Assertions.assertEquals(arrayList.getResult().size(), 2);
+        Assertions.assertEquals(commentSize, arrayList.getResult().size());
     }
 
 
@@ -139,19 +147,21 @@ class VideoCommentControllerTest extends IntegrationTest {
                                 .content(objectMapper.writeValueAsBytes(request))
                                 .header(HttpHeaders.AUTHORIZATION, token)
 
-                ).andDo(print())
+                )
                 .andExpect(jsonPath("$.status", is(200)));
 //        url += "comment";
         MockHttpServletResponse response = mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .param("videoBoardId", String.valueOf(videoBoard.getId()))
+                                .param("storeId", String.valueOf(-1))
                 )
+                .andDo(print())
                 .andReturn()
                 .getResponse();
 
         BaseResponse<List<CommentListResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        Assertions.assertEquals(arrayList.getResult().size(), 6);
+        Assertions.assertEquals(commentSize+1, arrayList.getResult().size());
     }
 
 
@@ -159,7 +169,7 @@ class VideoCommentControllerTest extends IntegrationTest {
     @DisplayName("댓글 수정")
     void updateComment() throws Exception {
         url += "comment";
-        Long commentId = videoCommentRepository.findAll().get(0).getId();
+        Long commentId = videoComments.get(0).getId();
         CommentUpdateRequest request = new CommentUpdateRequest(commentId, "새로운내용");
         mockMvc.perform(
                         put(url)
@@ -174,14 +184,14 @@ class VideoCommentControllerTest extends IntegrationTest {
         VideoComment videoComment = byId.orElseThrow();
         String content = videoComment.getContent();
         System.out.println(content);
-        Assertions.assertEquals(content, "새로운내용");
+        Assertions.assertEquals("새로운내용", content);
     }
 
     @Test
     @DisplayName("코멘트 삭제")
     void deleteComment() throws Exception {
         url += "comment";
-        Long commentId = videoCommentRepository.findAll().get(0).getId();
+        Long commentId = videoComments.get(0).getId();
         mockMvc.perform(
                         delete(url)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -203,13 +213,14 @@ class VideoCommentControllerTest extends IntegrationTest {
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(HttpHeaders.AUTHORIZATION, token)
+                                .param("storeId", String.valueOf(-1))
 
                 ).andDo(print())
                 .andExpect(jsonPath("$.status", is(200)))
                 .andReturn()
                 .getResponse();
         BaseResponse<List<MyCommentListResponse>> listBaseResponse = this.convertToBaseResponse(response);
-        Assertions.assertEquals(listBaseResponse.getResult().size(), 5);
+        Assertions.assertEquals(5, listBaseResponse.getResult().size());
 
     }
 }

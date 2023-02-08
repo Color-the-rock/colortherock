@@ -9,6 +9,7 @@ import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundExc
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
 import org.anotherclass.colortherock.domain.videocomment.entity.VideoComment;
 import org.anotherclass.colortherock.domain.videocomment.exception.CommentNotFoundException;
+import org.anotherclass.colortherock.domain.videocomment.exception.NotWriterException;
 import org.anotherclass.colortherock.domain.videocomment.repository.VideoCommentReadRepository;
 import org.anotherclass.colortherock.domain.videocomment.repository.VideoCommentRepository;
 import org.anotherclass.colortherock.domain.videocomment.request.CommentListRequest;
@@ -51,7 +52,7 @@ public class VideoCommentService {
                         .commentId(vc.getId())
                         .nickname(vc.getMember().getNickname())
                         .content(vc.getContent())
-                        .createdDate(vc.getCreatedDate())
+                        .createdDate(vc.getCreatedDate().toLocalDate())
                         .build()).collect(Collectors.toList());
     }
 
@@ -98,16 +99,16 @@ public class VideoCommentService {
                 .map(vc -> MyCommentListResponse.builder()
                         .commentId(vc.getId())
                         .videoBoardId(vc.getVideoBoard().getId())
-                        .nickname(vc.getMember().getNickname())
+                        .title(vc.getVideoBoard().getTitle())
                         .content(vc.getContent())
-                        .createdDate(vc.getCreatedDate())
+                        .createdDate(vc.getCreatedDate().toLocalDate())
                         .build()).collect(Collectors.toList());
     }
 
     // 받은 멤버가 수정권한이 있는지 확인하는 메서드
     private void checkAuth(Long memberId, VideoComment comment) {
         if (!comment.getMember().getId().equals(memberId)) {
-            throw new GlobalBaseException(GlobalErrorCode.NOT_WRITER);
+            throw new NotWriterException(GlobalErrorCode.NOT_WRITER);
         }
     }
 

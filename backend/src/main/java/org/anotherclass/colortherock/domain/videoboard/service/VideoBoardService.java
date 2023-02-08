@@ -36,11 +36,12 @@ public class VideoBoardService {
     private final MemberRepository memberRepository;
     private final VideoBoardRepository videoBoardRepository;
     private final VideoBoardReadRepository videoBoardReadRepository;
+    private final Integer PAGE_SIZE = 16;
 
     // 완등 영상 전체 리스트 조회
     @Transactional(readOnly = true)
     public List<VideoBoardSummaryResponse> getSuccessVideos(VideoBoardSearchRequest condition) {
-        Pageable pageable = Pageable.ofSize(16);
+        Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
         Slice<VideoBoard> slices = videoBoardReadRepository.searchByCond(condition, pageable);
 
@@ -54,7 +55,7 @@ public class VideoBoardService {
                         .title(vb.getTitle())
                         .thumbnailURL(vb.getVideo().getThumbnailURL())
                         .color(vb.getVideo().getColor())
-                        .createdDate(vb.getCreatedDate())
+                        .createdDate(vb.getCreatedDate().toLocalDate())
                         .gymName(vb.getVideo().getGymName())
                         .build()).collect(Collectors.toList());
 
@@ -89,7 +90,8 @@ public class VideoBoardService {
                 .videoBoardId(vb.getId())
                 .nickname(vb.getMember().getNickname())
                 .title(vb.getTitle())
-                .createdDate(vb.getCreatedDate())
+                .s3URL(vb.getVideo().getS3URL())
+                .createdDate(vb.getCreatedDate().toLocalDate())
                 .build();
     }
 
@@ -128,7 +130,7 @@ public class VideoBoardService {
                         .title(vb.getTitle())
                         .thumbnailURL(vb.getVideo().getThumbnailURL())
                         .color(vb.getVideo().getColor())
-                        .createdDate(vb.getCreatedDate())
+                        .createdDate(vb.getCreatedDate().toLocalDate())
                         .build()).collect(Collectors.toList());
     }
 

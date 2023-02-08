@@ -49,6 +49,9 @@ class VideoBoardControllerTest extends IntegrationTest {
 
     ArrayList<Long> videoBoardIds;
 
+    private final Integer PAGE_SIZE = 16;
+    private final Integer MYPAGE_SIZE = 8;
+
     @BeforeEach
     public void setup() {
         member = Member.builder()
@@ -58,7 +61,7 @@ class VideoBoardControllerTest extends IntegrationTest {
         em.persist(member);
         videoBoardIds = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 20; i++) {
             Video video = Video.builder()
                     .thumbnailURL("url")
                     .videoName("이름")
@@ -89,12 +92,13 @@ class VideoBoardControllerTest extends IntegrationTest {
         MockHttpServletResponse response = mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .param("storeId", String.valueOf(-1))
                 )
                 .andReturn()
                 .getResponse();
 
         BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        assertEquals(arrayList.getResult().size(), 5);
+        assertEquals(PAGE_SIZE, arrayList.getResult().size());
     }
 
     @Test
@@ -103,13 +107,13 @@ class VideoBoardControllerTest extends IntegrationTest {
         MockHttpServletResponse response = mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .param("storeId", String.valueOf(videoBoardIds.get(2)))
+                                .param("storeId", String.valueOf(2L))
                 )
                 .andReturn()
                 .getResponse();
 
         BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        assertEquals(2, arrayList.getResult().size());
+        assertEquals(1, arrayList.getResult().size());
     }
 
     @Test
@@ -118,7 +122,9 @@ class VideoBoardControllerTest extends IntegrationTest {
         MockHttpServletResponse response = mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .param("storeId", String.valueOf(-1))
                                 .param("gymName", "더클라이밍 강남점1")
+
                 )
                 .andReturn()
                 .getResponse();
@@ -132,6 +138,7 @@ class VideoBoardControllerTest extends IntegrationTest {
         MockHttpServletResponse response = mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .param("storeId", String.valueOf(-1))
                                 .param("color", "초록1")
                 )
                 .andReturn()
@@ -157,7 +164,8 @@ class VideoBoardControllerTest extends IntegrationTest {
     void updateSuccessPost() throws Exception {
         url += "detail";
         Long videoBoardId = videoBoardIds.get(0);
-        SuccessPostUpdateRequest request = new SuccessPostUpdateRequest(videoBoardId, "새로운내용");
+        String newTitle = "새로운 내용";
+        SuccessPostUpdateRequest request = new SuccessPostUpdateRequest(videoBoardId, newTitle);
         mockMvc.perform(
                         put(url)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -170,7 +178,7 @@ class VideoBoardControllerTest extends IntegrationTest {
         Optional<VideoBoard> byId = videoBoardRepository.findById(videoBoardId);
         VideoBoard videoBoard = byId.orElseThrow();
         String title = videoBoard.getTitle();
-        assertEquals("새로운내용", title);
+        assertEquals(newTitle, title);
     }
 
     @Test
@@ -188,5 +196,23 @@ class VideoBoardControllerTest extends IntegrationTest {
         Optional<VideoBoard> byId = videoBoardRepository.findById(videoBoardId);
         assertTrue(byId.isEmpty());
     }
+
+    @Test
+    @DisplayName("내 완등 영상 조회 storeId -1입력시 최신순 16개까지 반환")
+    void getMySuccessPostList() throws Exception {
+        url += "mypost";
+        MockHttpServletResponse response = mockMvc.perform(
+                        get(url)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header(HttpHeaders.AUTHORIZATION, token)
+                                .param("storeId", String.valueOf(-1))
+                ).andDo(print())
+                .andExpect(jsonPath("$.status", is(200)))
+                .andReturn().getResponse();
+
+        BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
+        assertEquals(MYPAGE_SIZE, arrayList.getResult().size());
+    }
+
 
 }

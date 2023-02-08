@@ -3,6 +3,7 @@ package org.anotherclass.colortherock.domain.report.service;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.report.entity.Report;
+import org.anotherclass.colortherock.domain.report.exception.ReportOneselfException;
 import org.anotherclass.colortherock.domain.report.repository.ReportReadRepository;
 import org.anotherclass.colortherock.domain.report.repository.ReportRepository;
 import org.anotherclass.colortherock.domain.report.request.PostReportRequest;
@@ -13,6 +14,7 @@ import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundExc
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,7 +80,7 @@ class ReportServiceTest {
         }
 
         // 신고 생성
-        for (int i = 0; i < 2; i++) {
+        for (int i = 1; i < 3; i++) {
             VideoBoard videoBoard = videoBoardRepository.findById(videoBoardIds.get(0))
                     .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
             Member member = memberRepository.findById(memberIds.get(i))
@@ -112,7 +114,7 @@ class ReportServiceTest {
         // when
         VideoBoard videoBoard = videoBoardRepository.findById(videoBoardIds.get(0))
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
-        for (int i = 2; i < 5; i++) {
+        for (int i = 3; i < 6; i++) {
             Member member = memberRepository.findById(memberIds.get(i))
                     .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.USER_NOT_FOUND));
             PostReportRequest request = new PostReportRequest(videoBoardIds.get(0), "TYPE_A");
@@ -130,7 +132,7 @@ class ReportServiceTest {
         // when
         VideoBoard videoBoard = videoBoardRepository.findById(videoBoardIds.get(0))
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
-        for (int i = 2; i < 4; i++) {
+        for (int i = 3; i < 5; i++) {
             Member member = memberRepository.findById(memberIds.get(i))
                     .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.USER_NOT_FOUND));
             PostReportRequest request = new PostReportRequest(videoBoardIds.get(0), "TYPE_A");
@@ -140,6 +142,26 @@ class ReportServiceTest {
         Long cnt = reportReadRepository.countReport(videoBoard.getId());
         assertEquals(4, cnt);
         assertFalse(videoBoard.getIsHidden());
+    }
+
+    @Test
+    @DisplayName("스스로를 신고할 경우 예외 발생")
+    void reportOneself() {
+        // when
+        Member member = memberRepository.findById(memberIds.get(0))
+                .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
+        PostReportRequest request = new PostReportRequest(videoBoardIds.get(0), "TYPE_A");
+        // then
+        try {
+            reportService.reportPost(member, request);
+            fail("Expected MemberReportException");
+        } catch (ReportOneselfException e) {
+            // Assert that the exception is the expected exception
+            Assertions.assertThat(e.getMessage()).isEqualTo("본인 스스로를 신고할 수 없습니다.");
+        }
+
+
+
     }
 
 }

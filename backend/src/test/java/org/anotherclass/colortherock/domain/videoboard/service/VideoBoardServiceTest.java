@@ -43,6 +43,8 @@ class VideoBoardServiceTest {
     private ArrayList<Long> memberIds;
     private ArrayList<Long> videoIds;
     private ArrayList<Long> videoBoardIds;
+    private final Integer PAGE_SIZE = 16;
+    private final Integer MYPAGE_SIZE = 8;
 
     @BeforeEach
     public void setMemberAndVideo() {
@@ -105,7 +107,7 @@ class VideoBoardServiceTest {
 
                     // given
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
-                    cond.setStoreId(null);
+                    cond.setStoreId(-1L);
                     cond.setGymName("");
                     cond.setColor("");
 
@@ -114,7 +116,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertTrue(successVideos.get(0).getVideoBoardId() > successVideos.get(1).getVideoBoardId());
-                    assertEquals(16, successVideos.size());
+                    assertEquals(PAGE_SIZE, successVideos.size());
                 }
             }
 
@@ -126,8 +128,9 @@ class VideoBoardServiceTest {
                 void getSuccessVideosWithStoreId() {
 
                     // given
+                    Long setId = 2L;
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
-                    cond.setStoreId(videoBoardIds.get(7));
+                    cond.setStoreId(setId);
                     cond.setGymName("");
                     cond.setColor("");
 
@@ -136,7 +139,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertTrue(cond.getStoreId() > successVideos.get(0).getVideoBoardId());
-                    assertEquals(7, successVideos.size());
+                    assertEquals(setId-1, successVideos.size());
                 }
             }
 
@@ -166,14 +169,14 @@ class VideoBoardServiceTest {
         @DisplayName("색상 검색 조건이 있고")
         class With_Color_Search_Condition {
             @Nested
-            @DisplayName("storeId가 null일 경우")
+            @DisplayName("storeId가 -1일 경우")
             class No_Store_ID {
                 @Test
                 @DisplayName("색상 조건에 해당하는 리스트를 Id값이 큰 순서대로 사이즈만큼 반환")
                 void getSuccessVideosWithColorWihtoutStoreID() {
                     // given
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
-                    cond.setStoreId(null);
+                    cond.setStoreId(-1L);
                     cond.setGymName("");
                     cond.setColor("초록");
 
@@ -183,7 +186,7 @@ class VideoBoardServiceTest {
                     // then
                     assertEquals(successVideos.get(0).getColor(), cond.getColor());
                     assertEquals(successVideos.get(1).getColor(), cond.getColor());
-                    assertEquals(16,successVideos.size());
+                    assertEquals(PAGE_SIZE,successVideos.size());
                 }
 
             }
@@ -193,14 +196,14 @@ class VideoBoardServiceTest {
         @DisplayName("암장 검색 조건이 있고")
         class With_Gym_Search_Condition {
             @Nested
-            @DisplayName("storeId가 null일 경우")
+            @DisplayName("storeId가 -1일 경우")
             class No_Store_Id {
                 @Test
                 @DisplayName("암장 조건에 해당하는 리스트를 Id값이 큰 순서대로 사이즈만큼 반환")
                 void getSuccessVideosWithGymNameWithoutStoreID() {
                     // given
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
-                    cond.setStoreId(null);
+                    cond.setStoreId(-1L);
                     cond.setGymName("더클라임 강남점");
                     cond.setColor("");
 
@@ -209,7 +212,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
-                    assertEquals(16,successVideos.size());
+                    assertEquals(PAGE_SIZE,successVideos.size());
                 }
             }
         }
@@ -219,7 +222,7 @@ class VideoBoardServiceTest {
         class With_ALL_Condition {
 
             @Nested
-            @DisplayName("storeId가 null일 경우")
+            @DisplayName("storeId가 -1일 경우")
             class No_Store_Id {
 
                 @Test
@@ -227,7 +230,7 @@ class VideoBoardServiceTest {
                 void getSuccessVideosWithAllCondWithoutStoreID() {
                     // given
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
-                    cond.setStoreId(null);
+                    cond.setStoreId(-1L);
                     cond.setGymName("더클라임 홍대점");
                     cond.setColor("파랑");
 
@@ -237,7 +240,7 @@ class VideoBoardServiceTest {
                     // then
                     assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
                     assertEquals(successVideos.get(0).getColor(), cond.getColor());
-                    assertEquals(16, successVideos.size());
+                    assertEquals(PAGE_SIZE, successVideos.size());
                 }
             }
 
@@ -256,9 +259,9 @@ class VideoBoardServiceTest {
             @DisplayName("USER_NOT_FOUND 예외를 발생시킴")
             void noSuchUserException() {
                 // given
-                Long memberId = 2L; //DB에 없는 id
+                Long memberId = 2000000L; //DB에 없는 id
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
-                request.setVideoId(1L);
+                request.setVideoId(videoIds.get(0));
                 request.setTitle("성공했습니다.");
 
                 assertThrows(GlobalBaseException.class, () -> videoBoardService.uploadMySuccessVideoPost(memberId, request));
@@ -273,7 +276,7 @@ class VideoBoardServiceTest {
             void noSuchVideoException() {
                 Long memberId = memberIds.get(0);
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
-                request.setVideoId(20L); // DB에 없는 ID
+                request.setVideoId(2000000L); // DB에 없는 ID
                 request.setTitle("성공했습니다.");
 
                 assertThrows(VideoNotFoundException.class, () -> videoBoardService.uploadMySuccessVideoPost(memberId, request));
@@ -325,7 +328,7 @@ class VideoBoardServiceTest {
             @Test
             @DisplayName("PostNotFound예외를 발생시킨다")
             void postNotFoundException() {
-                Long videoBoardId = 20L;
+                Long videoBoardId = 2000000L;
                 assertThrows(PostNotFoundException.class, () -> videoBoardService.getVideoDetail(videoBoardId));
             }
         }
@@ -353,9 +356,9 @@ class VideoBoardServiceTest {
             @Test
             @DisplayName("Post Not Found 예외를 발생시킴")
             void PostNotFoundException() {
-                Long memberId = 1L;
+                Long memberId = memberIds.get(0);
                 SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
-                request.setVideoBoardId(20L); // 없는 게시글 번호
+                request.setVideoBoardId(2000000L); // 없는 게시글 번호
                 request.setTitle("수정했습니다.");
 
                 assertThrows(PostNotFoundException.class, () -> videoBoardService.updateSuccessPost(memberId, request));
@@ -420,17 +423,17 @@ class VideoBoardServiceTest {
     @DisplayName("내 완등 영상 게시글 가져오기 메소드는")
     class GetMySuccessVideoPosts {
         @Nested
-        @DisplayName("storeId가 null일 경우")
+        @DisplayName("storeId가 -1일 경우")
         class Store_Id_Null {
             @Test
             @DisplayName("멤버의 성공 영상 게시글의 id값이 큰 순서대로 사이즈만큼 반환")
             void getMySuccessVideoPosts() {
                 Long memberId = memberIds.get(0);
-                Long storeId = null;
+                Long storeId = -1L;
                 List<VideoBoardSummaryResponse> result = videoBoardService.getMySuccessVideoPosts(memberId, storeId);
 
                 assertTrue(result.get(0).getVideoBoardId() > result.get(1).getVideoBoardId());
-                assertEquals(8, result.size());
+                assertEquals(MYPAGE_SIZE, result.size());
             }
         }
     }
