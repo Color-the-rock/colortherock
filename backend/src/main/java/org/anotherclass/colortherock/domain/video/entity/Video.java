@@ -27,18 +27,18 @@ public class Video extends BaseTime {
     @Column(name = "gym_name", length = 30)
     private String gymName;
 
-    @Column(name = "s_3_url", length = 100)
+    @Column(name = "s_3_url", length = 200)
     private String s3URL;
-    @Column(name = "video_name", length = 100)
+    @Column(name = "video_name", length = 200)
     private String videoName;
 
     @Column(name = "is_success")
     private Boolean isSuccess;
 
-    @Column(name = "thumbnail_url", length = 100)
+    @Column(name = "thumbnail_url", length = 200)
     private String thumbnailURL;
 
-    @Column(name = "thumbnail_name", length = 100)
+    @Column(name = "thumbnail_name", length = 200)
     private String thumbnailName;
 
     @Column(name = "color", length = 20)
