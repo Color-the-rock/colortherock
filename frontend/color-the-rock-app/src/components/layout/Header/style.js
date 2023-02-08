@@ -103,6 +103,8 @@ export const CancelButton = styled(HiOutlineX)`
 export const SideMenu = styled.ul`
   width: 100%;
   min-width: 180px;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const SideMenuItem = styled.li`

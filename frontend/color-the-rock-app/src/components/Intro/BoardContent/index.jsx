@@ -1,6 +1,7 @@
 import React from "react";
 import * as S from "./style";
 import IntroTitle from "../IntroTitle";
+import FirstLineImg from "../../../assets/img/intro/img-intro-board1.png";
 import SecondLineImg from "../../../assets/img/intro/img-intro-board2.png";
 import ParallaxText from "../ParallaxText";
 
@@ -13,12 +14,12 @@ const BoardContent = () => {
         정확하게 내가 원하는 암장, 색상을 선택해 풀이를 볼 수 있어요!
       </S.Text>
       <S.Wrapper>
-        {/* <ParallaxText baseVelocity={-3}>
+        <ParallaxText baseVelocity={-2}>
+          <S.BoardImg src={FirstLineImg} alt="img" />
+        </ParallaxText>
+        <ParallaxText baseVelocity={2}>
           <S.BoardImg src={SecondLineImg} alt="img" />
         </ParallaxText>
-        <ParallaxText baseVelocity={3}>
-          <S.BoardImg src={SecondLineImg} alt="img" />
-        </ParallaxText> */}
       </S.Wrapper>
     </S.Container>
   );

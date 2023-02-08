@@ -4,9 +4,9 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100vw;
-  height: calc(var(--vh, 1vh) * 100);
+  height: 100vh;
   background-color: transparent;
-  overflow-x: hidden;
+  overflow: hidden;
   padding: 1rem;
   justify-content: center;
   align-items: center;
@@ -28,13 +28,14 @@ export const Text = styled.p`
 
 export const BoardImg = styled.img`
   width: 100vw;
-  height: 100%;
+  height: auto;
   opacity: 0.6;
-  @media (max-width: 1070px) {
-    width: 280vw;
+  @media (max-width: 992px) {
+    width: 320vw;
   }
 `;
 
 export const Wrapper = styled.div`
   margin-top: 2rem;
+  background-color: transparent;
 `;

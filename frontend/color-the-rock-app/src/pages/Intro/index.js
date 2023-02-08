@@ -11,12 +11,15 @@ const Intro = () => {
   const fadeInBoard = useScrollFadeIn();
   const fadeIntro = useScrollFadeIn();
   const handleBackToTop = () => {
-    let container = document.getElementById("container");
-    container.scrollTo(0, 0);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
-    <S.Container id="container">
+    <S.Container>
       <S.ContentWrapper {...fadeIntro}>
         <Content />
       </S.ContentWrapper>

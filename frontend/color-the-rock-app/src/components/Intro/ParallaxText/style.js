@@ -18,7 +18,7 @@ export const Parallax = styled.div`
     white-space: nowrap;
     display: flex;
     flex-wrap: nowrap;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     @media (max-width: 992px) {
       font-size: 7rem;
     }
