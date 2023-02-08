@@ -23,6 +23,7 @@ import RecordForm from "./pages/Record/RecordForm";
 import StreamingLive from "./pages/StreamingLive";
 import UploadS3Form from "./pages/Board/UploadS3Form";
 import ErrorPage from "./pages/Error";
+import { useSelector } from "react-redux";
 
 const Layout = () => {
   return (
@@ -34,8 +35,8 @@ const Layout = () => {
 };
 
 const AppRouter = () => {
-  console.log("로그인 상태", sessionStorage.getItem("accessToken"));
-  if (sessionStorage.getItem("accessToken") === null) {
+  const isLogin = useSelector((state) => state.users.isLogin);
+  if (!isLogin) {
     return (
       <Router>
         <Routes>
