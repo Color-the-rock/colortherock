@@ -2,12 +2,39 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
-  flex-direction: column;
   width: 100vw;
+  justify-content: center;
+  align-items: center;
   height: calc(var(--vh, 1vh) * 100);
   background-color: transparent;
   overflow-x: hidden;
   padding: 1rem;
+  @media (max-width: 992px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+`;
+
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  @media (max-width: 992px) {
+    align-items: flex-start;
+  }
+`;
+
+export const ImgWrapper = styled.div`
+  width: 100%;
+  max-width: 794px;
+  height: 800px;
+  margin-left: 2rem;
+  background-color: var(--color-background);
+  @media (max-width: 992px) {
+    margin-left: 0;
+    margin-top: 2rem;
+  }
 `;
 
 export const Text = styled.p`

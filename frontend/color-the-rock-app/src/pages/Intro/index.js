@@ -29,9 +29,7 @@ const Intro = () => {
       <S.ContentWrapper {...fadeInRecord}>
         <RecordContent />
       </S.ContentWrapper>
-      <S.BackToTop id="back-to-top" onClick={handleBackToTop}>
-        올라가
-      </S.BackToTop>
+      <S.BackToTop id="back-to-top" onClick={handleBackToTop} />
     </S.Container>
   );
 };

@@ -12,14 +12,14 @@ const BoardContent = () => {
       <S.Text>
         정확하게 내가 원하는 암장, 색상을 선택해 풀이를 볼 수 있어요!
       </S.Text>
-      <S.Section>
-        <ParallaxText baseVelocity={-3}>
+      <S.Wrapper>
+        {/* <ParallaxText baseVelocity={-3}>
           <S.BoardImg src={SecondLineImg} alt="img" />
         </ParallaxText>
         <ParallaxText baseVelocity={3}>
           <S.BoardImg src={SecondLineImg} alt="img" />
-        </ParallaxText>
-      </S.Section>
+        </ParallaxText> */}
+      </S.Wrapper>
     </S.Container>
   );
 };

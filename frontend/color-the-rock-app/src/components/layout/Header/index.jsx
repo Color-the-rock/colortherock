@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Mobile, Desktop } from "../Template";
 import * as S from "./style";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Header = () => {
@@ -10,7 +9,6 @@ const Header = () => {
   const [isShowNav, setShowNav] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const location = useLocation();
-  const navigate = useNavigate();
 
   const updateScrollPosition = () => {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);

@@ -8,6 +8,12 @@ export const Container = styled.div`
   background-color: transparent;
   overflow-x: hidden;
   padding: 1rem;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 992px) {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
 `;
 
 export const Text = styled.p`
@@ -20,11 +26,6 @@ export const Text = styled.p`
   color: var(--color-tertiary);
 `;
 
-export const Section = styled.section`
-  height: 100%;
-  padding: 1rem 0;
-`;
-
 export const BoardImg = styled.img`
   width: 100vw;
   height: 100%;
@@ -32,4 +33,8 @@ export const BoardImg = styled.img`
   @media (max-width: 1070px) {
     width: 280vw;
   }
+`;
+
+export const Wrapper = styled.div`
+  margin-top: 2rem;
 `;
