@@ -7,6 +7,7 @@ export const userSlice = createSlice({
     email: "",
     fulfilled: false,
   },
+  isLogin: false,
   reducers: {
     // 로그인 진행중 상황
     setPendingLogin: (state, action) => {
@@ -25,6 +26,7 @@ export const userSlice = createSlice({
       state.email = action.payload.email;
       state.registrationId = action.payload.registrationId;
       state.fulfilled = true;
+      state.isLogin = true;
     },
     // 로그아웃
     LogOut: (state) => {
@@ -32,6 +34,7 @@ export const userSlice = createSlice({
       state.email = "";
       state.registrationId = "";
       state.fulfilled = false;
+      state.isLogin = true;
     },
   },
 });

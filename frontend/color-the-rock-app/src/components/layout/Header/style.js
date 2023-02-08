@@ -62,7 +62,7 @@ export const Menu = styled.ul`
 `;
 
 export const MenuItem = styled.li`
-  display: inline-block;
+  display: ${(props) => (props.isLogin ? "inline-block" : "none")};
 `;
 
 export const SLink = styled(Link)`
@@ -106,8 +106,9 @@ export const SideMenu = styled.ul`
 `;
 
 export const SideMenuItem = styled.li`
+  display: ${(props) => (props.isLogin ? "inline-block" : "none")};
   font-style: normal;
   font-weight: 500;
   line-height: 28px;
-  margin: 1rem 0.5rem;
+  margin: 0.5rem 0.5rem;
 `;
