@@ -12,7 +12,7 @@ let menuItems = [
   },
   {
     id: 2,
-    name: "완등 영상 모음",
+    name: "완등 영상",
     path: "/board",
   },
   {
@@ -22,7 +22,7 @@ let menuItems = [
   },
   {
     id: 4,
-    name: "로그인/회원가입",
+    name: "로그인",
     path: "/login",
   },
 ];
@@ -40,7 +40,7 @@ const Header = () => {
     window.addEventListener("scroll", updateScrollPosition);
 
     // test
-    if (localStorage.getItem("user") !== null) {
+    if (sessionStorage.getItem("accessToken") !== null) {
       menuItems = menuItems.filter((item) => {
         if (item.id === 4) {
           item.name = "마이페이지";
@@ -50,13 +50,13 @@ const Header = () => {
       });
     }
 
-    // if (
-    //   location.pathname === "/record" &&
-    //   localStorage.getItem("user") === null
-    // ) {
-    //   alert("로그인이 필요한 서비스입니다:)");
-    //   navigate("/login");
-    // }
+    if (
+      location.pathname === "/record" &&
+      sessionStorage.getItem("accessToken") === null
+    ) {
+      alert("로그인이 필요한 서비스입니다:)");
+      navigate("/login");
+    }
   });
 
   const handleSetShowNav = () => {

@@ -174,3 +174,9 @@ export const IconWrapper = styled.div`
   border-radius: 50%;
   margin: 0.65rem 0;
 `;
+
+export const VideoTest = styled.video`
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+`;

@@ -18,10 +18,11 @@ import Signup from "./pages/Signup/index";
 import BoardRegist from "./pages/Board/BoardRegist/index";
 import BoardModify from "./pages/Board/BoardModify/index";
 import StreamingForm from "./pages/StreamingForm";
-import Preview from "./pages/Preview/inedx";
+import Preview from "./pages/Preview/index";
 import RecordForm from "./pages/Record/RecordForm";
 import StreamingLive from "./pages/StreamingLive";
 import UploadS3Form from "./pages/Board/UploadS3Form";
+import ErrorPage from "./pages/Error";
 
 const Layout = () => {
   return (
@@ -33,7 +34,25 @@ const Layout = () => {
 };
 
 const AppRouter = () => {
-  // 로그인 여부에 따라 router 설정
+  console.log("로그인 상태", sessionStorage.getItem("accessToken"));
+  if (sessionStorage.getItem("accessToken") === null) {
+    return (
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Intro />} />
+            <Route path="/board" element={<Board />} />
+            <Route path="/streaming" element={<Streaming />} />
+          </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/oauth" element={<Oauth />} />
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
+        {/* <Footer /> */}
+      </Router>
+    );
+  }
   return (
     <Router>
       <Routes>
@@ -46,17 +65,18 @@ const AppRouter = () => {
         </Route>
 
         <Route path="/login" element={<Login />} />
+        <Route path="/oauth" element={<Oauth />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/board/form" element={<BoardRegist />} />
         <Route path="/board/modify/:id" element={<BoardModify />} />
         <Route path="/board/detail/:id" element={<BoardDetail />} />
-        <Route path="/oauth" element={<Oauth />} />
         <Route path="/streaming/:streamingId" element={<Streaming />} />
         <Route path="/streaming/form" element={<StreamingForm />} />
         <Route path="preview" element={<Preview />} />
         <Route path="/record/form" element={<RecordForm />} />
-        <Route path="/streaming/live/:sessionId" element={<StreamingLive />} />
+        <Route path="/streaming/live" element={<StreamingLive />} />
         <Route path="/board/s3form" element={<UploadS3Form />} />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
       {/* <Footer /> */}
     </Router>

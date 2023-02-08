@@ -16,12 +16,12 @@ export const userSlice = createSlice({
     },
     // 미완료 로그인 진행
     setfulfilledLogin: (state, action) => {
-      state.nickName = action.payload.nickName;
+      state.nickName = action.payload.nickname;
       state.fulfilled = true;
     },
     // 로그인 완료
     setLogin: (state, action) => {
-      state.nickName = action.payload.nickName;
+      state.nickName = action.payload.nickname;
       state.email = action.payload.email;
       state.registrationId = action.payload.registrationId;
       state.fulfilled = true;
