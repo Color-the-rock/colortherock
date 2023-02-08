@@ -32,26 +32,22 @@ public class MemberController {
     private final RecordService recordService;
 
     @GetMapping("/test")
-    @Operation(description = "임시 테스트용 API",summary = "임시 테스트용 API")
+    @Operation(description = "임시 테스트용 API", summary = "임시 테스트용 API")
     public String test(@AuthenticationPrincipal MemberDetails memberDetails) {
         return "ok";
     }
 
     @PostMapping("/api/refresh")
-    @Operation(description = "액세스 재발급 API",summary = "액세스 토큰 재발급 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "재발급 성공", content = @Content(schema = @Schema(implementation = ReGenerateAccessTokenResponse.class)))
-    })
+    @Operation(description = "액세스 재발급 API", summary = "액세스 토큰 재발급 API")
+    @ApiResponse(responseCode = "200", description = "재발급 성공", content = @Content(schema = @Schema(implementation = ReGenerateAccessTokenResponse.class)))
     public BaseResponse<ReGenerateAccessTokenResponse> reGenerateAccessToken(@Valid @RequestBody ReGenerateAccessTokenRequest request) {
 
         String regenerateAccessToken = memberService.regenerateAccessToken(request.getRefreshToken());
         return new BaseResponse<>(new ReGenerateAccessTokenResponse(regenerateAccessToken));
     }
 
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "회원가입 성공", content = @Content(schema = @Schema(implementation = MemberSignUpResponse.class))),
-    })
-    @Operation(description = "회원 가입 API",summary = "회원가입 API")
+    @ApiResponse(responseCode = "200", description = "회원가입 성공", content = @Content(schema = @Schema(implementation = MemberSignUpResponse.class)))
+    @Operation(description = "회원 가입 API", summary = "회원가입 API")
     @PostMapping("/api/member/signup")
     public BaseResponse<MemberSignUpResponse> signup(@Valid @RequestBody MemberSignUpRequest request) {
         MemberSignUpResponse signup = memberService.signup(request);
@@ -60,14 +56,10 @@ public class MemberController {
     }
 
     @PostMapping("/api/duplicateNickname")
-    @Operation(description = "닉네임 중복 확인 API",summary = "닉네임 중복확인 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "닉네임 중복 검사 통과",content = @Content(schema = @Schema(implementation = Boolean.class))),
-            @ApiResponse(responseCode = "400", description = "닉네임 중복 검사 실패"),
-    })
-    public BaseResponse<?> duplicateNickname(@Valid
-                                             @RequestBody
-                                             DuplicateNicknameRequest request) {
+    @Operation(description = "닉네임 중복 확인 API", summary = "닉네임 중복확인 API")
+    @ApiResponse(responseCode = "200", description = "닉네임 중복 검사 통과", content = @Content(schema = @Schema(implementation = Boolean.class)))
+    @ApiResponse(responseCode = "400", description = "닉네임 중복 검사 실패")
+    public BaseResponse<?> duplicateNickname(@Valid @RequestBody DuplicateNicknameRequest request) {
         Boolean isDuplicate = memberService.duplicateNickname(request.getNickname());
         return new BaseResponse<>(isDuplicate);
     }

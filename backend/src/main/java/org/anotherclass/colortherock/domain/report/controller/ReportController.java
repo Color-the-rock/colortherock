@@ -23,10 +23,8 @@ public class ReportController {
     private final ReportService reportService;
 
     @PostMapping("/report")
-    @Operation(description = "완등 영상 게시글 신고 API")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "신고 완료")
-    })
+    @Operation(description = "완등 영상 게시글 신고 API",summary = "완등 영상 게시글 신고 API")
+    @ApiResponse(responseCode = "200", description = "신고 완료")
     public BaseResponse<?> reportPost(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody PostReportRequest postReportRequest) {
         Member member = memberDetails.getMember();
         reportService.reportPost(member, postReportRequest);

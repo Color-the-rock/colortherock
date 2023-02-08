@@ -1,5 +1,6 @@
 package org.anotherclass.colortherock.domain.report.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +12,13 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "영상 신고 요청")
 public class PostReportRequest {
     @NotNull
+    @Schema(description = "영상 게시글 id")
     private Long videoBoardId;
     @NotNull
+    @Schema(description = "사유")
     private String category;
 
 }
