@@ -43,6 +43,7 @@ class VideoBoardServiceTest {
     private ArrayList<Long> memberIds;
     private ArrayList<Long> videoIds;
     private ArrayList<Long> videoBoardIds;
+    private final Integer PAGE_SIZE = 16;
 
     @BeforeEach
     public void setMemberAndVideo() {
@@ -114,7 +115,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertTrue(successVideos.get(0).getVideoBoardId() > successVideos.get(1).getVideoBoardId());
-                    assertEquals(16, successVideos.size());
+                    assertEquals(PAGE_SIZE, successVideos.size());
                 }
             }
 
@@ -136,7 +137,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertTrue(cond.getStoreId() > successVideos.get(0).getVideoBoardId());
-                    assertEquals(16, successVideos.size());
+                    assertEquals(PAGE_SIZE, successVideos.size());
                 }
             }
 
@@ -183,7 +184,7 @@ class VideoBoardServiceTest {
                     // then
                     assertEquals(successVideos.get(0).getColor(), cond.getColor());
                     assertEquals(successVideos.get(1).getColor(), cond.getColor());
-                    assertEquals(16,successVideos.size());
+                    assertEquals(PAGE_SIZE,successVideos.size());
                 }
 
             }
@@ -209,7 +210,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
-                    assertEquals(16,successVideos.size());
+                    assertEquals(PAGE_SIZE,successVideos.size());
                 }
             }
         }
@@ -237,7 +238,7 @@ class VideoBoardServiceTest {
                     // then
                     assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
                     assertEquals(successVideos.get(0).getColor(), cond.getColor());
-                    assertEquals(16, successVideos.size());
+                    assertEquals(PAGE_SIZE, successVideos.size());
                 }
             }
 
@@ -256,7 +257,7 @@ class VideoBoardServiceTest {
             @DisplayName("USER_NOT_FOUND 예외를 발생시킴")
             void noSuchUserException() {
                 // given
-                Long memberId = 100L; //DB에 없는 id
+                Long memberId = 2000000L; //DB에 없는 id
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
                 request.setVideoId(videoIds.get(0));
                 request.setTitle("성공했습니다.");
@@ -273,7 +274,7 @@ class VideoBoardServiceTest {
             void noSuchVideoException() {
                 Long memberId = memberIds.get(0);
                 SuccessVideoUploadRequest request = new SuccessVideoUploadRequest();
-                request.setVideoId(100L); // DB에 없는 ID
+                request.setVideoId(2000000L); // DB에 없는 ID
                 request.setTitle("성공했습니다.");
 
                 assertThrows(VideoNotFoundException.class, () -> videoBoardService.uploadMySuccessVideoPost(memberId, request));
@@ -325,7 +326,7 @@ class VideoBoardServiceTest {
             @Test
             @DisplayName("PostNotFound예외를 발생시킨다")
             void postNotFoundException() {
-                Long videoBoardId = 100L;
+                Long videoBoardId = 2000000L;
                 assertThrows(PostNotFoundException.class, () -> videoBoardService.getVideoDetail(videoBoardId));
             }
         }
@@ -355,7 +356,7 @@ class VideoBoardServiceTest {
             void PostNotFoundException() {
                 Long memberId = memberIds.get(0);
                 SuccessPostUpdateRequest request = new SuccessPostUpdateRequest();
-                request.setVideoBoardId(100L); // 없는 게시글 번호
+                request.setVideoBoardId(2000000L); // 없는 게시글 번호
                 request.setTitle("수정했습니다.");
 
                 assertThrows(PostNotFoundException.class, () -> videoBoardService.updateSuccessPost(memberId, request));

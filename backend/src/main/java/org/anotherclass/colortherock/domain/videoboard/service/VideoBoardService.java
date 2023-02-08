@@ -36,11 +36,12 @@ public class VideoBoardService {
     private final MemberRepository memberRepository;
     private final VideoBoardRepository videoBoardRepository;
     private final VideoBoardReadRepository videoBoardReadRepository;
+    private final Integer PAGE_SIZE = 16;
 
     // 완등 영상 전체 리스트 조회
     @Transactional(readOnly = true)
     public List<VideoBoardSummaryResponse> getSuccessVideos(VideoBoardSearchRequest condition) {
-        Pageable pageable = Pageable.ofSize(16);
+        Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
         Slice<VideoBoard> slices = videoBoardReadRepository.searchByCond(condition, pageable);
 
