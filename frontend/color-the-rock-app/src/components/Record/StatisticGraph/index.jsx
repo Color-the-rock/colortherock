@@ -7,6 +7,7 @@ const StatisticGraph = ({ count = 3 }) => {
   const [totalCount, setTotalCount] = useState(0);
 
   const getTotalCount = (_result) => {
+    if (_result.length === 0) return;
     let tmp = 0;
     for (let item of _result) {
       tmp += Number(item.count);
@@ -19,9 +20,10 @@ const StatisticGraph = ({ count = 3 }) => {
       .getVisitedGymData()
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("statusCode : 200 ", _result);
+          console.log("[getVisitedGymData] statusCode : 200 ", _result);
           setResult(_result);
           getTotalCount(_result);
+          console.log("_result ? ", _result);
         }
       })
       .catch((error) => console.log("error", error));
@@ -41,7 +43,7 @@ const StatisticGraph = ({ count = 3 }) => {
       </S.ChallengeBar>
 
       <S.GraphTitle>방문한 홈짐</S.GraphTitle>
-      <S.HomeGymGraph isResult={result.length === 0 && 0}>
+      <S.HomeGymGraph length={result.length === 0 ? 0 : result.length}>
         {result && result.length > 0
           ? result.map((gym, index) => (
               <S.VisitedState

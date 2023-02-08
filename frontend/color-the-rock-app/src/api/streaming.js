@@ -13,11 +13,12 @@ const streamingApi = {
   getAllLiveList: (liveId = 0) => api.get(`/live/list?liveId=${liveId}`),
 
   // 라이브 기록 시작 API
-  startRecordVideo: (sessionId) =>
-    api.post(`/live/${sessionId}/recording/start`),
+  startRecordVideo: (sessionId, token) =>
+    api.post(`/live/${sessionId}/recording/start`, token),
 
   // 라이브 기록 종료 API
-  quitRecordVideo: (sessionId) => api.post(`/live/${sessionId}/recording/end`),
+  quitRecordVideo: (sessionId, recordObject) =>
+    api.post(`/live/${sessionId}/recording/end`, recordObject),
 
   // 라이브 기록 저장 API
   saveRecordVideo: (sessionId) => api.post(`/live/${sessionId}/recording/save`),

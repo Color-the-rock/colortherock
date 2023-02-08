@@ -12,7 +12,7 @@ const MyRecordVideoList = ({ isSuccess = true }) => {
   const getVideoListByCalendar = () => {
     // requestBody
     const data = {
-      videoId: videos.length > 0 ? videos[videos.length - 1].videoId : 0,
+      videoId: videos.length > 0 ? videos[videos.length - 1].videoId : 1,
       shootingDate: moment(date).format("YYYY-MM-DD"),
       isSuccess: isSuccess === "success" ? true : false,
     };
