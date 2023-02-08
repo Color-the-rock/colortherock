@@ -3,7 +3,7 @@ package org.anotherclass.colortherock.domain.videocomment.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
 @Getter
@@ -20,5 +20,5 @@ public class CommentListResponse {
     @Schema(description = "내용")
     private String content;
     @Schema(description = "생성 날짜")
-    private LocalDateTime createdDate;
+    private LocalDate createdDate;
 }

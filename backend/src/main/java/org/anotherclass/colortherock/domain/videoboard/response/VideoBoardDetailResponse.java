@@ -3,7 +3,7 @@ package org.anotherclass.colortherock.domain.videoboard.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
 @Getter
@@ -19,6 +19,6 @@ public class VideoBoardDetailResponse {
     @Schema(description = "제목")
     private String title;
     @Schema(description = "글 쓴 시간")
-    private LocalDateTime createdDate;
+    private LocalDate createdDate;
 
 }

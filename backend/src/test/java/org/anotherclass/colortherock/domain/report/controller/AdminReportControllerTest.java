@@ -25,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.util.NestedServletException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -59,6 +60,7 @@ class AdminReportControllerTest extends IntegrationTest {
     private String adminId;
 
     private String token;
+    private String tokenForUser;
     @Autowired
     JwtTokenUtils jwtTokenUtils;
 
@@ -96,19 +98,20 @@ class AdminReportControllerTest extends IntegrationTest {
         }
 
         // 신고 생성
-        for (int i = 0; i < 5; i++) {
+        for (int i = 1; i < 6; i++) {
             Member member = memberRepository.findById(memberIds.get(i))
                     .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.USER_NOT_FOUND));
             for (int j = 0; j < 2; j++) {
                 reportService.reportPost(member, new PostReportRequest(videoBoardIds.get(0), "TYPE_A"));
             }
         }
-        token = TOKEN_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+
     }
 
     @Test
     @DisplayName("(관리자 인증된 경우) 신고된 영상 게시글 목록 가져오기")
     void getReportedPost() throws Exception {
+        token = TOKEN_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
         MockHttpServletResponse response = mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -124,16 +127,39 @@ class AdminReportControllerTest extends IntegrationTest {
     @Test
     @DisplayName("(관리자 미인증시) 신고된 영상 불러오기 실패")
     void failToGetReportPost() throws Exception {
-        mockMvc.perform(
-                        get(url)
-                                .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(print())
-                .andExpect(jsonPath("$.status", is(401)));
+        try {
+            mockMvc.perform(
+                    get(url)
+                            .contentType(MediaType.APPLICATION_JSON)
+            ).andDo(print());
+            fail("허용되지 않은 사용자입니다");
+        } catch (NestedServletException e) {
+            assertTrue(e.getCause() instanceof GlobalBaseException);
+        }
+    }
+
+    @Test
+    @DisplayName("(일반 유저의 경우) 신고된 영상 불러오기 실패")
+    void failToGetReportPostByUser() throws Exception {
+        Member member = memberRepository.findById(memberIds.get(0))
+                .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.USER_NOT_FOUND));
+        tokenForUser = token = TOKEN_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        try {
+            mockMvc.perform(
+                    get(url)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header(HttpHeaders.AUTHORIZATION, tokenForUser)
+            ).andDo(print());
+            fail("허용되지 않은 사용자입니다");
+        } catch (NestedServletException e) {
+            assertTrue(e.getCause() instanceof GlobalBaseException);
+        }
     }
 
     @Test
     @DisplayName("신고 내용 상세 확인하기")
     void getReportedPostDetail() throws Exception {
+        token = TOKEN_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
         MockHttpServletResponse response = mockMvc.perform(
                         get(url + "/detail")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -149,6 +175,7 @@ class AdminReportControllerTest extends IntegrationTest {
     @Test
     @DisplayName("영상 숨김 해제하기")
     void cancelHiddenStatus() throws Exception {
+        token = TOKEN_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
         mockMvc.perform(
                         get(url + "/detail/unhidden")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -161,12 +188,13 @@ class AdminReportControllerTest extends IntegrationTest {
     @Test
     @DisplayName("영상 삭제하기")
     void deleteVideo() throws Exception {
+        token = TOKEN_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
         mockMvc.perform(
-                delete(url + "/detail")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("videoBoardId", String.valueOf(videoBoardIds.get(0)))
-                        .header(HttpHeaders.AUTHORIZATION, token)
-        ).andDo(print())
+                        delete(url + "/detail")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("videoBoardId", String.valueOf(videoBoardIds.get(0)))
+                                .header(HttpHeaders.AUTHORIZATION, token)
+                ).andDo(print())
                 .andExpect(jsonPath("$.status", is(200)));
     }
 
