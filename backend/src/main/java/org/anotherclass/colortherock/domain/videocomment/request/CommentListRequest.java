@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 public class CommentListRequest {
 
     @Schema(description = "마지막으로 본 댓글 id")
+    @NotNull
     private Long storeId;
     @NotNull
     @Schema(description = "영상 게시글 id")
