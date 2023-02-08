@@ -13,7 +13,6 @@ export const streamingSlice = createSlice({
     ov: null, // openVidu 객체
     info: {},
     userOpenViduToken: "",
-    picture: "",
   },
   reducers: {
     setOV: (state, action) => {
@@ -23,13 +22,8 @@ export const streamingSlice = createSlice({
     setOpenViduToken: (state, action) => {
       state.userOpenViduToken = action.payload;
     },
-<<<<<<< HEAD
-    setPicture: (state, action) => {
-      state.picture = action.payload;
-=======
     setStreamingInfo: (state, action) => {
       state.info = action.payload;
->>>>>>> d09182074696f4a40ad8d14f935f554e9da80254
     },
   },
 });

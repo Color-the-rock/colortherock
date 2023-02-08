@@ -21,16 +21,7 @@ const UserApi = {
   //   });
   // },
   // 회원가입 API
-<<<<<<< HEAD
-  SignUp: (data) =>
-    defaultInstance.post("/member/signup", data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }),
-=======
   SignUp: (data) => defaultInstance.post("/member/signup", data),
->>>>>>> d09182074696f4a40ad8d14f935f554e9da80254
 };
 
 export default UserApi;
