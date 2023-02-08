@@ -49,7 +49,7 @@ public class VideoReadRepository {
 
     // videoId를 통한 no-offset 처리 메소드
     private BooleanExpression ltVideoId(Long videoId) {
-        if(videoId == null) return null;
+        if(videoId == -1L) return null;
         return video.id.lt(videoId);
     }
 
