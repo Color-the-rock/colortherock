@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -8,7 +8,6 @@ import { useInput } from "../../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
 import { setOV } from "../../stores/streaming/streamingSlice";
 import CommentBtn from "../../components/Common/CommentBtn";
-import TestImg from "../../assets/img/common/app-logo.png";
 import ChattingModal from "../../components/Live/ChattingModal";
 import {
   FiLogOut,
@@ -23,6 +22,7 @@ import {
   FiLink,
 } from "react-icons/fi";
 import { Desktop, Mobile } from "../../components/layout/Template";
+import streamingApi from "../../api/streaming";
 
 const StreamingLive = () => {
   // 기본 설정
@@ -50,8 +50,10 @@ const StreamingLive = () => {
   const [isRecordStart, setRecordStart] = useState();
 
   // 라이브 API 연결 설정 관리
-  const [sessionId, setSessionId] = useState("");
   const token = useSelector((state) => state.streaming.userOpenViduToken);
+
+  // 녹화 설정 관리
+  const [recordId, setRecordId] = useState("");
 
   useEffect(() => {
     if (ov !== null && ov !== undefined) {
@@ -255,6 +257,39 @@ const StreamingLive = () => {
       return;
     }
 
+    if (_sessionId === null || _sessionId === undefined) return;
+
+    console.log("_session ? ", _sessionId);
+
+    if (isRecordStart) {
+      const requestBody = {
+        token: token,
+      };
+      streamingApi
+        .startRecordVideo("ses_ATKMnDpKyk", requestBody)
+        .then(({ data: { status, result: _result } }) => {
+          if (status === 200) {
+            console.log("[startRecordVideo] statusCode : 200 ", _result);
+            setRecordId(_result);
+          }
+        })
+        .catch((error) => console.log(error));
+    } else {
+      const requestBody = {
+        token: token,
+        recordingId: recordId,
+      };
+
+      streamingApi
+        .quitRecordVideo("ses_YoeQbk4Sng", requestBody)
+        .then(({ data: { status, result: _result } }) => {
+          if (status === 200) {
+            console.log("[quitRecordVideo] statusCode : 200 ", _result);
+            setRecordId(_result);
+          }
+        })
+        .catch((error) => console.log(error));
+    }
     setRecordStart((prev) => !prev);
   };
 

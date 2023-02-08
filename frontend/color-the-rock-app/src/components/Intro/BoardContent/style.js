@@ -26,7 +26,10 @@ export const Section = styled.section`
 `;
 
 export const BoardImg = styled.img`
-  width: 280vw;
+  width: 100vw;
   height: 100%;
   opacity: 0.6;
+  @media (max-width: 1070px) {
+    width: 280vw;
+  }
 `;

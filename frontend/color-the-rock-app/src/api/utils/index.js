@@ -6,7 +6,12 @@ const BASE_URL = "https://colortherock.com/api";
 
 const instance = axios.create({
   baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
+
+// instance.defaults.headers.common["Content-Type"] = "application/json";
 
 // // 원본 코드(삭제 금지)
 instance.interceptors.request.use(function (config) {
@@ -18,7 +23,6 @@ instance.interceptors.request.use(function (config) {
     config.headers.Authorization = null;
     return config;
   }
-
   if (config.headers && accessToken) {
     config.headers.Authorization = `${accessToken}`;
     return config;
@@ -27,7 +31,7 @@ instance.interceptors.request.use(function (config) {
 
 instance.interceptors.response.use(
   // console.log("interceptors response"),
-  // 2xx 응답이 오면 return;
+  // 2xx 응답이 오면 return
   (response) => {
     console.log("interceptor response 200");
     return response;

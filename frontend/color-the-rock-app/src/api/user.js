@@ -9,14 +9,24 @@ const UserApi = {
   // GetRefleshToken: "/refresh",
 
   // 닉네임 중복체크
-  // CheckNickname: (nickName) =>
-  // defaultInstance.post("/duplicateNickname", {
-  //   nickName,
-  // }),
   CheckNickname: (nickName) =>
-    defaultInstance.post("/duplicateNickname", nickName),
+    defaultInstance.post("/duplicateNickname", {
+      nickName,
+    }),
+  // CheckNickname: (nickName) => {
+  //   defaultInstance.post("/duplicateNickname", nickName, {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   });
+  // },
   // 회원가입 API
-  SignUp: (data) => defaultInstance.post("/member/signup", data),
+  SignUp: (data) =>
+    defaultInstance.post("/member/signup", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }),
 };
 
 export default UserApi;

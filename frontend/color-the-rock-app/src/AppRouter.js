@@ -18,7 +18,7 @@ import Signup from "./pages/Signup/index";
 import BoardRegist from "./pages/Board/BoardRegist/index";
 import BoardModify from "./pages/Board/BoardModify/index";
 import StreamingForm from "./pages/StreamingForm";
-import Preview from "./pages/Preview/inedx";
+import Preview from "./pages/Preview/index";
 import RecordForm from "./pages/Record/RecordForm";
 import StreamingLive from "./pages/StreamingLive";
 import UploadS3Form from "./pages/Board/UploadS3Form";
