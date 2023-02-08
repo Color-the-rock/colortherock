@@ -10,7 +10,7 @@ const streamingApi = {
   participateLiveSession: (liveId) => api.get(`/live/${liveId}`),
 
   // 라이브 목록 조회 API
-  getAllLiveList: (liveId = 0) => api.get(`/live/list?liveId=${liveId}`),
+  getAllLiveList: (liveId = -1) => api.get(`/live/list?liveId=${liveId}`),
 
   // 라이브 기록 시작 API
   startRecordVideo: (sessionId, token) =>

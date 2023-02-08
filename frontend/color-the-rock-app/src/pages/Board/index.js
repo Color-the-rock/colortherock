@@ -5,16 +5,16 @@ import * as S from "./style";
 import { HiPencil } from "react-icons/hi";
 import BoardSearchBar from "../../components/Board/BoardSearch";
 import boardApi from "../../api/board";
-import BasicButton from "../../components/Common/BasicButton";
-import RegistBtn from "../../components/Board/RegistBtn";
+import { useNavigate } from "react-router-dom";
 
 const Board = () => {
+  const navigate = useNavigate();
   const [result, setResult] = useState([]);
   const [searchLocation, setSearchLocation] = useState("");
   const [isShowRegisterModal, setShowRegisterModal] = useState(false);
   const getBoardList = () => {
     const requestData = {
-      storeId: 0,
+      storeId: 25,
       color: "",
       gymName: "",
     };
@@ -49,6 +49,10 @@ const Board = () => {
     getBoardList();
   }, []);
 
+  const handleOnClickItem = (id) => {
+    navigate(`/board/detail/${id}`);
+  };
+
   return (
     <S.Container id="board-container">
       <Title>완등 영상 보기</Title>
@@ -71,6 +75,7 @@ const Board = () => {
               isLive={false}
               color={item.color}
               createdDate={item.createdDate}
+              //onClick={handleOnClickItem(item.videoBoardId)}
             />
           ))}
         </S.ThumbnailList>

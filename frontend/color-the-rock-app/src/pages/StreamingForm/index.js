@@ -4,7 +4,6 @@ import Webcam from "react-webcam";
 import * as S from "./style";
 import { FiArrowLeft } from "react-icons/fi";
 import InputComp from "../../components/Board/InputComp";
-// import ArrowLeftBtn from "../../components/Common/ArrowLeftBtn"
 import BoardSubTitle from "../../components/Board/BoardSubTitle";
 import SearchBar from "../../components/Common/KakaoKeywordSearch/SearchBar";
 import RegistBtn from "../../components/Board/RegistBtn";
@@ -73,8 +72,8 @@ const StreamingForm = () => {
   };
 
   const submitHandler = () => {
-    joinSession();
-    navigate("/streaming/live/1");
+    const sessionId = joinSession();
+    navigate(`/streaming/live/${sessionId}`);
   };
 
   // openVidu 설정
@@ -101,6 +100,8 @@ const StreamingForm = () => {
         if (status === 200) {
           console.log("stausCode : 200 ", result);
           dispatch(setOpenViduToken(result));
+          const params = new URL(result).searchParams;
+          return params.get("sessionId");
         }
       })
       .catch((error) => console.log(error));

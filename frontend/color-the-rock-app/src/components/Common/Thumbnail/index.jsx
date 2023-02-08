@@ -15,12 +15,13 @@ const Thumbnail = ({
   return (
     <S.Container id={id} onClick={onClick}>
       <S.ThumbnailImg src={!imgUrl ? TestImg : imgUrl} />
-      <S.VideoText isLive={true}>{title}</S.VideoText>
+      <S.VideoText isLive={true}>
+        {title.length < 13 ? title : title.substring(0, 12) + "..."}
+      </S.VideoText>
       <S.VideoText isLive={isLive}>
         <S.LiveBadge />
         {userNickname}
       </S.VideoText>
-
       {color && <S.Tag>{color}</S.Tag>}
       <S.Tag>{gymName}</S.Tag>
     </S.Container>
@@ -29,11 +30,12 @@ const Thumbnail = ({
 export default Thumbnail;
 
 Thumbnail.propTypes = {
-  id: PropTypes.number,
+  id: PropTypes.string,
   title: PropTypes.string,
   userNickname: PropTypes.string,
   gymName: PropTypes.string,
   imgUrl: PropTypes.string,
   isLive: PropTypes.bool,
   color: PropTypes.string,
+  onClick: PropTypes.func,
 };

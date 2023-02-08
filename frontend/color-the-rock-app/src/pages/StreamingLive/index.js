@@ -30,6 +30,7 @@ const StreamingLive = () => {
   const dispatch = useDispatch();
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [sessionTitle, setSessionTitle] = useState("SessionA");
+  const [connectionId, setConnectionId] = useState("");
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -99,7 +100,9 @@ const StreamingLive = () => {
   }, [session]);
 
   useEffect(() => {
+    console.log("useEffect().....", session);
     if (token !== "" && session !== undefined) {
+      console.log("??????");
       session.connect(token, { clientData: userNickName }).then(async () => {
         onSessionCreated();
 
@@ -118,6 +121,8 @@ const StreamingLive = () => {
         session.publish(publisher); // publisher는 본인의 화면을 송출
 
         console.log("session???", session.sessionId);
+        setConnectionId(session.connection.connectionId);
+        console.log("ov???", ov);
 
         // Obtain the current video device in use
         let devices = await ov.getDevices();
@@ -259,14 +264,15 @@ const StreamingLive = () => {
 
     if (_sessionId === null || _sessionId === undefined) return;
 
-    console.log("_session ? ", _sessionId);
+    console.log("_session ? ", session);
 
-    if (isRecordStart) {
+    if (!isRecordStart) {
+      console.log("connectionId", connectionId);
       const requestBody = {
-        token: token,
+        token: connectionId,
       };
       streamingApi
-        .startRecordVideo("ses_ATKMnDpKyk", requestBody)
+        .startRecordVideo(_sessionId, requestBody)
         .then(({ data: { status, result: _result } }) => {
           if (status === 200) {
             console.log("[startRecordVideo] statusCode : 200 ", _result);
@@ -281,7 +287,7 @@ const StreamingLive = () => {
       };
 
       streamingApi
-        .quitRecordVideo("ses_YoeQbk4Sng", requestBody)
+        .quitRecordVideo(_sessionId, requestBody)
         .then(({ data: { status, result: _result } }) => {
           if (status === 200) {
             console.log("[quitRecordVideo] statusCode : 200 ", _result);

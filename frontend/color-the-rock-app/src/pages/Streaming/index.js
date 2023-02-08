@@ -23,14 +23,14 @@ const Streaming = () => {
     dispatch(setOV({ ov }));
   };
 
-  const handleParticipateSession = () => {
+  const handleParticipateSession = (sessionId) => {
     joinSession();
     streamingApi
-      .participateLiveSession("ses_C1O14q5DIs")
+      .participateLiveSession(sessionId)
       .then(({ data: { status, result } }) => {
         if (status === 200) {
           dispatch(setOpenViduToken(result));
-          navigate(`/streaming/live/ses_C1O14q5DIs`);
+          navigate(`/streaming/live/${sessionId}`);
         }
       })
       .catch((error) => console.log(error));
@@ -38,7 +38,7 @@ const Streaming = () => {
 
   const getAllLiveList = () => {
     streamingApi
-      .getAllLiveList()
+      .getAllLiveList(25)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
           console.log("statusCode : 200 ", _result);
@@ -65,19 +65,30 @@ const Streaming = () => {
         도전 중인 등반을 보고 실시간으로 피드백해줘요!
       </S.Description>
       <SearchBar />
-      {/* list */}
+      {/* list 
+       {
+      "id": 7,
+      "title": "string",
+      "memberName": "닉네임1",
+      "memberId": 2,
+      "gymName": "string",
+      "sessionId": "ses_DNufxCA9vZ",
+      "participantNum": 0
+    },
+      */}
       {result && result.length > 0 ? (
         <S.ThumbnailList>
           {result.map((item) => (
             <Thumbnail
-              key={item.id}
-              id={item.id}
+              key={item.sessionId}
+              id={item.sessionId}
               title={item.title}
-              userNickname={item.userNickname}
+              userNickname={item.memberName}
               gymName={item.gymName}
               imgUrl={item.imgUrl}
               isLive={true}
-              onClick={handleParticipateSession(item.id)}
+              participantNum={item.participantNum}
+              // onClick={handleParticipateSession(item.sessionId)}
             />
           ))}
         </S.ThumbnailList>

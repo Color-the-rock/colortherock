@@ -49,8 +49,14 @@ export const ThumbnailList = styled.div`
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1rem;
   margin-top: 20px;
-  @media (max-width: 1070px) {
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 350px) {
+    grid-template-columns: 1fr;
   }
 `;
 export const RegisterButton = styled.button`
