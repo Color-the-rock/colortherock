@@ -32,11 +32,17 @@ import java.nio.file.Paths;
 public class S3Service {
     private AmazonS3 s3Client;
 
-    @Value("${cloud.aws.credentials.access-key}") private String accessKey;
-    @Value("${cloud.aws.credentials.secret-key}") private String secretKey;
-    @Value("${cloud.aws.s3.bucket}") private String bucket;
-    @Value("${cloud.aws.region.static}") private String region;
-    @Value("${CLOUDFRONT_URL}") private String cloudFrontUrl;
+    @Value("${cloud.aws.credentials.access-key}")
+    private String accessKey;
+    @Value("${cloud.aws.credentials.secret-key}")
+    private String secretKey;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+    @Value("${cloud.aws.region.static}")
+    private String region;
+    @Value("${CLOUDFRONT_URL}")
+    private String cloudFrontUrl;
+
     // S3Client 생성
     @PostConstruct
     public void setS3Client() {
@@ -52,8 +58,10 @@ public class S3Service {
 
     // Upload user's local video
     public String upload(MultipartFile file, String videoName) throws IOException {
-        s3Client.putObject(new PutObjectRequest(bucket, videoName, file.getInputStream(), null)
+        InputStream inputStream = file.getInputStream();
+        s3Client.putObject(new PutObjectRequest(bucket, videoName, inputStream, null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
+        inputStream.close();
         return cloudFrontUrl + videoName;
     }
 
@@ -64,14 +72,18 @@ public class S3Service {
     }
 
     // Upload video from Openvidu
-    public String uploadFromOV(String dir, String videoName) throws IOException {
+    public String uploadFromOV(String dir, String videoName) {
 
         Path filePath = Paths.get(dir);
-        InputStream inputStream = Files.newInputStream(filePath);
-        s3Client.putObject(new PutObjectRequest(bucket, videoName, inputStream, null)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
+        try (InputStream inputStream = Files.newInputStream(filePath)) {
+            s3Client.putObject(new PutObjectRequest(bucket, videoName, inputStream, null)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return cloudFrontUrl + videoName;
     }
+
     // Upload thumbnail from Openvidu recording video
     public String uploadThumbnailFromOV(String dir, String thumbnailName) throws IOException, JCodecException {
         File file = Paths.get(dir).toFile();
@@ -100,17 +112,19 @@ public class S3Service {
         baos.close();
         // Upload the object to S3
         s3Client.putObject(new PutObjectRequest(bucket, thumbnailName, is, null));
-        if(!file.delete()) System.out.println("파일이 삭제되지 않았습니다.");
+        if (!file.delete()) log.info("파일이 삭제되지 않았습니다.");
         return cloudFrontUrl + thumbnailName;
     }
 
     // Convert MultipartFile to File
     private File convertMultipartFileToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
-        convFile.createNewFile();
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(file.getBytes());
-        fos.close();
+        try (FileOutputStream fos = new FileOutputStream(convFile)) {
+            fos.write(file.getBytes());
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+
         return convFile;
     }
 }
