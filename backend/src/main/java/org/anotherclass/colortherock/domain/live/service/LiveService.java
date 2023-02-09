@@ -243,7 +243,7 @@ public class LiveService {
         String thumbnailName = "Thumb" + DateTime.now() + request.getRecordingId() + ".JPEG";
         String thumbnailURL = s3Service.uploadThumbnailFromOV(newDir, thumbnailName);
         // 비디오 객체 생성
-        Video video = request.toEntity(s3Url, thumbnailURL, member);
+        Video video = request.toEntity(s3Url, thumbnailURL, member,videoName);
         videoRepository.save(video);
 
     }
