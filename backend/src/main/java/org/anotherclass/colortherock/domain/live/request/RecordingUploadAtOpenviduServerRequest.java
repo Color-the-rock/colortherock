@@ -10,6 +10,7 @@ import org.anotherclass.colortherock.domain.video.entity.Video;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.time.LocalDate;
 
 
 @Schema(description = "오픈비두 서버에 녹화 저장 요청")
@@ -63,6 +64,7 @@ public class RecordingUploadAtOpenviduServerRequest {
                 .videoName(videoName)
                 .color(this.color)
                 .gymName(this.gymName)
+                .shootingDate(LocalDate.now())
                 .isSuccess(this.isSuccess)
                 .level(this.level).build();
     }
