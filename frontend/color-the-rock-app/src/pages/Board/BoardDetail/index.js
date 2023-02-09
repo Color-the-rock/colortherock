@@ -62,7 +62,7 @@ const BoardDetail = () => {
 
     // 게시글 삭제 API 호출 및 처리 완료 후 페이지 이동
     boardApi
-      .deleteBoardDetail()
+      .deleteBoardDetail(id)
       .then(({ data: { status } }) => {
         if (status === 200) {
           alert("정상적으로 게시글이 삭제되었습니다.");
@@ -91,7 +91,9 @@ const BoardDetail = () => {
         {isOpenBoardSettingModal && (
           <S.SettingModal>
             <S.SettingModalItem isSameAuthor={userNickname === result.nickname}>
-              <Link to={`/board/modify/${result.videoBoardId}`}>수정</Link>
+              <S.SLink to={`/board/modify/${result.videoBoardId}`}>
+                수정
+              </S.SLink>
             </S.SettingModalItem>
             <S.SettingModalItem
               onClick={handleOnclickDelete}
@@ -123,7 +125,10 @@ const BoardDetail = () => {
             ></S.Video>
             {isModalOpen ? (
               <S.CommentModalWrap isModalOpen>
-                <CommentModal setIsModalOpen={setIsModalOpen} />
+                <CommentModal
+                  setIsModalOpen={setIsModalOpen}
+                  isModalOpen={isModalOpen}
+                />
               </S.CommentModalWrap>
             ) : (
               <S.FalseWrap>

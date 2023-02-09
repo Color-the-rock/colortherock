@@ -84,7 +84,7 @@ const Streaming = () => {
               title={item.title}
               userNickname={item.memberName}
               gymName={item.gymName}
-              imgUrl={item.imgUrl}
+              imgUrl={item.thumbnailUrl}
               isLive={true}
               participantNum={item.participantNum}
               onClick={handleParticipateSession}

@@ -52,7 +52,7 @@ const BoardForm = () => {
   console.log(users);
 
   const navigate = useNavigate();
-  const [title, setTitle] = useState();
+  const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [level, setLevel] = useState("");
   const [color, setColor] = useState("");
@@ -101,8 +101,7 @@ const BoardForm = () => {
     // Blob 객체 생성
     const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
 
-    console.log("blob: ", blob);
-    console.log("video: ", video);
+    console.log("video type ? ", typeof video);
 
     formData.append("localSuccessVideoUploadRequest", blob);
     formData.append("newVideo", video);
@@ -110,7 +109,6 @@ const BoardForm = () => {
       .postRegisterLocalVideo(formData)
       .then((res) => {
         console.log("res", res);
-        console.log("성공");
         navigate("/board");
       })
       .catch((err) => {
@@ -155,9 +153,8 @@ const BoardForm = () => {
             <S.ComponentWrap>
               <InputComp
                 placeholder="제목을 입력해주세요"
-                handleChange={titleHandler}
+                handleChange={setTitle}
                 title={title}
-                setTitle={setTitle}
               />
             </S.ComponentWrap>
 

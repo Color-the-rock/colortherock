@@ -4,7 +4,12 @@ import { defaultInstance as api } from "./utils";
 
 const streamingApi = {
   // 라이브 방 생성 API
-  createLiveSession: (liveObject) => api.post(`/live`, liveObject),
+  createLiveSession: (liveObject) =>
+    api.post(`/live`, liveObject, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
 
   // 라이브 참여 API
   participateLiveSession: (liveId) => api.get(`/live/${liveId}`),

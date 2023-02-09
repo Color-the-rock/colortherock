@@ -1,5 +1,6 @@
 import styled, { keyframes } from "styled-components";
 import { FiSettings, FiMoreVertical } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 const slideIn = keyframes`
   from {
@@ -197,4 +198,8 @@ export const DetailInfo = styled.label`
   line-height: 1rem;
   letter-spacing: -0.005em;
   color: ${(props) => (props.color ? props.color : "var(--color-white)")};
+`;
+
+export const SLink = styled(Link)`
+  width: 100%;
 `;
