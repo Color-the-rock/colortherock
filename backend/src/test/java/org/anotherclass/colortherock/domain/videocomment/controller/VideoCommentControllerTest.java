@@ -195,7 +195,7 @@ class VideoCommentControllerTest extends IntegrationTest {
         mockMvc.perform(
                         delete(url)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsBytes(commentId))
+                                .param("commentId", String.valueOf(commentId))
                                 .header(HttpHeaders.AUTHORIZATION, token)
 
                 ).andDo(print())

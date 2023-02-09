@@ -8,6 +8,7 @@ import org.anotherclass.colortherock.domain.memberrecord.response.VisitListDto;
 import org.anotherclass.colortherock.domain.video.dto.DateLevelDto;
 import org.anotherclass.colortherock.domain.video.entity.QVideo;
 import org.anotherclass.colortherock.domain.video.entity.Video;
+import org.anotherclass.colortherock.domain.video.request.MySuccessVideoRequest;
 import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -31,6 +32,7 @@ public class VideoReadRepository {
 
     QVideo video = QVideo.video;
 
+    // 내 영상 조회 (성공/실패)
     public Slice<Video> searchBySlice(Pageable pageable, MyVideoRequest request, Member member) {
         List<Video> results = queryFactory.selectFrom(video)
                 .where(
@@ -47,9 +49,27 @@ public class VideoReadRepository {
         return checkLastPage(pageable, results);
     }
 
+    // 업로드 된 적 없는 성공 영상 조회
+    public Slice<Video> searchBySuccessRequest(Pageable pageable, MySuccessVideoRequest request, Member member) {
+        List<Video> results = queryFactory.selectFrom(video)
+                .where(
+                        // no-offset 페이지 처리
+                        ltVideoId(request.getStoreId()),
+                        // 다른 조건
+                        video.member.eq(member),
+                        video.shootingDate.eq(request.getShootingDate()),
+                        video.isSuccess.isTrue(),
+                        video.isPosted.isFalse()
+                )
+                .orderBy(video.id.desc())
+                .limit(pageable.getPageSize() + 1)
+                .fetch();
+        return checkLastPage(pageable, results);
+    }
+
     // videoId를 통한 no-offset 처리 메소드
     private BooleanExpression ltVideoId(Long videoId) {
-        if(videoId == -1L) return null;
+        if (videoId == -1L) return null;
         return video.id.lt(videoId);
     }
 
@@ -58,7 +78,7 @@ public class VideoReadRepository {
         boolean hasNext = false;
 
         // 조회 결과 갯수가 요청 페이지 사이즈보다 크면 다음 페이지가 존재
-        if(results.size() > pageable.getPageSize()) {
+        if (results.size() > pageable.getPageSize()) {
             hasNext = true;
             results.remove(pageable.getPageSize());
         }
@@ -82,9 +102,9 @@ public class VideoReadRepository {
     // 사용자의 해당 날짜 사이에 존재하는 Video를 조회
     public List<DateLevelDto> searchDailyColor(Member member, LocalDate firstDate, LocalDate lastDate) {
         return queryFactory.select(
-                    Projections.constructor(DateLevelDto.class,
-                            video.shootingDate.as("date"),
-                            video.level)
+                        Projections.constructor(DateLevelDto.class,
+                                video.shootingDate.as("date"),
+                                video.level)
                 )
                 .from(video)
                 .where(

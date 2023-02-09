@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
+import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
+import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
 import org.anotherclass.colortherock.domain.memberrecord.exception.WrongMemberException;
 import org.anotherclass.colortherock.domain.memberrecord.response.*;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
@@ -45,6 +47,7 @@ public class RecordController {
     private final S3Service s3Service;
     private final VideoService videoService;
     private final VideoRepository videoRepository;
+    private final MemberRepository memberRepository;
 
     /**
      * 전체 운동 영상 색상 별 통계 조회
@@ -123,8 +126,10 @@ public class RecordController {
     @PostMapping(value = "/video", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails
             , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
-
-        Member member = memberDetails.getMember();
+        Long memberId = memberDetails.getMember().getId();
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                UserNotFoundException::new
+        );
         // S3 영상 저장 후 URL 얻어오기
         // 영상 식별을 위해 파일 앞에 현재 시각 추가
         String videoName = videoService.extractValidVideoName(member, newVideo);
@@ -133,7 +138,7 @@ public class RecordController {
         String thumbnailName = videoService.extractValidThumbName(member);
         String thumbnailURL = s3Service.uploadThumbnail(newVideo, thumbnailName);
         // request와 URL을 통해 DB에 저장
-        videoService.uploadVideo(member, s3URL, thumbnailURL, uploadVideoRequest, videoName);
+        videoService.uploadVideo(member, s3URL, thumbnailURL, thumbnailName, uploadVideoRequest, videoName);
         // 영상 누적 통계에서 영상 갯수 올리기
         recordService.addVideoCount(member, uploadVideoRequest.getIsSuccess());
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
