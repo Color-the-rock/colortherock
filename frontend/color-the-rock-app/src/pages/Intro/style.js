@@ -2,12 +2,12 @@ import styled from "styled-components";
 import { FiArrowUpCircle } from "react-icons/fi";
 
 export const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-  overflow-y: scroll;
+  width: 100%;
   background-color: transparent;
   position: relative;
-  scroll-behavior: smooth;
+  overflow: hidden;
+  padding: 0 16px;
+  margin-top: 3rem;
 `;
 
 export const ContentWrapper = styled.div`
@@ -15,6 +15,7 @@ export const ContentWrapper = styled.div`
   width: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
+  margin: 2rem 0;
 `;
 
 export const Section = styled.section`
@@ -55,17 +56,21 @@ export const BoardText = styled.h1`
   p {
     text-align: center;
   }
-  @media (max-width: 1070px) {
+  @media (max-width: 992px) {
     text-align: start;
   }
 `;
 
 export const BackToTop = styled(FiArrowUpCircle)`
   position: fixed;
-  right: 16px;
+  right: 32px;
   bottom: 16px;
   width: 40px;
   height: 40px;
   color: var(--color-tertiary);
   background-color: transparent;
+  cursor: pointer;
+  @media (max-width: 992px) {
+    right: 16px;
+  }
 `;

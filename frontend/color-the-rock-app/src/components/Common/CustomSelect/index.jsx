@@ -8,8 +8,6 @@ const CustomSelect = ({ setter, optionValues }) => {
   const handleChangeOption = (value, e) => {
     console.log(value);
     console.log(e);
-    // setCurrentOption(e.target.innerText);
-    // console.log("뭐야:", e.target.value);
     setter(value);
     setShowOption(!showOption);
   };

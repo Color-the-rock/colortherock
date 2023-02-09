@@ -50,7 +50,6 @@ const AppRouter = () => {
           <Route path="/oauth" element={<Oauth />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
-        {/* <Footer /> */}
       </Router>
     );
   }
@@ -79,7 +78,6 @@ const AppRouter = () => {
         <Route path="/board/s3form" element={<UploadS3Form />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-      {/* <Footer /> */}
     </Router>
   );
 };

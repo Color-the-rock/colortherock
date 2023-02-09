@@ -7,7 +7,7 @@ export const Container = styled.div`
   align-items: center;
   width: 100vw;
   height: calc(var(--vh, 1vh) * 100);
-  background: url(${bgImg});
+  background: ${(props) => (props.bg ? `url(${props.bg})` : `url(${bgImg})`)};
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;

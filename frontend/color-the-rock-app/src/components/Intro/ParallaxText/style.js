@@ -9,23 +9,15 @@ export const Parallax = styled.div`
   flex-wrap: nowrap;
 
   .scroller {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 9rem;
-    font-family: "Poppins";
-    font-style: italic;
     display: flex;
     white-space: nowrap;
     display: flex;
     flex-wrap: nowrap;
-    margin-bottom: 2rem;
-    @media (max-width: 992px) {
-      font-size: 7rem;
-    }
   }
 
   span {
     display: block;
     margin-right: 30px;
+    margin-bottom: 0.5rem;
   }
 `;

@@ -19,6 +19,7 @@ export const userSlice = createSlice({
     setfulfilledLogin: (state, action) => {
       state.nickName = action.payload.nickname;
       state.fulfilled = true;
+      state.isLogin = true;
     },
     // 로그인 완료
     setLogin: (state, action) => {
@@ -29,17 +30,17 @@ export const userSlice = createSlice({
       state.isLogin = true;
     },
     // 로그아웃
-    LogOut: (state) => {
+    logOut: (state) => {
       state.nickName = "";
       state.email = "";
       state.registrationId = "";
       state.fulfilled = false;
-      state.isLogin = true;
+      state.isLogin = false;
     },
   },
 });
 
-export const { setPendingLogin, setfulfilledLogin, setLogin, LogOut } =
+export const { setPendingLogin, setfulfilledLogin, setLogin, logOut } =
   userSlice.actions;
 
 export default userSlice.reducer;

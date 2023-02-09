@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import * as S from "./style";
 import CommentBtn from "../CommentBtn";
-import { VscChromeClose } from "react-icons/vsc";
-import MyCommentList from "../../Mypage/MyCommentList";
-const CommentModal = ({ setIsModalOpen }) => {
+import BoardCommentList from "../../Board/BoardCommentList";
+import { FiX } from "react-icons/fi";
+import PropTypes from "prop-types";
+const CommentModal = ({ setIsModalOpen, isModalOpen }) => {
   const closeModalHandler = () => {
     setIsModalOpen(false);
   };
@@ -17,23 +18,26 @@ const CommentModal = ({ setIsModalOpen }) => {
         </S.OrnamentWrap>
 
         <S.CloseBtnWrap>
-          <div>댓글</div>
-          <VscChromeClose className="" onClick={closeModalHandler} />
+          <S.CloseButton>
+            <FiX size="24px" onClick={closeModalHandler} />
+          </S.CloseButton>
         </S.CloseBtnWrap>
 
         <S.CommentBtnWrap>
-          <CommentBtn isReadOnly={false} />
+          <CommentBtn isReadOnly={!isModalOpen} />
         </S.CommentBtnWrap>
 
         <S.CommentListWrap>
-          <MyCommentList />
+          <BoardCommentList />
         </S.CommentListWrap>
-        {/* <S.CommentList>
-          
-        </S.CommentList> */}
       </S.CommentWrap>
     </S.Container>
   );
 };
 
 export default React.memo(CommentModal);
+
+CommentModal.propTypes = {
+  setIsModalOpen: PropTypes.func,
+  isModalOpen: PropTypes.bool,
+};

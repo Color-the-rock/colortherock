@@ -92,26 +92,46 @@ const StreamingForm = () => {
     createSession();
   };
 
+  const base64toFile = (base_data, filename) => {
+    let arr = base_data.split(","),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename + ".jpeg", { type: "image/jpeg" });
+  };
+
   // 세션 만들기
   const createSession = () => {
     const requestBody = {
-      isPublic: true,
+      isPublic: isPublic,
       gymName: gymName,
       title: title,
     };
 
-    console.log("createdSession!", requestBody);
+    const blob = new Blob([JSON.stringify(requestBody)], {
+      type: "application/json",
+    });
+
+    const formData = new FormData();
+
+    formData.append("createLiveRequest", blob);
+    formData.append("thumbnail", base64toFile(imgSrc, "thumbnail"));
+    console.log("thumbnail", base64toFile(imgSrc, "thumbnail").type);
+
+    console.log("createdSession! formData", formData.get("createLiveRequest"));
+    console.log("createdSession! formData", formData.get("thumbnail"));
 
     streamingApi
-      .createLiveSession(requestBody)
+      .createLiveSession(formData)
       .then(({ data: { status, result } }) => {
         if (status === 200) {
           console.log("stausCode : 200 ", result);
           dispatch(setOpenViduToken(result));
-          const params = new URL(result).searchParams;
-          console.log("param?? ", params.get("sessionId"));
-          const sessionId = params.get("sessionId");
-          console.log("sessionId? ???", sessionId);
           dispatch(setStreamingInfo(requestBody));
         }
       })
@@ -202,7 +222,7 @@ const StreamingForm = () => {
                 <S.ComponenentWrap>
                   <InputComp
                     title={title}
-                    setTitle={setTitle}
+                    handleChange={setTitle}
                     placeholder="제목을 입력해주세요."
                     opacity="70"
                   />
