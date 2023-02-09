@@ -83,5 +83,5 @@ KakaoSearchList.propTypes = {
   setLocation: PropTypes.func,
   setOpenList: PropTypes.func,
   opacity: PropTypes.string,
-  currentLocation: PropTypes.string,
+  currentLocation: PropTypes.object,
 };

@@ -21,7 +21,7 @@ const Video = ({ id, thumbnailURL, gymName, level, color }) => {
 export default Video;
 
 Video.propTypes = {
-  id: PropTypes.string,
+  id: PropTypes.number,
   thumbnailURL: PropTypes.string,
   gymName: PropTypes.string,
   level: PropTypes.string,

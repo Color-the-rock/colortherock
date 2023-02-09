@@ -64,11 +64,8 @@ const boardApi = {
     }),
 
   // 영상 댓글 작성 요청
-  postVideoBoardComment: ({ videoBoardId, content }) =>
-    defaultInstance.post("/videoboard/comment", {
-      videoBoardId,
-      content,
-    }),
+  postVideoBoardComment: (requestBody) =>
+    defaultInstance.post("/videoboard/comment", requestBody),
 
   // 영상 댓글 삭제 요청
   // value 수정
