@@ -1,6 +1,7 @@
 package org.anotherclass.colortherock.domain.live.service;
 
 import io.openvidu.java.client.*;
+import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.live.entity.Live;
 import org.anotherclass.colortherock.domain.live.exception.RecordingDeleteException;
 import org.anotherclass.colortherock.domain.live.exception.RecordingStartBadRequestException;
@@ -18,7 +19,6 @@ import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundE
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
-import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.jcodec.api.JCodecException;
 import org.joda.time.DateTime;
@@ -29,7 +29,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +41,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class LiveService {
 
     private final S3Service s3Service;
@@ -167,22 +171,22 @@ public class LiveService {
         List<LiveListResponse> responses = new ArrayList<>();
 
         slices.toList().forEach(live -> {
-                    if(activeSessions.contains(live.getSessionId())) {
-                        responses.add(LiveListResponse.builder()
-                                .id(live.getId())
-                                .title(live.getTitle())
-                                .memberId(live.getMember().getId())
-                                .memberName(live.getMember().getNickname())
-                                .gymName(live.getGymName())
-                                .sessionId(live.getSessionId())
-                                .participantNum(
-                                        openVidu.getActiveSession(live.getSessionId()).getActiveConnections().size()
-                                )
-                                .thumbnailUrl(live.getThumbnailURL()).build());
-                    } else {
-                        liveRepository.delete(live);
-                    }
-                });
+            if (activeSessions.contains(live.getSessionId())) {
+                responses.add(LiveListResponse.builder()
+                        .id(live.getId())
+                        .title(live.getTitle())
+                        .memberId(live.getMember().getId())
+                        .memberName(live.getMember().getNickname())
+                        .gymName(live.getGymName())
+                        .sessionId(live.getSessionId())
+                        .participantNum(
+                                openVidu.getActiveSession(live.getSessionId()).getActiveConnections().size()
+                        )
+                        .thumbnailUrl(live.getThumbnailURL()).build());
+            } else {
+                liveRepository.delete(live);
+            }
+        });
         return responses;
     }
 
@@ -214,9 +218,9 @@ public class LiveService {
     @Transactional
     public void removeSession(String sessionId) {
         Optional<Live> live = liveRepository.findBySessionId(sessionId);
-        if(live.isPresent())
+        if (live.isPresent())
             s3Service.deleteFile(live.get().getThumbnailName());
-            liveRepository.deleteBySessionId(sessionId);
+        liveRepository.deleteBySessionId(sessionId);
     }
 
     public void recordingSave(MemberDetails memberDetails, RecordingSaveRequest request) {
@@ -234,6 +238,30 @@ public class LiveService {
     @Transactional
     public void uplooadAtOpenviduServer(RecordingUploadAtOpenviduServerRequest request) throws IOException, JCodecException {
         String newDir = recordingPath + "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".mp4";
+        Path path = Paths.get("/");
+        File[] files = path.toFile().listFiles();
+        assert files != null;
+        for (File file : files) {
+            log.info(file.getName());
+        }
+        Path path2 = Paths.get("/opt");
+        File[] files2 = path2.toFile().listFiles();
+        assert files2 != null;
+        for (File file : files2) {
+            log.info(file.getName());
+        }
+        Path path3 = Paths.get("/opt/openvidu");
+        File[] files3 = path3.toFile().listFiles();
+        assert files3 != null;
+        for (File file : files3) {
+            log.info(file.getName());
+        }
+        Path path4 = Paths.get("/opt/openvidu/recordings");
+        File[] files4 = path4.toFile().listFiles();
+        assert files4 != null;
+        for (File file : files4) {
+            log.info(file.getName());
+        }
         String videoName = DateTime.now() + request.getRecordingId() + ".mp4";
         String s3Url = s3Service.uploadFromOV(newDir, videoName);
         Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> {
