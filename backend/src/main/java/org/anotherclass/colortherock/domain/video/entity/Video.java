@@ -71,4 +71,10 @@ public class Video extends BaseTime {
 
     public void videoPosted() {this.isPosted = true;}
     public void postDeleted() {this.isPosted = false;}
+
+    public void update(Integer level, String gymName, String color) {
+        this.level = level;
+        this.gymName = gymName;
+        this.color = color;
+    }
 }

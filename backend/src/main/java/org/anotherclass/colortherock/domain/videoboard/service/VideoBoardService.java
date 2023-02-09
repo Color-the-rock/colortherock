@@ -97,11 +97,12 @@ public class VideoBoardService {
 
     // 완등 영상 게시글 수정
     @Transactional
-    public void updateSuccessPost(Long memberId, SuccessPostUpdateRequest successPostUpdateRequest) {
-        VideoBoard vb = videoBoardRepository.findById(successPostUpdateRequest.getVideoBoardId())
+    public void updateSuccessPost(Long memberId, SuccessPostUpdateRequest request) {
+        VideoBoard vb = videoBoardRepository.findById(request.getVideoBoardId())
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
         checkAuth(memberId, vb);
-        vb.update(successPostUpdateRequest.getTitle());
+        vb.update(request.getTitle());
+        vb.getVideo().update(request.getLevel(), request.getGymName(), request.getColor());
     }
 
     // 완등 영상 게시글 삭제
