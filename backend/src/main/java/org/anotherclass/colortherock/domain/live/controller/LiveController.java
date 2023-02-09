@@ -15,6 +15,7 @@ import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.jcodec.api.JCodecException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -39,8 +40,8 @@ public class LiveController {
     @Operation(description = "라이브 생성(방송 시작) API", summary = "라이브 생성(방송 시작) API")
     @ApiResponse(responseCode = "200", description = "라이브 생성 성공 시 PUBLISHER token 반환")
     @PostMapping("/live")
-    public BaseResponse<String> createLive(@AuthenticationPrincipal MemberDetails memberDetails, @ModelAttribute CreateLiveRequest request) {
-        String token = liveService.createLiveRoom(memberDetails, request);
+    public BaseResponse<String> createLive(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestPart CreateLiveRequest createLiveRequest, @RequestPart MultipartFile thumbnail) {
+        String token = liveService.createLiveRoom(memberDetails, createLiveRequest, thumbnail);
         return new BaseResponse<>(token);
     }
 
