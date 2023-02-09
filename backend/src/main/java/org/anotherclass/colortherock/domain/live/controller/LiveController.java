@@ -64,7 +64,7 @@ public class LiveController {
     @Operation(description = "라이브 녹화 중단 API", summary = "라이브 녹화 중단 API")
     @ApiResponse(responseCode = "200", description = "녹화 중단 성공")
     @PostMapping("/live/{sessionId}/recording/stop")
-    public BaseResponse<Object> recordingStop(@RequestBody RecordingStopRequest request) {
+    public BaseResponse<Object> recordingStop(@RequestBody RecordingStopRequest request, @PathVariable String sessionId) {
         liveService.recordingStop(request);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
