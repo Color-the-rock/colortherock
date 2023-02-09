@@ -1,7 +1,5 @@
 package org.anotherclass.colortherock.domain.live.controller;
 
-import io.openvidu.java.client.OpenViduHttpException;
-import io.openvidu.java.client.OpenViduJavaClientException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -88,7 +86,7 @@ public class LiveController {
     public BaseResponse<Object> uploadAtOpenviduServer(@RequestBody RecordingUploadAtOpenviduServerRequest request) throws JCodecException, IOException {
 
         liveService.uplooadAtOpenviduServer(request);
-        return null;
+        return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 
     @Operation(description = "이전 녹화 목록 반환 API", summary = "이전 녹화 목록 반환 API")
