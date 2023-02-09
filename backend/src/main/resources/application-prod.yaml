@@ -62,6 +62,11 @@ notification:
   mattermost:
     enabled: true # mmSender를 사용할 지 여부, false면 알림이 오지 않는다
     webhook-url: ${MM_WEBHOOK_URL} # 위의 Webhook URL을 기입
+report:
+  mattermost:
+    enabled: true
+    webhook-url: ${MM_REPORT_URL}
+    pretext: 신고 누적 발생 알림!
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true
