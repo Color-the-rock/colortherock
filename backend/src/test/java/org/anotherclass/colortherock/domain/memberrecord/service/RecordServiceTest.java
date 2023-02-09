@@ -103,7 +103,7 @@ class RecordServiceTest {
     public void getMyVideosTest() {
         // given
         LocalDate localDate = LocalDate.parse("2023-01-17");
-        MyVideoRequest request = MyVideoRequest.builder().isSuccess(true).shootingDate(localDate).build();
+        MyVideoRequest request = MyVideoRequest.builder().videoId(-1L).isSuccess(true).shootingDate(localDate).build();
         // when
         List<VideoListResponse> myVideos = recordService.getMyVideos(member, request);
         // then
