@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.live.entity.Live;
 import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -24,18 +25,25 @@ public class CreateLiveRequest {
     @Schema(description = "라이브 방 제목")
     private String title;
 
+    @NotNull
+    @Schema(description = "썸네일 이미지")
+    private MultipartFile thumbnail;
+
     @Builder
-    public CreateLiveRequest(Boolean isPublic, String gymName, String title) {
+    public CreateLiveRequest(Boolean isPublic, String gymName, String title, MultipartFile thumbnail) {
         this.isPublic = isPublic;
         this.gymName = gymName;
         this.title = title;
+        this.thumbnail = thumbnail;
     }
 
-    public Live toEntity(String sessionId, Member member) {
+    public Live toEntity(String sessionId, Member member, String thumbnail, String thumbnailName) {
         return Live.builder()
                 .isLive(true)
                 .sessionId(sessionId)
                 .member(member)
+                .thumbnailURL(thumbnail)
+                .thumbnailName(thumbnailName)
                 .gymName(this.gymName)
                 .isPublic(this.isPublic)
                 .title(this.title)

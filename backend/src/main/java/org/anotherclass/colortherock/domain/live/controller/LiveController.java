@@ -42,7 +42,7 @@ public class LiveController {
     @Operation(description = "라이브 생성(방송 시작) API", summary = "라이브 생성(방송 시작) API")
     @ApiResponse(responseCode = "200", description = "라이브 생성 성공 시 PUBLISHER token 반환")
     @PostMapping("/live")
-    public BaseResponse<String> createLive(@AuthenticationPrincipal MemberDetails memberDetails, @RequestBody CreateLiveRequest request) {
+    public BaseResponse<String> createLive(@AuthenticationPrincipal MemberDetails memberDetails, @ModelAttribute CreateLiveRequest request) {
         String token = liveService.createLiveRoom(memberDetails, request);
         return new BaseResponse<>(token);
     }
