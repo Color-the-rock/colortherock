@@ -3,8 +3,10 @@ import { useLocation } from "react-router-dom";
 import { Mobile, Desktop } from "../Template";
 import * as S from "./style";
 import { useSelector } from "react-redux";
-
+import { logOut } from "../../../stores/users/userSlice";
+import { useDispatch } from "react-redux";
 const Header = () => {
+  const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.users.isLogin);
   const [isShowNav, setShowNav] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -16,11 +18,15 @@ const Header = () => {
 
   useEffect(() => {
     window.addEventListener("scroll", updateScrollPosition);
+    if (sessionStorage.getItem("accessToken") === null) {
+      dispatch(logOut());
+    }
   }, []);
 
   const handleSetShowNav = () => {
     setShowNav((prev) => !prev);
   };
+
   return (
     <S.Container scrollPosition={scrollPosition}>
       <S.SLink to="/">

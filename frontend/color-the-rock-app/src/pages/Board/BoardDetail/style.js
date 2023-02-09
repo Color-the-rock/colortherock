@@ -19,7 +19,7 @@ export const Settings = styled(FiSettings)`
 
 export const ContainerWrap = styled.div`
   position: relative;
-  width: 100vw;
+  width: 100%;
   height: calc(var(--vh, 1vh) * 100);
   background-color: transparent;
 
@@ -66,18 +66,23 @@ export const ContentWrap = styled.div`
 `;
 
 export const ArrowLeftBtnWrap = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding-left: 1rem;
   background-color: transparent;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-left: 1rem;
 `;
 
 export const BoardSettingBtn = styled(FiMoreVertical)`
   margin-top: 1rem;
   font-size: 2rem;
-  margin-right: 1rem;
   background-color: transparent;
+  @media (max-width: 992px) {
+    margin-right: 1rem;
+  }
 `;
 
 export const VideoWrap = styled.div`

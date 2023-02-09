@@ -89,6 +89,10 @@ const boardApi = {
         storeId,
       },
     }),
+
+  // 게시글 신고 API
+  reportVideoBoard: (requestBody) =>
+    defaultInstance.post(`/video/board/detail/report`, requestBody),
 };
 
 export default boardApi;
