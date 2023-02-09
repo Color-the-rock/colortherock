@@ -21,4 +21,14 @@ public class SuccessPostUpdateRequest {
     @NotNull
     @Schema(description = "게시글 제목")
     private String title;
+    @NotNull
+    @Schema(description = "레벨")
+    private Integer level;
+    @NotNull
+    @Schema(description = "색깔")
+    private String color;
+    @Schema(description = "암장 이름")
+    @NotNull
+    private String gymName;
+
 }

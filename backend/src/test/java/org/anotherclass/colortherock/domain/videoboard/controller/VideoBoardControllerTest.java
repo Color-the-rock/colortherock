@@ -186,7 +186,10 @@ class VideoBoardControllerTest extends IntegrationTest {
         url += "detail";
         Long videoBoardId = videoBoardIds.get(0);
         String newTitle = "새로운 내용";
-        SuccessPostUpdateRequest request = new SuccessPostUpdateRequest(videoBoardId, newTitle);
+        Integer newLevel = 5;
+        String newColor = "파랑";
+        String newGymName = "더클라임 신림점";
+        SuccessPostUpdateRequest request = new SuccessPostUpdateRequest(videoBoardId, newTitle, newLevel, newColor, newGymName);
         mockMvc.perform(
                         put(url)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -198,8 +201,10 @@ class VideoBoardControllerTest extends IntegrationTest {
 
         Optional<VideoBoard> byId = videoBoardRepository.findById(videoBoardId);
         VideoBoard videoBoard = byId.orElseThrow();
-        String title = videoBoard.getTitle();
-        assertEquals(newTitle, title);
+        assertEquals(newTitle, videoBoard.getTitle());
+        assertEquals(newLevel, videoBoard.getVideo().getLevel());
+        assertEquals(newColor, videoBoard.getVideo().getColor());
+        assertEquals(newGymName, videoBoard.getVideo().getGymName());
     }
 
     @Test
