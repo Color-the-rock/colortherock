@@ -60,14 +60,11 @@ const FeedbackModal = ({ session, picture = null }) => {
     let startAngle = 0;
     let endAngle = 2 * Math.PI;
     let counterClockwise = false;
-    // ctx.fillRect(x - 2, y - 2, 30, 30);
     ctx.beginPath();
     ctx.arc(x, y, radius, startAngle, endAngle, counterClockwise);
     ctx.strokeStyle = "#8ED6FF";
     ctx.lineWidth = 5;
     ctx.stroke();
-
-    // ctx.fillRect(x - 2, y - 2, 4, 4);
     setLastX(x);
     setLastY(y);
     sendDrawing();
