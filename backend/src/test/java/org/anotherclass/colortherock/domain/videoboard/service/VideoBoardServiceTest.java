@@ -207,14 +207,14 @@ class VideoBoardServiceTest {
                     // given
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
                     cond.setStoreId(-1L);
-                    cond.setGymName("더클라임 강남점");
+                    cond.setGymName("더클라임");
                     cond.setColor("");
 
                     // when
                     List<VideoBoardSummaryResponse> successVideos = videoBoardService.getSuccessVideos(cond);
 
                     // then
-                    assertEquals(successVideos.get(0).getGymName(), cond.getGymName());
+                    assertTrue(successVideos.get(0).getGymName().contains(cond.getGymName()));
                     assertEquals(PAGE_SIZE,successVideos.size());
                 }
             }
