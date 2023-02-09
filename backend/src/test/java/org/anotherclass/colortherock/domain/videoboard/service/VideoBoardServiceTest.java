@@ -16,6 +16,7 @@ import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchR
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetailResponse;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
+import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -61,7 +62,7 @@ class VideoBoardServiceTest {
 
         // Video, VideoBoard 생성
         for(int i = 1; i <= 32; i++){
-            Video video = new Video(LocalDate.parse("2023-01-29"), 4, "더클라임 강남점", "s3url", true, "thumbnail", "name","초록", saveA, "videoName");
+            Video video = new Video(LocalDate.parse("2023-01-29"), 4, "더클라임 강남점", "s3url", true, "thumbnail", "name","초록", saveA, "videoName", false);
             Video saveVideo = videoRepository.save(video);
             videoIds.add(saveVideo.getId());
             if(i % 2 == 0) {
@@ -71,11 +72,12 @@ class VideoBoardServiceTest {
                         .video(video)
                         .isHidden(false).build();
                 VideoBoard saveVideoBoard = videoBoardRepository.save(videoBoard);
+                videoBoard.getVideo().videoPosted();
                 videoBoardIds.add(saveVideoBoard.getId());
             }
         }
         for(int i = 33; i <= 64; i++){
-            Video video = new Video(LocalDate.parse("2023-01-29"),5, "더클라임 홍대점", "s3url", true, "thumbnail", "name","파랑", saveB, "videoName");
+            Video video = new Video(LocalDate.parse("2023-01-29"),5, "더클라임 홍대점", "s3url", true, "thumbnail", "name","파랑", saveB, "videoName", false);
             Video saveVideo = videoRepository.save(video);
             videoIds.add(saveVideo.getId());
             if(i % 2 == 0){
@@ -85,6 +87,7 @@ class VideoBoardServiceTest {
                         .title("완등했습니다.")
                         .isHidden(false).build();
                 VideoBoard saveVideoBoard = videoBoardRepository.save(videoBoard);
+                videoBoard.getVideo().videoPosted();
                 videoBoardIds.add(saveVideoBoard.getId());
             }
         }
@@ -408,13 +411,18 @@ class VideoBoardServiceTest {
         @DisplayName("게시글이 있고 작성자가 유저와 일치할 경우")
         class Exception_All_Pass {
             @Test
-            @DisplayName("해당 게시글을 삭제")
+            @DisplayName("해당 게시글은 삭제되며, 비디오에서 해당 영상의 isPosted변수 false로 변경")
             void deleteSuccessPost() {
                 Long memberId = memberIds.get(0);
                 Long videoBoardId = videoBoardIds.get(0);
+                VideoBoard videoBoard = videoBoardRepository.findById(videoBoardId)
+                        .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
+                Video video = videoBoard.getVideo();
+                assertTrue(video.getIsPosted());
                 videoBoardService.deleteSuccessPost(memberId, videoBoardId);
                 // 삭제 후에 해당 데이터를 한번 더 삭제할 경우 No Such Post 예외 발생
                 assertThrows(PostNotFoundException.class, () -> videoBoardService.deleteSuccessPost(memberId, videoBoardId));
+                assertFalse(video.getIsPosted());
             }
         }
     }
