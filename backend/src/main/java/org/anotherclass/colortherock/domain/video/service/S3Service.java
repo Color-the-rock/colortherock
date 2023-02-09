@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.jcodec.api.FrameGrab;
 import org.jcodec.api.JCodecException;
+import org.jcodec.common.io.FileChannelWrapper;
 import org.jcodec.common.io.NIOUtils;
 import org.jcodec.common.model.Picture;
 import org.jcodec.scale.AWTUtil;
@@ -86,19 +87,20 @@ public class S3Service {
      */
     private String getThumbnailURL(String thumbnailName, File file) throws IOException, JCodecException {
         // Get image from video
-        FrameGrab grab = FrameGrab.createFrameGrab(NIOUtils.readableChannel(file));
+        FileChannelWrapper fileChannelWrapper = NIOUtils.readableChannel(file);
+        FrameGrab grab = FrameGrab.createFrameGrab(fileChannelWrapper);
         Picture picture = grab.seekToSecondPrecise(1.0).getNativeFrame();
         BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
-
+        fileChannelWrapper.close();
         // Convert the image to a JPEG and write it to a ByteArrayOutputStream
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(bufferedImage, "JPEG", baos);
         baos.flush();
         InputStream is = new ByteArrayInputStream(baos.toByteArray());
         baos.close();
-
         // Upload the object to S3
         s3Client.putObject(new PutObjectRequest(bucket, thumbnailName, is, null));
+        if(!file.delete()) System.out.println("파일이 삭제되지 않았습니다.");
         return cloudFrontUrl + thumbnailName;
     }
 
