@@ -48,17 +48,19 @@ public class UploadVideoRequest {
                 .member(member).build();
     }
 
-    public Video toEntity(Member member, String s3URL, String thumbnailURL, String videoName) {
+    public Video toEntity(Member member, String s3URL, String thumbnailURL, String videoName, String thumbnailName, Boolean isPosted) {
         return Video.builder()
                 .shootingDate(this.shootingDate)
                 .level(this.level)
                 .gymName(this.gymName)
                 .isSuccess(this.isSuccess)
                 .color(this.color)
+                .isPosted(isPosted)
                 .member(member)
                 .s3URL(s3URL)
                 .thumbnailURL(thumbnailURL)
                 .videoName(videoName)
+                .thumbnailName(thumbnailName)
                 .build();
     }
 
