@@ -1,5 +1,6 @@
 import { useState } from "react";
 import * as S from "./style";
+import PropTypes from "prop-types";
 const OptionValue = [
   { key: "색상", value: "" },
   { key: "흰색", value: "흰색" },
@@ -17,9 +18,8 @@ const OptionValue = [
   { key: "갈색", value: "갈색" },
   { key: "회색", value: "회색" },
 ];
-const BoardSelect = () => {
+const BoardSelect = ({ currentOption, setCurrentOption }) => {
   const [showOption, setShowOption] = useState(false);
-  const [currentOption, setCurrentOption] = useState("색상");
 
   const handleChangeOption = (e) => {
     setCurrentOption(e.target.innerText);
@@ -49,3 +49,8 @@ const BoardSelect = () => {
 };
 
 export default BoardSelect;
+
+BoardSelect.propTypes = {
+  currentOption: PropTypes.string,
+  setCurrentOption: PropTypes.func,
+};

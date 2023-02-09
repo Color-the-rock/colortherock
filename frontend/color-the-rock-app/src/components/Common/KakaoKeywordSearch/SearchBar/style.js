@@ -23,7 +23,7 @@ export const InputContent = styled.input`
   border: none;
   width: 100%;
   height: 100%;
-  margin-left: 16px;
+  padding-left: 16px;
   background-color: var(--color-background);
   color: var(--color-tertiary);
   letter-spacing: -0.01em;

@@ -22,9 +22,8 @@ const KakaoSearchList = ({
   // 완등 영상 목록 실시간 검색
   useEffect(() => {
     const ps = new kakao.maps.services.Places();
-
     // 위치 정보 제공시 로직
-    if (currentLocation !== null) {
+    if (currentLocation !== undefined && currentLocation !== null) {
       ps.keywordSearch(searchPlace, placesSearchCB, {
         location: new kakao.maps.LatLng(
           currentLocation.lat,
@@ -40,7 +39,6 @@ const KakaoSearchList = ({
 
   const placesSearchCB = (data, status) => {
     if (status === kakao.maps.services.Status.OK) {
-      console.log("data??", data);
       setSearchData(data);
     }
   };
