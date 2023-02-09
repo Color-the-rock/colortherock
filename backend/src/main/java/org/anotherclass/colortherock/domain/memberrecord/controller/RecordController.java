@@ -133,7 +133,7 @@ public class RecordController {
         String thumbnailName = videoService.extractValidThumbName(member);
         String thumbnailURL = s3Service.uploadThumbnail(newVideo, thumbnailName);
         // request와 URL을 통해 DB에 저장
-        videoService.uploadVideo(member, s3URL, thumbnailURL, uploadVideoRequest, videoName);
+        videoService.uploadVideo(member, s3URL, thumbnailURL, thumbnailName, uploadVideoRequest, videoName);
         // 영상 누적 통계에서 영상 갯수 올리기
         recordService.addVideoCount(member, uploadVideoRequest.getIsSuccess());
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);

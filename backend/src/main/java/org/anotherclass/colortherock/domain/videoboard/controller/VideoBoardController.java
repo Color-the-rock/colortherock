@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
+import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
+import org.anotherclass.colortherock.domain.video.request.MySuccessVideoRequest;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.domain.videoboard.request.LocalSuccessVideoUploadRequest;
@@ -63,7 +65,7 @@ public class VideoBoardController {
         String thumbnailName = videoService.extractValidThumbName(member);
         String thumbnailURL = s3Service.uploadThumbnail(newVideo, thumbnailName);
         // request와 URL을 통해 DB에 저장
-        Long videoId = videoService.uploadSuccessVideo(member, s3URL, thumbnailURL, localSuccessVideoUploadRequest);
+        Long videoId = videoService.uploadSuccessVideo(member,videoName, s3URL,thumbnailName, thumbnailURL, localSuccessVideoUploadRequest);
         // 운동 게시글 업로드
         SuccessVideoUploadRequest request = SuccessVideoUploadRequest.builder()
                 .title(localSuccessVideoUploadRequest.getTitle())
@@ -73,6 +75,15 @@ public class VideoBoardController {
         // 운동기록 통계 카운트 증가
         recordService.addVideoCount(member, true);
         return new BaseResponse<>(videoBoardId);
+    }
+
+    @GetMapping("/board/myvideo")
+    @Operation(description = "영상 게시글 업로드용 영상 목록 가져오기", summary = "영상 게시글 업로드용 영상 목록 가져오기")
+    @ApiResponse(responseCode = "200", description = "성공 영상 불러오기 성공", content = @Content(schema = @Schema(implementation = VideoListResponse.class)))
+    public BaseResponse<List<VideoListResponse>> getMySuccessVideoList(@AuthenticationPrincipal MemberDetails memberDetails, @Valid MySuccessVideoRequest request) {
+        Member member = memberDetails.getMember();
+        List<VideoListResponse> mySuccessVideoList = videoService.getMySuccessVideoList(member, request);
+        return new BaseResponse<>(mySuccessVideoList);
     }
 
     @PostMapping("/board")

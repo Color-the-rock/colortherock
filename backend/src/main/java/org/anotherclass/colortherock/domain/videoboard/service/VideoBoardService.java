@@ -110,6 +110,8 @@ public class VideoBoardService {
         VideoBoard vb = videoBoardRepository.findById(videoBoardId)
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
         checkAuth(memberId, vb);
+        // 영상의 isPosted 삭제
+        vb.getVideo().postDeleted();
         videoBoardRepository.delete(vb);
     }
 
