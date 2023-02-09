@@ -27,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.File;
@@ -74,7 +75,7 @@ public class LiveService {
         this.recordingPath = recordingPath;
     }
 
-    public String createLiveRoom(MemberDetails memberDetails, CreateLiveRequest request) {
+    public String createLiveRoom(MemberDetails memberDetails, CreateLiveRequest request, MultipartFile thumbnail) {
         Long id = memberDetails.getMember().getId();
         Member member = memberRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
         Session session;
@@ -87,7 +88,7 @@ public class LiveService {
         String thumbnailName = DateTime.now() + sessionId;
         String uploadedURL = null;
         try {
-            uploadedURL = s3Service.upload(request.getThumbnail(), thumbnailName);
+            uploadedURL = s3Service.upload(thumbnail, thumbnailName);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
