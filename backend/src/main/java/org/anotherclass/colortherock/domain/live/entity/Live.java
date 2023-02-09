@@ -28,6 +28,9 @@ public class Live {
     @Column(name = "thumbnail_url", length = 100)
     private String thumbnailURL;
 
+    @Column(name = "thumbnail_name", length = 100)
+    private String thumbnailName;
+
     @Column(name = "session_id", length = 100)
     private String sessionId;
 
@@ -40,15 +43,15 @@ public class Live {
     private Member member;
 
     @Builder
-    public Live(Boolean isPublic, String gymName, String title, String thumbnailURL, String sessionId, Boolean isLive, Member member) {
+    public Live(Long id, Boolean isPublic, String gymName, String title, String thumbnailURL, String thumbnailName, String sessionId, Boolean isLive, Member member) {
+        this.id = id;
         this.isPublic = isPublic;
         this.gymName = gymName;
         this.title = title;
         this.thumbnailURL = thumbnailURL;
+        this.thumbnailName = thumbnailName;
         this.sessionId = sessionId;
         this.isLive = isLive;
         this.member = member;
     }
-
-
 }

@@ -1,9 +1,13 @@
 package org.anotherclass.colortherock.domain.member;
 
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.anotherclass.colortherock.IntegrationTest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.member.request.DuplicateNicknameRequest;
 import org.anotherclass.colortherock.domain.member.request.MemberSignUpRequest;
 import org.anotherclass.colortherock.domain.member.request.ReGenerateAccessTokenRequest;
 import org.anotherclass.colortherock.domain.member.response.ReGenerateAccessTokenResponse;
@@ -23,8 +27,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.Optional;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -66,10 +70,10 @@ public class MemberLoginTest extends IntegrationTest {
 
     @Test
     @DisplayName("비 로그인 요청시 302 에러")
-    public void 비로그인시_302에러를_반환() throws Exception {
+    public void 비로그인시_401에러를_반환() throws Exception {
         mockMvc.perform(
                 get(url + "test")
-        ).andExpect(status().is(302));
+        ).andExpect(status().is(401));
     }
 
     @Test
@@ -119,7 +123,7 @@ public class MemberLoginTest extends IntegrationTest {
         ReGenerateAccessTokenRequest request = new ReGenerateAccessTokenRequest(tokens, refreshToken.getRefreshToken());
 
         mockMvc.perform(
-                post("/refresh")
+                post("/api/refresh")
                         .content(this.objectMapper.writeValueAsBytes(request))
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(jsonPath("$.status", is(HttpStatus.UNAUTHORIZED.value())));
@@ -129,7 +133,15 @@ public class MemberLoginTest extends IntegrationTest {
     @DisplayName("Refresh로 다시 토큰 재발급")
     public void 토큰재발급성공() throws Exception {
 
-        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        Map<String, Object> map = new HashMap<>();
+        Claims claims = Jwts.claims(map);
+        String tokens = Jwts.builder()
+                .setClaims(claims)
+                .setExpiration(new Date(System.currentTimeMillis()))
+                .setIssuedAt(new Date())
+                .signWith(SignatureAlgorithm.HS256, "secret")
+                .compact();
+
         RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(tokens);
         Optional<RefreshToken> validRefreshToken = jwtTokenUtils.isValidRefreshToken(refreshToken.getRefreshToken());
         Assertions.assertDoesNotThrow(() -> {
@@ -139,12 +151,12 @@ public class MemberLoginTest extends IntegrationTest {
         ReGenerateAccessTokenRequest request = new ReGenerateAccessTokenRequest(tokens, refreshToken.getRefreshToken());
         Thread.sleep(3000);
         String contentAsString = mockMvc.perform(
-                        post("/refresh")
+                        post("/api/refresh")
                                 .content(this.objectMapper.writeValueAsBytes(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().isOk())
+                    .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         ReGenerateAccessTokenResponse response = objectMapper.readValue(contentAsString, ReGenerateAccessTokenResponse.class);
         String accessToken = response.getAccessToken();
@@ -169,17 +181,20 @@ public class MemberLoginTest extends IntegrationTest {
     @DisplayName("이메일 중복검사 API")
     public void 이메일이_중복일_경우() throws Exception {
 
-        mockMvc.perform(post(url + "/api/duplicateNickname").content("태규").contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(jsonPath("$.status", is(400)));
+        DuplicateNicknameRequest request = new DuplicateNicknameRequest("태규");
+        mockMvc.perform(post(url + "/api/duplicateNickname").content(objectMapper.writeValueAsBytes(request)).contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8)
+        ).andExpect(jsonPath("$.result", is(false)));
 
     }
 
     @Test
     @DisplayName("이메일 중복검사 API")
     public void 이메일이_중복이_아닐_경우() throws Exception {
-
-        mockMvc.perform(post(url + "/api/duplicateNickname").content("태규123").contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(jsonPath("$.status", is(200)));
+        DuplicateNicknameRequest request = new DuplicateNicknameRequest("태규123");
+        mockMvc.perform(post(url + "/api/duplicateNickname").content(objectMapper.writeValueAsBytes(request)).contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8)
+        ).andExpect(jsonPath("$.result", is(true)));
 
     }
 }

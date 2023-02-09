@@ -1,24 +1,25 @@
 package org.anotherclass.colortherock.domain.live.service;
 
 import io.openvidu.java.client.*;
+import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.live.entity.Live;
 import org.anotherclass.colortherock.domain.live.exception.RecordingDeleteException;
 import org.anotherclass.colortherock.domain.live.exception.RecordingStartBadRequestException;
 import org.anotherclass.colortherock.domain.live.exception.SessionNotFountException;
 import org.anotherclass.colortherock.domain.live.repository.LiveReadRepository;
 import org.anotherclass.colortherock.domain.live.repository.LiveRepository;
-import org.anotherclass.colortherock.domain.live.request.CreateLiveRequest;
-import org.anotherclass.colortherock.domain.live.request.RecordingSaveRequest;
-import org.anotherclass.colortherock.domain.live.request.RecordingStartRequest;
-import org.anotherclass.colortherock.domain.live.request.RecordingStopRequest;
+import org.anotherclass.colortherock.domain.live.request.*;
 import org.anotherclass.colortherock.domain.live.response.LiveListResponse;
 import org.anotherclass.colortherock.domain.live.response.PrevRecordingListResponse;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
+import org.anotherclass.colortherock.domain.member.exception.MemberNotFoundException;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
+import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.jcodec.api.JCodecException;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,15 +27,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class LiveService {
 
     private final S3Service s3Service;
@@ -46,34 +54,45 @@ public class LiveService {
     private final OpenVidu openVidu;
     private final Integer PAGE_SIZE = 15;
 
-    @Value("${RECORDING_PATH}") String dir;
+
+    @Value("${RECORDING_PATH}")
+    private final String recordingPath;
 
     public LiveService(LiveRepository liveRepository,
                        MemberRepository memberRepository,
                        VideoRepository videoRepository,
                        S3Service s3Service,
-                       LiveReadRepository liveReadRepository, @Value("${OPENVIDU_URL}") String OPENVIDU_URL,
-                       @Value("${OPENVIDU_SECRET}") String OPENVIDU_SECRET) {
+
+                       LiveReadRepository liveReadRepository, @Value("${OPENVIDU_URL}") String openviduUrl,
+                       @Value("${OPENVIDU_SECRET}") String openviduSecret,
+                       final @Value("${RECORDING_PATH}") String recordingPath) {
         this.s3Service = s3Service;
         this.liveRepository = liveRepository;
         this.memberRepository = memberRepository;
         this.videoRepository = videoRepository;
         this.liveReadRepository = liveReadRepository;
-        this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+        this.openVidu = new OpenVidu(openviduUrl, openviduSecret);
+        this.recordingPath = recordingPath;
     }
 
-    public String createLiveRoom(MemberDetails memberDetails, CreateLiveRequest request) {
+    public String createLiveRoom(MemberDetails memberDetails, CreateLiveRequest request, MultipartFile thumbnail) {
         Long id = memberDetails.getMember().getId();
-        Member member = memberRepository.findById(id).orElseThrow();
+        Member member = memberRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
         Session session;
-        // TODO 어떤 오류가 나는지 불명
         try {
             session = openVidu.createSession();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             throw new RuntimeException(e);
         }
         String sessionId = session.getSessionId();
-        Live live = request.toEntity(sessionId, member);
+        String thumbnailName = DateTime.now() + sessionId;
+        String uploadedURL = null;
+        try {
+            uploadedURL = s3Service.upload(thumbnail, thumbnailName);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Live live = request.toEntity(sessionId, member, uploadedURL, thumbnailName);
         liveRepository.save(live);
         try {
             Connection connection = session.createConnection(new ConnectionProperties.Builder().role(OpenViduRole.PUBLISHER).build());
@@ -84,6 +103,11 @@ public class LiveService {
     }
 
     public String joinLiveRoom(String sessionId) {
+        try {
+            openVidu.fetch();
+        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+            throw new RuntimeException(e);
+        }
         Session activeSession = openVidu.getActiveSession(sessionId);
         if (activeSession == null) {
             throw new SessionNotFountException();
@@ -97,13 +121,17 @@ public class LiveService {
     }
 
     public String recordingStart(String sessionId, RecordingStartRequest request) {
-
+        try {
+            openVidu.fetch();
+        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+            throw new RuntimeException(e);
+        }
         Session activeSession = openVidu.getActiveSession(sessionId);
         if (activeSession == null) {
             throw new SessionNotFountException();
         }
-        String token = request.getToken();
-        Connection connection = activeSession.getConnection(token);
+        String connectionId = request.getConnectionId();
+        Connection connection = activeSession.getConnection(connectionId);
         OpenViduRole role = connection.getRole();
 
         if (role.equals(OpenViduRole.PUBLISHER)) {
@@ -128,21 +156,6 @@ public class LiveService {
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             throw new RuntimeException(e);
         }
-        throw new RecordingStartBadRequestException();
-    }
-
-    @Transactional
-    public void recordingSave(MemberDetails memberDetails, String sessionId, RecordingSaveRequest request) throws IOException, JCodecException {
-        String newDir = dir + "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".webm";
-        String videoName = DateTime.now() + request.getRecordingId() + ".webm";
-        String s3Url = s3Service.uploadFromOV(newDir, videoName);
-        Member member = memberRepository.findById(memberDetails.getMember().getId()).orElseThrow();
-        // 썸네일 추가
-        String thumbnailName = "Thumb"+DateTime.now() + request.getRecordingId() + ".JPEG";
-        String thumbnailURL = s3Service.uploadThumbnailFromOV(newDir, thumbnailName);
-        // 비디오 객체 생성
-        Video video = request.toEntity(s3Url, thumbnailURL, member);
-        videoRepository.save(video);
     }
 
     @Transactional(readOnly = true)
@@ -151,7 +164,7 @@ public class LiveService {
 
         Slice<Live> slices = liveReadRepository.searchBySlice(liveId, pageable);
 
-        if(slices.isEmpty()) return new ArrayList<>();
+        if (slices.isEmpty()) return new ArrayList<>();
 
         // list를 받아와서 openvidu의 active session과 비교하여 없으면 DB 삭제하는 방식으로 DB를 최적화
         List<String> activeSessions = openVidu.getActiveSessions().stream().map(Session::getSessionId).collect(Collectors.toList());
@@ -159,21 +172,22 @@ public class LiveService {
         List<LiveListResponse> responses = new ArrayList<>();
 
         slices.toList().forEach(live -> {
-                    if(activeSessions.contains(live.getSessionId())) {
-                        responses.add(LiveListResponse.builder()
-                                .id(live.getId())
-                                .title(live.getTitle())
-                                .memberId(live.getMember().getId())
-                                .memberName(live.getMember().getNickname())
-                                .gymName(live.getGymName())
-                                .sessionId(live.getSessionId())
-                                .participantNum(
-                                        openVidu.getActiveSession(live.getSessionId()).getActiveConnections().size()
-                                ).build());
-                    } else {
-                        liveRepository.delete(live);
-                    }
-                });
+            if (activeSessions.contains(live.getSessionId())) {
+                responses.add(LiveListResponse.builder()
+                        .id(live.getId())
+                        .title(live.getTitle())
+                        .memberId(live.getMember().getId())
+                        .memberName(live.getMember().getNickname())
+                        .gymName(live.getGymName())
+                        .sessionId(live.getSessionId())
+                        .participantNum(
+                                openVidu.getActiveSession(live.getSessionId()).getActiveConnections().size()
+                        )
+                        .thumbnailUrl(live.getThumbnailURL()).build());
+            } else {
+                liveRepository.delete(live);
+            }
+        });
         return responses;
     }
 
@@ -183,7 +197,7 @@ public class LiveService {
         recordingIds.forEach(recordingId -> {
             try {
                 Recording recording = openVidu.getRecording(recordingId);
-                if(recording.getStatus() == Recording.Status.ready) {
+                if (recording.getStatus() == Recording.Status.ready) {
                     response.add(new PrevRecordingListResponse(recording));
                 }
             } catch (OpenViduJavaClientException | OpenViduHttpException e) {
@@ -204,8 +218,62 @@ public class LiveService {
 
     @Transactional
     public void removeSession(String sessionId) {
-        if(liveRepository.findBySessionId(sessionId).isPresent())
-            liveRepository.deleteBySessionId(sessionId);
+        Optional<Live> live = liveRepository.findBySessionId(sessionId);
+        if (live.isPresent())
+            s3Service.deleteFile(live.get().getThumbnailName());
+        liveRepository.deleteBySessionId(sessionId);
     }
 
+    public void recordingSave(MemberDetails memberDetails, RecordingSaveRequest request) {
+
+        WebClient webClient = WebClient.create();
+        webClient
+                .post()
+                .uri("http://localhost:8080/api/live/uploadRecord")
+                .bodyValue(new RecordingUploadAtOpenviduServerRequest(request, memberDetails.getMember().getId()))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
+
+    @Transactional
+    public void uplooadAtOpenviduServer(RecordingUploadAtOpenviduServerRequest request) throws IOException, JCodecException {
+        String newDir = recordingPath + "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".mp4";
+        Path path = Paths.get("/");
+        File[] files = path.toFile().listFiles();
+        assert files != null;
+        for (File file : files) {
+            log.info(file.getName());
+        }
+        Path path2 = Paths.get("/opt");
+        File[] files2 = path2.toFile().listFiles();
+        assert files2 != null;
+        for (File file : files2) {
+            log.info(file.getName());
+        }
+        Path path3 = Paths.get("/opt/openvidu");
+        File[] files3 = path3.toFile().listFiles();
+        assert files3 != null;
+        for (File file : files3) {
+            log.info(file.getName());
+        }
+        Path path4 = Paths.get("/opt/openvidu/recordings");
+        File[] files4 = path4.toFile().listFiles();
+        assert files4 != null;
+        for (File file : files4) {
+            log.info(file.getName());
+        }
+        String videoName = DateTime.now() + request.getRecordingId() + ".mp4";
+        String s3Url = s3Service.uploadFromOV(newDir, videoName);
+        Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> {
+            throw new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND);
+        });
+        // 썸네일 추가
+        String thumbnailName = "Thumb" + DateTime.now() + request.getRecordingId() + ".JPEG";
+        String thumbnailURL = s3Service.uploadThumbnailFromOV(newDir, thumbnailName);
+        // 비디오 객체 생성
+        Video video = request.toEntity(s3Url, thumbnailURL, member,videoName);
+        videoRepository.save(video);
+
+    }
 }

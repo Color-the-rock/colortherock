@@ -31,11 +31,13 @@ public class CreateLiveRequest {
         this.title = title;
     }
 
-    public Live toEntity(String sessionId, Member member) {
+    public Live toEntity(String sessionId, Member member, String thumbnail, String thumbnailName) {
         return Live.builder()
                 .isLive(true)
                 .sessionId(sessionId)
                 .member(member)
+                .thumbnailURL(thumbnail)
+                .thumbnailName(thumbnailName)
                 .gymName(this.gymName)
                 .isPublic(this.isPublic)
                 .title(this.title)

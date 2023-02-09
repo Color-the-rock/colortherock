@@ -24,6 +24,8 @@ public class MatterMostSender {
     private boolean mmEnabled;
     @Value("${notification.mattermost.webhook-url}")
     private String webhookUrl;
+    @Value("${report.mattermost.webhook-url}")
+    private String reportUrl;
 
     private final RestTemplate restTemplate;
     private final MattermostProperties mmProperties;
@@ -54,6 +56,38 @@ public class MatterMostSender {
 
             HttpEntity<String> entity = new HttpEntity<>(payload, headers);
             restTemplate.postForEntity(webhookUrl, entity, String.class);
+
+        } catch (Exception e) {
+            log.error("#### ERROR!! Notification Manager : {}", e.getMessage());
+        }
+
+    }
+
+    public void sendMessage(String title, Long id) {
+        if (!mmEnabled)
+            return;
+
+        try {
+            Attachment attachment = Attachment.builder()
+                    .channel(mmProperties.getChannel())
+                    .authorIcon(mmProperties.getAuthorIcon())
+                    .authorName(mmProperties.getAuthorName())
+                    .color(mmProperties.getColor())
+                    .pretext(mmProperties.getPretext())
+                    .title(mmProperties.getTitle())
+                    .text(mmProperties.getText())
+                    .footer(mmProperties.getFooter())
+                    .build();
+
+            attachment.addReportInfo(title, id);
+            Attachments attachments = new Attachments(attachment);
+            String payload = new Gson().toJson(attachments);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-type", MediaType.APPLICATION_JSON_VALUE);
+
+            HttpEntity<String> entity = new HttpEntity<>(payload, headers);
+            restTemplate.postForEntity(reportUrl, entity, String.class);
 
         } catch (Exception e) {
             log.error("#### ERROR!! Notification Manager : {}", e.getMessage());

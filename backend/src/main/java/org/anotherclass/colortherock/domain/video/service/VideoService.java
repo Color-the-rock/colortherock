@@ -12,7 +12,6 @@ import org.anotherclass.colortherock.domain.video.request.MySuccessVideoRequest;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.LocalSuccessVideoUploadRequest;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
-import org.joda.time.DateTime;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -90,11 +89,12 @@ public class VideoService {
         if (!extension.matches("(mp4|mov|avi|wmv|flv|mkv|webm)$")) {
             throw new NotVideoExtensionException(GlobalErrorCode.NOT_VIDEO_EXTENSION);
         }
-        return DateTime.now() + member.getNickname() + "." + extension;
-
+        String videoName = System.currentTimeMillis() + member.getNickname() + "." + extension;
+        return videoName;
     }
 
     public String extractValidThumbName(Member member) {
-        return "Thumb" + DateTime.now() + member.getNickname() + ".JPEG";
+        return "Thumb" + System.currentTimeMillis() + member.getNickname() + ".JPEG";
     }
+
 }
