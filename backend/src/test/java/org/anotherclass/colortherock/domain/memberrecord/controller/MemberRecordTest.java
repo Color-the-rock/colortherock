@@ -3,6 +3,8 @@ package org.anotherclass.colortherock.domain.memberrecord.controller;
 import org.anotherclass.colortherock.IntegrationTest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
+import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
@@ -21,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
@@ -43,6 +46,8 @@ public class MemberRecordTest extends IntegrationTest {
     JwtTokenUtils jwtTokenUtils;
     @Autowired
     VideoRepository videoRepository;
+    @Autowired
+    RecordRepository recordRepository;
     @Autowired
     RecordService recordService;
     @Autowired
@@ -76,6 +81,9 @@ public class MemberRecordTest extends IntegrationTest {
                     .color("노랑").build().toEntity(savedMember, "s3URL", "thumbURL", "videoName", "thumbName", false);
             videoRepository.save(video);
         }
+        // member record 추가
+        MemberRecord record = MemberRecord.builder().successCount(18).videoCount(18).member(member).build();
+        recordRepository.save(record);
     }
 
     @Test
@@ -113,7 +121,9 @@ public class MemberRecordTest extends IntegrationTest {
     @Test
     @DisplayName("[GET]전체 운동 기록 누적 통계 조회")
     public void 사용자_누적통계_조회() throws Exception {
-        recordService.saveNewRecord(member.getId());
+        MemberRecord record = recordRepository.findByMember(member);
+        int originalVideoCount = record.getVideoCount();
+        int originalSuccessCount = record.getSuccessCount();
         recordService.addVideoCount(member, true);
         recordService.addVideoCount(member, true);
         recordService.addVideoCount(member, false);
@@ -121,8 +131,8 @@ public class MemberRecordTest extends IntegrationTest {
                 get(url + "/record/total")
                         .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(jsonPath("$.status", is(200)))
-                .andExpect(jsonPath("$.result.videoCount").value(3))
-                .andExpect(jsonPath("$.result.successCount").value(2));
+                .andExpect(jsonPath("$.result.videoCount").value(originalVideoCount + 3))
+                .andExpect(jsonPath("$.result.successCount").value(originalSuccessCount + 2));
     }
 
     @Test
@@ -140,7 +150,7 @@ public class MemberRecordTest extends IntegrationTest {
                                 .header("Authorization", AUTHORIZATION_HEADER + token)
                                 .params(info))
                 .andExpect(jsonPath("$.status", is(200)))
-                .andExpect(jsonPath("$.result.size()").value(15));
+                .andExpect(jsonPath("$.result.size()").value(1));
     }
 
     @Test
@@ -165,7 +175,7 @@ public class MemberRecordTest extends IntegrationTest {
     @Test
     @DisplayName("[POST] 로컬 영상 업로드")
     public void 로컬_영상_업로드_성공() throws Exception {
-        MockMultipartFile newVideo = new MockMultipartFile("newVideo", "video.mp4", "mp4", "<<video data>>".getBytes());
+        MockMultipartFile newVideo = new MockMultipartFile("newVideo", "video.mp4", "mp4", new FileInputStream("src/test/resources/video/test_recording.mp4"));
         String content = "{" +
                 "\"shootingDate\": \"2023-01-17\"," +
                 "\"level\": 1," +
