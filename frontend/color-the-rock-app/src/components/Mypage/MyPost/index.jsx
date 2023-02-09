@@ -21,11 +21,13 @@ const MyPost = () => {
     result.map((item) => (
       <S.VideoList>
         <Video
-          key={item.sources}
+          id={item.videoBoardId}
+          key={item.videoBoardId}
           title={item.title}
           color={item.color}
-          thumb={item.thumb}
-          sources={item.sources}
+          gymName={item.gymName}
+          createdDate={item.createdDate}
+          thumbnailURL={item.thumbnailURL}
         />
       </S.VideoList>
     ))
