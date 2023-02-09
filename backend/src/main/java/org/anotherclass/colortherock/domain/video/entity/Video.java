@@ -4,6 +4,7 @@ import lombok.*;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.global.common.BaseTime;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -45,6 +46,7 @@ public class Video extends BaseTime {
     private String color;
 
     @Column(name = "is_posted")
+    @ColumnDefault("FALSE")
     private Boolean isPosted;
 
     @ManyToOne(fetch = FetchType.LAZY)
