@@ -65,7 +65,7 @@ public class MemberRecordTest extends IntegrationTest {
                     .level(i)
                     .gymName("더클라임 강남")
                     .isSuccess(true)
-                    .color("노랑").build().toEntity(savedMember, "s3URL", "thumbURL", "videoName");
+                    .color("노랑").build().toEntity(savedMember, "s3URL", "thumbURL", "videoName", "thumbName", false);
             Video save = videoRepository.save(video);
             videoId = save.getId();
             video = UploadVideoRequest.builder()
@@ -73,7 +73,7 @@ public class MemberRecordTest extends IntegrationTest {
                     .level(i)
                     .gymName("더클라임 홍대")
                     .isSuccess(true)
-                    .color("노랑").build().toEntity(savedMember, "s3URL", "thumbURL", "videoName");
+                    .color("노랑").build().toEntity(savedMember, "s3URL", "thumbURL", "videoName", "thumbName", false);
             videoRepository.save(video);
         }
     }
@@ -131,6 +131,7 @@ public class MemberRecordTest extends IntegrationTest {
 
         MultiValueMap<String, String> info = new LinkedMultiValueMap<>();
 
+        info.add("videoId", "-1");
         info.add("shootingDate", "2023-01-17");
         info.add("isSuccess", "true");
 
