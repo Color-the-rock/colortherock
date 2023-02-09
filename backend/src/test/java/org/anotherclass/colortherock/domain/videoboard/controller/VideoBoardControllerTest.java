@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.videoboard.controller;
 
 import org.anotherclass.colortherock.IntegrationTest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
@@ -61,7 +62,7 @@ class VideoBoardControllerTest extends IntegrationTest {
         em.persist(member);
         videoBoardIds = new ArrayList<>();
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 30; i++) {
             Video video = Video.builder()
                     .thumbnailURL("url")
                     .videoName("이름")
@@ -70,18 +71,22 @@ class VideoBoardControllerTest extends IntegrationTest {
                     .level(3)
                     .gymName("더클라이밍 강남점" + i)
                     .isSuccess(true)
-                    .shootingDate(LocalDate.now())
+                    .shootingDate(LocalDate.of(2023, 2, 9))
                     .member(member)
+                    .isPosted(false)
                     .build();
             em.persist(video);
-            VideoBoard videoBoard = VideoBoard.builder()
-                    .video(video)
-                    .title("제목" + i)
-                    .isHidden(false)
-                    .member(member)
-                    .build();
-            em.persist(videoBoard);
-            videoBoardIds.add(videoBoard.getId());
+            if(i % 2 == 0) {
+                VideoBoard videoBoard = VideoBoard.builder()
+                        .video(video)
+                        .title("제목" + i)
+                        .isHidden(false)
+                        .member(member)
+                        .build();
+                em.persist(videoBoard);
+                videoBoard.getVideo().videoPosted();
+                videoBoardIds.add(videoBoard.getId());
+            }
         }
         token = TOKEN_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
     }
@@ -102,7 +107,7 @@ class VideoBoardControllerTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("완등 영상 슬라이싱 조회")
+    @DisplayName("완등 영상 게시글 슬라이싱 조회")
     void getSuccessPostsSlice() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(
                         get(url)
@@ -117,13 +122,13 @@ class VideoBoardControllerTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("완등 영상 암장별 조회")
+    @DisplayName("완등 영상 게시글 암장별 조회")
     void getSuccessPostsByGym() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .param("storeId", String.valueOf(-1))
-                                .param("gymName", "더클라이밍 강남점1")
+                                .param("gymName", "더클라이밍 강남점2")
 
                 )
                 .andReturn()
@@ -133,19 +138,35 @@ class VideoBoardControllerTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("완등 영상 색상별 조회")
+    @DisplayName("완등 영상 게시글 색상별 조회")
     void getSuccessPostsByColor() throws Exception {
         MockHttpServletResponse response = mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .param("storeId", String.valueOf(-1))
-                                .param("color", "초록1")
+                                .param("color", "초록2")
                 )
                 .andReturn()
                 .getResponse();
         BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
         assertEquals(1, arrayList.getResult().size());
     }
+
+    @Test
+    @DisplayName("내 성공영상 리스트 중 업로드 가능한 목록 조회")
+    void getMySuccessVideo() throws Exception {
+        url += "myvideo";
+        MockHttpServletResponse response = mockMvc.perform(
+                get(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("storeId", String.valueOf(-1))
+                        .param("shootingDate", "2023-02-09")
+                        .header(HttpHeaders.AUTHORIZATION, token)
+        ).andReturn().getResponse();
+        BaseResponse<List<VideoListResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
+        assertEquals(15, arrayList.getResult().size());
+    }
+
 
     @Test
     @DisplayName("완등 영상 게시글 상세 조회")
