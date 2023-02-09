@@ -91,7 +91,7 @@ public class VideoBoardReadRepository {
         if (gymNameCond == null || gymNameCond.isBlank()) {
             return null;
         }
-        return videoBoard.video.gymName.eq(gymNameCond);
+        return videoBoard.video.gymName.contains(gymNameCond);
     }
 
     // 레벨 검색을 처리하는 메서드

@@ -65,7 +65,7 @@ public class MemberRecordTest extends IntegrationTest {
                     .level(i)
                     .gymName("더클라임 강남")
                     .isSuccess(true)
-                    .color("노랑").build().toEntity(savedMember, "s3URL", "thumbURL", "videoName");
+                    .color("노랑").build().toEntity(savedMember, "s3URL", "thumbURL", "videoName", "thumbName", false);
             Video save = videoRepository.save(video);
             videoId = save.getId();
             video = UploadVideoRequest.builder()
@@ -73,7 +73,7 @@ public class MemberRecordTest extends IntegrationTest {
                     .level(i)
                     .gymName("더클라임 홍대")
                     .isSuccess(true)
-                    .color("노랑").build().toEntity(savedMember, "s3URL", "thumbURL", "videoName");
+                    .color("노랑").build().toEntity(savedMember, "s3URL", "thumbURL", "videoName", "thumbName", false);
             videoRepository.save(video);
         }
     }
@@ -131,6 +131,7 @@ public class MemberRecordTest extends IntegrationTest {
 
         MultiValueMap<String, String> info = new LinkedMultiValueMap<>();
 
+        info.add("videoId", "-1");
         info.add("shootingDate", "2023-01-17");
         info.add("isSuccess", "true");
 
@@ -206,9 +207,10 @@ public class MemberRecordTest extends IntegrationTest {
                         get(url + "/record/visit")
                                 .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(jsonPath("$.status", is(200)))
-                .andExpect(jsonPath("$.result").isArray())
-                .andExpect(jsonPath("$.result[0].gymName", is("더클라임 강남")))
-                .andExpect(jsonPath("$.result[0].count", is(2)));
+                .andExpect(jsonPath("$.result.totalCount").isNumber())
+                .andExpect(jsonPath("$.result.data").isArray())
+                .andExpect(jsonPath("$.result.data[0].gymName", is("더클라임 강남")))
+                .andExpect(jsonPath("$.result.data[0].count", is(2)));
     }
 
     @Test

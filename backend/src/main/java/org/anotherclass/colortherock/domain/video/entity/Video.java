@@ -4,6 +4,7 @@ import lombok.*;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
 import org.anotherclass.colortherock.global.common.BaseTime;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -44,6 +45,10 @@ public class Video extends BaseTime {
     @Column(name = "color", length = 20)
     private String color;
 
+    @Column(name = "is_posted")
+    @ColumnDefault("FALSE")
+    private Boolean isPosted;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -52,7 +57,7 @@ public class Video extends BaseTime {
     private VideoBoard videoBoard;
 
     @Builder
-    public Video(LocalDate shootingDate, Integer level, String gymName, String s3URL, Boolean isSuccess, String thumbnailURL, String thumbnailName, String color, Member member, String videoName) {
+    public Video(LocalDate shootingDate, Integer level, String gymName, String s3URL, Boolean isSuccess, String thumbnailURL, String thumbnailName, String color, Member member, String videoName, Boolean isPosted) {
         this.shootingDate = shootingDate;
         this.level = level;
         this.gymName = gymName;
@@ -63,5 +68,9 @@ public class Video extends BaseTime {
         this.color = color;
         this.member = member;
         this.videoName = videoName;
+        this.isPosted = isPosted;
     }
+
+    public void videoPosted() {this.isPosted = true;}
+    public void postDeleted() {this.isPosted = false;}
 }

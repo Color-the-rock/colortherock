@@ -67,7 +67,7 @@ public class VideoCommentController {
     @ApiResponse(responseCode = "200", description = "댓글 삭제 완료")
     @ApiResponse(responseCode = "403", description = "유저 정보와 댓글 작성자 일치하지 않음")
     @ApiResponse(responseCode = "404", description = "해당하는 댓글 찾을 수 없음")
-    public BaseResponse<?> deleteComment(@AuthenticationPrincipal MemberDetails memberDetails, @NotNull @RequestBody Long commentId) {
+    public BaseResponse<?> deleteComment(@AuthenticationPrincipal MemberDetails memberDetails, @NotNull @RequestParam Long commentId) {
         Member member = memberDetails.getMember();
         videoCommentService.deleteComment(member.getId(), commentId);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
