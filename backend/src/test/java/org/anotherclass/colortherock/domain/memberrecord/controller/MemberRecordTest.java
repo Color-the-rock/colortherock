@@ -206,9 +206,10 @@ public class MemberRecordTest extends IntegrationTest {
                         get(url + "/record/visit")
                                 .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(jsonPath("$.status", is(200)))
-                .andExpect(jsonPath("$.result").isArray())
-                .andExpect(jsonPath("$.result[0].gymName", is("더클라임 강남")))
-                .andExpect(jsonPath("$.result[0].count", is(2)));
+                .andExpect(jsonPath("$.result.totalCount").isNumber())
+                .andExpect(jsonPath("$.result.data").isArray())
+                .andExpect(jsonPath("$.result.data[0].gymName", is("더클라임 강남")))
+                .andExpect(jsonPath("$.result.data[0].count", is(2)));
     }
 
     @Test
