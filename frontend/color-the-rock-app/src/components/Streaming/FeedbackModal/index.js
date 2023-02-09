@@ -12,7 +12,7 @@ const chunkSize = 1024 * 1024;
 const FeedbackModal = ({ session, picture = null }) => {
   const canvasRef = createRef(null);
   const contextRef = useRef(null); // 캔버스의 드로잉 컨텍스트
-
+  const [isDrawing, setIsDrawing] = useState(false);
   const [ctx, setCtx] = useState();
   const [lastX, setLastX] = useState(0);
   const [lastY, setLastY] = useState(0);
@@ -50,26 +50,27 @@ const FeedbackModal = ({ session, picture = null }) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    // const x = event.clientX - rect.left;
+    // const y = event.clientY - rect.top;
 
-    ctx.fillRect(x - 2, y - 2, 4, 4);
+    const x = event.clientX;
+    const y = event.clientY;
+
+    let radius = 10;
+    let startAngle = 0;
+    let endAngle = 2 * Math.PI;
+    let counterClockwise = false;
+    // ctx.fillRect(x - 2, y - 2, 30, 30);
+    ctx.beginPath();
+    ctx.arc(x, y, radius, startAngle, endAngle, counterClockwise);
+    ctx.strokeStyle = "#8ED6FF";
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    // ctx.fillRect(x - 2, y - 2, 4, 4);
     setLastX(x);
     setLastY(y);
     sendDrawing();
-  };
-
-  const draw = (event) => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    // ctx.fillRect(x - 2, y - 2, 10, 10);
-    ctx.strokeRect(x - 5, y - 5, 10, 10);
-    setLastX(x);
-    setLastY(y);
   };
 
   const sendDrawing = () => {
@@ -101,8 +102,8 @@ const FeedbackModal = ({ session, picture = null }) => {
           <canvas
             id="canvas"
             ref={canvasRef}
-            // width={200}
-            // height={500}
+            width={200}
+            height={500}
             onPointerDown={startDrawing}
           />
         </S.ContentBox>

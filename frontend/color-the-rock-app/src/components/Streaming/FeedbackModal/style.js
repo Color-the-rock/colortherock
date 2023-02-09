@@ -7,7 +7,7 @@ export const ContainerWrap = styled.div`
   right: 0;
   bottom: 0;
   z-index: 1000;
-  background-color: transparent;
+  background-color: red;
 `;
 
 export const Container = styled.div`
@@ -16,7 +16,7 @@ export const Container = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
-  background-color: transparent;
+  /* background-color: transparent; */
 `;
 
 export const ContentBox = styled.div`
@@ -26,7 +26,7 @@ export const ContentBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: transparent;
+  /* background-color: transparent; */
 
   #canvas {
     overflow: hidden;
