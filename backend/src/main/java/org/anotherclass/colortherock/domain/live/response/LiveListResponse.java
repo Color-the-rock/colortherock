@@ -21,9 +21,11 @@ public class LiveListResponse {
     private String sessionId;
     @Schema(description = "참가자 수")
     private Integer participantNum;
+    @Schema(description = "썸네일 URL")
+    private String thumbnailUrl;
 
     @Builder
-    public LiveListResponse(Long id, String title, String memberName, Long memberId, String gymName, String sessionId, Integer participantNum) {
+    public LiveListResponse(Long id, String title, String memberName, Long memberId, String gymName, String sessionId, Integer participantNum, String thumbnailUrl) {
         this.id = id;
         this.title = title;
         this.memberName = memberName;
@@ -31,5 +33,6 @@ public class LiveListResponse {
         this.gymName = gymName;
         this.sessionId = sessionId;
         this.participantNum = participantNum;
+        this.thumbnailUrl = thumbnailUrl;
     }
 }

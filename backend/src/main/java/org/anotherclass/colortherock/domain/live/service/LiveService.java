@@ -16,6 +16,7 @@ import org.anotherclass.colortherock.domain.live.response.PrevRecordingListRespo
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -64,16 +66,22 @@ public class LiveService {
 
     public String createLiveRoom(MemberDetails memberDetails, CreateLiveRequest request) {
         Long id = memberDetails.getMember().getId();
-        Member member = memberRepository.findById(id).orElseThrow();
+        Member member = memberRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
         Session session;
-        // TODO 어떤 오류가 나는지 불명
         try {
             session = openVidu.createSession();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             throw new RuntimeException(e);
         }
         String sessionId = session.getSessionId();
-        Live live = request.toEntity(sessionId, member);
+        String thumbnailName = DateTime.now() + sessionId;
+        String uploadedURL = null;
+        try {
+            uploadedURL = s3Service.upload(request.getThumbnail(), thumbnailName);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Live live = request.toEntity(sessionId, member, uploadedURL, thumbnailName);
         liveRepository.save(live);
         try {
             Connection connection = session.createConnection(new ConnectionProperties.Builder().role(OpenViduRole.PUBLISHER).build());
@@ -169,7 +177,8 @@ public class LiveService {
                                 .sessionId(live.getSessionId())
                                 .participantNum(
                                         openVidu.getActiveSession(live.getSessionId()).getActiveConnections().size()
-                                ).build());
+                                )
+                                .thumbnailUrl(live.getThumbnailURL()).build());
                     } else {
                         liveRepository.delete(live);
                     }
@@ -204,7 +213,9 @@ public class LiveService {
 
     @Transactional
     public void removeSession(String sessionId) {
-        if(liveRepository.findBySessionId(sessionId).isPresent())
+        Optional<Live> live = liveRepository.findBySessionId(sessionId);
+        if(live.isPresent())
+            s3Service.deleteFile(live.get().getThumbnailName());
             liveRepository.deleteBySessionId(sessionId);
     }
 
