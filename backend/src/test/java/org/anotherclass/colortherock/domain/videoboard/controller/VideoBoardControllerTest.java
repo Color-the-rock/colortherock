@@ -128,7 +128,7 @@ class VideoBoardControllerTest extends IntegrationTest {
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .param("storeId", String.valueOf(-1))
-                                .param("gymName", "더클라이밍 강남점2")
+                                .param("gymName", "더클라이밍 강남점26")
 
                 )
                 .andReturn()
