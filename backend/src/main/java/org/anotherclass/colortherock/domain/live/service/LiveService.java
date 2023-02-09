@@ -18,6 +18,7 @@ import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundE
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
+import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.jcodec.api.JCodecException;
 import org.joda.time.DateTime;
@@ -48,21 +49,25 @@ public class LiveService {
     private final OpenVidu openVidu;
     private final Integer PAGE_SIZE = 15;
 
+
     @Value("${RECORDING_PATH}")
-    String dir;
+    private final String recordingPath;
 
     public LiveService(LiveRepository liveRepository,
                        MemberRepository memberRepository,
                        VideoRepository videoRepository,
                        S3Service s3Service,
+
                        LiveReadRepository liveReadRepository, @Value("${OPENVIDU_URL}") String openviduUrl,
-                       @Value("${OPENVIDU_SECRET}") String openviduSecret) {
+                       @Value("${OPENVIDU_SECRET}") String openviduSecret,
+                       final @Value("${RECORDING_PATH}") String recordingPath) {
         this.s3Service = s3Service;
         this.liveRepository = liveRepository;
         this.memberRepository = memberRepository;
         this.videoRepository = videoRepository;
         this.liveReadRepository = liveReadRepository;
         this.openVidu = new OpenVidu(openviduUrl, openviduSecret);
+        this.recordingPath = recordingPath;
     }
 
     public String createLiveRoom(MemberDetails memberDetails, CreateLiveRequest request) {
@@ -93,6 +98,11 @@ public class LiveService {
     }
 
     public String joinLiveRoom(String sessionId) {
+        try {
+            openVidu.fetch();
+        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+            throw new RuntimeException(e);
+        }
         Session activeSession = openVidu.getActiveSession(sessionId);
         if (activeSession == null) {
             throw new SessionNotFountException();
@@ -106,13 +116,17 @@ public class LiveService {
     }
 
     public String recordingStart(String sessionId, RecordingStartRequest request) {
-
+        try {
+            openVidu.fetch();
+        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+            throw new RuntimeException(e);
+        }
         Session activeSession = openVidu.getActiveSession(sessionId);
         if (activeSession == null) {
             throw new SessionNotFountException();
         }
-        String token = request.getToken();
-        Connection connection = activeSession.getConnection(token);
+        String connectionId = request.getConnectionId();
+        Connection connection = activeSession.getConnection(connectionId);
         OpenViduRole role = connection.getRole();
 
         if (role.equals(OpenViduRole.PUBLISHER)) {
@@ -137,7 +151,6 @@ public class LiveService {
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             throw new RuntimeException(e);
         }
-        throw new RecordingStartBadRequestException();
     }
 
     @Transactional(readOnly = true)
@@ -211,15 +224,17 @@ public class LiveService {
         WebClient webClient = WebClient.create();
         webClient
                 .post()
-                .uri("https://colorhtherock.com/api/live/uploadRecord")
+                .uri("http://localhost:8080/api/live/uploadRecord")
                 .bodyValue(new RecordingUploadAtOpenviduServerRequest(request, memberDetails.getMember().getId()))
-                .retrieve();
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 
     @Transactional
     public void uplooadAtOpenviduServer(RecordingUploadAtOpenviduServerRequest request) throws IOException, JCodecException {
-        String newDir = dir + "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".webm";
-        String videoName = DateTime.now() + request.getRecordingId() + ".webm";
+        String newDir = recordingPath + "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".mp4";
+        String videoName = DateTime.now() + request.getRecordingId() + ".mp4";
         String s3Url = s3Service.uploadFromOV(newDir, videoName);
         Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> {
             throw new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND);

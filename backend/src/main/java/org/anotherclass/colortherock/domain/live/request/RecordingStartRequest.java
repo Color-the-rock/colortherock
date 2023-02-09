@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @Schema(description = "녹화 시작 요청")
 public class RecordingStartRequest {
-    @Schema(description = "토큰")
+    @Schema(description = "커넥션 id")
     @NotBlank
-    private String token;
+    private String connectionId;
 }

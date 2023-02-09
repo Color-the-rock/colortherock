@@ -1,7 +1,10 @@
 package org.anotherclass.colortherock.domain.live.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 
@@ -9,8 +12,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-@Data
+
 @Schema(description = "오픈비두 서버에 녹화 저장 요청")
+@NoArgsConstructor
+@Getter
+@AllArgsConstructor
 public class RecordingUploadAtOpenviduServerRequest {
 
     @NotNull
