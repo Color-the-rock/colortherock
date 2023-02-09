@@ -2,7 +2,6 @@ package org.anotherclass.colortherock.domain.live.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
@@ -55,12 +54,13 @@ public class RecordingUploadAtOpenviduServerRequest {
         this.title = request.getTitle();
     }
 
-    public Video toEntity(String s3Url, String thumbnailUrl, Member member) {
+    public Video toEntity(String s3Url, String thumbnailUrl, Member member,String videoName) {
 
         return Video.builder()
                 .s3URL(s3Url)
                 .thumbnailURL(thumbnailUrl)
                 .member(member)
+                .videoName(videoName)
                 .color(this.color)
                 .gymName(this.gymName)
                 .isSuccess(this.isSuccess)
