@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOV } from "../../stores/streaming/streamingSlice";
 import CommentBtn from "../../components/Common/CommentBtn";
 import ChattingModal from "../../components/Live/ChattingModal";
+import FeedbackModal from "../../components/Streaming/FeedbackModal";
 import {
   FiLogOut,
   FiMic,
@@ -56,6 +57,10 @@ const StreamingLive = () => {
   const [sessionId, setSessionId] = useState("");
   // 녹화 설정 관리
   const [recordId, setRecordId] = useState("");
+
+  // 피드백 설정 관리
+  const [picture, setPicture] = useState();
+  const [feedbackModal, setFeedbackModal] = useState(false);
   let testRecordId = "";
 
   useEffect(() => {
@@ -72,6 +77,10 @@ const StreamingLive = () => {
   useEffect(() => {
     if (session !== undefined) {
       onSessionCreated();
+
+      // feedback signal...
+      onFeedbackSignal();
+
       console.log("세션 존재, 세션: ", session);
       console.log("오픈비두 객체: ", ov);
       session
@@ -255,6 +264,19 @@ const StreamingLive = () => {
     });
   };
 
+  // 피드백 관리
+  const onFeedbackSignal = () => {
+    session.on(`signal:drawingSignal`, (event) => {
+      const data = JSON.parse(event.data);
+      console.log("onFeedbackSignal - data.image :", data.image);
+      setPicture(data.image);
+    });
+  };
+
+  const openFeedback = () => {
+    setFeedbackModal((prev) => !prev);
+  };
+
   // test
   useEffect(() => {
     console.log("messages::", messages);
@@ -318,6 +340,7 @@ const StreamingLive = () => {
   };
   return (
     <S.Container>
+      {feedbackModal && <FeedbackModal session={session} picture={picture} />}
       <Mobile>
         {isShowChattingModal && (
           <S.DragModal>
@@ -380,7 +403,7 @@ const StreamingLive = () => {
           </S.CommentWrapper>
         </S.SettingWrapper>
         <S.VideoMenu position="bottom">
-          <S.VideoMenuItem onClick={leaveSession}>
+          <S.VideoMenuItem onClick={openFeedback}>
             <S.IconWrapper>
               <FiEdit size="24px" />
             </S.IconWrapper>

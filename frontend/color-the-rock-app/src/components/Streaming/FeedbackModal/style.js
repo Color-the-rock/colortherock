@@ -26,10 +26,13 @@ export const ContentBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* background-color: transparent; */
-`;
+  background-color: transparent;
 
-export const Canvas = styled.canvas`
-  width: 100%;
-  height: 100%;
+  #canvas {
+    overflow: hidden;
+    opacity: 0.7;
+    width: 100%;
+    height: 100%;
+    z-index: 5000;
+  }
 `;
