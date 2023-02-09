@@ -38,7 +38,7 @@ export const LogoImg = styled.div`
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-  @media (max-width: 1070px) {
+  @media (max-width: 992px) {
     width: 82px;
     min-height: 48px;
     background-image: url(${AppLogo});
@@ -48,7 +48,7 @@ export const LogoImg = styled.div`
 export const HeaderMenu = styled(HiOutlineMenu)`
   display: none;
   color: var(--color-brand-primary);
-  @media (max-width: 1070px) {
+  @media (max-width: 992px) {
     display: inline;
   }
 `;
@@ -56,7 +56,7 @@ export const HeaderMenu = styled(HiOutlineMenu)`
 export const Menu = styled.ul`
   background-color: transparent;
   line-height: 28px;
-  @media (max-width: 1070px) {
+  @media (max-width: 992px) {
     display: none;
   }
 `;
@@ -78,7 +78,7 @@ export const SLink = styled(Link)`
     margin-right: 0px;
   }
 
-  @media (max-width: 1070px) {
+  @media (max-width: 992px) {
     font-size: 1.125rem;
   }
 `;

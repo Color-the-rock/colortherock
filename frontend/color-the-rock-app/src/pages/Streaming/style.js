@@ -46,7 +46,7 @@ export const ThumbnailList = styled.div`
     grid-template-columns: 1fr 1fr;
   }
 `;
-export const LiveButton = styled(Link)`
+export const LiveButton = styled.button`
   width: 50px;
   height: 50px;
   border-radius: 50%;

@@ -2,14 +2,14 @@ import React from "react";
 import * as S from "./style";
 import IntroTitle from "../IntroTitle";
 import IntroButton from "../IntroButton";
-import { Mobile, Desktop } from "../../layout/Template";
+import { Desktop, Mobile } from "../../layout/Template";
 const LiveContent = () => {
   const imgVariants = {
     offscreen: {
       y: 500,
     },
     onscreen: {
-      y: 100,
+      y: 80,
       transition: {
         type: "spring",
         bounce: 0.4,
@@ -36,7 +36,7 @@ const LiveContent = () => {
     <S.Container
       initial="offscreen"
       whileInView="onscreen"
-      viewport={{ once: true, amount: 0.8 }}
+      viewport={{ once: false, amount: 0.8 }}
     >
       <S.Wrapper>
         <IntroTitle text="실시간 도전" />

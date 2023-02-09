@@ -9,7 +9,7 @@ const RecordContent = () => {
       y: 500,
     },
     onscreen: {
-      y: 100,
+      y: 80,
       transition: {
         type: "spring",
         bounce: 0.4,
@@ -36,7 +36,7 @@ const RecordContent = () => {
     <S.Container
       initial="offscreen"
       whileInView="onscreen"
-      viewport={{ once: true, amount: 0.8 }}
+      viewport={{ once: false, amount: 0.8 }}
     >
       <S.Wrapper>
         <IntroTitle text="클라이밍 기록" />
