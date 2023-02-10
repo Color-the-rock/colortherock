@@ -28,12 +28,12 @@ import streamingApi from "../../api/streaming";
 
 const StreamingLive = () => {
   // 기본 설정
+  const dispatch = useDispatch();
   const ov = useSelector((state) => state.streaming.ov);
   const roomInfo = useSelector((state) => state.streaming.info);
   const nickName = useSelector((state) => state.users.nickName);
-  const dispatch = useDispatch();
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
-  const [sessionTitle, setSessionTitle] = useState("testTitle");
+  const [sessionTitle, setSessionTitle] = useState("");
   const [userNickName, setUserNickName] = useState("");
   const [connectionId, setConnectionId] = useState("");
   const [session, setSession] = useState(undefined);
@@ -110,6 +110,7 @@ const StreamingLive = () => {
       // On every Stream destroyed...
       session.on("streamDestroyed", (event) => {
         deleteSubscriber(event.stream.streamManager);
+        leaveSession();
       });
 
       // On every asynchronous exception...

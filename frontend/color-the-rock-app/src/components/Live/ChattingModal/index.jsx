@@ -30,6 +30,8 @@ const ChattingModal = ({
   };
 
   const handlePressEnter = () => {
+    if (message === "") return;
+
     if (window.event.keyCode === 13) {
       sendMessage();
     }
