@@ -38,7 +38,7 @@ const streamingApi = {
       " recordObject ? ",
       recordObject
     );
-    return api.post(`/live/{sessionId}/recording/end`, recordObject);
+    return api.post(`/live/${sessionId}/recording/stop`, recordObject);
   },
 
   // 라이브 기록 저장 API

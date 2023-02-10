@@ -28,12 +28,12 @@ import streamingApi from "../../api/streaming";
 
 const StreamingLive = () => {
   // 기본 설정
+  const dispatch = useDispatch();
   const ov = useSelector((state) => state.streaming.ov);
   const roomInfo = useSelector((state) => state.streaming.info);
   const nickName = useSelector((state) => state.users.nickName);
-  const dispatch = useDispatch();
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
-  const [sessionTitle, setSessionTitle] = useState("testTitle");
+  const [sessionTitle, setSessionTitle] = useState("");
   const [userNickName, setUserNickName] = useState("");
   const [connectionId, setConnectionId] = useState("");
   const [session, setSession] = useState(undefined);
@@ -99,9 +99,9 @@ const StreamingLive = () => {
       session.on("streamCreated", (event) => {
         const testVideo = document.getElementById("test-video");
         const subscriber = session.subscribe(event.stream, undefined);
-
         if (testVideo !== null) {
           subscriber.addVideoElement(testVideo);
+          testVideo.play();
         }
 
         setSubscribers((prev) => [subscriber, ...prev]);
@@ -110,6 +110,7 @@ const StreamingLive = () => {
       // On every Stream destroyed...
       session.on("streamDestroyed", (event) => {
         deleteSubscriber(event.stream.streamManager);
+        leaveSession();
       });
 
       // On every asynchronous exception...
@@ -203,6 +204,22 @@ const StreamingLive = () => {
         navigate("/streaming");
       })
       .catch((error) => console.log(error));
+  };
+
+  const leaveSessionPart = () => {
+    if (session) {
+      session.disconnect();
+    }
+
+    // dispatch ov를 null로 설정
+    dispatch(setOV({}));
+    setSession(undefined);
+    setSubscribers([]);
+    setSessionTitle("");
+    setMainStreamManager(undefined);
+    setPublisher(undefined);
+    alert("방송이 종료되었습니다:)");
+    navigate("/streaming");
   };
 
   const switchCamera = async () => {
@@ -380,7 +397,7 @@ const StreamingLive = () => {
           <S.LeaveSessionButton
             color="#ffffff"
             size="24px"
-            onClick={leaveSession}
+            onClick={leaveSessionPart}
           />
         )}
 
