@@ -8,7 +8,7 @@ export const Title = styled.h1`
   line-height: 34px;
   letter-spacing: -0.01em;
   color: var(--color-primary);
-  margin: 1rem 0;
+  margin: ${(props) => (props.margin ? props.margin : "1rem 0")};
 `;
 
 export const Dot = styled.span`

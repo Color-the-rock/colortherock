@@ -4,10 +4,15 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100vw;
-  height: calc(var(--vh, 1vh) * 100);
+  height: 100vh;
   background-color: transparent;
-  overflow-x: hidden;
-  padding: 1rem;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 992px) {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
 `;
 
 export const Text = styled.p`
@@ -18,18 +23,20 @@ export const Text = styled.p`
   line-height: 24px;
   letter-spacing: -0.01em;
   color: var(--color-tertiary);
-`;
-
-export const Section = styled.section`
-  height: 100%;
-  padding: 1rem 0;
+  padding: 0 1rem;
 `;
 
 export const BoardImg = styled.img`
   width: 100vw;
-  height: 100%;
+  height: 50vh;
   opacity: 0.6;
-  @media (max-width: 1070px) {
-    width: 280vw;
+  @media (max-width: 768px) {
+    width: 320vw;
   }
+`;
+
+export const Wrapper = styled.div`
+  margin-top: 2rem;
+  height: 100vh;
+  background-color: transparent;
 `;

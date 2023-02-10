@@ -18,8 +18,8 @@ export const Button = styled(Link)`
     linear-gradient(to right, #ff6cab, #8533ff);
   background-origin: border-box;
   background-clip: content-box, border-box;
-  cursor: pointer;
   margin-top: 1rem;
+  cursor: pointer;
 `;
 
 export const GradientText = styled.label`
@@ -37,4 +37,5 @@ export const GradientText = styled.label`
   background-clip: text;
   text-fill-color: transparent;
   padding: 0.5rem 0;
+  cursor: pointer;
 `;

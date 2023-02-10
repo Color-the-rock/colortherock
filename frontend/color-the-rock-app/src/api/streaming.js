@@ -4,8 +4,15 @@ import { defaultInstance as api } from "./utils";
 
 const streamingApi = {
   // 라이브 방 생성 API
-  createLiveSession: (liveObject) => api.post(`/live`, liveObject),
+  createLiveSession: (liveObject) =>
+    api.post(`/live`, liveObject, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
 
+  // 라이브 종료 API
+  leaveLiveSession: (sessionId) => api.delete(`/live/${sessionId}`),
   // 라이브 참여 API
   participateLiveSession: (liveId) => api.get(`/live/${liveId}`),
 
@@ -31,7 +38,7 @@ const streamingApi = {
       " recordObject ? ",
       recordObject
     );
-    return api.post(`/live/${sessionId}/recording/end`, recordObject);
+    return api.post(`/live/${sessionId}/recording/stop`, recordObject);
   },
 
   // 라이브 기록 저장 API

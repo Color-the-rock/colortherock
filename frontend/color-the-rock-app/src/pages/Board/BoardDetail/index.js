@@ -1,41 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Desktop, Mobile } from "../../../components/layout/Template";
 import * as S from "./style";
 import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn";
 import CommentModal from "../../../components/Common/CommentModal";
 import CommentBtn from "../../../components/Common/CommentBtn";
 import { useNavigate, useParams } from "react-router";
-import Thumbnail from "../../../components/Common/Thumbnail";
-import useInfiniteScroll from "../../../hooks/useInfiniteScroll";
-import Header from "../../../components/layout/Header";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
-import TestVideo from "../../../assets/video/test.mp4";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import boardApi from "../../../api/board";
+import ReportModal from "../../../components/Board/ReportModal";
 
 const BoardDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenBoardSettingModal, setOpenBoardSettingModal] = useState(false);
+  const [isOpenBoardReportModal, setOpenBoardReportModal] = useState(false);
   const [result, setResult] = useState({}); // 게시글 상세 정보 배열
   const [commentList, setCommentList] = useState({}); // 게시글 댓글 정보 배열
   const userNickname = useSelector((state) => state.users.nickName);
-  //const [isFetching, setIsFetching] = useInfiniteScroll(updateFuncOnScroll);
-
-  const updateFuncOnScroll = () => {
-    // try {
-    //   setData((prev) => [...prev, ...dummy]);
-    // } catch (error) {
-    // } finally {
-    //   setIsFetching(false);
-    // }
-  };
 
   // 게시글 상세 조회 API
   const getBoardDetail = () => {
-    console.log("param id: ", id);
     boardApi
       .getBoardDetail(id)
       .then(({ data: { status, result: _result } }) => {
@@ -68,7 +54,6 @@ const BoardDetail = () => {
   }, []);
 
   const handleModal = () => {
-    console.log("change");
     setIsModalOpen(true);
   };
 
@@ -77,7 +62,7 @@ const BoardDetail = () => {
 
     // 게시글 삭제 API 호출 및 처리 완료 후 페이지 이동
     boardApi
-      .deleteBoardDetail()
+      .deleteBoardDetail(id)
       .then(({ data: { status } }) => {
         if (status === 200) {
           alert("정상적으로 게시글이 삭제되었습니다.");
@@ -91,55 +76,59 @@ const BoardDetail = () => {
 
   const handleReportBoard = () => {
     // 게시글 신고를 위한 팝업 제공
+    setOpenBoardReportModal(true);
+    setOpenBoardSettingModal(false);
   };
 
   return (
     <S.ContainerWrap>
-      {isOpenBoardSettingModal && (
-        <S.SettingModal>
-          <S.SettingModalItem isSameAuthor={userNickname === result.nickname}>
-            <Link to={`/board/modify/${result.videoBoardId}`}>수정</Link>
-          </S.SettingModalItem>
-          <S.SettingModalItem
-            onClick={handleOnclickDelete}
-            isSameAuthor={userNickname === result.nickname}
-          >
-            삭제
-          </S.SettingModalItem>
-          <S.SettingModalReportItem
-            onClick={handleReportBoard}
-            isSameAuthor={userNickname === result.nickname}
-          >
-            신고
-          </S.SettingModalReportItem>
-        </S.SettingModal>
-      )}
-      <Desktop>
-        <S.HeaderWrap>
-          <Header></Header>
-        </S.HeaderWrap>
-      </Desktop>
-      <Mobile>
-        <S.ArrowLeftBtnWrap>
-          <ArrowLeftBtn clickHandler={() => navigate("/board")}></ArrowLeftBtn>
-          <S.BoardSettingBtn
-            onClick={() => setOpenBoardSettingModal((prev) => !prev)}
-          />
-        </S.ArrowLeftBtnWrap>
-      </Mobile>
+      <S.ArrowLeftBtnWrap>
+        <ArrowLeftBtn clickHandler={() => navigate("/board")}></ArrowLeftBtn>
+        <S.BoardSettingBtn
+          onClick={() => setOpenBoardSettingModal((prev) => !prev)}
+        />
 
+        {isOpenBoardSettingModal && (
+          <S.SettingModal>
+            <S.SettingModalItem isSameAuthor={userNickname === result.nickname}>
+              <S.SLink to={`/board/modify/${result.videoBoardId}`}>
+                수정
+              </S.SLink>
+            </S.SettingModalItem>
+            <S.SettingModalItem
+              onClick={handleOnclickDelete}
+              isSameAuthor={userNickname === result.nickname}
+            >
+              삭제
+            </S.SettingModalItem>
+            <S.SettingModalReportItem
+              onClick={handleReportBoard}
+              isSameAuthor={userNickname === result.nickname}
+            >
+              신고
+            </S.SettingModalReportItem>
+          </S.SettingModal>
+        )}
+      </S.ArrowLeftBtnWrap>
       <S.Container>
         <S.ContentContainer>
+          {isOpenBoardReportModal && (
+            <ReportModal setOpenBoardReportModal={setOpenBoardReportModal} />
+          )}
+
           <S.ContentWrap>
-            <S.Video controls autoPlay>
-              <source
-                src="https://dhw80hz67vj6n.cloudfront.net/20230203_091428077.mp4"
-                type="video/mp4"
-              />
-            </S.Video>
+            <S.Video
+              controls
+              autoPlay
+              src={result.s3URL}
+              type="video/mp4"
+            ></S.Video>
             {isModalOpen ? (
               <S.CommentModalWrap isModalOpen>
-                <CommentModal setIsModalOpen={setIsModalOpen} />
+                <CommentModal
+                  setIsModalOpen={setIsModalOpen}
+                  isModalOpen={isModalOpen}
+                />
               </S.CommentModalWrap>
             ) : (
               <S.FalseWrap>
@@ -157,23 +146,6 @@ const BoardDetail = () => {
                 <S.CommentWrap>
                   <CommentBtn onClick={handleModal} />
                 </S.CommentWrap>
-                {/* <S.ComponentWrap>
-                  <BoardSubTitle text="다른 완등 영상 보기" />
-                </S.ComponentWrap>
-                <S.ThumbnailList>
-                  {data.map((item) => (
-                    <Thumbnail
-                      key={item.id}
-                      id={item.id}
-                      title={item.title}
-                      userNickname={item.userNickname}
-                      gymName={item.gymName}
-                      imgUrl={item.imgUrl}
-                      isLive={false}
-                      color={item.color}
-                    />
-                  ))}
-                </S.ThumbnailList> */}
               </S.FalseWrap>
             )}
           </S.ContentWrap>

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import * as S from "./style";
 import SearchList from "../SearchList";
 
 const SearchBar = ({ location, setLocation, opacity = "100" }) => {
-  // const [inputText, setInputText] = useState("");
   const [OpenList, setOpenList] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState(null);
 
   const handleChange = (e) => {
     setLocation(e.target.value);
@@ -20,11 +20,31 @@ const SearchBar = ({ location, setLocation, opacity = "100" }) => {
     }
   };
 
+  useMemo(() => {
+    const handleSuccessCallback = (position) => {
+      setCurrentLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+    };
+
+    const handleFailCallback = () => {
+      console.log("[handleFailCallback] 현재 위치 받기 실패 ");
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        handleSuccessCallback,
+        handleFailCallback
+      );
+    }
+  }, []);
+
   return (
     <div>
       <S.Container opacity={opacity}>
         <S.InputContent
-          type="text"
+          type="search"
           value={location}
           placeholder="암장을 입력해주세요."
           onChange={handleChange}
@@ -38,15 +58,17 @@ const SearchBar = ({ location, setLocation, opacity = "100" }) => {
           opacity={opacity}
           setLocation={setLocation}
           setOpenList={setOpenList}
+          currentLocation={currentLocation}
         ></SearchList>
       ) : null}
     </div>
   );
 };
 
+export default React.memo(SearchBar);
+
 SearchBar.propTypes = {
   location: PropTypes.string,
   setLocation: PropTypes.func,
+  opacity: PropTypes.string,
 };
-
-export default React.memo(SearchBar);

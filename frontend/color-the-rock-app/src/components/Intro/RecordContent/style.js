@@ -1,13 +1,40 @@
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
-export const Container = styled.div`
+export const Container = styled(motion.div)`
   display: flex;
-  flex-direction: column;
   width: 100vw;
+  flex-direction: row-reverse;
+  justify-content: center;
+  align-items: center;
   height: calc(var(--vh, 1vh) * 100);
   background-color: transparent;
-  overflow-x: hidden;
+  overflow: hidden;
   padding: 1rem;
+  @media (max-width: 992px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+`;
+
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+export const ImgWrapper = styled.div`
+  width: 100%;
+  max-width: 794px;
+  height: 800px;
+  margin-right: 2rem;
+  background-color: var(--color-background);
+  overflow: hidden;
+
+  @media (max-width: 992px) {
+    margin-left: 0;
+    margin-top: 2rem;
+  }
 `;
 
 export const Text = styled.p`
@@ -18,4 +45,39 @@ export const Text = styled.p`
   line-height: 24px;
   letter-spacing: -0.01em;
   color: var(--color-tertiary);
+`;
+
+export const ImgAnimation = styled(motion.div)`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: transparent;
+  bottom: 0px;
+`;
+
+export const ImgBox = styled(motion.div)`
+  width: 300px;
+  height: 500px;
+  background-color: ${(props) => (props.bg ? props.bg : "#ffffff")};
+  border-radius: 20px;
+  position: absolute;
+  left: ${(props) => (props.left ? `${props.left}px` : "0")};
+  bottom: ${(props) => (props.bottom ? `${props.bottom}px` : "0")};
+  z-index: ${(props) => (props.depth ? props.depth : "0")};
+`;
+
+export const ImgBoxMobile = styled(motion.div)`
+  position: absolute;
+  width: 36%;
+  min-width: 200px;
+  height: 500px;
+  background-color: ${(props) => (props.bg ? props.bg : "#ffffff")};
+  border-radius: 20px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  right: ${(props) => (props.right ? `${props.right}%` : "0")};
+  bottom: 0px;
+  &:last-child {
+    border-top-right-radius: 0px;
+  }
 `;

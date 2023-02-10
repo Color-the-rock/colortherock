@@ -7,11 +7,8 @@ const boardApi = {
     defaultInstance.get(`/video/board/detail?videoBoardId=${videoBoardId}`),
 
   // 완등 영상 글 수정하기(PUT 요청)
-  PutBoardDetail: (videoBoardId, title) =>
-    defaultInstance.put("/video/board/detail", {
-      videoBoardId,
-      title,
-    }),
+  putBoardDetail: (requestBody) =>
+    defaultInstance.put("/video/board/detail", requestBody),
 
   // 완등 영상 글 삭제하기(DELETE 요청) - 현주
   deleteBoardDetail: (videoBoardId) =>
@@ -67,11 +64,8 @@ const boardApi = {
     }),
 
   // 영상 댓글 작성 요청
-  postVideoBoardComment: ({ videoBoardId, content }) =>
-    defaultInstance.post("/videoboard/comment", {
-      videoBoardId,
-      content,
-    }),
+  postVideoBoardComment: (requestBody) =>
+    defaultInstance.post("/videoboard/comment", requestBody),
 
   // 영상 댓글 삭제 요청
   // value 수정
@@ -89,6 +83,10 @@ const boardApi = {
         storeId,
       },
     }),
+
+  // 게시글 신고 API
+  reportVideoBoard: (requestBody) =>
+    defaultInstance.post(`/video/board/detail/report`, requestBody),
 };
 
 export default boardApi;

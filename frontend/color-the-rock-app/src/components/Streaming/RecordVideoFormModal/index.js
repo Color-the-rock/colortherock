@@ -58,10 +58,10 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
   };
 
   const registVideoToS3 = () => {
-    if (!color || !level || !isSuccess || !video) {
-      alert("모든 항목을 채워주세요.");
-      return;
-    }
+    // if (!color || !level || !isSuccess || !video) {
+    //   alert("모든 항목을 채워주세요.");
+    //   return;
+    // }
 
     const data = {
       color,
