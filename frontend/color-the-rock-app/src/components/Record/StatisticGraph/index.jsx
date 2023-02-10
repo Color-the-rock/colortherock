@@ -8,16 +8,16 @@ const StatisticGraph = () => {
     videoCount: 0,
     successCount: 0,
   });
-  const [totalCount, setTotalCount] = useState(0);
+  // const [totalCount, setTotalCount] = useState(0);
 
-  const getTotalCount = (_result) => {
-    if (_result.length === 0) return;
-    let tmp = 0;
-    for (let item of _result) {
-      tmp += Number(item.count);
-    }
-    setTotalCount(tmp);
-  };
+  // const getTotalCount = (_result) => {
+  //   if (_result.length === 0) return;
+  //   let tmp = 0;
+  //   for (let item of _result) {
+  //     tmp += Number(item.count);
+  //   }
+  //   setTotalCount(tmp);
+  // };
 
   const handleGetGymData = () => {
     recordApi
@@ -26,7 +26,7 @@ const StatisticGraph = () => {
         if (status === 200) {
           console.log("[getVisitedGymData] statusCode : 200 ", _result);
           setGymData(_result);
-          getTotalCount(_result);
+          //getTotalCount(_result);
         }
       })
       .catch((error) => console.log("error", error));
@@ -53,7 +53,10 @@ const StatisticGraph = () => {
     <S.GraphWrapper>
       <S.GraphTitle>모든 도전</S.GraphTitle>
       <S.ChallengeBar>
-        <S.Success count={totalRecords.successCount} />
+        <S.Success
+          successCount={totalRecords.successCount}
+          videoCount={totalRecords.videoCount}
+        />
         <S.BarLabel right="16px">
           {totalRecords.successCount !== 0 ? totalRecords.successCount : 0}번의
           성공
@@ -64,13 +67,13 @@ const StatisticGraph = () => {
       </S.ChallengeBar>
 
       <S.GraphTitle>방문한 홈짐</S.GraphTitle>
-      <S.HomeGymGraph length={gymData.length === 0 ? 0 : gymData.length}>
+      <S.HomeGymGraph length={totalRecords.visitCount}>
         {gymData && gymData.length > 0
           ? gymData.map((gym, index) => (
               <S.VisitedState
                 className="visited_state"
                 key={index}
-                percent={(gym.count / totalCount) * 100}
+                percent={(gym.count / totalRecords.visitCount) * 100}
                 count={
                   0.01 * (100 / gymData.length) * (gymData.length - (index + 1))
                 }

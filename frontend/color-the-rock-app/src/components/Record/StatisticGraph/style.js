@@ -51,10 +51,12 @@ export const Success = styled.div`
     var(--color-brand-gradient-start) 0%,
     var(--color-brand-gradient-end) 100%
   );
-  width: ${(props) => (props.count ? `${props.count}0%` : "0%")};
+  width: ${(props) =>
+    props.successCount !== 0
+      ? `${(props.successCount / props.videoCount) * 100}%`
+      : "0%"};
   height: 100%;
-  border-top-left-radius: 2rem;
-  border-bottom-left-radius: 2rem;
+  border-radius: 2rem;
 `;
 
 // home gym graph
@@ -66,7 +68,6 @@ export const HomeGymGraph = styled.div`
   height: 1.6rem;
   border-radius: 2rem;
   background-color: ${(props) => {
-    console.log("bgc props? ", props);
     return props.length !== 0
       ? "var(--color-brand-shade)"
       : "var(--color-border)";
@@ -77,8 +78,8 @@ export const HomeGymGraph = styled.div`
 export const VisitedState = styled.div`
   display: inline-block;
   background-color: ${(props) =>
-    props.count ? `rgba(194, 80, 214, ${props.count})` : ""};
-  width: ${(props) => (props.percent ? `${props.percent}0%` : "0%")};
+    props.count ? `rgba(194, 80, 214, ${props.count})` : "rgb(194, 80, 214)"};
+  width: ${(props) => (props.percent ? `${props.percent}%` : "0%")};
   height: 100%;
 
   &:first-child {
