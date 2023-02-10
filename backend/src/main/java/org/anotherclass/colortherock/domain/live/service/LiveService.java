@@ -234,7 +234,9 @@ public class LiveService {
                 .post()
                 .uri("https://colortherock.com/api/live/uploadRecord")
                 .bodyValue(new RecordingUploadAtOpenviduServerRequest(request, memberDetails.getMember().getId()))
-                .retrieve();
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 
     @Transactional

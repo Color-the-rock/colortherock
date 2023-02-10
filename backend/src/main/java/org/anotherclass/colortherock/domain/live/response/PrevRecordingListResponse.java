@@ -3,7 +3,10 @@ package org.anotherclass.colortherock.domain.live.response;
 import io.openvidu.java.client.Recording;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
+import lombok.Getter;
 
+@Schema(description = "이전 영상 목록 객체")
+@Getter
 public class PrevRecordingListResponse {
 
     @Schema(description = "녹화 영상 id")
