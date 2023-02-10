@@ -99,9 +99,9 @@ const StreamingLive = () => {
       session.on("streamCreated", (event) => {
         const testVideo = document.getElementById("test-video");
         const subscriber = session.subscribe(event.stream, undefined);
-        testVideo.play();
         if (testVideo !== null) {
           subscriber.addVideoElement(testVideo);
+          testVideo.play();
         }
 
         setSubscribers((prev) => [subscriber, ...prev]);
@@ -204,6 +204,22 @@ const StreamingLive = () => {
         navigate("/streaming");
       })
       .catch((error) => console.log(error));
+  };
+
+  const leaveSessionPart = () => {
+    if (session) {
+      session.disconnect();
+    }
+
+    // dispatch ov를 null로 설정
+    dispatch(setOV({}));
+    setSession(undefined);
+    setSubscribers([]);
+    setSessionTitle("");
+    setMainStreamManager(undefined);
+    setPublisher(undefined);
+    alert("방송이 종료되었습니다:)");
+    navigate("/streaming");
   };
 
   const switchCamera = async () => {
@@ -381,7 +397,7 @@ const StreamingLive = () => {
           <S.LeaveSessionButton
             color="#ffffff"
             size="24px"
-            onClick={leaveSession}
+            onClick={leaveSessionPart}
           />
         )}
 
