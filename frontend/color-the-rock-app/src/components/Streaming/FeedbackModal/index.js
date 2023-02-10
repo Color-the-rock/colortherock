@@ -91,6 +91,7 @@ const FeedbackModal = ({ closeFeedback, session, picture = null }) => {
     ctx.strokeStyle = "#8ED6FF";
     ctx.lineWidth = 2;
     ctx.stroke();
+
     sendDrawing();
   };
 

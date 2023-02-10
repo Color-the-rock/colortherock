@@ -11,7 +11,10 @@ export const streamingSlice = createSlice({
   name: "streaming",
   initialState: {
     ov: null, // openVidu 객체
-    info: {},
+    info: {
+      title: "",
+      gymName: "",
+    },
     userOpenViduToken: "",
   },
   reducers: {
