@@ -7,7 +7,6 @@ export const Container = styled.div`
   height: 100vh;
   background-color: transparent;
   overflow: hidden;
-  padding: 1rem;
   justify-content: center;
   align-items: center;
   @media (max-width: 992px) {
@@ -24,11 +23,12 @@ export const Text = styled.p`
   line-height: 24px;
   letter-spacing: -0.01em;
   color: var(--color-tertiary);
+  padding: 0 1rem;
 `;
 
 export const BoardImg = styled.img`
   width: 100vw;
-  height: auto;
+  height: 50vh;
   opacity: 0.6;
   @media (max-width: 768px) {
     width: 320vw;
@@ -37,5 +37,6 @@ export const BoardImg = styled.img`
 
 export const Wrapper = styled.div`
   margin-top: 2rem;
+  height: 100vh;
   background-color: transparent;
 `;

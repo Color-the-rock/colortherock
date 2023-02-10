@@ -8,7 +8,7 @@ import ParallaxText from "../ParallaxText";
 const BoardContent = () => {
   return (
     <S.Container>
-      <IntroTitle text="완등 영상 목록" />
+      <IntroTitle text="완등 영상 목록" margin="0 1rem" />
       <S.Text>인OOOO, 유OO 검색도 안녕!</S.Text>
       <S.Text>
         정확하게 내가 원하는 암장, 색상을 선택해 풀이를 볼 수 있어요!
@@ -17,9 +17,9 @@ const BoardContent = () => {
         <ParallaxText baseVelocity={-4}>
           <S.BoardImg src={FirstLineImg} alt="img" />
         </ParallaxText>
-        <ParallaxText baseVelocity={4}>
+        {/* <ParallaxText baseVelocity={4}>
           <S.BoardImg src={SecondLineImg} alt="img" />
-        </ParallaxText>
+        </ParallaxText> */}
       </S.Wrapper>
     </S.Container>
   );

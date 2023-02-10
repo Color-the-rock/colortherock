@@ -6,7 +6,7 @@ import { Desktop, Mobile } from "../../layout/Template";
 const LiveContent = () => {
   const imgVariants = {
     offscreen: {
-      y: 500,
+      y: 600,
     },
     onscreen: {
       y: 80,
