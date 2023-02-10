@@ -122,7 +122,7 @@ const Record = () => {
           <SubTitle text="일별 도전 기록" />
           <S.RecordWrapper>
             <S.CalendarWrapper>
-              <CustomCalendar />
+              <CustomCalendar isSuccess={radioValue} />
             </S.CalendarWrapper>
 
             <div>

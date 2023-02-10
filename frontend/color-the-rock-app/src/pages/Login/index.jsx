@@ -3,11 +3,11 @@ import * as S from "./style";
 import KakaoBtn from "../../assets/img/LogIn/kakao-login.png";
 import GoogleBtn from "../../assets/img/LogIn/google-login.png";
 import { Mobile, Desktop } from "../../components/layout/Template";
-import AppLogo from "../../assets/img/common/app-logo.png";
+import WebLogo from "../../assets/img/common/web-logo.png";
+import JoinUs from "../../assets/img/LogIn/img-signup-join-us.png";
 import Header from "../../components/layout/Header";
 import { useNavigate } from "react-router-dom";
 import { VscChromeClose } from "react-icons/vsc";
-import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,12 +25,8 @@ const Login = () => {
               <S.CloseBtn></S.CloseBtn>
             </S.CloseBtnContainer>
             <S.LogoContainer>
-              <S.LogoImg src={AppLogo} alt="app logo"></S.LogoImg>
-              <S.SecondLogo>
-                {`Color the Rock,\nColor your Rock!`}
-                {/* <div>Color the Rock,</div>
-                <div>Color your Rock!</div> */}
-              </S.SecondLogo>
+              <S.LogoImg src={WebLogo} alt="app logo" />
+              <S.SecondLogo src={JoinUs} alt="app logo" />
             </S.LogoContainer>
             <S.LoginContainer>
               <S.LoginWrap href="https://colortherock.com/oauth2/authorization/kakao">
@@ -53,8 +49,8 @@ const Login = () => {
           </S.CloseBtnContainer>
           <S.ContentWrap>
             <S.LogoContainer>
-              <S.LogoImg src={AppLogo} alt="app logo"></S.LogoImg>
-              <S.SecondLogo>{`Color the Rock,\nColor your Rock!`}</S.SecondLogo>
+              <S.LogoImg src={WebLogo} alt="app logo"></S.LogoImg>
+              <S.SecondLogo src={JoinUs} alt="app logo" />
             </S.LogoContainer>
 
             <S.LoginContainer>

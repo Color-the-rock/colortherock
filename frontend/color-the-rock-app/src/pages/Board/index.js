@@ -15,21 +15,30 @@ const Board = () => {
   const [result, setResult] = useState([]);
   const [storeId, setStoreId] = useState(-1);
   const [isShowRegisterModal, setShowRegisterModal] = useState(false);
+  const currentOption = useSelector((state) => state.board.searchColorValue);
+  const searchGymName = useSelector((state) => state.board.searchGymName);
   const [isLoading, setLoading] = useState(false);
   const getBoardList = () => {
     setLoading(true);
     const requestData = {
-      storeId: -1,
-      color: "",
-      gymName: "",
+      storeId: storeId,
+      color: currentOption === "색상" ? "" : currentOption,
+      gymName: searchGymName,
     };
+
+    console.log("getBoardList....", requestData);
+
     boardApi
       .getAllVideo(requestData)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
           console.log("statusCode : 200", _result);
           setResult(_result);
-          setStoreId(_result[_result.length - 1].videoBoardId);
+          let lastId =
+            _result[_result.length - 1].videoBoardId === undefined
+              ? -1
+              : _result[_result.length - 1].videoBoardId;
+          setStoreId(lastId);
         }
       })
       .catch((error) => console.log(error))
@@ -64,9 +73,14 @@ const Board = () => {
 
   useEffect(() => {
     getBoardList();
-  }, []);
+  }, [currentOption]);
 
   const handleOnClickItem = (id) => {
+    if (!isLogin) {
+      alert("로그인 후, 이용해주세요!");
+      return;
+    }
+
     navigate(`/board/detail/${id}`);
   };
 
@@ -74,12 +88,7 @@ const Board = () => {
     <S.Container id="board-container">
       <Title>완등 영상 보기</Title>
       <S.Description>완등 영상을 게시하고 피드백을 받아보세요!</S.Description>
-      <BoardSearchBar
-        setResult={setResult}
-        storeId={storeId}
-        setStoreId={setStoreId}
-        setLoading={setLoading}
-      />
+      <BoardSearchBar getBoardList={getBoardList} setStoreId={setStoreId} />
       {isLoading && <Loading />}
       {result && result.length > 0 ? (
         <S.ThumbnailList>

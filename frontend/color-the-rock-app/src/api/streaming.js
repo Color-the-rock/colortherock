@@ -20,32 +20,15 @@ const streamingApi = {
   getAllLiveList: (liveId = -1) => api.get(`/live/list?liveId=${liveId}`),
 
   // 라이브 기록 시작 API
-  startRecordVideo: (sessionId, token) => {
-    console.log(
-      "[startRecordVideo] sessionId > ",
-      sessionId,
-      " token ? ",
-      token
-    );
-    return api.post(`/live/${sessionId}/recording/start`, token);
-  },
+  startRecordVideo: (sessionId, token) =>
+    api.post(`/live/${sessionId}/recording/start`, token),
 
   // 라이브 기록 종료 API
-  quitRecordVideo: (sessionId, recordObject) => {
-    console.log(
-      "[quitRecordVideo] sessionId > ",
-      sessionId,
-      " recordObject ? ",
-      recordObject
-    );
-    return api.post(`/live/${sessionId}/recording/stop`, recordObject);
-  },
-
+  quitRecordVideo: (sessionId, recordObject) =>
+    api.post(`/live/${sessionId}/recording/stop`, recordObject),
   // 라이브 기록 저장 API
-  saveRecordVideo: (sessionId, data) => {
-    api.post(`/live/${sessionId}/recording/save`, data);
-  },
-
+  saveRecordVideo: (sessionId, data) =>
+    api.post(`/live/${sessionId}/recording/save`, data),
   // 라이브 이전 녹화 목록 반환 API
   getRecordList: (sessionId) => {
     api.get(`/live/${sessionId}/recording/list`);
