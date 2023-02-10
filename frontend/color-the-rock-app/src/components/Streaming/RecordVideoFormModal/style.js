@@ -7,8 +7,6 @@ export const ContainerWrap = styled.div`
   top: 0px;
   bottom: 0px;
   z-index: 1000;
-  background-color: var(--color-dark);
-  opacity: 50%;
 `;
 
 export const Container = styled.div`
@@ -17,18 +15,26 @@ export const Container = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: transparent;
-  opacity: 100%;
 `;
 
-export const ContentBox = styled.div`
+export const ContentBox = styled.span`
   width: calc(100% - 32px);
-  max-width: 600px;
+  width: 70%;
+  height: 40%;
+  padding: 2rem 1rem 1rem 1rem;
+  /* border: 1px solid white; */
+  border-radius: 20px;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: var(--color-background);
 `;
+
+export const RealContentBox = styled.div``;
 
 export const ComponentWrap = styled.div`
   width: 100%;

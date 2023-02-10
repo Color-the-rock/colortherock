@@ -26,6 +26,7 @@ import {
 import { Desktop, Mobile } from "../../components/layout/Template";
 import streamingApi from "../../api/streaming";
 import RecordVideoFormModal from "../../components/Streaming/RecordVideoFormModal";
+import VideoClip from "../../components/Streaming/VideoClip";
 
 const StreamingLive = () => {
   // 기본 설정
@@ -58,9 +59,13 @@ const StreamingLive = () => {
   // 라이브 API 연결 설정 관리
   const token = useSelector((state) => state.streaming.userOpenViduToken);
   const [sessionId, setSessionId] = useState("");
+
   // 녹화 설정 관리
   const [recordId, setRecordId] = useState("");
   const [recordModal, setRecordModal] = useState(false);
+
+  // 이전 영상 보기 관리
+  const [recordListModal, setRecordListModal] = useState(false);
 
   // 피드백 설정 관리
   const [picture, setPicture] = useState();
@@ -301,6 +306,12 @@ const StreamingLive = () => {
   };
 
   // 모달 관리 //
+
+  // 이전 영상 모달 관리
+  const openRecordList = () => {
+    setRecordListModal((prev) => !prev);
+  };
+
   // 녹화 모달 관리
   const openRecord = () => {
     setRecordModal((prev) => !prev);
@@ -386,6 +397,9 @@ const StreamingLive = () => {
           setModalOpen={openRecord}
         />
       )}
+      {recordListModal && (
+        <VideoClip sessionId={sessionId} setModalOpen={openRecordList} />
+      )}
       <Mobile>
         {isShowChattingModal && (
           <S.DragModal>
@@ -463,7 +477,7 @@ const StreamingLive = () => {
             </S.IconWrapper>
             피드백
           </S.VideoMenuItem>
-          <S.VideoMenuItem onClick={handleSetVideo}>
+          <S.VideoMenuItem onClick={openRecordList}>
             <S.IconWrapper>
               <FiFilm size="24px" />
             </S.IconWrapper>

@@ -13,14 +13,11 @@
 */
 
 import * as S from "./style";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import BoardRadioBtn from "../../Board/BoardRadioBtn";
 import CustomSelect from "../../Common/CustomSelect";
-import UploadForm from "../../Board/UploadForm";
 import RegistBtn from "../../Board/RegistBtn";
-import { registfuc } from "../../../api/streaming";
-import { Form, useNavigate } from "react-router-dom";
-import BoardApi from "../../../api/board";
+
 import streamingApi from "../../../api/streaming";
 import InputComp from "../../../components/Board/InputComp";
 import { useSelector } from "react-redux";
@@ -61,11 +58,10 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
   const [color, setColor] = useState("");
 
   // test 용 : video는 props로 받아와야함.
-  const [video, setVideo] = useState("");
 
   const handleModalStateChange = () => {
     if (window.confirm("정말로 취소하시겠습니까?")) {
-      setModalOpen((prev) => !prev);
+      setModalOpen();
     }
   };
 
@@ -92,7 +88,7 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
       .saveRecordVideo(sessionId, JSON.stringify(data))
       .then(() => {
         console.log("성공");
-        setModalOpen((prev) => !prev);
+        setModalOpen();
       })
       .catch((err) => {
         console.log("실패");
@@ -104,6 +100,9 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
     <S.ContainerWrap>
       <S.Container>
         <S.ContentBox>
+          <S.ComponentWrap>
+            <div>영상 등록</div>
+          </S.ComponentWrap>
           <S.ComponentWrap>
             <InputComp
               title={title}

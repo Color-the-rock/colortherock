@@ -1,26 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Desktop, Mobile } from "../../layout/Template";
 import * as S from "./style";
+import streamingApi from "../../../api/streaming";
 
-const VideoClip = () => {
+const VideoClip = ({ sessionId, setModalOpen }) => {
   const [isPublisher, setIsPublisher] = useState(true);
+  const [data, setData] = useState([]);
 
-  const onClickHandler = () => {};
+  // useEffect(() => {
+  //   streamingApi.getRecordList(sessionId).then((res) => {
+  //     console.log(res);
+  //     setData(res);
+  //   });
+  // });
+
+  const onClickHandler = () => {
+    setModalOpen();
+  };
 
   return (
     <>
-      <Desktop></Desktop>
-      <Mobile>
-        <S.ContainerWrap>
-          <S.Container>
-            <S.ContentBox>
-              {/* Publisher만 보이는 버튼 =>  */}
-              {isPublisher && <button onClick={onClickHandler}></button>}
-              만드는 중입니다.
-            </S.ContentBox>
-          </S.Container>
-        </S.ContainerWrap>
-      </Mobile>
+      <S.ContainerWrap>
+        <S.Container>
+          <S.ContentBox>
+            {isPublisher && <button onClick={onClickHandler}>나 뭐야</button>}
+            만드는 중입니다.
+          </S.ContentBox>
+        </S.Container>
+      </S.ContainerWrap>
     </>
   );
 };
