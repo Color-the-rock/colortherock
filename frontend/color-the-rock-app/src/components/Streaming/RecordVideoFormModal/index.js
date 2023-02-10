@@ -17,7 +17,6 @@ import React, { useState } from "react";
 import BoardRadioBtn from "../../Board/BoardRadioBtn";
 import CustomSelect from "../../Common/CustomSelect";
 import RegistBtn from "../../Board/RegistBtn";
-
 import streamingApi from "../../../api/streaming";
 import InputComp from "../../../components/Board/InputComp";
 import { useSelector } from "react-redux";
@@ -85,9 +84,9 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
     console.log("---------------------------------");
 
     streamingApi
-      .saveRecordVideo(sessionId, JSON.stringify(data))
-      .then(() => {
-        console.log("성공");
+      .saveRecordVideo(sessionId, data)
+      .then(({ data }) => {
+        console.log("성공", data);
         setModalOpen();
       })
       .catch((err) => {
