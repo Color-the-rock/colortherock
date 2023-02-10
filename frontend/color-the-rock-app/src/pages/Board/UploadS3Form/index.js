@@ -51,7 +51,7 @@ const dummy = [
 ];
 
 const UploadS3Form = () => {
-  const [data, setData] = useState(dummy);
+  const [data, setData] = useState([]);
   const [selectDate, setSelectDate] = useState("");
 
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ const UploadS3Form = () => {
     if (!selectDate) return;
 
     const params = {
-      videoId: 0,
+      videoId: -1,
       shootingDate: selectDate,
       isSuccess: true,
     };
@@ -101,22 +101,23 @@ const UploadS3Form = () => {
             setSelectDate={setSelectDate}
           />
         </S.CalendarWrap>
-        <S.ArrowLeftBtnWrap></S.ArrowLeftBtnWrap>
-        <S.ThumbnailList>
-          {data.map((item) => (
-            <Thumbnail
-              key={item.id}
-              onClick={onClick}
-              id={item.id}
-              title={item.title}
-              userNickname={item.userNickname}
-              gymName={item.gymName}
-              imgUrl={item.imgUrl}
-              isLive={false}
-              color={item.color}
-            />
-          ))}
-        </S.ThumbnailList>
+        {data && (
+          <S.ThumbnailList>
+            {data.map((item) => (
+              <Thumbnail
+                key={item.id}
+                onClick={onClick}
+                id={item.id}
+                title={item.title}
+                userNickname={item.userNickname}
+                gymName={item.gymName}
+                imgUrl={item.imgUrl}
+                isLive={false}
+                color={item.color}
+              />
+            ))}
+          </S.ThumbnailList>
+        )}
         {/* <S.ComponentWrap>
               <RegistBtn btnName="등록하기" clickHandler={submitHandler} />
             </S.ComponentWrap> */}

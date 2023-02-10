@@ -100,7 +100,9 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
       <S.Container>
         <S.ContentBox>
           <S.ComponentWrap>
-            <div>영상 등록</div>
+            <S.TitleWrap>
+              <S.TitleWrap>영상 등록</S.TitleWrap>
+            </S.TitleWrap>
           </S.ComponentWrap>
           <S.ComponentWrap>
             <InputComp
@@ -120,10 +122,18 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
             <BoardRadioBtn isPublic={isSuccess} setIsPublic={setIsSuccess} />
           </S.ComponentWrap>
           <S.ComponentWrap>
-            <RegistBtn btnName="등록" clickHandler={registVideoToS3} />
+            <RegistBtn
+              btnName="등록"
+              size="40px"
+              clickHandler={registVideoToS3}
+            />
           </S.ComponentWrap>
           <S.ComponentWrap>
-            <RegistBtn btnName="취소" clickHandler={handleModalStateChange} />
+            <RegistBtn
+              btnName="취소"
+              size="40px"
+              clickHandler={handleModalStateChange}
+            />
           </S.ComponentWrap>
         </S.ContentBox>
       </S.Container>

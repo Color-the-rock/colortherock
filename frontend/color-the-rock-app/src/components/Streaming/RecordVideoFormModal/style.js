@@ -34,10 +34,14 @@ export const ContentBox = styled.span`
   background-color: var(--color-background);
 `;
 
-export const RealContentBox = styled.div``;
+export const TitleWrap = styled.div`
+  font-size: 20px;
+  text-align: left;
+`;
 
 export const ComponentWrap = styled.div`
   width: 100%;
+  height: 40px;
   display: flex;
   margin-bottom: 1rem;
   justify-content: center;
