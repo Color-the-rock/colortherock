@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOpenViduToken, setOV } from "../../stores/streaming/streamingSlice";
 import { useNavigate } from "react-router";
 import { OpenVidu } from "openvidu-browser";
+import Loading from "../../components/Common/Loading";
 
 const Streaming = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,8 @@ const Streaming = () => {
   const token = useSelector((state) => state.streaming.userOpenViduToken);
   const isLogin = useSelector((state) => state.users.isLogin);
   const [result, setResult] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+  const [storeId, setStoreId] = useState(-1);
 
   // openVidu 설정
   const joinSession = () => {
@@ -25,7 +28,7 @@ const Streaming = () => {
   };
 
   const handleParticipateSession = (sessionId) => {
-    console.log("sessionId ? ", sessionId);
+    setLoading(true);
     joinSession();
     streamingApi
       .participateLiveSession(sessionId)
@@ -37,19 +40,32 @@ const Streaming = () => {
       })
       .catch(() => {
         alert("이미 종료된 방송입니다.");
+        navigate(`/streaming`);
+      })
+      .finally(() => {
+        setTimeout(() => setLoading(false), 200);
       });
   };
 
   const getAllLiveList = () => {
+    setLoading(true);
     streamingApi
-      .getAllLiveList(-1)
+      .getAllLiveList(storeId)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
           console.log("statusCode : 200 ", _result);
           setResult(_result);
+          let lastId =
+            _result[_result.length - 1].videoBoardId === undefined
+              ? -1
+              : _result[_result.length - 1].videoBoardId;
+          setStoreId(lastId);
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setTimeout(() => setLoading(false), 200);
+      });
   };
 
   const handleOnClickCreateLive = () => {
@@ -76,7 +92,8 @@ const Streaming = () => {
       <S.Description>
         도전 중인 등반을 보고 실시간으로 피드백해줘요!
       </S.Description>
-      <SearchBar />
+      <SearchBar getAllLiveList={getAllLiveList} />
+      {isLoading && <Loading />}
       {result && result.length > 0 ? (
         <S.ThumbnailList>
           {result.map((item) => (

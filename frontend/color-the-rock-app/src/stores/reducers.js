@@ -4,7 +4,7 @@ import storage from "redux-persist/lib/storage";
 import record from "./record/recordSlice";
 import streaming from "./streaming//streamingSlice";
 import users from "./users/userSlice";
-
+import board from "./board/boardSlice";
 const persistConfig = {
   key: "root",
   storage,
@@ -15,6 +15,7 @@ const reducers = combineReducers({
   users,
   streaming,
   record,
+  board,
 });
 
 export default persistReducer(persistConfig, reducers);
