@@ -99,7 +99,7 @@ const StreamingLive = () => {
       session.on("streamCreated", (event) => {
         const testVideo = document.getElementById("test-video");
         const subscriber = session.subscribe(event.stream, undefined);
-
+        testVideo.play();
         if (testVideo !== null) {
           subscriber.addVideoElement(testVideo);
         }
