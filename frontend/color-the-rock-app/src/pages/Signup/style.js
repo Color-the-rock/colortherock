@@ -97,7 +97,7 @@ export const InputButtonWrap = styled.div`
       font-size: 1.25rem;
       margin: 5px 3px 0.25rem 0.25rem;
       /* margin-top: 0.05px; */
-      color: var(--color-level-v1-start);
+      color: var(--color-badge-live);
     }
   }
 `;
@@ -113,7 +113,14 @@ export const InputButton = styled.button`
   color: ${(props) =>
     props.isValidate === true
       ? "var(--color-white)"
-      : "var(--color-level-v1-start)"};
+      : "var(--color-badge-live)"};
+
+  .FiArrowRightCircle {
+    color: ${(props) =>
+      props.isValidate === true
+        ? "var(--color-white)"
+        : "var(--color-badge-live)"};
+  }
 
   .p {
     display: flex;
@@ -151,7 +158,7 @@ export const ErrorMessage = styled.div`
     align-items: center;
     font-size: 0.5rem;
     color: white;
-    background-color: var(--color-level-v1-start);
+    background-color: var(--color-badge-live);
     /* border: 1px solid white; */
     border-radius: 100%;
   }
@@ -161,7 +168,7 @@ export const ErrorMessage = styled.div`
     font-style: normal;
     font-weight: 400;
     font-size: 0.75rem;
-    color: var(--color-level-v1-start);
+    color: var(--color-badge-live);
     letter-spacing: -0.01em;
   }
 `;
