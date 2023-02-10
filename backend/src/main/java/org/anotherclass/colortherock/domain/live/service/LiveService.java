@@ -54,10 +54,9 @@ public class LiveService {
     private final LiveRepository liveRepository;
     private final LiveReadRepository liveReadRepository;
     private final MemberRepository memberRepository;
-    private final VideoRepository videoRepository;
-    private ConcurrentMap<String, List<String>> recordingsForSession = new ConcurrentHashMap<>();
+    private static ConcurrentMap<String, List<String>> recordingsForSession = new ConcurrentHashMap<>();
     private final OpenVidu openVidu;
-    private final Integer PAGE_SIZE = 15;
+    private static final Integer PAGE_SIZE = 15;
 
 
     @Value("${RECORDING_PATH}")
@@ -65,7 +64,6 @@ public class LiveService {
 
     public LiveService(LiveRepository liveRepository,
                        MemberRepository memberRepository,
-                       VideoRepository videoRepository,
                        S3Service s3Service,
                        VideoService videoService,
                        RecordService recordService,
@@ -77,7 +75,6 @@ public class LiveService {
         this.recordService = recordService;
         this.liveRepository = liveRepository;
         this.memberRepository = memberRepository;
-        this.videoRepository = videoRepository;
         this.liveReadRepository = liveReadRepository;
         this.openVidu = new OpenVidu(openviduUrl, openviduSecret);
         this.recordingPath = recordingPath;
@@ -85,7 +82,7 @@ public class LiveService {
 
     public String createLiveRoom(MemberDetails memberDetails, CreateLiveRequest request, MultipartFile thumbnail) {
         Long id = memberDetails.getMember().getId();
-        Member member = memberRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
+        Member member = memberRepository.findById(id).orElseThrow(UserNotFoundException::new);
         Session session;
         try {
             session = openVidu.createSession();
@@ -94,7 +91,7 @@ public class LiveService {
         }
         String sessionId = session.getSessionId();
         String thumbnailName = DateTime.now() + sessionId;
-        String uploadedURL = null;
+        String uploadedURL;
         try {
             uploadedURL = s3Service.upload(thumbnail, thumbnailName);
         } catch (IOException e) {
@@ -167,10 +164,10 @@ public class LiveService {
     }
 
     @Transactional(readOnly = true)
-    public List<LiveListResponse> getLiveList(Long liveId) {
+    public List<LiveListResponse> getLiveList(LiveListRequest liveListRequest) {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
-        Slice<Live> slices = liveReadRepository.searchBySlice(liveId, pageable);
+        Slice<Live> slices = liveReadRepository.searchBySlice(liveListRequest, pageable);
 
         if (slices.isEmpty()) return new ArrayList<>();
 
