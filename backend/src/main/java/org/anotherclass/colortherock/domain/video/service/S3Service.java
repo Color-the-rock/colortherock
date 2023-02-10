@@ -68,7 +68,9 @@ public class S3Service {
     // Upload thumbnail from user's local video
     public String uploadThumbnail(MultipartFile videoFile, String thumbnailName) throws IOException, JCodecException {
         File file = convertMultipartFileToFile(videoFile);
-        return getThumbnailURL(thumbnailName, file);
+        String thumbnailURL = getThumbnailURL(thumbnailName, file);
+        if (!file.delete()) log.info("파일이 삭제되지 않았습니다.");
+        return thumbnailURL;
     }
 
     // Upload video from Openvidu
@@ -112,12 +114,11 @@ public class S3Service {
         baos.close();
         // Upload the object to S3
         s3Client.putObject(new PutObjectRequest(bucket, thumbnailName, is, null));
-        if (!file.delete()) log.info("파일이 삭제되지 않았습니다.");
         return cloudFrontUrl + thumbnailName;
     }
 
     // Convert MultipartFile to File
-    private File convertMultipartFileToFile(MultipartFile file) throws IOException {
+    private File convertMultipartFileToFile(MultipartFile file) {
         File convFile = new File(file.getOriginalFilename());
         try (FileOutputStream fos = new FileOutputStream(convFile)) {
             fos.write(file.getBytes());

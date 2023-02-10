@@ -16,9 +16,11 @@ import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.exception.MemberNotFoundException;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
-import org.anotherclass.colortherock.domain.video.entity.Video;
+import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
+import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
+import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.jcodec.api.JCodecException;
 import org.joda.time.DateTime;
@@ -34,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,13 +49,14 @@ import java.util.stream.Collectors;
 public class LiveService {
 
     private final S3Service s3Service;
+    private final VideoService videoService;
+    private final RecordService recordService;
     private final LiveRepository liveRepository;
     private final LiveReadRepository liveReadRepository;
     private final MemberRepository memberRepository;
-    private final VideoRepository videoRepository;
-    private ConcurrentMap<String, List<String>> recordingsForSession = new ConcurrentHashMap<>();
+    private static ConcurrentMap<String, List<String>> recordingsForSession = new ConcurrentHashMap<>();
     private final OpenVidu openVidu;
-    private final Integer PAGE_SIZE = 15;
+    private static final Integer PAGE_SIZE = 15;
 
 
     @Value("${RECORDING_PATH}")
@@ -60,16 +64,17 @@ public class LiveService {
 
     public LiveService(LiveRepository liveRepository,
                        MemberRepository memberRepository,
-                       VideoRepository videoRepository,
                        S3Service s3Service,
-
+                       VideoService videoService,
+                       RecordService recordService,
                        LiveReadRepository liveReadRepository, @Value("${OPENVIDU_URL}") String openviduUrl,
                        @Value("${OPENVIDU_SECRET}") String openviduSecret,
                        final @Value("${RECORDING_PATH}") String recordingPath) {
         this.s3Service = s3Service;
+        this.videoService = videoService;
+        this.recordService = recordService;
         this.liveRepository = liveRepository;
         this.memberRepository = memberRepository;
-        this.videoRepository = videoRepository;
         this.liveReadRepository = liveReadRepository;
         this.openVidu = new OpenVidu(openviduUrl, openviduSecret);
         this.recordingPath = recordingPath;
@@ -77,7 +82,7 @@ public class LiveService {
 
     public String createLiveRoom(MemberDetails memberDetails, CreateLiveRequest request, MultipartFile thumbnail) {
         Long id = memberDetails.getMember().getId();
-        Member member = memberRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
+        Member member = memberRepository.findById(id).orElseThrow(UserNotFoundException::new);
         Session session;
         try {
             session = openVidu.createSession();
@@ -86,7 +91,7 @@ public class LiveService {
         }
         String sessionId = session.getSessionId();
         String thumbnailName = DateTime.now() + sessionId;
-        String uploadedURL = null;
+        String uploadedURL;
         try {
             uploadedURL = s3Service.upload(thumbnail, thumbnailName);
         } catch (IOException e) {
@@ -140,7 +145,7 @@ public class LiveService {
                 String recordingId = recording.getId();
                 List<String> recordings = recordingsForSession.getOrDefault(sessionId, new ArrayList<>());
                 recordings.add(recordingId);
-                recordingsForSession.replace(sessionId, recordings);
+                recordingsForSession.put(sessionId, recordings);
                 return recordingId;
             } catch (OpenViduJavaClientException | OpenViduHttpException e) {
                 throw new RuntimeException(e);
@@ -159,10 +164,10 @@ public class LiveService {
     }
 
     @Transactional(readOnly = true)
-    public List<LiveListResponse> getLiveList(Long liveId) {
+    public List<LiveListResponse> getLiveList(LiveListRequest liveListRequest) {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
 
-        Slice<Live> slices = liveReadRepository.searchBySlice(liveId, pageable);
+        Slice<Live> slices = liveReadRepository.searchBySlice(liveListRequest, pageable);
 
         if (slices.isEmpty()) return new ArrayList<>();
 
@@ -219,8 +224,7 @@ public class LiveService {
     @Transactional
     public void removeSession(String sessionId) {
         Optional<Live> live = liveRepository.findBySessionId(sessionId);
-        if (live.isPresent())
-            s3Service.deleteFile(live.get().getThumbnailName());
+        live.ifPresent(value -> s3Service.deleteFile(value.getThumbnailName()));
         liveRepository.deleteBySessionId(sessionId);
     }
 
@@ -263,17 +267,23 @@ public class LiveService {
         for (File file : files4) {
             log.info(file.getName());
         }
-        String videoName = DateTime.now() + request.getRecordingId() + ".mp4";
+        String videoName = System.currentTimeMillis() + request.getRecordingId() + ".mp4";
         String s3Url = s3Service.uploadFromOV(newDir, videoName);
         Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> {
             throw new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND);
         });
         // 썸네일 추가
-        String thumbnailName = "Thumb" + DateTime.now() + request.getRecordingId() + ".JPEG";
+        String thumbnailName = "Thumb" + System.currentTimeMillis() + request.getRecordingId() + ".JPEG";
         String thumbnailURL = s3Service.uploadThumbnailFromOV(newDir, thumbnailName);
-        // 비디오 객체 생성
-        Video video = request.toEntity(s3Url, thumbnailURL, member,videoName);
-        videoRepository.save(video);
-
+        // 비디오 저장
+        UploadVideoRequest uploadVideoRequest = UploadVideoRequest.builder()
+                .shootingDate(LocalDate.now())
+                .level(request.getLevel())
+                .isSuccess(request.getIsSuccess())
+                .color(request.getColor())
+                .gymName(request.getGymName()).build();
+        videoService.uploadVideo(member, s3Url, thumbnailURL, thumbnailName, uploadVideoRequest, videoName);
+        // 영상 누적 통계에서 영상 갯수 올리기
+        recordService.addVideoCount(member, uploadVideoRequest.getIsSuccess());
     }
 }
