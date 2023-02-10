@@ -84,6 +84,7 @@ public class LiveController {
 
     @ApiResponse(responseCode = "200", description = "업로드 성공")
     @PostMapping("/live/uploadRecord")
+    @Operation(description = "프론트에서 사용 x",summary = "프론트에서 사용 X ")
     public BaseResponse<Object> uploadAtOpenviduServer(@RequestBody RecordingUploadAtOpenviduServerRequest request) throws JCodecException, IOException {
 
         liveService.uplooadAtOpenviduServer(request);
@@ -93,7 +94,7 @@ public class LiveController {
     @Operation(description = "이전 녹화 목록 반환 API", summary = "이전 녹화 목록 반환 API")
     @ApiResponse(responseCode = "200", description = "녹화 목록 반환 성공", content = @Content(schema = @Schema(implementation = PrevRecordingListResponse.class)))
     @GetMapping("/live/{sessionId}/recording/list")
-    public BaseResponse<Object> previousRecordingList(@PathVariable String sessionId) {
+    public BaseResponse<List<PrevRecordingListResponse>> previousRecordingList(@PathVariable String sessionId) {
         List<PrevRecordingListResponse> response = liveService.getRecordings(sessionId);
         return new BaseResponse<>(response);
     }
