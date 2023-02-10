@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOV } from "../../stores/streaming/streamingSlice";
 import CommentBtn from "../../components/Common/CommentBtn";
 import ChattingModal from "../../components/Live/ChattingModal";
+import FeedbackModal from "../../components/Streaming/FeedbackModal";
 import {
   FiLogOut,
   FiMic,
@@ -58,6 +59,10 @@ const StreamingLive = () => {
   const [sessionId, setSessionId] = useState("");
   // 녹화 설정 관리
   const [recordId, setRecordId] = useState("");
+
+  // 피드백 설정 관리
+  const [picture, setPicture] = useState();
+  const [feedbackModal, setFeedbackModal] = useState(false);
   let testRecordId = "";
 
   useEffect(() => {
@@ -80,6 +85,10 @@ const StreamingLive = () => {
   useEffect(() => {
     if (session !== undefined) {
       onSessionCreated();
+
+      // feedback signal...
+      onFeedbackSignal();
+
       console.log("세션 존재, 세션: ", session);
       console.log("오픈비두 객체: ", ov);
       session
@@ -263,6 +272,24 @@ const StreamingLive = () => {
     });
   };
 
+  // 피드백 관리
+  const onFeedbackSignal = () => {
+    session.on(`signal:drawingSignal`, (event) => {
+      const data = JSON.parse(event.data);
+      console.log("onFeedbackSignal - data.image :", data.image);
+      setPicture(data.image);
+    });
+  };
+
+  const openFeedback = () => {
+    setFeedbackModal((prev) => !prev);
+  };
+
+  // test
+  useEffect(() => {
+    console.log("messages::", messages);
+  }, [messages]);
+
   const handleStartVideoRecord = () => {
     // 카메라가 꺼져있다면
     if (!isOnVideo) {
@@ -318,6 +345,13 @@ const StreamingLive = () => {
   };
   return (
     <S.Container>
+      {feedbackModal && (
+        <FeedbackModal
+          session={session}
+          picture={picture}
+          closeFeedback={openFeedback}
+        />
+      )}
       <Mobile>
         {isShowChattingModal && (
           <S.DragModal>
@@ -389,15 +423,12 @@ const StreamingLive = () => {
           </S.CommentWrapper>
         </S.SettingWrapper>
         <S.VideoMenu position="bottom">
-          {mainStreamManager !== undefined && (
-            <S.VideoMenuItem>
-              <S.IconWrapper>
-                <FiEdit size="24px" />
-              </S.IconWrapper>
-              피드백
-            </S.VideoMenuItem>
-          )}
-
+          <S.VideoMenuItem onClick={openFeedback}>
+            <S.IconWrapper>
+              <FiEdit size="24px" />
+            </S.IconWrapper>
+            피드백
+          </S.VideoMenuItem>
           <S.VideoMenuItem onClick={handleSetVideo}>
             <S.IconWrapper>
               <FiFilm size="24px" />

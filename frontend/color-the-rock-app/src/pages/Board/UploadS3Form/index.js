@@ -58,17 +58,22 @@ const UploadS3Form = () => {
 
   // 날짜가 바뀔 때마다 영상이 바뀌도록....
   useEffect(() => {
-    // const params = {
-    //   videoId: 0,
-    //   shootingDate: selectDate,
-    //   isSuccess: true,
-    // };
-    // recordApi
-    //   .getALlRecordVideo(params)
-    //   .then((res) => {
-    //     setData(res);
-    //   })
-    //   .catch((err) => {});
+    if (!selectDate) return;
+
+    const params = {
+      videoId: 0,
+      shootingDate: selectDate,
+      isSuccess: true,
+    };
+    recordApi
+      .getAllRecordVideo(params)
+      .then((res) => {
+        console.log("영상불러오기 성공");
+        setData(res);
+      })
+      .catch((err) => {
+        console.log("영상불러오기 실패");
+      });
   }, [selectDate]);
 
   const clickHandler = () => {
@@ -100,8 +105,8 @@ const UploadS3Form = () => {
         <S.ThumbnailList>
           {data.map((item) => (
             <Thumbnail
-              onClick={onClick}
               key={item.id}
+              onClick={onClick}
               id={item.id}
               title={item.title}
               userNickname={item.userNickname}
