@@ -7,12 +7,17 @@ const VideoClip = ({ sessionId, setModalOpen }) => {
   const [isPublisher, setIsPublisher] = useState(true);
   const [data, setData] = useState([]);
 
-  // useEffect(() => {
-  //   streamingApi.getRecordList(sessionId).then((res) => {
-  //     console.log(res);
-  //     setData(res);
-  //   });
-  // });
+  useEffect(() => {
+    streamingApi
+      .getRecordList(sessionId)
+      .then((res) => {
+        console.log("res: ", res);
+        setData(res);
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+      });
+  });
 
   const onClickHandler = () => {
     setModalOpen();
