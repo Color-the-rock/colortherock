@@ -4,6 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.anotherclass.colortherock.domain.live.entity.Live;
 import org.anotherclass.colortherock.domain.live.entity.QLive;
+import org.anotherclass.colortherock.domain.live.request.LiveListRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -25,12 +26,14 @@ public class LiveReadRepository {
 
     QLive live = QLive.live;
 
-    public Slice<Live> searchBySlice(Long liveId, Pageable pageable) {
+    public Slice<Live> searchBySlice(LiveListRequest liveListRequest, Pageable pageable) {
         List<Live> results = queryFactory.selectFrom(live)
                 .where(
-                        ltLiveId(liveId),
+                        ltLiveId(liveListRequest.getLiveId()),
                         live.isPublic.eq(true),
-                        live.isLive.eq(true)
+                        live.isLive.eq(true),
+                        // 암장 검색
+                        checkGymName(liveListRequest.getGymName())
                 )
                 .orderBy(live.id.desc())
                 .limit(pageable.getPageSize() + 1)
@@ -41,6 +44,14 @@ public class LiveReadRepository {
     private BooleanExpression ltLiveId(Long liveId) {
         if(liveId == -1L) return null;
         return live.id.lt(liveId);
+    }
+
+    // 암장 검색을 처리하는 메서드
+    private BooleanExpression checkGymName(String gymNameCond) {
+        if (gymNameCond == null || gymNameCond.isBlank()) {
+            return null;
+        }
+        return live.gymName.contains(gymNameCond);
     }
 
     private Slice<Live> checkLastPage(Pageable pageable, List<Live> results) {
