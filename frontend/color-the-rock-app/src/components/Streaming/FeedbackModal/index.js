@@ -9,24 +9,39 @@ import * as S from "./style";
 
 const chunkSize = 1024 * 1024;
 
-const FeedbackModal = ({ session, picture = null }) => {
+const FeedbackModal = ({ closeFeedback, session, picture = null }) => {
   const canvasRef = createRef(null);
-  const contextRef = useRef(null); // 캔버스의 드로잉 컨텍스트
-  const [isDrawing, setIsDrawing] = useState(false);
+  // const contextRef = useRef(null); // 캔버스의 드로잉 컨텍스트
+  const parentRef = useRef(null);
+  // const [isDrawing, setIsDrawing] = useState(false);
   const [ctx, setCtx] = useState();
-  const [lastX, setLastX] = useState(0);
-  const [lastY, setLastY] = useState(0);
+  // const [lastX, setLastX] = useState(0);
+  // const [lastY, setLastY] = useState(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    canvas.width = document.getElementById("canvas").width;
-    canvas.height = document.getElementById("canvas").height;
     const context = canvas.getContext("2d");
-    context.strokeStyle = "black";
-    context.lineWidth = 2.5;
-    contextRef.current = context;
     setCtx(context);
   }, []);
+
+  useEffect(() => {
+    if (ctx) {
+      const canvas = canvasRef.current;
+      const parent = parentRef.current;
+
+      const resizeCanvas = () => {
+        canvas.width = parent.offsetWidth;
+        canvas.height = parent.offsetHeight;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      };
+
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+      return () => {
+        window.removeEventListener("resize", resizeCanvas);
+      };
+    }
+  }, [ctx]);
 
   useEffect(() => {
     if (picture === null || ctx === null) {
@@ -36,6 +51,12 @@ const FeedbackModal = ({ session, picture = null }) => {
     image.src = picture;
     image.onload = function () {
       ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      // ctx.clearRect(
+      //   0,
+      //   0,
+      //   document.getElementById("canvas").width,
+      //   document.getElementById("canvas").height
+      // );
       ctx.drawImage(
         image,
         0,
@@ -50,23 +71,26 @@ const FeedbackModal = ({ session, picture = null }) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     const rect = canvas.getBoundingClientRect();
+    console.log("rect: ", rect);
     // const x = event.clientX - rect.left;
     // const y = event.clientY - rect.top;
-
     const x = event.clientX;
     const y = event.clientY;
 
-    let radius = 10;
+    // const x = event.clientX - event.offsetX;
+    // const y = event.clientY - event.offsetY;
+
+    console.log("(x, y): ", "(", x, ", ", y + ")");
+    console.log("흠, ", event.clientX, ", ", event.clientY);
+    let radius = 7;
     let startAngle = 0;
     let endAngle = 2 * Math.PI;
     let counterClockwise = false;
     ctx.beginPath();
     ctx.arc(x, y, radius, startAngle, endAngle, counterClockwise);
     ctx.strokeStyle = "#8ED6FF";
-    ctx.lineWidth = 5;
+    ctx.lineWidth = 2;
     ctx.stroke();
-    setLastX(x);
-    setLastY(y);
     sendDrawing();
   };
 
@@ -95,12 +119,19 @@ const FeedbackModal = ({ session, picture = null }) => {
   return (
     <S.ContainerWrap>
       <S.Container>
-        <S.ContentBox>
+        <S.ContentBox ref={parentRef}>
+          <S.ChromeClose
+            onClick={() => {
+              closeFeedback();
+            }}
+          />
           <canvas
             id="canvas"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
             ref={canvasRef}
-            width={200}
-            height={500}
             onPointerDown={startDrawing}
           />
         </S.ContentBox>

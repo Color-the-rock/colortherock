@@ -340,7 +340,13 @@ const StreamingLive = () => {
   };
   return (
     <S.Container>
-      {feedbackModal && <FeedbackModal session={session} picture={picture} />}
+      {feedbackModal && (
+        <FeedbackModal
+          session={session}
+          picture={picture}
+          closeFeedback={openFeedback}
+        />
+      )}
       <Mobile>
         {isShowChattingModal && (
           <S.DragModal>
