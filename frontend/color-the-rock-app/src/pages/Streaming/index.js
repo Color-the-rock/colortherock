@@ -35,7 +35,9 @@ const Streaming = () => {
           navigate(`/streaming/live`);
         }
       })
-      .catch((error) => console.log(error));
+      .catch(() => {
+        alert("이미 종료된 방송입니다.");
+      });
   };
 
   const getAllLiveList = () => {

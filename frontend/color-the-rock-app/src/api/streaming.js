@@ -11,6 +11,8 @@ const streamingApi = {
       },
     }),
 
+  // 라이브 종료 API
+  leaveLiveSession: (sessionId) => api.delete(`/live/${sessionId}`),
   // 라이브 참여 API
   participateLiveSession: (liveId) => api.get(`/live/${liveId}`),
 
@@ -36,7 +38,7 @@ const streamingApi = {
       " recordObject ? ",
       recordObject
     );
-    return api.post(`/live/${sessionId}/recording/end`, recordObject);
+    return api.post(`/live/{sessionId}/recording/end`, recordObject);
   },
 
   // 라이브 기록 저장 API

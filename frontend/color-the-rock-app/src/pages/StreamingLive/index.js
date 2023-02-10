@@ -20,6 +20,7 @@ import {
   FiFilm,
   FiDisc,
   FiLink,
+  FiX,
 } from "react-icons/fi";
 import { Desktop, Mobile } from "../../components/layout/Template";
 import streamingApi from "../../api/streaming";
@@ -28,15 +29,16 @@ const StreamingLive = () => {
   // 기본 설정
   const ov = useSelector((state) => state.streaming.ov);
   const roomInfo = useSelector((state) => state.streaming.info);
+  const nickName = useSelector((state) => state.users.nickName);
   const dispatch = useDispatch();
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [sessionTitle, setSessionTitle] = useState("testTitle");
+  const [userNickName, setUserNickName] = useState("");
   const [connectionId, setConnectionId] = useState("");
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
-  const [userNickName, onChangeUserNickName] = useInput("");
 
   // 세션 종료 관리
   const navigate = useNavigate();
@@ -61,9 +63,15 @@ const StreamingLive = () => {
   useEffect(() => {
     if (ov !== null && ov !== undefined) {
       console.log("ov 있음", ov, token);
+
       setSession(ov.initSession());
     }
   }, []);
+
+  useEffect(() => {
+    setUserNickName(nickName);
+    console.log("nickName:: ", nickName);
+  }, [nickName]);
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
@@ -75,7 +83,7 @@ const StreamingLive = () => {
       console.log("세션 존재, 세션: ", session);
       console.log("오픈비두 객체: ", ov);
       session
-        .connect(token)
+        .connect(token, { clientData: userNickName })
         .then(() => console.log("success Connect"))
         .catch((error) => console.log("error: ", error));
 
@@ -167,21 +175,25 @@ const StreamingLive = () => {
 
   // 비디오 설정 메뉴 관리
   const leaveSession = () => {
-    if (session) {
-      session.disconnect();
-    }
+    streamingApi
+      .leaveLiveSession(sessionId)
+      .then(() => {
+        console.log("라이브 종료 성공");
+        if (session) {
+          session.disconnect();
+        }
 
-    // dispatch ov를 null로 설정
-    dispatch(setOV({}));
-    setSession(undefined);
-    setSubscribers([]);
-    setSessionTitle("SessionA");
-    setMainStreamManager(undefined);
-    setPublisher(undefined);
-
-    // 목록 페이지로 이동
-    alert("방송이 종료되었습니다:)");
-    navigate("/streaming");
+        // dispatch ov를 null로 설정
+        dispatch(setOV({}));
+        setSession(undefined);
+        setSubscribers([]);
+        setSessionTitle("");
+        setMainStreamManager(undefined);
+        setPublisher(undefined);
+        alert("방송이 종료되었습니다:)");
+        navigate("/streaming");
+      })
+      .catch((error) => console.log(error));
   };
 
   const switchCamera = async () => {
@@ -197,8 +209,6 @@ const StreamingLive = () => {
         );
 
         if (newVideoDevice.length > 0) {
-          // Creating a new publisher with specific videoSource
-          // In mobile devices the default and first camera is the front one
           let newPublisher = ov.initPublisher(undefined, {
             videoSource: newVideoDevice[0].deviceId,
             publishAudio: true,
@@ -206,7 +216,6 @@ const StreamingLive = () => {
             mirror: true,
           });
 
-          //newPublisher.once("accessAllowed", () => {
           await session.unpublish(mainStreamManager);
           await session.publish(newPublisher);
 
@@ -242,23 +251,17 @@ const StreamingLive = () => {
     console.log("onSessionCreated!");
     session.on(`signal:signal`, (event) => {
       const msg = JSON.parse(event.data).message;
-
-      console.log("[onSessionCreated]: ", event.from);
+      const userName = JSON.parse(event.from.data).clientData;
 
       // test
       setMessages((prev) =>
         prev.concat({
-          userName: event.from.connectionId,
+          userName: userName,
           text: msg,
         })
       );
     });
   };
-
-  // test
-  useEffect(() => {
-    console.log("messages::", messages);
-  }, [messages]);
 
   const handleStartVideoRecord = () => {
     // 카메라가 꺼져있다면
@@ -269,11 +272,8 @@ const StreamingLive = () => {
 
     if (sessionId === null || sessionId === undefined) return;
 
-    console.log("_session ? ", session, sessionId);
-
-    console.log("connectionId", connectionId);
     const requestBody = {
-      token: connectionId,
+      connectionId: connectionId,
     };
     streamingApi
       .startRecordVideo(sessionId, requestBody)
@@ -296,7 +296,7 @@ const StreamingLive = () => {
 
     console.log("recordId : ", testRecordId);
     const requestBody = {
-      token: connectionId,
+      token: token,
       recordingId: recordId,
     };
 
@@ -336,12 +336,21 @@ const StreamingLive = () => {
       </Mobile>
       <S.OwnerVideoWrapper>
         <S.StreamTitle>{roomInfo.title}</S.StreamTitle>
-        <S.VideoSettingsIcon
-          color="#ffffff"
-          size="24px"
-          onClick={() => setShowSettingModal((prev) => !prev)}
-        />
-        {isShowSettingModal && (
+        {mainStreamManager !== undefined ? (
+          <S.VideoSettingsIcon
+            color="#ffffff"
+            size="24px"
+            onClick={() => setShowSettingModal((prev) => !prev)}
+          />
+        ) : (
+          <S.LeaveSessionButton
+            color="#ffffff"
+            size="24px"
+            onClick={leaveSession}
+          />
+        )}
+
+        {mainStreamManager !== undefined && isShowSettingModal && (
           <S.VideoSettingsMenu>
             <S.VideoSettingsMenuItem onClick={handleSetVideo}>
               {isOnVideo ? <FiVideo size="16px" /> : <FiVideoOff size="16px" />}
@@ -380,26 +389,34 @@ const StreamingLive = () => {
           </S.CommentWrapper>
         </S.SettingWrapper>
         <S.VideoMenu position="bottom">
-          <S.VideoMenuItem onClick={leaveSession}>
-            <S.IconWrapper>
-              <FiEdit size="24px" />
-            </S.IconWrapper>
-            피드백
-          </S.VideoMenuItem>
+          {mainStreamManager !== undefined && (
+            <S.VideoMenuItem>
+              <S.IconWrapper>
+                <FiEdit size="24px" />
+              </S.IconWrapper>
+              피드백
+            </S.VideoMenuItem>
+          )}
+
           <S.VideoMenuItem onClick={handleSetVideo}>
             <S.IconWrapper>
               <FiFilm size="24px" />
             </S.IconWrapper>
             이전 영상
           </S.VideoMenuItem>
-          <S.VideoMenuItem
-            onClick={!isRecordStart ? handleStartVideoRecord : handleQuitRecord}
-          >
-            <S.IconWrapper>
-              <FiDisc size="24px" color={isRecordStart ? "red" : "#ffffff"} />
-            </S.IconWrapper>
-            녹화 시작
-          </S.VideoMenuItem>
+          {mainStreamManager !== undefined && (
+            <S.VideoMenuItem
+              onClick={
+                !isRecordStart ? handleStartVideoRecord : handleQuitRecord
+              }
+            >
+              <S.IconWrapper>
+                <FiDisc size="24px" color={isRecordStart ? "red" : "#ffffff"} />
+              </S.IconWrapper>
+              녹화 시작
+            </S.VideoMenuItem>
+          )}
+
           <S.VideoMenuItem onClick={handleCopyLink}>
             <S.IconWrapper>
               <FiLink size="24px" />
