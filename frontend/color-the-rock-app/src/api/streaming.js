@@ -42,7 +42,10 @@ const streamingApi = {
   },
 
   // 라이브 기록 저장 API
-  saveRecordVideo: (sessionId) => api.post(`/live/${sessionId}/recording/save`),
+  saveRecordVideo: (sessionId, data) =>
+    api.post(`/live/${sessionId}/recording/save`, {
+      data,
+    }),
 };
 
 export default streamingApi;

@@ -25,6 +25,7 @@ import {
 } from "react-icons/fi";
 import { Desktop, Mobile } from "../../components/layout/Template";
 import streamingApi from "../../api/streaming";
+import RecordVideoFormModal from "../../components/Streaming/RecordVideoFormModal";
 
 const StreamingLive = () => {
   // 기본 설정
@@ -59,6 +60,7 @@ const StreamingLive = () => {
   const [sessionId, setSessionId] = useState("");
   // 녹화 설정 관리
   const [recordId, setRecordId] = useState("");
+  const [recordModal, setRecordModal] = useState(false);
 
   // 피드백 설정 관리
   const [picture, setPicture] = useState();
@@ -298,6 +300,13 @@ const StreamingLive = () => {
     });
   };
 
+  // 모달 관리 //
+  // 녹화 모달 관리
+  const openRecord = () => {
+    setRecordModal((prev) => !prev);
+  };
+
+  // 피드백 모달 관리
   const openFeedback = () => {
     setFeedbackModal((prev) => !prev);
   };
@@ -349,6 +358,7 @@ const StreamingLive = () => {
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
           console.log("[quitRecordVideo] statusCode : 200 ", _result);
+          setRecordModal(true);
         }
       })
       .catch((error) => console.log(error));
@@ -367,6 +377,13 @@ const StreamingLive = () => {
           session={session}
           picture={picture}
           closeFeedback={openFeedback}
+        />
+      )}
+      {recordModal && (
+        <RecordVideoFormModal
+          sessionId={sessionId}
+          recordingId={recordId}
+          setModalOpen={openRecord}
         />
       )}
       <Mobile>

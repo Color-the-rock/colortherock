@@ -23,6 +23,7 @@ import { Form, useNavigate } from "react-router-dom";
 import BoardApi from "../../../api/board";
 import streamingApi from "../../../api/streaming";
 import InputComp from "../../../components/Board/InputComp";
+import { useSelector } from "react-redux";
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
@@ -51,10 +52,11 @@ const colorValues = [
   { key: "갈색", value: "갈색" },
   { key: "회색", value: "회색" },
 ];
-// const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
-const RecordVideoFormModal = ({ sessionId, setModalOpen }) => {
+const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
+  const saveTitle = useSelector((state) => state.streaming.info.title);
+  const saveGymName = useSelector((state) => state.streaming.info.gymName);
   const [isSuccess, setIsSuccess] = useState(true);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(saveTitle);
   const [level, setLevel] = useState("");
   const [color, setColor] = useState("");
 
@@ -68,31 +70,26 @@ const RecordVideoFormModal = ({ sessionId, setModalOpen }) => {
   };
 
   const registVideoToS3 = () => {
-    // if (!color || !level || !isSuccess || !video) {
-    //   alert("모든 항목을 채워주세요.");
-    //   return;
-    // }
-    console.log("흠");
+    if (!color || !level || !isSuccess) {
+      alert("모든 항목을 채워주세요.");
+      return;
+    }
+
     const data = {
-      color,
+      recordingId,
+      isSaved: true,
       level,
+      title,
+      gymName: saveGymName,
       isSuccess,
+      color,
     };
     console.log("---------------------------------");
-    console.log("color: ", color);
-    console.log("level: ", level);
-    console.log("isSuccess: ", isSuccess);
-    console.log("video: ", video);
+    console.log(data);
     console.log("---------------------------------");
 
-    const formData = new FormData();
-    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
-
-    formData.append("localSuccessVideoUploadRequest", blob);
-    formData.append("newVideo", video);
-
     streamingApi
-      .postUploadVideo(formData)
+      .saveRecordVideo(sessionId, JSON.stringify(data))
       .then(() => {
         console.log("성공");
         setModalOpen((prev) => !prev);
