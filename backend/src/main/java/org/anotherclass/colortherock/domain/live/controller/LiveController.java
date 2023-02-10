@@ -91,7 +91,7 @@ public class LiveController {
     }
 
     @Operation(description = "이전 녹화 목록 반환 API", summary = "이전 녹화 목록 반환 API")
-    @ApiResponse(responseCode = "200", description = "녹화 목록 반환 성공", content = @Content(schema = @Schema(implementation = LiveListResponse.class)))
+    @ApiResponse(responseCode = "200", description = "녹화 목록 반환 성공", content = @Content(schema = @Schema(implementation = PrevRecordingListResponse.class)))
     @GetMapping("/live/{sessionId}/recording/list")
     public BaseResponse<Object> previousRecordingList(@PathVariable String sessionId) {
         List<PrevRecordingListResponse> response = liveService.getRecordings(sessionId);
