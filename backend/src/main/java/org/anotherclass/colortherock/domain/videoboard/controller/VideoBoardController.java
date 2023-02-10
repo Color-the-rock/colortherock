@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
-import org.anotherclass.colortherock.domain.member.service.MemberService;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.domain.video.request.MySuccessVideoRequest;
@@ -39,7 +38,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/video")
 public class VideoBoardController {
-    private final MemberService memberService;
     private final VideoBoardService videoBoardService;
     private final VideoService videoService;
     private final RecordService recordService;
@@ -58,20 +56,13 @@ public class VideoBoardController {
     @Operation(description = "완등 영상 게시글 올리기(로컬 파일에서 영상 가져오기)", summary = "완등 영상 게시글 올리기(로컬 파일에서 영상 가져오기)")
     @ApiResponse(responseCode = "200", description = "운동 영상 올리기 성공", content = @Content(schema = @Schema(implementation = Long.class)))
     public BaseResponse<Long> uploadSuccessPostFromLocalVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestPart LocalSuccessVideoUploadRequest localSuccessVideoUploadRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
-        Member member = memberService.getMember(memberDetails);
-        // S3 영상 저장 후 URL 얻어오기
-        String videoName = videoService.extractValidVideoName(member, newVideo);
-        String s3URL = s3Service.upload(newVideo, videoName);
-        // 썸네일 이미지 생성하여 S3 저장
-        String thumbnailName = videoService.extractValidThumbName(member);
-        String thumbnailURL = s3Service.uploadThumbnail(newVideo, thumbnailName);
-        // request와 URL을 통해 DB에 저장
-        Long videoId = videoService.uploadSuccessVideo(member,videoName, s3URL,thumbnailName, thumbnailURL, localSuccessVideoUploadRequest);
+        Long videoId = videoService.uploadSuccessVideo(memberDetails, newVideo, localSuccessVideoUploadRequest);
         // 운동 게시글 업로드
         SuccessVideoUploadRequest request = SuccessVideoUploadRequest.builder()
                 .title(localSuccessVideoUploadRequest.getTitle())
                 .videoId(videoId)
                 .build();
+        Member member = memberDetails.getMember();
         Long videoBoardId = videoBoardService.uploadMySuccessVideoPost(member.getId(), request);
         // 운동기록 통계 카운트 증가
         recordService.addVideoCount(member, true);

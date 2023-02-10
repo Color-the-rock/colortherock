@@ -8,13 +8,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
-import org.anotherclass.colortherock.domain.member.service.MemberService;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
 import org.anotherclass.colortherock.domain.memberrecord.response.*;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
-import org.anotherclass.colortherock.domain.video.response.DeletedVideoResponse;
+import org.anotherclass.colortherock.domain.video.dto.DeletedVideoDto;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
@@ -39,7 +38,6 @@ import java.util.List;
 @RequestMapping("/api/record")
 public class RecordController {
 
-    private final MemberService memberService;
     private final RecordService recordService;
     private final S3Service s3Service;
     private final VideoService videoService;
@@ -121,17 +119,9 @@ public class RecordController {
     @PostMapping(value = "/video", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails
             , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
-        Member member = memberService.getMember(memberDetails);
-        // S3 영상 저장 후 URL 얻어오기
-        // 영상 식별을 위해 파일 앞에 현재 시각 추가
-        String videoName = videoService.extractValidVideoName(member, newVideo);
-        String s3URL = s3Service.upload(newVideo, videoName);
-        // 썸네일 이미지 생성하여 S3 저장
-        String thumbnailName = videoService.extractValidThumbName(member);
-        String thumbnailURL = s3Service.uploadThumbnail(newVideo, thumbnailName);
-        // request와 URL을 통해 DB에 저장
-        videoService.uploadVideo(member, s3URL, thumbnailURL, thumbnailName, uploadVideoRequest, videoName);
+        videoService.uploadMyVideo(memberDetails, newVideo, uploadVideoRequest);
         // 영상 누적 통계에서 영상 갯수 올리기
+        Member member = memberDetails.getMember();
         recordService.addVideoCount(member, uploadVideoRequest.getIsSuccess());
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
@@ -149,11 +139,11 @@ public class RecordController {
     public BaseResponse<Void> deleteVideo(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable @Positive Long videoId) {
         Member member = memberDetails.getMember();
         // DB에서 해당 영상 삭제
-        DeletedVideoResponse deletedVideoResponse = videoService.deleteVideo(member, videoId);
+        DeletedVideoDto deletedVideoDto = videoService.deleteVideo(member, videoId);
         // S3에서 해당 영상 삭제
-        s3Service.deleteFile(deletedVideoResponse.getVideoName());
+        s3Service.deleteFile(deletedVideoDto.getVideoName());
         // 영상 누적 통계에서 영상 갯수 줄이기
-        recordService.subVideoCount(member, deletedVideoResponse.getIsVideoSuccess());
+        recordService.subVideoCount(member, deletedVideoDto.getIsVideoSuccess());
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 
