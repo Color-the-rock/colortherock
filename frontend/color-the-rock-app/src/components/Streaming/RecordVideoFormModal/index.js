@@ -24,26 +24,31 @@ import BoardApi from "../../../api/board";
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
-  { key: "LEVEL1", value: "level-1" },
-  { key: "LEVEL2", value: "level-2" },
-  { key: "LEVEL3", value: "level-3" },
-  { key: "LEVEL4", value: "level-4" },
-  { key: "LEVEL5", value: "level-5" },
-  { key: "LEVEL6", value: "level-6" },
-  { key: "LEVEL7", value: "level-7" },
+  { key: "LEVEL1", value: "1" },
+  { key: "LEVEL2", value: "2" },
+  { key: "LEVEL3", value: "3" },
+  { key: "LEVEL4", value: "4" },
+  { key: "LEVEL5", value: "5" },
+  { key: "LEVEL6", value: "6" },
+  { key: "LEVEL7", value: "7" },
 ];
 const colorValues = [
   { key: "난이도 색상", value: "" },
-  { key: "빨강", value: "red" },
-  { key: "주황", value: "orange" },
-  { key: "노랑", value: "yellow" },
-  { key: "연두", value: "green" },
-  { key: "하늘", value: "skyBlue" },
-  { key: "남색", value: "indigo" },
-  { key: "보리", value: "purple" },
-  { key: "검정", value: "black" },
+  { key: "흰색", value: "흰색" },
+  { key: "빨강", value: "빨강" },
+  { key: "주황", value: "주황" },
+  { key: "노랑", value: "노랑" },
+  { key: "연두", value: "연두" },
+  { key: "초록", value: "초록" },
+  { key: "하늘", value: "하늘" },
+  { key: "파랑", value: "파랑" },
+  { key: "남색", value: "남색" },
+  { key: "보라", value: "보라" },
+  { key: "핑크", value: "핑크" },
+  { key: "검정", value: "검정" },
+  { key: "갈색", value: "갈색" },
+  { key: "회색", value: "회색" },
 ];
-
 const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
   const [isSuccess, setIsSuccess] = useState(true);
   const [level, setLevel] = useState("빨강");
