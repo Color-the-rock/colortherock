@@ -16,7 +16,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.6);
 `;
 
 export const ContentBox = styled.span`

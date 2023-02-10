@@ -34,26 +34,6 @@ const videoConstraints = {
 };
 
 const StreamingForm = () => {
-  /////////////////////////// test ////////////////////////////////
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalOpen2, setModalOpen2] = useState(false);
-  const [modalOpen3, setModalOpen3] = useState(false);
-
-  const [token, setToken] = useState("");
-
-  const handleModalStateChange = () => {
-    setModalOpen((prev) => !prev);
-  };
-
-  const handleModalStateChange2 = () => {
-    setModalOpen2((prev) => !prev);
-  };
-
-  const handleModalStateChange3 = () => {
-    setModalOpen3((prev) => !prev);
-  };
-  //////////////////////////////////////////////////////////////////
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -76,12 +56,12 @@ const StreamingForm = () => {
   };
 
   const submitHandler = () => {
-    // if (!isPublic || !title || !gymName || !imgSrc) {
-    //   alert("모든 항목을 채워주세요.");
-    //   return;
-    // }
+    if (!isPublic || !title || !gymName || !imgSrc) {
+      alert("모든 항목을 채워주세요.");
+      return;
+    }
     joinSession();
-    navigate("/streaming/live");
+    navigate(`/streaming/live`);
   };
 
   // openVidu 설정
@@ -121,10 +101,6 @@ const StreamingForm = () => {
 
     formData.append("createLiveRequest", blob);
     formData.append("thumbnail", base64toFile(imgSrc, "thumbnail"));
-    console.log("thumbnail", base64toFile(imgSrc, "thumbnail").type);
-
-    console.log("createdSession! formData", formData.get("createLiveRequest"));
-    console.log("createdSession! formData", formData.get("thumbnail"));
 
     streamingApi
       .createLiveSession(formData)
@@ -146,28 +122,6 @@ const StreamingForm = () => {
 
   return (
     <S.Container>
-      {/* ---------------------모달 테스트 중입니다.-------------------- */}
-      {modalOpen && (
-        <RecordVideoFormModal
-          onClick={handleModalStateChange}
-          setModalOpen={setModalOpen}
-        />
-      )}
-      {modalOpen2 && (
-        <FeedbackModal
-          onClick={handleModalStateChange2}
-          setModalOpen={setModalOpen2}
-        />
-      )}
-      {modalOpen3 && (
-        <RecordVideoFormModal
-          onClick={handleModalStateChange3}
-          setModalOpen={setModalOpen3}
-        />
-      )}
-
-      {/* ------------------------------------------------------------- */}
-
       <S.ContentWrap>
         <S.Content>
           <Webcam
@@ -196,7 +150,6 @@ const StreamingForm = () => {
             <S.ArrowLeftBtnWrap onClick={clickHandler}>
               <FiArrowLeft />
             </S.ArrowLeftBtnWrap>
-
             <S.ComponenentWrap>
               <S.SettingComponentWrap onClick={ChangeSettingMode}>
                 <BoardSubTitle text="방송 설정" />
@@ -207,7 +160,6 @@ const StreamingForm = () => {
                 )}
               </S.SettingComponentWrap>
             </S.ComponenentWrap>
-
             {onSetting && (
               <S.AddPadding>
                 <S.ComponenentWrap>
@@ -233,42 +185,6 @@ const StreamingForm = () => {
                     setLocation={setGymName}
                     opacity="70"
                   />
-                </S.ComponenentWrap>
-
-                <S.ComponenentWrap>
-                  <button
-                    onClick={handleModalStateChange}
-                    style={{
-                      fontSize: "20px",
-                      color: "white",
-                      border: "1px solid white",
-                      margin: "1rem",
-                    }}
-                  >
-                    영상 등록 모달
-                  </button>
-                  <button
-                    onClick={handleModalStateChange2}
-                    style={{
-                      fontSize: "20px",
-                      color: "white",
-                      border: "1px solid white",
-                      margin: "1rem",
-                    }}
-                  >
-                    피드백 모달
-                  </button>
-                  <button
-                    onClick={handleModalStateChange3}
-                    style={{
-                      fontSize: "20px",
-                      color: "white",
-                      border: "1px solid white",
-                      margin: "1rem",
-                    }}
-                  >
-                    영상 수정 모달
-                  </button>
                 </S.ComponenentWrap>
               </S.AddPadding>
             )}
