@@ -85,7 +85,7 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
     console.log("---------------------------------");
 
     streamingApi
-      .saveRecordVideo(sessionId, JSON.stringify(data))
+      .saveRecordVideo(sessionId, data)
       .then(() => {
         console.log("성공");
         setModalOpen();

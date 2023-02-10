@@ -58,7 +58,8 @@ instance.interceptors.response.use(
       // refreshToken이 있는 경우에만 재요청 시도
       if (refreshToken) {
         // token refresh 요청
-        const token = sessionStorage.getItem("token");
+        console.log("토큰재발급");
+        const token = sessionStorage.getItem("accessToken");
         const data = await axios.post(
           `https://colortherock.com/refresh`, // token refresh api
           {
