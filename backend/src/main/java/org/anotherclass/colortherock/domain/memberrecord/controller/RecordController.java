@@ -8,17 +8,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
-import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.member.service.MemberService;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
-import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
-import org.anotherclass.colortherock.domain.memberrecord.exception.WrongMemberException;
 import org.anotherclass.colortherock.domain.memberrecord.response.*;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
-import org.anotherclass.colortherock.domain.video.entity.Video;
-import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
-import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
+import org.anotherclass.colortherock.domain.video.response.DeletedVideoResponse;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
@@ -43,11 +39,10 @@ import java.util.List;
 @RequestMapping("/api/record")
 public class RecordController {
 
+    private final MemberService memberService;
     private final RecordService recordService;
     private final S3Service s3Service;
     private final VideoService videoService;
-    private final VideoRepository videoRepository;
-    private final MemberRepository memberRepository;
 
     /**
      * 전체 운동 영상 색상 별 통계 조회
@@ -126,10 +121,7 @@ public class RecordController {
     @PostMapping(value = "/video", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails
             , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
-        Long memberId = memberDetails.getMember().getId();
-        Member member = memberRepository.findById(memberId).orElseThrow(
-                UserNotFoundException::new
-        );
+        Member member = memberService.getMember(memberDetails);
         // S3 영상 저장 후 URL 얻어오기
         // 영상 식별을 위해 파일 앞에 현재 시각 추가
         String videoName = videoService.extractValidVideoName(member, newVideo);
@@ -156,18 +148,12 @@ public class RecordController {
     @DeleteMapping("/video/{videoId}")
     public BaseResponse<Void> deleteVideo(@AuthenticationPrincipal MemberDetails memberDetails, @PathVariable @Positive Long videoId) {
         Member member = memberDetails.getMember();
-        // 현재 로그인한 member와 영상의 주인이 일치하는 지 확인
-        Video video = videoRepository.findById(videoId)
-                .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND));
-        if (member.getId().longValue() != video.getMember().getId().longValue())
-            throw new WrongMemberException(GlobalErrorCode.NOT_VIDEO_OWNER);
-        // S3에서 해당 영상 삭제
-        String videoName = video.getVideoName();
-        s3Service.deleteFile(videoName);
         // DB에서 해당 영상 삭제
-        videoService.deleteVideo(videoId);
+        DeletedVideoResponse deletedVideoResponse = videoService.deleteVideo(member, videoId);
+        // S3에서 해당 영상 삭제
+        s3Service.deleteFile(deletedVideoResponse.getVideoName());
         // 영상 누적 통계에서 영상 갯수 줄이기
-        recordService.subVideoCount(member, video.getIsSuccess());
+        recordService.subVideoCount(member, deletedVideoResponse.getIsVideoSuccess());
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 

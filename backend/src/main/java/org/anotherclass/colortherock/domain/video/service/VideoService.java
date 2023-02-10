@@ -2,14 +2,17 @@ package org.anotherclass.colortherock.domain.video.service;
 
 import lombok.AllArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.memberrecord.exception.WrongMemberException;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.exception.NotVideoExtensionException;
 import org.anotherclass.colortherock.domain.video.exception.VideoFileNameHasNotExtensionException;
+import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
 import org.anotherclass.colortherock.domain.video.repository.VideoReadRepository;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.request.MySuccessVideoRequest;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
+import org.anotherclass.colortherock.domain.video.response.DeletedVideoResponse;
 import org.anotherclass.colortherock.domain.videoboard.request.LocalSuccessVideoUploadRequest;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.data.domain.Pageable;
@@ -75,8 +78,16 @@ public class VideoService {
     }
 
     @Transactional
-    public void deleteVideo(Long videoId) {
+    public DeletedVideoResponse deleteVideo(Member member, Long videoId) {
+        // 현재 로그인한 member와 영상의 주인이 일치하는 지 확인
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND));
+        String videoName = video.getVideoName();
+        Boolean isVideoSuccess = video.getIsSuccess();
+        if (member.getId().longValue() != video.getMember().getId().longValue())
+            throw new WrongMemberException(GlobalErrorCode.NOT_VIDEO_OWNER);
         videoRepository.deleteById(videoId);
+        return new DeletedVideoResponse(videoName, isVideoSuccess);
     }
 
     public String extractValidVideoName(Member member, MultipartFile newVideo) {

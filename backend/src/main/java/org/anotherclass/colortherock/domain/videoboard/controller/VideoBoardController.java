@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
+import org.anotherclass.colortherock.domain.member.service.MemberService;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.domain.video.request.MySuccessVideoRequest;
@@ -38,7 +39,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/video")
 public class VideoBoardController {
-
+    private final MemberService memberService;
     private final VideoBoardService videoBoardService;
     private final VideoService videoService;
     private final RecordService recordService;
@@ -57,7 +58,7 @@ public class VideoBoardController {
     @Operation(description = "완등 영상 게시글 올리기(로컬 파일에서 영상 가져오기)", summary = "완등 영상 게시글 올리기(로컬 파일에서 영상 가져오기)")
     @ApiResponse(responseCode = "200", description = "운동 영상 올리기 성공", content = @Content(schema = @Schema(implementation = Long.class)))
     public BaseResponse<Long> uploadSuccessPostFromLocalVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestPart LocalSuccessVideoUploadRequest localSuccessVideoUploadRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
-        Member member = memberDetails.getMember();
+        Member member = memberService.getMember(memberDetails);
         // S3 영상 저장 후 URL 얻어오기
         String videoName = videoService.extractValidVideoName(member, newVideo);
         String s3URL = s3Service.upload(newVideo, videoName);
