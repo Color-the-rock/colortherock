@@ -11,12 +11,15 @@ const Intro = () => {
   const fadeInBoard = useScrollFadeIn();
   const fadeIntro = useScrollFadeIn();
   const handleBackToTop = () => {
-    let container = document.getElementById("container");
-    container.scrollTo(0, 0);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
-    <S.Container id="container">
+    <S.Container>
       <S.ContentWrapper {...fadeIntro}>
         <Content />
       </S.ContentWrapper>
@@ -29,9 +32,7 @@ const Intro = () => {
       <S.ContentWrapper {...fadeInRecord}>
         <RecordContent />
       </S.ContentWrapper>
-      <S.BackToTop id="back-to-top" onClick={handleBackToTop}>
-        올라가
-      </S.BackToTop>
+      <S.BackToTop id="back-to-top" onClick={handleBackToTop} />
     </S.Container>
   );
 };

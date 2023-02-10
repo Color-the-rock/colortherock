@@ -18,7 +18,7 @@ export const InputContent = styled.input`
   border: none;
   width: 100%;
   height: 100%;
-  padding: 16px;
+  padding: 0 1rem;
   border-radius: 20px;
   /* min-width: 280px; */
   background-color: var(--color-background);

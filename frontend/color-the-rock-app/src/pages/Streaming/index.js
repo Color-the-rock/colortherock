@@ -14,6 +14,7 @@ const Streaming = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((state) => state.streaming.userOpenViduToken);
+  const isLogin = useSelector((state) => state.users.isLogin);
   const [result, setResult] = useState([]);
 
   // openVidu 설정
@@ -34,7 +35,9 @@ const Streaming = () => {
           navigate(`/streaming/live`);
         }
       })
-      .catch((error) => console.log(error));
+      .catch(() => {
+        alert("이미 종료된 방송입니다.");
+      });
   };
 
   const getAllLiveList = () => {
@@ -47,6 +50,14 @@ const Streaming = () => {
         }
       })
       .catch((error) => console.log(error));
+  };
+
+  const handleOnClickCreateLive = () => {
+    if (isLogin) {
+      navigate("/streaming/form");
+    } else {
+      alert("로그인 후, 이용해주세요!");
+    }
   };
 
   useEffect(() => {
@@ -66,17 +77,6 @@ const Streaming = () => {
         도전 중인 등반을 보고 실시간으로 피드백해줘요!
       </S.Description>
       <SearchBar />
-      {/* list 
-       {
-      "id": 7,
-      "title": "string",
-      "memberName": "닉네임1",
-      "memberId": 2,
-      "gymName": "string",
-      "sessionId": "ses_DNufxCA9vZ",
-      "participantNum": 0
-    },
-      */}
       {result && result.length > 0 ? (
         <S.ThumbnailList>
           {result.map((item) => (
@@ -86,7 +86,7 @@ const Streaming = () => {
               title={item.title}
               userNickname={item.memberName}
               gymName={item.gymName}
-              imgUrl={item.imgUrl}
+              imgUrl={item.thumbnailUrl}
               isLive={true}
               participantNum={item.participantNum}
               onClick={handleParticipateSession}
@@ -96,7 +96,7 @@ const Streaming = () => {
       ) : (
         <S.Message>진행중인 방송이 없어요!</S.Message>
       )}
-      <S.LiveButton to="/streaming/form">
+      <S.LiveButton onClick={handleOnClickCreateLive}>
         <HiOutlineVideoCamera size="24px" color="#C250D6" />
       </S.LiveButton>
     </S.Container>

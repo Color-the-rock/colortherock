@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { HiOutlineDotsVertical } from "react-icons/hi";
+import { FiX } from "react-icons/fi";
 
 export const InputWrapper = styled.div`
   display: flex;
@@ -126,6 +127,18 @@ export const StreamTitle = styled.h1`
 `;
 
 export const VideoSettingsIcon = styled(HiOutlineDotsVertical)`
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: transparent;
+  z-index: 100;
+  padding: 0.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+`;
+
+export const LeaveSessionButton = styled(FiX)`
   position: absolute;
   top: 16px;
   right: 16px;

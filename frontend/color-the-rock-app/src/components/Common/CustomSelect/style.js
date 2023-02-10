@@ -5,7 +5,6 @@ export const Container = styled.div`
   border-radius: 10px;
   color: var(--color-tertiary);
   background-color: transparent;
-  /* min-width: 155px; */
 `;
 
 export const SelectBox = styled.div`
@@ -48,7 +47,7 @@ export const SelectOption = styled.ul`
   border-radius: 8px;
   background: var(--color-background);
   color: #ffffff;
-  transition: 0.2s ease-in;
+  transition: 0.1s ease-in;
   overflow: scroll;
   -ms-overflow-style: none;
   ::-webkit-scrollbar {

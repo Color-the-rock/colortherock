@@ -147,7 +147,7 @@ const Record = () => {
                   />
                   실패영상
                 </S.RadioLabel>
-                <S.UploadButton>
+                <S.UploadButton to="/record/form">
                   <S.UploadIcon size="20px" color="#ffffff" />
                   업로드
                 </S.UploadButton>

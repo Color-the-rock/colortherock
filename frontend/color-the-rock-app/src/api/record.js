@@ -5,7 +5,12 @@ export const recordApi = {
   // 날짜별 운동 기록 색상 별 조회
 
   // 로컬 영상 개인 기록 업로드 API
-  uploadLocalVideo: () => api.post(`/record/video`),
+  uploadLocalVideo: (formData) =>
+    api.post(`/record/video`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
 
   // 날짜별 성공 및 실패 영상 목록 API
   getAllRecordVideo: ({ videoId, shootingDate, isSuccess }) =>
@@ -18,6 +23,7 @@ export const recordApi = {
 
   // 영상 재생을 위한 영상 상세 정보 조회
   getOneRecordVideo: (videoId) => api.get(`/record/video/${videoId}`),
+
   // 전체 운동 기록 누적 통계 조회 API
   getTotalStatistics: () => api.get(`/record/total`),
 
