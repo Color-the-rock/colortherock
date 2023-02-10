@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -233,41 +232,15 @@ public class LiveService {
         WebClient webClient = WebClient.create();
         webClient
                 .post()
-                .uri("http://localhost:8080/api/live/uploadRecord")
+                .uri("https://colortherock.com/api/live/uploadRecord")
                 .bodyValue(new RecordingUploadAtOpenviduServerRequest(request, memberDetails.getMember().getId()))
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+                .retrieve();
     }
 
     @Transactional
     public void uplooadAtOpenviduServer(RecordingUploadAtOpenviduServerRequest request) throws IOException, JCodecException {
         String newDir = recordingPath + "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".mp4";
-        Path path = Paths.get("/");
-        File[] files = path.toFile().listFiles();
-        assert files != null;
-        for (File file : files) {
-            log.info(file.getName());
-        }
-        Path path2 = Paths.get("/opt");
-        File[] files2 = path2.toFile().listFiles();
-        assert files2 != null;
-        for (File file : files2) {
-            log.info(file.getName());
-        }
-        Path path3 = Paths.get("/opt/openvidu");
-        File[] files3 = path3.toFile().listFiles();
-        assert files3 != null;
-        for (File file : files3) {
-            log.info(file.getName());
-        }
-        Path path4 = Paths.get("/opt/openvidu/recordings");
-        File[] files4 = path4.toFile().listFiles();
-        assert files4 != null;
-        for (File file : files4) {
-            log.info(file.getName());
-        }
-        String videoName = System.currentTimeMillis() + request.getRecordingId() + ".mp4";
+        String videoName = DateTime.now() + request.getRecordingId() + ".mp4";
         String s3Url = s3Service.uploadFromOV(newDir, videoName);
         Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> {
             throw new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND);
