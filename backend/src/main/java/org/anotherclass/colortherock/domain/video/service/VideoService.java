@@ -2,22 +2,30 @@ package org.anotherclass.colortherock.domain.video.service;
 
 import lombok.AllArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
+import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
+import org.anotherclass.colortherock.domain.member.exception.MemberNotFoundException;
+import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.memberrecord.exception.WrongMemberException;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.exception.NotVideoExtensionException;
 import org.anotherclass.colortherock.domain.video.exception.VideoFileNameHasNotExtensionException;
+import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
 import org.anotherclass.colortherock.domain.video.repository.VideoReadRepository;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.request.MySuccessVideoRequest;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
+import org.anotherclass.colortherock.domain.video.dto.DeletedVideoDto;
 import org.anotherclass.colortherock.domain.videoboard.request.LocalSuccessVideoUploadRequest;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
+import org.jcodec.api.JCodecException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,20 +33,46 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class VideoService {
+    private final S3Service s3Service;
+    private final MemberRepository memberRepository;
     private final VideoRepository videoRepository;
     private final VideoReadRepository videoReadRepository;
 
     private final Integer PAGE_SIZE = 15;
 
-    // 마이페이지에서 동영상 업로드
+    // 로컬에서 영상게시판 통해 동영상 올리기
     @Transactional
-    public void uploadVideo(Member member, String s3URL, String thumbnailURL, String thumbnailName, UploadVideoRequest request, String videoName) {
+    public Long uploadSuccessVideo(MemberDetails memberDetails, MultipartFile newVideo, LocalSuccessVideoUploadRequest request) throws IOException, JCodecException {
+        Member member = memberRepository.findById(memberDetails.getMember().getId())
+                .orElseThrow(() -> new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND));
+        // S3 영상 저장 후 URL 얻어오기
+        String videoName = extractValidVideoName(member, newVideo);
+        String s3URL = s3Service.upload(newVideo, videoName);
+        // 썸네일 이미지 생성하여 S3 저장 후 URL 얻어오기
+        String thumbnailName = extractValidThumbName(member);
+        String thumbnailURL = s3Service.uploadThumbnail(newVideo, thumbnailName);
+        // request와 URL, name 을 DB에 저장
+        return saveSuccessVideo(member, videoName, s3URL,thumbnailName, thumbnailURL, request);
+    }
+
+    // 마이페이지에서 동영상 올리기
+    @Transactional
+    public void uploadMyVideo(MemberDetails memberDetails, MultipartFile newVideo, UploadVideoRequest request) throws IOException, JCodecException {
+        Member member = memberRepository.findById(memberDetails.getMember().getId())
+                .orElseThrow(() -> new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND));
+        // S3 영상 저장 후 URL 얻어오기
+        String videoName = extractValidVideoName(member, newVideo);
+        String s3URL = s3Service.upload(newVideo, videoName);
+        // 썸네일 이미지 생성하여 S3 저장 후 URL 얻어오기
+        String thumbnailName = extractValidThumbName(member);
+        String thumbnailURL = s3Service.uploadThumbnail(newVideo, thumbnailName);
         videoRepository.save(request.toEntity(member, s3URL, thumbnailURL, videoName, thumbnailName, false));
     }
 
+
     // 완등 영상 게시판에서 동영상 업로드
     @Transactional
-    public Long uploadSuccessVideo(Member member, String videoName, String s3URL, String thumbnailName, String thumbnailURL, LocalSuccessVideoUploadRequest request) {
+    public Long saveSuccessVideo(Member member, String videoName, String s3URL, String thumbnailName, String thumbnailURL, LocalSuccessVideoUploadRequest request) {
         Video newVideo = Video.builder()
                 .shootingDate(request.getShootingTime())
                 .level(request.getLevel())
@@ -75,8 +109,16 @@ public class VideoService {
     }
 
     @Transactional
-    public void deleteVideo(Long videoId) {
+    public DeletedVideoDto deleteVideo(Member member, Long videoId) {
+        // 현재 로그인한 member와 영상의 주인이 일치하는 지 확인
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new VideoNotFoundException(GlobalErrorCode.VIDEO_NOT_FOUND));
+        String videoName = video.getVideoName();
+        Boolean isVideoSuccess = video.getIsSuccess();
+        if (member.getId().longValue() != video.getMember().getId().longValue())
+            throw new WrongMemberException(GlobalErrorCode.NOT_VIDEO_OWNER);
         videoRepository.deleteById(videoId);
+        return new DeletedVideoDto(videoName, isVideoSuccess);
     }
 
     public String extractValidVideoName(Member member, MultipartFile newVideo) {

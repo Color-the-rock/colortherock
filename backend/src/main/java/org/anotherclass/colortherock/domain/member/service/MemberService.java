@@ -2,8 +2,11 @@ package org.anotherclass.colortherock.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
+
+import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.exception.AccessDeniedException;
 import org.anotherclass.colortherock.domain.member.exception.IncorrectAdminInfoException;
+import org.anotherclass.colortherock.domain.member.exception.MemberNotFoundException;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.member.request.LoginInfo;
 import org.anotherclass.colortherock.domain.member.request.MemberSignUpRequest;
@@ -14,6 +17,7 @@ import org.anotherclass.colortherock.global.security.jwt.RefreshToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -34,7 +38,7 @@ public class MemberService {
     private String adminPassword;
 
     public String adminLogin(LoginInfo loginInfo) {
-        if(!adminId.equals(loginInfo.getId()) || !adminPassword.equals(loginInfo.getPassword())) {
+        if (!adminId.equals(loginInfo.getId()) || !adminPassword.equals(loginInfo.getPassword())) {
             throw new IncorrectAdminInfoException();
         }
         return "Bearer " + jwtTokenUtils.createTokens(loginInfo.getId(), List.of(() -> "ROLE_ADMIN"));
@@ -52,6 +56,13 @@ public class MemberService {
         String token = "Bearer " + jwtTokenUtils.createTokens(save, List.of(new SimpleGrantedAuthority("ROLE_USER")));
         RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(token);
         return new MemberSignUpResponse(save.getId(), save.getEmail(), save.getRegistrationId(), save.getNickname(), refreshToken.getAccessToken(), refreshToken.getRefreshToken());
+    }
+
+    @Transactional(readOnly = true)
+    public Member getMember(MemberDetails memberDetails) {
+        Member member = memberRepository.findById(memberDetails.getMember().getId())
+                .orElseThrow(() -> new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND));
+        return member;
     }
 
     public boolean duplicateNickname(String nickname) {

@@ -16,8 +16,6 @@ public class MyCommentListResponse {
     private Long commentId;
     @Schema(description = "게시글 id")
     private Long videoBoardId;
-    @Schema(description = "닉네임")
-    private String nickname;
     @Schema(description = "게시글 제목")
     private String title;
     @Schema(description = "댓글 내용")

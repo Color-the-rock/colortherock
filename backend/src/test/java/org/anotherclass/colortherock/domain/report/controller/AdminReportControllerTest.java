@@ -25,7 +25,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.util.NestedServletException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -127,15 +126,11 @@ class AdminReportControllerTest extends IntegrationTest {
     @Test
     @DisplayName("(관리자 미인증시) 신고된 영상 불러오기 실패")
     void failToGetReportPost() throws Exception {
-        try {
-            mockMvc.perform(
-                    get(url)
-                            .contentType(MediaType.APPLICATION_JSON)
-            ).andDo(print());
-            fail("허용되지 않은 사용자입니다");
-        } catch (NestedServletException e) {
-            assertTrue(e.getCause() instanceof GlobalBaseException);
-        }
+        mockMvc.perform(
+                        get(url)
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andDo(print())
+                .andExpect(jsonPath("$.status", is(401)));
     }
 
     @Test
@@ -144,16 +139,12 @@ class AdminReportControllerTest extends IntegrationTest {
         Member member = memberRepository.findById(memberIds.get(0))
                 .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.USER_NOT_FOUND));
         tokenForUser = token = TOKEN_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
-        try {
-            mockMvc.perform(
-                    get(url)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .header(HttpHeaders.AUTHORIZATION, tokenForUser)
-            ).andDo(print());
-            fail("허용되지 않은 사용자입니다");
-        } catch (NestedServletException e) {
-            assertTrue(e.getCause() instanceof GlobalBaseException);
-        }
+        mockMvc.perform(
+                        get(url)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header(HttpHeaders.AUTHORIZATION, tokenForUser)
+                ).andDo(print())
+                .andExpect(jsonPath("$.status", is(401)));
     }
 
     @Test
