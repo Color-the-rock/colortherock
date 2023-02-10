@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -249,7 +250,17 @@ public class LiveService {
         });
         // 썸네일 추가
         String thumbnailName = "Thumb" + System.currentTimeMillis() + request.getRecordingId() + ".JPEG";
+        File file = new File(recordingPath + "/" + request.getRecordingId());
+        File[] files = file.listFiles();
+        for (File file1 : files) {
+            log.info(file1.getAbsolutePath());
+        }
         String thumbnailURL = s3Service.uploadThumbnailFromOV(newDir, thumbnailName);
+        file = new File(recordingPath + "/" + request.getRecordingId());
+        files = file.listFiles();
+        for (File file1 : files) {
+            log.info(file1.getAbsolutePath());
+        }
         // 비디오 저장
         UploadVideoRequest uploadVideoRequest = UploadVideoRequest.builder()
                 .shootingDate(LocalDate.now())
@@ -257,7 +268,13 @@ public class LiveService {
                 .isSuccess(request.getIsSuccess())
                 .color(request.getColor())
                 .gymName(request.getGymName()).build();
+
         videoService.uploadVideo(member, s3Url, thumbnailURL, thumbnailName, uploadVideoRequest, videoName);
+        file = new File(recordingPath + "/" + request.getRecordingId());
+        files = file.listFiles();
+        for (File file1 : files) {
+            log.info(file1.getAbsolutePath());
+        }
         // 영상 누적 통계에서 영상 갯수 올리기
         recordService.addVideoCount(member, uploadVideoRequest.getIsSuccess());
     }
