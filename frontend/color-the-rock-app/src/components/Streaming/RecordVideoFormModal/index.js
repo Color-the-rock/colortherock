@@ -21,6 +21,8 @@ import RegistBtn from "../../Board/RegistBtn";
 import { registfuc } from "../../../api/streaming";
 import { Form, useNavigate } from "react-router-dom";
 import BoardApi from "../../../api/board";
+import streamingApi from "../../../api/streaming";
+import InputComp from "../../../components/Board/InputComp";
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
@@ -49,12 +51,15 @@ const colorValues = [
   { key: "갈색", value: "갈색" },
   { key: "회색", value: "회색" },
 ];
-const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
+// const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
+const RecordVideoFormModal = ({ sessionId, setModalOpen }) => {
   const [isSuccess, setIsSuccess] = useState(true);
-  const [level, setLevel] = useState("빨강");
-  const [color, setColor] = useState("초록");
-  console.log("level: ", level);
-  console.log("color: ", color);
+  const [title, setTitle] = useState("");
+  const [level, setLevel] = useState("");
+  const [color, setColor] = useState("");
+
+  // test 용 : video는 props로 받아와야함.
+  const [video, setVideo] = useState("");
 
   const handleModalStateChange = () => {
     if (window.confirm("정말로 취소하시겠습니까?")) {
@@ -67,12 +72,18 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
     //   alert("모든 항목을 채워주세요.");
     //   return;
     // }
-
+    console.log("흠");
     const data = {
       color,
       level,
       isSuccess,
     };
+    console.log("---------------------------------");
+    console.log("color: ", color);
+    console.log("level: ", level);
+    console.log("isSuccess: ", isSuccess);
+    console.log("video: ", video);
+    console.log("---------------------------------");
 
     const formData = new FormData();
     const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
@@ -80,7 +91,8 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
     formData.append("localSuccessVideoUploadRequest", blob);
     formData.append("newVideo", video);
 
-    BoardApi.postRegisterLocalVideo(FormData)
+    streamingApi
+      .postUploadVideo(formData)
       .then(() => {
         console.log("성공");
         setModalOpen((prev) => !prev);
@@ -96,7 +108,11 @@ const RecordVideoFormModal = ({ video = null, setModalOpen }) => {
       <S.Container>
         <S.ContentBox>
           <S.ComponentWrap>
-            <UploadForm video={video}></UploadForm>
+            <InputComp
+              title={title}
+              handleChange={setTitle}
+              placeholder="제목을 입력해주세요."
+            />
           </S.ComponentWrap>
           <S.SelectButtonWrap>
             <S.selectBtnContent>

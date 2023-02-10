@@ -8,6 +8,7 @@ export const ContainerWrap = styled.div`
   bottom: 0px;
   z-index: 1000;
   background-color: var(--color-dark);
+  opacity: 50%;
 `;
 
 export const Container = styled.div`
@@ -16,6 +17,8 @@ export const Container = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
+  background-color: transparent;
+  opacity: 100%;
 `;
 
 export const ContentBox = styled.div`
