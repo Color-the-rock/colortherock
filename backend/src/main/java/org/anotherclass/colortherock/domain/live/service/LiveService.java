@@ -17,8 +17,8 @@ import org.anotherclass.colortherock.domain.member.exception.MemberNotFoundExcep
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
+import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
-import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
@@ -34,8 +34,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +52,7 @@ public class LiveService {
     private final LiveRepository liveRepository;
     private final LiveReadRepository liveReadRepository;
     private final MemberRepository memberRepository;
+    private final VideoRepository videoRepository;
     private static ConcurrentMap<String, List<String>> recordingsForSession = new ConcurrentHashMap<>();
     private final OpenVidu openVidu;
     private static final Integer PAGE_SIZE = 15;
@@ -67,6 +66,7 @@ public class LiveService {
                        S3Service s3Service,
                        VideoService videoService,
                        RecordService recordService,
+                       VideoRepository videoRepository,
                        LiveReadRepository liveReadRepository, @Value("${OPENVIDU_URL}") String openviduUrl,
                        @Value("${OPENVIDU_SECRET}") String openviduSecret,
                        final @Value("${RECORDING_PATH}") String recordingPath) {
@@ -76,6 +76,7 @@ public class LiveService {
         this.liveRepository = liveRepository;
         this.memberRepository = memberRepository;
         this.liveReadRepository = liveReadRepository;
+        this.videoRepository = videoRepository;
         this.openVidu = new OpenVidu(openviduUrl, openviduSecret);
         this.recordingPath = recordingPath;
     }
@@ -262,20 +263,24 @@ public class LiveService {
             log.info(file1.getAbsolutePath());
         }
         // 비디오 저장
-        UploadVideoRequest uploadVideoRequest = UploadVideoRequest.builder()
-                .shootingDate(LocalDate.now())
-                .level(request.getLevel())
-                .isSuccess(request.getIsSuccess())
-                .color(request.getColor())
-                .gymName(request.getGymName()).build();
-
-        videoService.uploadVideo(member, s3Url, thumbnailURL, thumbnailName, uploadVideoRequest, videoName);
+        videoRepository.save(Video.builder()
+                        .shootingDate(LocalDate.now())
+                        .level(request.getLevel())
+                        .gymName(request.getGymName())
+                        .s3URL(s3Url)
+                        .videoName(videoName)
+                        .isSuccess(request.getIsSuccess())
+                        .thumbnailURL(thumbnailURL)
+                        .thumbnailName(thumbnailName)
+                        .color(request.getColor())
+                        .member(member)
+                .build());
         file = new File(recordingPath + "/" + request.getRecordingId());
         files = file.listFiles();
         for (File file1 : files) {
             log.info(file1.getAbsolutePath());
         }
         // 영상 누적 통계에서 영상 갯수 올리기
-        recordService.addVideoCount(member, uploadVideoRequest.getIsSuccess());
+        recordService.addVideoCount(member, request.getIsSuccess());
     }
 }
