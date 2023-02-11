@@ -35,7 +35,7 @@ const Streaming = () => {
       .then(({ data: { status, result } }) => {
         if (status === 200) {
           dispatch(setOpenViduToken(result));
-          navigate(`/streaming/live`);
+          navigate(`/streaming/live/${sessionId}`);
         }
       })
       .catch(() => {

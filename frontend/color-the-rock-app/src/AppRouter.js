@@ -74,7 +74,7 @@ const AppRouter = () => {
         <Route path="/streaming/form" element={<StreamingForm />} />
         <Route path="preview" element={<Preview />} />
         <Route path="/record/form" element={<RecordForm />} />
-        <Route path="/streaming/live" element={<StreamingLive />} />
+        <Route path="/streaming/live/:sessionId" element={<StreamingLive />} />
         <Route path="/board/s3form" element={<UploadS3Form />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>

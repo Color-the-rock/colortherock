@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import Webcam from "react-webcam";
 import * as S from "./style";
 import { FiArrowLeft } from "react-icons/fi";
@@ -8,23 +8,18 @@ import BoardSubTitle from "../../components/Board/BoardSubTitle";
 import SearchBar from "../../components/Common/KakaoKeywordSearch/SearchBar";
 import RegistBtn from "../../components/Board/RegistBtn";
 import BoardRadioBtn from "../../components/Board/BoardRadioBtn";
+import streamingApi from "../../api/streaming";
 import { FiChevronDown } from "react-icons/fi";
 import { FiChevronUp } from "react-icons/fi";
 import { HiOutlineCamera } from "react-icons/hi2";
 import { OpenVidu } from "openvidu-browser";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setOV,
   setOpenViduToken,
   setStreamingInfo,
+  setSessionId,
 } from "../../stores/streaming/streamingSlice";
-
-// ------------- test ----------------------//
-import RecordVideoFormModal from "../../components/Streaming/RecordVideoFormModal";
-import ModifyRoomSettingModal from "../../components/Streaming/ModifyRoomSettingModal";
-import FeedbackModal from "../../components/Streaming/FeedbackModal";
-import streamingApi from "../../api/streaming";
-// ----------------------------------------------------------------- //
 
 const videoConstraints = {
   width: { min: 480 },
@@ -36,6 +31,8 @@ const videoConstraints = {
 const StreamingForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const sessionId = useSelector((state) => state.streaming.sessionId);
 
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
@@ -61,12 +58,10 @@ const StreamingForm = () => {
       return;
     }
     joinSession();
-    navigate(`/streaming/live`);
   };
 
   // openVidu 설정
   const joinSession = () => {
-    console.log("joinSession");
     const ov = new OpenVidu();
     dispatch(setOV({ ov }));
     createSession();
@@ -74,7 +69,6 @@ const StreamingForm = () => {
 
   const base64toFile = (base_data, filename) => {
     let arr = base_data.split(","),
-      mime = arr[0].match(/:(.*?);/)[1],
       bstr = atob(arr[1]),
       n = bstr.length,
       u8arr = new Uint8Array(n);
@@ -109,6 +103,10 @@ const StreamingForm = () => {
           console.log("stausCode : 200 ", result);
           dispatch(setOpenViduToken(result));
           dispatch(setStreamingInfo(requestBody));
+          const params = new URL(result).searchParams;
+          console.log(params);
+          const sessionId = params.get("sessionId");
+          dispatch(setSessionId(sessionId));
         }
       })
       .catch((error) => console.log(error));
@@ -119,6 +117,11 @@ const StreamingForm = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
   }, [webcamRef, setImgSrc]);
+
+  useEffect(() => {
+    if (sessionId === "") return;
+    navigate(`/streaming/live/${sessionId}`);
+  }, [sessionId]);
 
   return (
     <S.Container>
