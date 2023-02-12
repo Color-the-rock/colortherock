@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  createRef,
-  useEffect,
-  useRef,
-  useCallback,
-} from "react";
+import React, { useState, createRef, useEffect, useRef } from "react";
 import * as S from "./style";
 
 const chunkSize = 1024 * 1024;

@@ -1,4 +1,15 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const clickAnimation = keyframes`
+  0% {
+    font-size: 32px;
+    color: red;
+  }
+  100% {
+    font-size: 50px;
+    color: white;
+  }
+`;
 
 export const Container = styled.div`
   width: 100vw;
@@ -40,12 +51,14 @@ export const Content = styled.div`
     height: calc(100% - 80px);
   }
 
-  .camera {
+  /* .camera {
     position: absolute;
     right: 1rem;
     top: calc(100% - 148px);
     z-index: 1;
-  }
+    animation-duration: 1s;
+    animation-name: ${clickAnimation};
+  } */
 `;
 
 export const CaptureWrap = styled.div`
@@ -103,4 +116,19 @@ export const SettingComponentWrap = styled.span`
   width: 100%;
   display: flex;
   align-items: center;
+`;
+
+export const CameraWrap = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  .camera {
+    /* position: absolute;
+    right: 1rem;
+    top: calc(100% - 148px);
+    z-index: 1;
+    animation-duration: 1s;
+    animation-name: ${clickAnimation}; */
+  }
 `;
