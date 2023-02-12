@@ -47,10 +47,10 @@ const Streaming = () => {
       });
   };
 
-  const getAllLiveList = () => {
+  const getAllLiveList = (searchValue = "") => {
     setLoading(true);
     streamingApi
-      .getAllLiveList(storeId)
+      .getAllLiveList(storeId, searchValue)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
           console.log("statusCode : 200 ", _result);

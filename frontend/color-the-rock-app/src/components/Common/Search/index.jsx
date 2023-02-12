@@ -10,7 +10,7 @@ const SearchBar = ({ getAllLiveList }) => {
 
   const handleKeyPressEnter = (e) => {
     if (e.keyCode === 13) {
-      getAllLiveList();
+      getAllLiveList(searchValue);
     }
   };
   return (
