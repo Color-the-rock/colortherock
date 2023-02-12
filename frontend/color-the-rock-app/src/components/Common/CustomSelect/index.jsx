@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as S from "./style";
 
-const CustomSelect = ({ setter, optionValues }) => {
+const CustomSelect = ({ setter, optionValues, defaultValue = 0 }) => {
   const [showOption, setShowOption] = useState(false);
-  const [currentOption, setCurrentOption] = useState(optionValues[0].key);
+  const [currentOption, setCurrentOption] = useState(
+    defaultValue !== 0 ? defaultValue : optionValues[0].key
+  );
+
+  useEffect(() => {
+    if (defaultValue === 0) return;
+    setCurrentOption(defaultValue);
+  }, [defaultValue]);
 
   const handleChangeOption = (option, e) => {
     console.log(option);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLinkClickHandler, useLocation } from "react-router-dom";
 import * as S from "./style";
 import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
@@ -13,7 +13,6 @@ import CustomCalendar from "../../../components/Board/CustomCalendar";
 
 import boardApi from "../../../api/board";
 import { recordApi } from "../../../api/record";
-
 import { useSelector } from "react-redux";
 
 const ALLOW_FILE_EXTENSION = "mp4,avi,wmv";
@@ -54,37 +53,54 @@ const BoardForm = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
-  const [level, setLevel] = useState("");
-  const [color, setColor] = useState("");
+  const [level, setLevel] = useState();
+  const [color, setColor] = useState();
   const [selectDate, setSelectDate] = useState("");
   const [video, setVideo] = useState(null);
-  console.log(typeof selectDate);
-  const clickHandler = () => {
-    navigate("/board");
-  };
 
   // 라우터로부터 내려받은  props 데이터
-  let { state, id } = useLocation();
-  state = false;
-  // state = true => s3upload
-  // state = true;
-  // 받아온 id에 대한 요청을 보낸다.
+  const propData = useLocation().state;
+
+  const [propLevel, setPropLevel] = useState("");
+  const [propColor, setPropColoer] = useState();
+
   useEffect(() => {
-    if (state) {
-      recordApi
-        .getRecordVideo(id)
-        .then((res) => {
-          setVideo(res);
-        })
-        .catch((err) => {
-          console.log("err", err);
-        });
-    }
+    if (!propData) return;
+
+    recordApi
+      .getOneRecordVideo(propData.id)
+      .then((res) => {
+        console.log("res: ", res);
+        setLocation(res.data.result.gymName);
+        setSelectDate(res.data.result.shootingDate);
+        setVideo(res.data.result.s3URL);
+        setLevel(res.data.result.level);
+        setColor(res.data.result.color);
+        setPropLevel(levelValues[res.data.result.level].key);
+        console.log("왜이래이거: ", typeof res.data.result.level);
+        setPropColoer(res.data.result.color);
+      })
+      .catch((err) => {
+        console.log("err: ", err);
+      });
   }, []);
 
   const submitHandler = () => {
     if (!title || !level || !color || !location || !selectDate || !video) {
       alert("모든 항목을 채워주세요.");
+      return;
+    }
+    if (propData) {
+      boardApi
+        .postRegisterRecordVideo({ videoId: propData.id, title })
+        .then((res) => {
+          console.log("res: ", res);
+          navigate("/board");
+        })
+        .catch((err) => {
+          alert("영상등록에 실패했습니다.");
+          console.log("err: ", err);
+        });
       return;
     }
 
@@ -117,6 +133,11 @@ const BoardForm = () => {
       });
   };
 
+  const clickHandler = () => {
+    if (!propData) navigate("/board");
+    else navigate("/board/s3form");
+  };
+
   const titleHandler = (e) => {
     setTitle(e.target.value);
   };
@@ -132,13 +153,9 @@ const BoardForm = () => {
             <S.ComponentWrap>
               <BoardSubTitle text="동영상" />
             </S.ComponentWrap>
-            {state ? (
+            {propData ? (
               <S.UploadVideoWrap>
-                <video
-                  src="https://dhw80hz67vj6n.cloudfront.net/20230203_091428077.mp4"
-                  muted
-                  controls
-                ></video>
+                <S.VideoContent src={video} muted controls />
               </S.UploadVideoWrap>
             ) : (
               <S.ComponentWrap>
@@ -167,8 +184,16 @@ const BoardForm = () => {
 
             <S.SelectButtonWrap>
               <S.selectBtnContent>
-                <CustomSelect setter={setLevel} optionValues={levelValues} />
-                <CustomSelect setter={setColor} optionValues={colorValues} />
+                <CustomSelect
+                  defaultValue={propData ? propLevel : 0}
+                  setter={setLevel}
+                  optionValues={levelValues}
+                />
+                <CustomSelect
+                  defaultValue={propData ? propColor : 0}
+                  setter={setColor}
+                  optionValues={colorValues}
+                />
               </S.selectBtnContent>
             </S.SelectButtonWrap>
 

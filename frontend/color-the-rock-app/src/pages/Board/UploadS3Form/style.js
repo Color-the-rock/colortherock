@@ -30,9 +30,15 @@ export const ThumbnailList = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1rem;
-
-  @media (max-width: 1070px) {
+  margin-top: 20px;
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 350px) {
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -64,3 +70,6 @@ export const selectBtnContent = styled.span`
   grid-template-columns: 1fr 1fr;
   grid-gap: 1rem;
 `;
+
+export const TitleWrap = styled.h2``;
+export const Message = styled.div``;
