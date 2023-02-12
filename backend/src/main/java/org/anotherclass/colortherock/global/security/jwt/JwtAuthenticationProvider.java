@@ -24,13 +24,28 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final JwtTokenUtils jwtTokenUtils;
 
 
+    static Collection<GrantedAuthority> getGrantedAuthorities(Claims claims, String keyRoles) {
+        List<Map<String, String>> roles = (List<Map<String, String>>) claims.get(keyRoles);
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        for (Map<String, String> role : roles) {
+            grantedAuthorities.add(() -> role.get("authority"));
+
+        }
+        return grantedAuthorities;
+    }
+
+    /**
+     * Jwt 토큰을 인증한다.
+     * @param authentication 인증을 수행할 객체 {@link JwtAuthenticationToken} 을 인증한다
+     * @return 인증에 성공한 {@link JwtAuthenticationToken}을 반환
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Claims claims = jwtTokenUtils.getAllClaims(((JwtAuthenticationToken) authentication).getToken());
         Collection<? extends GrantedAuthority> grantedAuthorities = createGrantedAuthorities(claims);
 
         String principal = (String) claims.get("email");
-        UserDetails userDetails = null;
+        UserDetails userDetails;
 
         if (principal != null) {
             userDetails = new MemberDetails(Member.builder()
@@ -48,16 +63,20 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         return jwtAuthenticationToken;
     }
 
+    /**
+     * claim에서 유저 권한을 가져와서 Collection 타입으로 변환한다
+     * @param claims jwt 토큰을 해독한 claim
+     * @return {@link GrantedAuthority}의 Collcetion 타입
+     */
     private Collection<? extends GrantedAuthority> createGrantedAuthorities(Claims claims) {
-        List<Map<String, String>> roles = (List<Map<String, String>>) claims.get(KEY_ROLES);
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        for (Map<String, String> role : roles) {
-            grantedAuthorities.add(() -> role.get("authority"));
-
-        }
-        return grantedAuthorities;
+        return getGrantedAuthorities(claims, KEY_ROLES);
     }
 
+    /**
+     * 현재 Authentcation 객체가 인증방식을 지원하는 타입인지 판단
+     * @param authentication 인증을 수행할 Authentcatio 인스턴스
+     * @return true, false로 provider와 authentcation 객체가 지원하는지 판단.
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return authentication.equals(JwtAuthenticationToken.class);
