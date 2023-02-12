@@ -23,6 +23,9 @@ import java.util.Optional;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
+/**
+ * @author suker80
+ */
 @RequiredArgsConstructor
 @Component
 @Slf4j
