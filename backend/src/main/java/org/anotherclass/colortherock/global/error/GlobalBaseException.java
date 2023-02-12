@@ -2,7 +2,7 @@ package org.anotherclass.colortherock.global.error;
 
 
 public class GlobalBaseException extends RuntimeException {
-    private GlobalErrorCode errorCode;
+    private final GlobalErrorCode errorCode;
 
     public GlobalBaseException(String message, GlobalErrorCode errorCode) {
         super(message);

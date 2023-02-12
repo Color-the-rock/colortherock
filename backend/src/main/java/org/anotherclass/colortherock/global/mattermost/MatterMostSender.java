@@ -30,7 +30,14 @@ public class MatterMostSender {
     private final RestTemplate restTemplate;
     private final MattermostProperties mmProperties;
 
-    public void sendMessage(Exception exception, String uri, String params) {
+    /**
+     * Mattermost 예외를 채널로 전송 한다.
+     * @param exception 발생한 예외
+     * @param uri 요청한 uri
+     * @param params 변수
+     */
+
+    public void sendExceptionMessage(Exception exception, String uri, String params) {
         if (!mmEnabled)
             return;
 
@@ -63,7 +70,14 @@ public class MatterMostSender {
 
     }
 
-    public void sendMessage(String title, Long id) {
+    /**
+     * 신고가 누적 되면 Mattermost로 전송 한다.
+     * @param title 신고 당한 게시글 제목
+     * @param id 게시글 id
+     *
+     */
+
+    public void sendReportMessage(String title, Long id) {
         if (!mmEnabled)
             return;
 
