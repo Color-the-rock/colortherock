@@ -82,7 +82,7 @@ public class MemberLoginTest extends IntegrationTest {
     @DisplayName("정상적인 로그인 요청")
     void 정상적인_로그인_요청() throws Exception {
 
-        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
 
         mockMvc.perform(
                         get(url + "test")
@@ -94,7 +94,7 @@ public class MemberLoginTest extends IntegrationTest {
     @Test
     @DisplayName("Refresh 발급")
     void Refresh_발급() {
-        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
         RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(tokens);
         System.out.println("refreshToken.getRefreshToken() = " + refreshToken.getRefreshTokenKey());
         System.out.println("refreshToken.getAccessToken() = " + refreshToken.getAccessTokenValue());
@@ -115,7 +115,7 @@ public class MemberLoginTest extends IntegrationTest {
     @DisplayName("Refresh로 다시 토큰 재발급 했는데 아직 만료안되서 실패")
     void 토큰재발급실패() throws Exception {
 
-        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
         RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(tokens);
         Optional<RefreshToken> validRefreshToken = jwtTokenUtils.findRefreshToken(refreshToken.getRefreshTokenKey());
         Assertions.assertDoesNotThrow(() -> {

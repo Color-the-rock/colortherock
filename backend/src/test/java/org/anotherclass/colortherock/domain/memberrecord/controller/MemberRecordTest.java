@@ -62,7 +62,7 @@ public class MemberRecordTest extends IntegrationTest {
         // Member 추가 및 token 설정
         member = new Member("johan@rock.com", "조한", Member.RegistrationId.google);
         Member savedMember = memberRepository.save(member);
-        token = jwtTokenUtils.createTokens(savedMember, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        token = jwtTokenUtils.createTokens(savedMember, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
         // 영상 추가
         for (int i = 1; i <= 9; i++) {
             video = UploadVideoRequest.builder()

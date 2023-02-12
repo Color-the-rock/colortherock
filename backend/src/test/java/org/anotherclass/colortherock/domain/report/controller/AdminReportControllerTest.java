@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -138,7 +138,7 @@ class AdminReportControllerTest extends IntegrationTest {
     void failToGetReportPostByUser() throws Exception {
         Member member = memberRepository.findById(memberIds.get(0))
                 .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.USER_NOT_FOUND));
-        tokenForUser = token = TOKEN_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        tokenForUser = token = TOKEN_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
         mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)

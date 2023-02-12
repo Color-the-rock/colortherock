@@ -97,7 +97,7 @@ class VideoCommentControllerTest extends IntegrationTest {
 
         em.flush();
         em.clear();
-        token = TOKEN_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        token = TOKEN_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
     }
 
     @Test

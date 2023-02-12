@@ -52,7 +52,7 @@ public class MemberService {
     public MemberSignUpResponse signup(MemberSignUpRequest request) {
         Member member = request.toEntity();
         Member save = memberRepository.save(member);
-        String token = "Bearer " + jwtTokenUtils.createTokens(save, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        String token = "Bearer " + jwtTokenUtils.createTokens(save, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
         RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(token);
         return new MemberSignUpResponse(save.getId(), save.getEmail(), save.getRegistrationId(), save.getNickname(), refreshToken.getAccessTokenValue(), refreshToken.getRefreshTokenKey());
     }
@@ -81,6 +81,6 @@ public class MemberService {
 
     public String testToken() {
         Member member = memberRepository.findById(memberId).orElseThrow();
-        return jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        return jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
     }
 }
