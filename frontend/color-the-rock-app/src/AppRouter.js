@@ -24,6 +24,7 @@ import StreamingLive from "./pages/StreamingLive";
 import UploadS3Form from "./pages/Board/UploadS3Form";
 import ErrorPage from "./pages/Error";
 import { useSelector } from "react-redux";
+import Admin from "./pages/Admin";
 
 const Layout = () => {
   return (
@@ -48,6 +49,7 @@ const AppRouter = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/oauth" element={<Oauth />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Router>
