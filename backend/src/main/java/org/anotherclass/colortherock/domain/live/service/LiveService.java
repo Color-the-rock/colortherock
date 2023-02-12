@@ -17,13 +17,11 @@ import org.anotherclass.colortherock.domain.member.exception.MemberNotFoundExcep
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
-import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
 import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.jcodec.api.JCodecException;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -34,8 +32,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +86,7 @@ public class LiveService {
             throw new RuntimeException(e);
         }
         String sessionId = session.getSessionId();
-        String thumbnailName = DateTime.now() + sessionId;
+        String thumbnailName = System.currentTimeMillis() + sessionId;
         String uploadedURL;
         try {
             uploadedURL = s3Service.upload(thumbnail, thumbnailName);
@@ -243,7 +239,7 @@ public class LiveService {
     @Transactional
     public void uplooadAtOpenviduServer(RecordingUploadAtOpenviduServerRequest request) throws IOException, JCodecException {
         String newDir = recordingPath + "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".mp4";
-        String videoName = DateTime.now() + request.getRecordingId() + ".mp4";
+        String videoName = System.currentTimeMillis() + request.getRecordingId() + ".mp4";
         String s3Url = s3Service.uploadFromOV(newDir, videoName);
         Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> {
             throw new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND);
