@@ -70,7 +70,7 @@ const AppRouter = () => {
         <Route path="/board/form" element={<BoardRegist />} />
         <Route path="/board/modify/:id" element={<BoardModify />} />
         <Route path="/board/detail/:id" element={<BoardDetail />} />
-        <Route path="/streaming/" element={<Streaming />} />
+        <Route path="/streaming" element={<Streaming />} />
         <Route path="/streaming/form" element={<StreamingForm />} />
         <Route path="preview" element={<Preview />} />
         <Route path="/record/form" element={<RecordForm />} />

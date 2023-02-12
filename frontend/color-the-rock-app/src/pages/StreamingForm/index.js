@@ -32,7 +32,7 @@ const StreamingForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const sessionId = useSelector((state) => state.streaming.sessionId);
+  const nickName = useSelector((state) => state.users.nickName);
 
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
@@ -58,6 +58,8 @@ const StreamingForm = () => {
       return;
     }
     joinSession();
+
+    navigate(`/streaming/live/1`);
   };
 
   // openVidu 설정
@@ -104,8 +106,9 @@ const StreamingForm = () => {
           dispatch(setOpenViduToken(result));
           dispatch(setStreamingInfo(requestBody));
           const params = new URL(result).searchParams;
-          console.log(params);
+          console.log("params,", params);
           const sessionId = params.get("sessionId");
+          console.log("params sessionId,", sessionId);
           dispatch(setSessionId(sessionId));
         }
       })
@@ -117,11 +120,6 @@ const StreamingForm = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
   }, [webcamRef, setImgSrc]);
-
-  useEffect(() => {
-    if (sessionId === "") return;
-    navigate(`/streaming/live/${sessionId}`);
-  }, [sessionId]);
 
   return (
     <S.Container>

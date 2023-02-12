@@ -27,7 +27,6 @@ import VideoClip from "../../components/Streaming/VideoClip";
 
 const StreamingLive = () => {
   // 기본 설정
-  const { sessionId: paramSessionId } = useParams();
   const dispatch = useDispatch();
   const ov = useSelector((state) => state.streaming.ov);
   const roomInfo = useSelector((state) => state.streaming.info);
@@ -108,19 +107,12 @@ const StreamingLive = () => {
   }, []);
 
   useEffect(() => {
-    setUserNickName(nickName);
-    console.log("nickName:: ", nickName);
-  }, [nickName]);
-
-  useEffect(() => {
     if (session !== undefined) {
       onSessionCreated();
 
       // feedback signal...
       onFeedbackSignal();
 
-      console.log("세션 존재, 세션: ", session);
-      console.log("오픈비두 객체: ", ov);
       session
         .connect(token, { clientData: userNickName })
         .then(() => console.log("success Connect"))
@@ -153,7 +145,6 @@ const StreamingLive = () => {
   useEffect(() => {
     if (token !== "" && session !== undefined) {
       session.connect(token, { clientData: userNickName }).then(async () => {
-        // --- 5) Get your own camera stream ---
         let publisher = await ov.initPublisherAsync(undefined, {
           audioSource: undefined, // The source of audio. If undefined default microphone
           videoSource: undefined, // The source of video. If undefined default webcam
@@ -187,6 +178,8 @@ const StreamingLive = () => {
         setCurrentVideoDevice(CurrentVideoDevice);
         setMainStreamManager(publisher);
         setPublisher(publisher);
+
+        console.log("hello?????");
       });
     }
   }, [token]);
@@ -379,9 +372,10 @@ const StreamingLive = () => {
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    alert("링크가 복사되었습니다:)");
-    console.log("window.location.href", window.location.href);
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      alert("링크가 복사되었습니다:)");
+      console.log("window.location.href", window.location.href);
+    });
   };
   return (
     <S.Container>
