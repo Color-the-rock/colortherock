@@ -28,6 +28,11 @@ const Streaming = () => {
   };
 
   const handleParticipateSession = (sessionId) => {
+    if (!isLoading) {
+      alert("로그인이 필요한 서비스입니다:)");
+      return;
+    }
+
     setLoading(true);
     joinSession();
     streamingApi
