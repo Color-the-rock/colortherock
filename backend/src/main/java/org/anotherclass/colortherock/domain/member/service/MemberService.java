@@ -2,7 +2,6 @@ package org.anotherclass.colortherock.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
-
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.exception.AccessDeniedException;
 import org.anotherclass.colortherock.domain.member.exception.IncorrectAdminInfoException;
@@ -45,7 +44,7 @@ public class MemberService {
     }
 
     public String regenerateAccessToken(String refreshToken) {
-        Optional<RefreshToken> findToken = jwtTokenUtils.isValidRefreshToken(refreshToken);
+        Optional<RefreshToken> findToken = jwtTokenUtils.findRefreshToken(refreshToken);
         RefreshToken findRefreshToken = findToken.orElseThrow(() -> new AccessDeniedException(GlobalErrorCode.ACCESS_DENIED));
         return jwtTokenUtils.reCreateTokens(findRefreshToken);
     }
@@ -55,14 +54,13 @@ public class MemberService {
         Member save = memberRepository.save(member);
         String token = "Bearer " + jwtTokenUtils.createTokens(save, List.of(new SimpleGrantedAuthority("ROLE_USER")));
         RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(token);
-        return new MemberSignUpResponse(save.getId(), save.getEmail(), save.getRegistrationId(), save.getNickname(), refreshToken.getAccessToken(), refreshToken.getRefreshToken());
+        return new MemberSignUpResponse(save.getId(), save.getEmail(), save.getRegistrationId(), save.getNickname(), refreshToken.getAccessTokenValue(), refreshToken.getRefreshTokenKey());
     }
 
     @Transactional(readOnly = true)
     public Member getMember(MemberDetails memberDetails) {
-        Member member = memberRepository.findById(memberDetails.getMember().getId())
+        return memberRepository.findById(memberDetails.getMember().getId())
                 .orElseThrow(() -> new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND));
-        return member;
     }
 
     public boolean duplicateNickname(String nickname) {

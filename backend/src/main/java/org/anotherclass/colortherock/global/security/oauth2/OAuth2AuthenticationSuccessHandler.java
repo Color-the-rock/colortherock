@@ -1,4 +1,4 @@
-package org.anotherclass.colortherock.global.security.oAuth2;
+package org.anotherclass.colortherock.global.security.oauth2;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,9 +12,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.yaml.snakeyaml.util.UriEncoder;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -36,7 +34,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
         MemberInfo memberInfo = MemberInfoFactory.getMemberInfo(attributes, (OAuth2AuthenticationToken) authentication);
@@ -53,8 +51,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     .host("localhost")
                     .port(3000)
                     .path("/oauth")
-                    .queryParam("refresh", token.getRefreshToken())
-                    .queryParam("access", token.getAccessToken())
+                    .queryParam("refresh", token.getRefreshTokenKey())
+                    .queryParam("access", token.getAccessTokenValue())
                     .queryParam("email", member.getEmail())
                     .queryParam("registrationId", member.getRegistrationId())
                     .queryParam("nickname", URLEncoder.encode(member.getNickname(), StandardCharsets.UTF_8)).toUriString();

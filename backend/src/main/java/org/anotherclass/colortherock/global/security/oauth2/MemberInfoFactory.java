@@ -1,9 +1,13 @@
-package org.anotherclass.colortherock.global.security.oAuth2;
+package org.anotherclass.colortherock.global.security.oauth2;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
 import java.util.Map;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberInfoFactory {
 
 
@@ -16,7 +20,7 @@ public class MemberInfoFactory {
         } else if (registrationId.equals("kakao")) {
             return new KakaoMemberInfo(attributes);
         }
-        throw new RuntimeException();
+        throw new UnsupportedInfoException(GlobalErrorCode.UNSUPPORTED_INFO);
     }
 
 }

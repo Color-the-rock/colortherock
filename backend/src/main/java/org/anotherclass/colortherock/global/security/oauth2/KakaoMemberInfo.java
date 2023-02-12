@@ -1,4 +1,4 @@
-package org.anotherclass.colortherock.global.security.oAuth2;
+package org.anotherclass.colortherock.global.security.oauth2;
 
 import org.anotherclass.colortherock.domain.member.entity.Member.RegistrationId;
 

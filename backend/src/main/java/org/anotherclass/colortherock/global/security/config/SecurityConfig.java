@@ -3,12 +3,12 @@ package org.anotherclass.colortherock.global.security.config;
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.service.MemberDetailsServiceImpl;
 import org.anotherclass.colortherock.global.security.jwt.JwtAuthenticationEntryPoint;
+import org.anotherclass.colortherock.global.security.jwt.JwtAuthenticationFilter;
 import org.anotherclass.colortherock.global.security.jwt.JwtAuthenticationProvider;
-import org.anotherclass.colortherock.global.security.jwt.JwtAuthorizeFilter;
 import org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils;
-import org.anotherclass.colortherock.global.security.oAuth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import org.anotherclass.colortherock.global.security.oAuth2.OAuth2AuthenticationFailureHandler;
-import org.anotherclass.colortherock.global.security.oAuth2.OAuth2AuthenticationSuccessHandler;
+import org.anotherclass.colortherock.global.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import org.anotherclass.colortherock.global.security.oauth2.OAuth2AuthenticationFailureHandler;
+import org.anotherclass.colortherock.global.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,7 +25,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    //    private final CustomOAuthUserService oAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
@@ -46,7 +45,7 @@ public class SecurityConfig {
         http.csrf().disable();
         http.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(new JwtAuthorizeFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtTokenUtils), BasicAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtTokenUtils), BasicAuthenticationFilter.class);
         http.authorizeRequests()
                 .antMatchers("/test")
                 .authenticated();

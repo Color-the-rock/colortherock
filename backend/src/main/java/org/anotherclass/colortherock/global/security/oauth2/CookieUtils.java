@@ -1,13 +1,18 @@
-package org.anotherclass.colortherock.global.security.oAuth2;
+package org.anotherclass.colortherock.global.security.oauth2;
 
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.util.SerializationUtils;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.Optional;
 
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CookieUtils {
 
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
