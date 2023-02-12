@@ -25,7 +25,7 @@ import static org.aspectj.util.LangUtil.isEmpty;
 public class JwtAuthorizeFilter extends BasicAuthenticationFilter {
 
     private final JwtTokenUtils jwtTokenUtils;
-    private final String bearer_prefix = "Bearer ";
+    private static final String BEARER_PREFIX = "Bearer ";
 
     private static final String KEY_ROLES = "roles";
 
@@ -38,7 +38,7 @@ public class JwtAuthorizeFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (isEmpty(header) || !header.startsWith(bearer_prefix)) {
+        if (isEmpty(header) || !header.startsWith(BEARER_PREFIX)) {
             chain.doFilter(request, response);
             return;
         }
