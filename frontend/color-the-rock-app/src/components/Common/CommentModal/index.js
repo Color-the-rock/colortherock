@@ -16,8 +16,6 @@ const CommentModal = ({ setIsModalOpen, isModalOpen }) => {
   };
 
   const getAllComments = () => {
-    console.log("getAllComments()....", storeId, " ", id);
-
     boardApi
       .getVideoBoardCommentList(storeId, id)
       .then(({ data: { status, result: _result } }) => {
@@ -25,11 +23,11 @@ const CommentModal = ({ setIsModalOpen, isModalOpen }) => {
           console.log("statusCode : 200", _result);
           setResult(_result);
 
-          let _storId =
-            _result.length === 0 ? -1 : _result[_result.length - 1].commentId;
+          // let _storId =
+          //   _result.length === 0 ? -1 : _result[_result.length - 1].commentId;
 
-          console.log("storeId ??? ", _storId);
-          setStoreId(_storId);
+          // console.log("storeId ??? ", _storId);
+          // setStoreId(_storId);
         }
       })
       .catch((error) => console.log(error));
@@ -38,7 +36,6 @@ const CommentModal = ({ setIsModalOpen, isModalOpen }) => {
   return (
     <S.Container>
       <S.CommentWrap>
-        {/* 장식용 바 */}
         <S.OrnamentWrap>
           <S.Ornament />
         </S.OrnamentWrap>

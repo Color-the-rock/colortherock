@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import * as S from "./style";
 import { HiDotsHorizontal, HiOutlineArrowSmUp } from "react-icons/hi";
-import { useInput } from "../../../hooks/useInput";
 import boardApi from "../../../api/board";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
+
 const CommentBtn = ({ isReadOnly, onClick, getAllComments }) => {
   const [value, setValue] = useState("");
   const { id } = useParams();
@@ -27,10 +27,6 @@ const CommentBtn = ({ isReadOnly, onClick, getAllComments }) => {
       })
       .catch((error) => console.log(error));
   };
-
-  useEffect(() => {
-    console.log("isReadOnly??", isReadOnly);
-  }, [isReadOnly]);
 
   return (
     <S.Container onClick={onClick}>
