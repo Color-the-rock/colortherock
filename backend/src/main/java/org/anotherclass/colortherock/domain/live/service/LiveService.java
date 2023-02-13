@@ -22,7 +22,6 @@ import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.jcodec.api.JCodecException;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -87,7 +86,7 @@ public class LiveService {
             throw new RuntimeException(e);
         }
         String sessionId = session.getSessionId();
-        String thumbnailName = DateTime.now() + sessionId;
+        String thumbnailName = System.currentTimeMillis() + sessionId;
         String uploadedURL;
         try {
             uploadedURL = s3Service.upload(thumbnail, thumbnailName);
