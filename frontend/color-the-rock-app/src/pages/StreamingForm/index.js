@@ -59,7 +59,7 @@ const StreamingForm = () => {
     }
     joinSession();
 
-    navigate(`/streaming/live/1`);
+    navigate(`/streaming/live`);
   };
 
   // openVidu 설정
