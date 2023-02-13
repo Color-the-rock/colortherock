@@ -232,8 +232,9 @@ public class LiveService {
 
     @Transactional
     public void uploadAtOpenviduServer(RecordingUploadAtOpenviduServerRequest request) {
-        String newDir = recordingPath + "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".mp4";
-        String videoName = System.currentTimeMillis() + request.getRecordingId() + ".mp4";
+        String videoExtension = ".mp4";
+        String newDir = recordingPath + "/" + request.getRecordingId() + "/" + request.getRecordingId() + videoExtension;
+        String videoName = System.currentTimeMillis() + request.getRecordingId() + videoExtension;
         String s3Url = s3Service.uploadFromOV(newDir, videoName);
         Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> {
             throw new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND);
