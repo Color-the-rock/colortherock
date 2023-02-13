@@ -23,6 +23,16 @@ public class BaseResponse<T> { // 모든 return은 BaseResponse 포맷으로 전
     @JsonInclude(JsonInclude.Include.NON_NULL) // 결과값이 공백일 경우 json에 포함하지 않도록
     private T result;
 
+    @Override
+    public String toString() {
+        return "BaseResponse{" +
+                "status=" + status +
+                ", message='" + message + '\'' +
+                ", code='" + code + '\'' +
+                ", result=" + result +
+                '}';
+    }
+
     // 요청에 성공한 경우
     public BaseResponse(T result) {
         this.status = SUCCESS.getStatus();
