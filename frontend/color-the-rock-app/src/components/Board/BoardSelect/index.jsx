@@ -1,6 +1,8 @@
 import { useState } from "react";
 import * as S from "./style";
 import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
+import { setSearchColorValue } from "../../../stores/board/boardSlice";
 const OptionValue = [
   { key: "색상", value: "" },
   { key: "흰색", value: "흰색" },
@@ -18,12 +20,15 @@ const OptionValue = [
   { key: "갈색", value: "갈색" },
   { key: "회색", value: "회색" },
 ];
-const BoardSelect = ({ currentOption, setCurrentOption }) => {
+const BoardSelect = ({ setStoreId }) => {
+  const dispatch = useDispatch();
   const [showOption, setShowOption] = useState(false);
+  const currentOption = useSelector((state) => state.board.searchColorValue);
 
   const handleChangeOption = (e) => {
-    setCurrentOption(e.target.innerText);
+    dispatch(setSearchColorValue(e.target.innerText));
     setShowOption(!showOption);
+    setStoreId(-1);
   };
 
   return (
@@ -51,6 +56,5 @@ const BoardSelect = ({ currentOption, setCurrentOption }) => {
 export default BoardSelect;
 
 BoardSelect.propTypes = {
-  currentOption: PropTypes.string,
-  setCurrentOption: PropTypes.func,
+  setStoreId: PropTypes.func,
 };

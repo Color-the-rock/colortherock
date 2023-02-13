@@ -3,7 +3,7 @@ import * as S from "./style";
 import { VscChromeClose } from "react-icons/vsc";
 
 const ALLOW_FILE_EXTENSION = "mp4,avi,wmv,webm";
-const FILE_SIZE_MAX_LIMIT = 100 * 1024 * 1024; // 10MB
+const FILE_SIZE_MAX_LIMIT = 100 * 1024 * 1024; // 100MB
 
 const UploadForm = ({ video, setVideo }) => {
   const [isSelected, setIsSelected] = useState(false);

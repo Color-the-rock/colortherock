@@ -24,6 +24,6 @@ Video.propTypes = {
   id: PropTypes.number,
   thumbnailURL: PropTypes.string,
   gymName: PropTypes.string,
-  level: PropTypes.string,
+  level: PropTypes.number,
   color: PropTypes.string,
 };

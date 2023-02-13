@@ -21,20 +21,13 @@ const boardApi = {
     ),
 
   // 완등 영상 게시글 올리기(내 운동기록 동영상에서 영상 가져오기)
-  postRegisterRecordVideo: ({ videoId, title }) =>
-    defaultInstance.post(
-      "/video/board",
-      {
-        videoId,
-        title,
-      },
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    ),
-
+  postRegisterRecordVideo: ({ videoId, title }) => {
+    console.log("데이터 확인용: ", videoId, ", ", title);
+    return defaultInstance.post("/video/board", {
+      videoId,
+      title,
+    });
+  },
   // 완등 영상 게시글 올리기(로컬 파일에서 영상 가져오기)
   postRegisterLocalVideo: (formData) =>
     defaultInstance.post("/video/board/local", formData, {

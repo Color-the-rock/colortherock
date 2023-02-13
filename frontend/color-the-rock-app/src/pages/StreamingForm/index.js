@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import Webcam from "react-webcam";
 import * as S from "./style";
 import { FiArrowLeft } from "react-icons/fi";
@@ -8,23 +8,18 @@ import BoardSubTitle from "../../components/Board/BoardSubTitle";
 import SearchBar from "../../components/Common/KakaoKeywordSearch/SearchBar";
 import RegistBtn from "../../components/Board/RegistBtn";
 import BoardRadioBtn from "../../components/Board/BoardRadioBtn";
+import streamingApi from "../../api/streaming";
 import { FiChevronDown } from "react-icons/fi";
 import { FiChevronUp } from "react-icons/fi";
 import { HiOutlineCamera } from "react-icons/hi2";
 import { OpenVidu } from "openvidu-browser";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setOV,
   setOpenViduToken,
   setStreamingInfo,
+  setSessionId,
 } from "../../stores/streaming/streamingSlice";
-
-// ------------- test ----------------------//
-import RecordVideoFormModal from "../../components/Streaming/RecordVideoFormModal";
-import ModifyRoomSettingModal from "../../components/Streaming/ModifyRoomSettingModal";
-import FeedbackModal from "../../components/Streaming/FeedbackModal";
-import streamingApi from "../../api/streaming";
-// ----------------------------------------------------------------- //
 
 const videoConstraints = {
   width: { min: 480 },
@@ -34,29 +29,8 @@ const videoConstraints = {
 };
 
 const StreamingForm = () => {
-  /////////////////////////// test ////////////////////////////////
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalOpen2, setModalOpen2] = useState(false);
-  const [modalOpen3, setModalOpen3] = useState(false);
-
-  const [token, setToken] = useState("");
-
-  const handleModalStateChange = () => {
-    setModalOpen((prev) => !prev);
-  };
-
-  const handleModalStateChange2 = () => {
-    setModalOpen2((prev) => !prev);
-  };
-
-  const handleModalStateChange3 = () => {
-    setModalOpen3((prev) => !prev);
-  };
-  //////////////////////////////////////////////////////////////////
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [onSetting, setOnSetting] = useState(true);
@@ -76,17 +50,20 @@ const StreamingForm = () => {
   };
 
   const submitHandler = () => {
-    // if (!isPublic || !title || !gymName || !imgSrc) {
-    //   alert("모든 항목을 채워주세요.");
-    //   return;
-    // }
+    if (!isPublic || !title || !gymName) {
+      alert("모든 항목을 채워주세요.");
+      return;
+    } else if (!imgSrc) {
+      alert("방송시작을 위한 썸네일을 촬영해주세요!");
+      return;
+    }
     joinSession();
-    navigate("/streaming/live");
+
+    navigate(`/streaming/live/1`);
   };
 
   // openVidu 설정
   const joinSession = () => {
-    console.log("joinSession");
     const ov = new OpenVidu();
     dispatch(setOV({ ov }));
     createSession();
@@ -94,7 +71,6 @@ const StreamingForm = () => {
 
   const base64toFile = (base_data, filename) => {
     let arr = base_data.split(","),
-      mime = arr[0].match(/:(.*?);/)[1],
       bstr = atob(arr[1]),
       n = bstr.length,
       u8arr = new Uint8Array(n);
@@ -121,10 +97,6 @@ const StreamingForm = () => {
 
     formData.append("createLiveRequest", blob);
     formData.append("thumbnail", base64toFile(imgSrc, "thumbnail"));
-    console.log("thumbnail", base64toFile(imgSrc, "thumbnail").type);
-
-    console.log("createdSession! formData", formData.get("createLiveRequest"));
-    console.log("createdSession! formData", formData.get("thumbnail"));
 
     streamingApi
       .createLiveSession(formData)
@@ -133,6 +105,11 @@ const StreamingForm = () => {
           console.log("stausCode : 200 ", result);
           dispatch(setOpenViduToken(result));
           dispatch(setStreamingInfo(requestBody));
+          const params = new URL(result).searchParams;
+          console.log("params,", params);
+          const sessionId = params.get("sessionId");
+          console.log("params sessionId,", sessionId);
+          dispatch(setSessionId(sessionId));
         }
       })
       .catch((error) => console.log(error));
@@ -146,28 +123,6 @@ const StreamingForm = () => {
 
   return (
     <S.Container>
-      {/* ---------------------모달 테스트 중입니다.-------------------- */}
-      {modalOpen && (
-        <RecordVideoFormModal
-          onClick={handleModalStateChange}
-          setModalOpen={setModalOpen}
-        />
-      )}
-      {modalOpen2 && (
-        <FeedbackModal
-          onClick={handleModalStateChange2}
-          setModalOpen={setModalOpen2}
-        />
-      )}
-      {modalOpen3 && (
-        <RecordVideoFormModal
-          onClick={handleModalStateChange3}
-          setModalOpen={setModalOpen3}
-        />
-      )}
-
-      {/* ------------------------------------------------------------- */}
-
       <S.ContentWrap>
         <S.Content>
           <Webcam
@@ -177,11 +132,7 @@ const StreamingForm = () => {
             screenshotFormat="image/jpeg"
             videoConstraints={videoConstraints}
           />
-          <HiOutlineCamera
-            size="32px"
-            className="camera"
-            onClick={handleCapture}
-          />
+
           {imgSrc && (
             <S.CaptureWrap>
               <img src={imgSrc} alt="capture" />
@@ -196,7 +147,6 @@ const StreamingForm = () => {
             <S.ArrowLeftBtnWrap onClick={clickHandler}>
               <FiArrowLeft />
             </S.ArrowLeftBtnWrap>
-
             <S.ComponenentWrap>
               <S.SettingComponentWrap onClick={ChangeSettingMode}>
                 <BoardSubTitle text="방송 설정" />
@@ -207,7 +157,6 @@ const StreamingForm = () => {
                 )}
               </S.SettingComponentWrap>
             </S.ComponenentWrap>
-
             {onSetting && (
               <S.AddPadding>
                 <S.ComponenentWrap>
@@ -234,45 +183,12 @@ const StreamingForm = () => {
                     opacity="70"
                   />
                 </S.ComponenentWrap>
-
-                <S.ComponenentWrap>
-                  <button
-                    onClick={handleModalStateChange}
-                    style={{
-                      fontSize: "20px",
-                      color: "white",
-                      border: "1px solid white",
-                      margin: "1rem",
-                    }}
-                  >
-                    영상 등록 모달
-                  </button>
-                  <button
-                    onClick={handleModalStateChange2}
-                    style={{
-                      fontSize: "20px",
-                      color: "white",
-                      border: "1px solid white",
-                      margin: "1rem",
-                    }}
-                  >
-                    피드백 모달
-                  </button>
-                  <button
-                    onClick={handleModalStateChange3}
-                    style={{
-                      fontSize: "20px",
-                      color: "white",
-                      border: "1px solid white",
-                      margin: "1rem",
-                    }}
-                  >
-                    영상 수정 모달
-                  </button>
-                </S.ComponenentWrap>
               </S.AddPadding>
             )}
           </S.OverlapContent>
+          <S.CameraWrap>
+            <HiOutlineCamera className="camera" onClick={handleCapture} />
+          </S.CameraWrap>
         </S.Content>
       </S.ContentWrap>
     </S.Container>

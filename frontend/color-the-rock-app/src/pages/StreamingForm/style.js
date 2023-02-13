@@ -43,8 +43,14 @@ export const Content = styled.div`
   .camera {
     position: absolute;
     right: 1rem;
-    top: calc(100% - 148px);
+    bottom: 6rem;
     z-index: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    padding: 0.4rem;
+    text-align: center;
   }
 `;
 
@@ -100,6 +106,12 @@ export const IconWrap = styled.span`
 `;
 
 export const SettingComponentWrap = styled.span`
+  width: 100%;
+  display: flex;
+  align-items: center;
+`;
+
+export const CameraWrap = styled.div`
   width: 100%;
   display: flex;
   align-items: center;

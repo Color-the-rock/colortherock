@@ -44,7 +44,7 @@ export const InputTitle = styled.div`
   font-family: "Noto Sans KR";
   font-style: normal;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   letter-spacing: -0.01em;
 `;
 // gradation + border가 충동이 나지 않도록 적용하는 법 배우기!!!
@@ -58,7 +58,7 @@ export const InputWrap = styled.div`
   margin-right: 0.5rem;
   color: var(--color-secondary);
   border-radius: 20px;
-  width: 300px;
+  width: 320px;
   height: 40px;
   background-image: linear-gradient(
       var(--color-background),
@@ -67,13 +67,19 @@ export const InputWrap = styled.div`
     linear-gradient(to right, #ff6cab, #8533ff);
   background-origin: border-box;
   background-clip: content-box, border-box;
+  @media (max-width: 991px) {
+    width: 240px;
+  }
+  @media (max-width: 315px) {
+    width: 200px;
+  }
 `;
 
 export const InputComp = styled.input`
   border: none;
   background-color: var(--color-background);
   color: var(--color-secondary);
-  width: 244px;
+  width: 100%;
   margin: 0 10px;
   font-style: normal;
   font-weight: 400;
@@ -91,7 +97,7 @@ export const InputButtonWrap = styled.div`
       font-size: 1.25rem;
       margin: 5px 3px 0.25rem 0.25rem;
       /* margin-top: 0.05px; */
-      color: var(--color-level-v1-start);
+      color: var(--color-badge-live);
     }
   }
 `;
@@ -102,12 +108,19 @@ export const InputButton = styled.button`
   font-family: "Noto Sans KR";
   font-style: normal;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   letter-spacing: -0.01em;
   color: ${(props) =>
     props.isValidate === true
       ? "var(--color-white)"
-      : "var(--color-level-v1-start)"};
+      : "var(--color-badge-live)"};
+
+  .FiArrowRightCircle {
+    color: ${(props) =>
+      props.isValidate === true
+        ? "var(--color-white)"
+        : "var(--color-badge-live)"};
+  }
 
   .p {
     display: flex;
@@ -116,9 +129,6 @@ export const InputButton = styled.button`
   }
 `;
 export const ErrorMessageWrap = styled.div`
-  @media (min-width: 992px) {
-  }
-
   @media (max-width: 991px) {
     display: flex;
     justify-content: center;
@@ -126,7 +136,7 @@ export const ErrorMessageWrap = styled.div`
     .p {
       font-family: "Noto Sans KR";
       font-style: normal;
-      font-size: 1.5rem;
+      font-size: 1.1rem;
       letter-spacing: -0.01em;
       color: #e0e2e7;
     }
@@ -148,24 +158,17 @@ export const ErrorMessage = styled.div`
     align-items: center;
     font-size: 0.5rem;
     color: white;
-    background-color: var(--color-level-v1-start);
+    background-color: var(--color-badge-live);
     /* border: 1px solid white; */
     border-radius: 100%;
   }
 
   p {
-    /* small/500 */
-
     font-family: "Noto Sans KR";
     font-style: normal;
     font-weight: 400;
     font-size: 0.75rem;
-    font-size: 1.2rem;
-    color: var(--color-level-v1-start);
-    /* identical to box height, or 171% */
-
-    display: flex;
-    align-items: center;
+    color: var(--color-badge-live);
     letter-spacing: -0.01em;
   }
 `;
@@ -175,6 +178,9 @@ export const InputWrapper = styled.div`
   align-items: center;
   font-style: normal;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   letter-spacing: -0.01em;
+  @media (max-width: 315px) {
+    font-size: 0.85rem;
+  }
 `;

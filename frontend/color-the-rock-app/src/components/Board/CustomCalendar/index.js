@@ -31,6 +31,7 @@ const CustomCalendar = ({
           color: "var(--color-secondary)",
           fontFamily: "Noto Sans KR",
         }}
+        defaultValue={selectDate}
         // value="날짜를 선택해주세요."
         onChange={(e) => setSelectDate(e.target.value)}
       ></input>

@@ -5,12 +5,20 @@ export const Container = styled(motion.div)`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: calc(100vh - 18.75rem);
+  height: 100vh;
   background-color: var(--color-background);
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
   filter: drop-shadow(0px -4px 2px rgba(0, 0, 0, 0.25));
   padding: 1rem;
+  @media (max-width: 992px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: calc(100vh - 18.75rem);
+    background-color: var(--color-background);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    filter: drop-shadow(0px -4px 2px rgba(0, 0, 0, 0.25));
+  }
 `;
 
 export const ChattingWrapper = styled.div`
@@ -18,6 +26,10 @@ export const ChattingWrapper = styled.div`
   height: 100%;
   overflow-y: scroll;
   background-color: transparent;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const InputWrapper = styled.div`
@@ -25,7 +37,7 @@ export const InputWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 3rem;
+  height: 4rem;
   border-radius: 3rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.7);
   padding: 0.25rem 1rem;
@@ -34,6 +46,10 @@ export const InputWrapper = styled.div`
 
   #ov-videoconference {
     width: calc(100% - 3.5rem);
+  }
+
+  @media (max-width: 992px) {
+    height: 3rem;
   }
 `;
 
@@ -76,7 +92,7 @@ export const ChattingContent = styled.div`
   flex-direction: column;
   width: 100%;
   min-height: 1.25rem;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 `;
 
 export const ChattingUserNickname = styled.label`
@@ -92,4 +108,10 @@ export const ChattingText = styled.label`
   font-size: 0.85rem;
   line-height: 1.25rem;
   letter-spacing: -0.01em;
+`;
+
+export const ChattingTitle = styled.h1`
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
 `;

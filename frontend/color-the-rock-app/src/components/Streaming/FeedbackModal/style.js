@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { VscChromeClose } from "react-icons/vsc";
+
 export const ContainerWrap = styled.div`
   position: fixed;
   top: 0;

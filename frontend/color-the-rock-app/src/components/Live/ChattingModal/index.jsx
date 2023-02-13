@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import * as S from "./style";
 import { HiOutlineArrowSmUp } from "react-icons/hi";
 import { useState } from "react";
@@ -13,7 +13,8 @@ const ChattingModal = ({
 }) => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
-
+  const isDesktop = useMediaQuery({ minWidth: 992 });
+  const scrollRef = useRef();
   const [message, setMessage] = useState("");
 
   // 채팅 전송
@@ -38,13 +39,16 @@ const ChattingModal = ({
   };
 
   useEffect(() => {
-    console.log("session :: ", session);
-    console.log("messages :: ", messages);
-  }, [session, messages]);
+    scrollRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest",
+    });
+  }, [messages]);
 
   return (
     <S.Container
-      drag="y"
+      drag={isMobile ? "y" : false}
       dragMomentum={false}
       dragElastic={0}
       dragConstraints={{ top: 10 }}
@@ -57,27 +61,30 @@ const ChattingModal = ({
         }
       }}
     >
-      <S.InputWrapper>
-        <ov-videoconference
-          id="ov-videoconference"
-          tokens={getToken}
-          toolbarDisplaySessionName={false}
-          onSessionCreated={onSessionCreated}
-        >
-          <S.CommentInput
-            type="text"
-            placeholder="댓글을 입력하세요."
-            onChange={(e) => setMessage(e.target.value)}
-            value={message}
-            onKeyUp={handlePressEnter}
-          />
-        </ov-videoconference>
-        <S.SendButton onClick={sendMessage}>
-          <HiOutlineArrowSmUp size="1rem" color="#ffffff" />
-        </S.SendButton>
-      </S.InputWrapper>
+      {isDesktop && <S.ChattingTitle>채팅창</S.ChattingTitle>}
+      {isMobile && (
+        <S.InputWrapper>
+          <ov-videoconference
+            id="ov-videoconference"
+            tokens={getToken}
+            toolbarDisplaySessionName={false}
+            onSessionCreated={onSessionCreated}
+          >
+            <S.CommentInput
+              type="text"
+              placeholder="댓글을 입력하세요."
+              onChange={(e) => setMessage(e.target.value)}
+              value={message}
+              onKeyUp={handlePressEnter}
+            />
+          </ov-videoconference>
+          <S.SendButton onClick={sendMessage}>
+            <HiOutlineArrowSmUp size="1rem" color="#ffffff" />
+          </S.SendButton>
+        </S.InputWrapper>
+      )}
       <S.ChattingWrapper>
-        <S.ChattingList>
+        <S.ChattingList ref={scrollRef}>
           {messages && messages.length > 0 ? (
             messages.map((item, index) => (
               <S.ChattingContent key={item + index}>
@@ -90,6 +97,28 @@ const ChattingModal = ({
           )}
         </S.ChattingList>
       </S.ChattingWrapper>
+
+      {isDesktop && (
+        <S.InputWrapper>
+          <ov-videoconference
+            id="ov-videoconference"
+            tokens={getToken}
+            toolbarDisplaySessionName={false}
+            onSessionCreated={onSessionCreated}
+          >
+            <S.CommentInput
+              type="text"
+              placeholder="댓글을 입력하세요."
+              onChange={(e) => setMessage(e.target.value)}
+              value={message}
+              onKeyUp={handlePressEnter}
+            />
+          </ov-videoconference>
+          <S.SendButton onClick={sendMessage}>
+            <HiOutlineArrowSmUp size="1rem" color="#ffffff" />
+          </S.SendButton>
+        </S.InputWrapper>
+      )}
     </S.Container>
   );
 };

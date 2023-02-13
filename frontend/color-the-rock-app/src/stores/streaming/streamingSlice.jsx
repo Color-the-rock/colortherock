@@ -11,8 +11,12 @@ export const streamingSlice = createSlice({
   name: "streaming",
   initialState: {
     ov: null, // openVidu 객체
-    info: {},
+    info: {
+      title: "",
+      gymName: "",
+    },
     userOpenViduToken: "",
+    sessionId: "",
   },
   reducers: {
     setOV: (state, action) => {
@@ -25,10 +29,13 @@ export const streamingSlice = createSlice({
     setStreamingInfo: (state, action) => {
       state.info = action.payload;
     },
+    setSessionId: (state, action) => {
+      state.sessionId = action.payload;
+    },
   },
 });
 
-export const { setOV, setOpenViduToken, setStreamingInfo } =
+export const { setOV, setOpenViduToken, setStreamingInfo, setSessionId } =
   streamingSlice.actions;
 
 export default streamingSlice.reducer;
