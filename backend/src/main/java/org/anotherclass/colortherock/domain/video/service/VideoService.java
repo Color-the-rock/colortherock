@@ -38,7 +38,7 @@ public class VideoService {
     private final VideoRepository videoRepository;
     private final VideoReadRepository videoReadRepository;
 
-    private final Integer PAGE_SIZE = 15;
+    private static final Integer PAGE_SIZE = 15;
 
     // 로컬에서 영상게시판 통해 동영상 올리기
     @Transactional
@@ -123,6 +123,7 @@ public class VideoService {
 
     public String extractValidVideoName(Member member, MultipartFile newVideo) {
         String fileName = newVideo.getOriginalFilename();
+        assert fileName != null;
         if (fileName.split("\\.").length < 2) {
             throw new VideoFileNameHasNotExtensionException(GlobalErrorCode.VIDEO_HAS_NOT_EXTENSION);
         }
@@ -131,8 +132,7 @@ public class VideoService {
         if (!extension.matches("(mp4|mov|avi|wmv|flv|mkv|webm)$")) {
             throw new NotVideoExtensionException(GlobalErrorCode.NOT_VIDEO_EXTENSION);
         }
-        String videoName = System.currentTimeMillis() + member.getNickname() + "." + extension;
-        return videoName;
+        return System.currentTimeMillis() + member.getNickname() + "." + extension;
     }
 
     public String extractValidThumbName(Member member) {
