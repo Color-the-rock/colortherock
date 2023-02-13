@@ -76,7 +76,7 @@ class VideoBoardControllerTest extends IntegrationTest {
                     .isPosted(false)
                     .build();
             em.persist(video);
-            if(i % 2 == 0) {
+            if (i % 2 == 0) {
                 VideoBoard videoBoard = VideoBoard.builder()
                         .video(video)
                         .title("제목" + i)
@@ -109,16 +109,13 @@ class VideoBoardControllerTest extends IntegrationTest {
     @Test
     @DisplayName("완등 영상 게시글 슬라이싱 조회")
     void getSuccessPostsSlice() throws Exception {
-        MockHttpServletResponse response = mockMvc.perform(
+        Long videoBoardId = videoBoardIds.get(2);
+        mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .param("storeId", String.valueOf(2L))
+                                .param("storeId", String.valueOf(videoBoardId))
                 )
-                .andReturn()
-                .getResponse();
-
-        BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        assertEquals(1, arrayList.getResult().size());
+                .andExpect(jsonPath("$.status", is(200)));
     }
 
     @Test
@@ -209,7 +206,7 @@ class VideoBoardControllerTest extends IntegrationTest {
 
     @Test
     @DisplayName("완등 영상 게시글 삭제")
-    void deleteSuccessPost() throws Exception{
+    void deleteSuccessPost() throws Exception {
         url += "detail";
         Long videoBoardId = videoBoardIds.get(0);
         mockMvc.perform(

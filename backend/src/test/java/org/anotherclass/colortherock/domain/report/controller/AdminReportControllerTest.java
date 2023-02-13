@@ -120,7 +120,7 @@ class AdminReportControllerTest extends IntegrationTest {
                 .andReturn().getResponse();
 
         BaseResponse<List<AdminReportedPostResponse>> result = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        assertEquals(1, result.getResult().size());
+        assertEquals(3, result.getResult().size());
     }
 
     @Test

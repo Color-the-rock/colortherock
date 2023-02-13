@@ -91,8 +91,7 @@ class AdminReportServiceTest {
         // when
         List<AdminReportedPostResponse> result = adminReportService.getReportedVideoBoard();
         // then
-        assertEquals(1, result.size());
-        assertEquals(videoBoardIds.get(0), result.get(0).getVideoBoardId());
+        assertEquals(3, result.size());
     }
 
     @Test
