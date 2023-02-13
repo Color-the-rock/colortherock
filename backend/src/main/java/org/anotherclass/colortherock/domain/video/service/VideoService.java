@@ -7,6 +7,7 @@ import org.anotherclass.colortherock.domain.member.exception.MemberNotFoundExcep
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.exception.WrongMemberException;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
+import org.anotherclass.colortherock.domain.video.dto.DeletedVideoDto;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.exception.NotVideoExtensionException;
 import org.anotherclass.colortherock.domain.video.exception.VideoFileNameHasNotExtensionException;
@@ -15,17 +16,14 @@ import org.anotherclass.colortherock.domain.video.repository.VideoReadRepository
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.request.MySuccessVideoRequest;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
-import org.anotherclass.colortherock.domain.video.dto.DeletedVideoDto;
 import org.anotherclass.colortherock.domain.videoboard.request.LocalSuccessVideoUploadRequest;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
-import org.jcodec.api.JCodecException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,11 +36,11 @@ public class VideoService {
     private final VideoRepository videoRepository;
     private final VideoReadRepository videoReadRepository;
 
-    private final Integer PAGE_SIZE = 15;
+    private static final Integer PAGE_SIZE = 15;
 
     // 로컬에서 영상게시판 통해 동영상 올리기
     @Transactional
-    public Long uploadSuccessVideo(MemberDetails memberDetails, MultipartFile newVideo, LocalSuccessVideoUploadRequest request) throws IOException, JCodecException {
+    public Long uploadSuccessVideo(MemberDetails memberDetails, MultipartFile newVideo, LocalSuccessVideoUploadRequest request) {
         Member member = memberRepository.findById(memberDetails.getMember().getId())
                 .orElseThrow(() -> new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND));
         // S3 영상 저장 후 URL 얻어오기
@@ -52,12 +50,12 @@ public class VideoService {
         String thumbnailName = extractValidThumbName(member);
         String thumbnailURL = s3Service.uploadThumbnail(newVideo, thumbnailName);
         // request와 URL, name 을 DB에 저장
-        return saveSuccessVideo(member, videoName, s3URL,thumbnailName, thumbnailURL, request);
+        return saveSuccessVideo(member, videoName, s3URL, thumbnailName, thumbnailURL, request);
     }
 
     // 마이페이지에서 동영상 올리기
     @Transactional
-    public void uploadMyVideo(MemberDetails memberDetails, MultipartFile newVideo, UploadVideoRequest request) throws IOException, JCodecException {
+    public void uploadMyVideo(MemberDetails memberDetails, MultipartFile newVideo, UploadVideoRequest request) {
         Member member = memberRepository.findById(memberDetails.getMember().getId())
                 .orElseThrow(() -> new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND));
         // S3 영상 저장 후 URL 얻어오기
@@ -123,6 +121,7 @@ public class VideoService {
 
     public String extractValidVideoName(Member member, MultipartFile newVideo) {
         String fileName = newVideo.getOriginalFilename();
+        assert fileName != null;
         if (fileName.split("\\.").length < 2) {
             throw new VideoFileNameHasNotExtensionException(GlobalErrorCode.VIDEO_HAS_NOT_EXTENSION);
         }
@@ -131,8 +130,7 @@ public class VideoService {
         if (!extension.matches("(mp4|mov|avi|wmv|flv|mkv|webm)$")) {
             throw new NotVideoExtensionException(GlobalErrorCode.NOT_VIDEO_EXTENSION);
         }
-        String videoName = System.currentTimeMillis() + member.getNickname() + "." + extension;
-        return videoName;
+        return System.currentTimeMillis() + member.getNickname() + "." + extension;
     }
 
     public String extractValidThumbName(Member member) {

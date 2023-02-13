@@ -6,6 +6,9 @@ import org.springframework.cglib.proxy.Proxy;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * Connection 객체를 가져왔을때 수행하는 InvocationHandler
+ */
 public class ConnectionInvocationHandler implements InvocationHandler {
 
     private final Object connection;
@@ -16,6 +19,13 @@ public class ConnectionInvocationHandler implements InvocationHandler {
         this.apiQueryCounter = apiQueryCounter;
     }
 
+    /**
+     * PreparedStatement를 가져올 떄 프록시 객체를 반환한다.
+     * @param o 타깃
+     * @param method 수행하는 메서드
+     * @param args 변수
+     * @return preparedStatement 객체 or 프록시 객체
+     */
     @Override
     public Object invoke(final Object o, final Method method, final Object[] args)
             throws InvocationTargetException, IllegalAccessException {

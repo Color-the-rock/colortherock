@@ -9,11 +9,10 @@ import java.util.List;
 
 @Repository
 public class ReportReadRepository {
-    private final EntityManager em;
+
     private final JPAQueryFactory query;
 
     public ReportReadRepository(EntityManager em) {
-        this.em = em;
         this.query = new JPAQueryFactory(em);
     }
 

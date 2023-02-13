@@ -18,11 +18,10 @@ import java.util.List;
 @Repository
 public class VideoBoardReadRepository {
 
-    private final EntityManager em;
+
     private final JPAQueryFactory query;
 
     public VideoBoardReadRepository(EntityManager em) {
-        this.em = em;
         this.query = new JPAQueryFactory(em);
     }
 
@@ -50,7 +49,7 @@ public class VideoBoardReadRepository {
                         checkColor(colorCond)
                 )
                 .orderBy(videoBoard.id.desc())
-                .limit(pageable.getPageSize() + 1)
+                .limit(pageable.getPageSize() + 1L)
                 .fetch();
 
         // 무한 스크롤 처리
@@ -71,7 +70,7 @@ public class VideoBoardReadRepository {
                         videoBoard.member.id.eq(memberId)
                 )
                 .orderBy(videoBoard.id.desc())
-                .limit(pageable.getPageSize() + 1)
+                .limit(pageable.getPageSize() + 1L)
                 .fetch();
 
         return checkLastPage(pageable, results);

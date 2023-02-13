@@ -30,8 +30,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils.BEARER_PREFIX;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -110,7 +111,7 @@ class AdminReportControllerTest extends IntegrationTest {
     @Test
     @DisplayName("(관리자 인증된 경우) 신고된 영상 게시글 목록 가져오기")
     void getReportedPost() throws Exception {
-        token = TOKEN_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        token = BEARER_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
         MockHttpServletResponse response = mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -138,7 +139,7 @@ class AdminReportControllerTest extends IntegrationTest {
     void failToGetReportPostByUser() throws Exception {
         Member member = memberRepository.findById(memberIds.get(0))
                 .orElseThrow(() -> new GlobalBaseException(GlobalErrorCode.USER_NOT_FOUND));
-        tokenForUser = token = TOKEN_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        tokenForUser = token = BEARER_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
         mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -150,7 +151,7 @@ class AdminReportControllerTest extends IntegrationTest {
     @Test
     @DisplayName("신고 내용 상세 확인하기")
     void getReportedPostDetail() throws Exception {
-        token = TOKEN_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        token = BEARER_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
         MockHttpServletResponse response = mockMvc.perform(
                         get(url + "/detail")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -166,7 +167,7 @@ class AdminReportControllerTest extends IntegrationTest {
     @Test
     @DisplayName("영상 숨김 해제하기")
     void cancelHiddenStatus() throws Exception {
-        token = TOKEN_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        token = BEARER_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
         mockMvc.perform(
                         get(url + "/detail/unhidden")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -179,7 +180,7 @@ class AdminReportControllerTest extends IntegrationTest {
     @Test
     @DisplayName("영상 삭제하기")
     void deleteVideo() throws Exception {
-        token = TOKEN_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        token = BEARER_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
         mockMvc.perform(
                         delete(url + "/detail")
                                 .contentType(MediaType.APPLICATION_JSON)

@@ -20,7 +20,8 @@ import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetail
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,7 @@ public class VideoBoardService {
     private final MemberRepository memberRepository;
     private final VideoBoardRepository videoBoardRepository;
     private final VideoBoardReadRepository videoBoardReadRepository;
-    private final Integer PAGE_SIZE = 16;
+    private static final Integer PAGE_SIZE = 16;
 
     // 완등 영상 전체 리스트 조회
     @Transactional(readOnly = true)

@@ -5,7 +5,6 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import jdk.javadoc.doclet.Doclet;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +21,7 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public OpenAPI ColorTheRockOpenAPI() {
+    public OpenAPI colorTheRockOpenAPI() {
         String jwtSchemeName = "jwtAuth";
         // API 요청헤더에 인증정보 포함
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);

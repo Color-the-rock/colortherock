@@ -2,13 +2,17 @@ package org.anotherclass.colortherock.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.AdminDetails;
+import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -23,10 +27,8 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String input) throws UsernameNotFoundException {
 
         if (!input.equals(adminId)) {
-            MemberDetails memberDetails = new MemberDetails(memberRepository.findByEmail(input));
-            if (memberDetails == null) {
-                throw new UsernameNotFoundException("User Not Found");
-            } else return memberDetails;
+            Member member = Optional.ofNullable(memberRepository.findByEmail(input)).orElseThrow(UserNotFoundException::new);
+            return new MemberDetails(member);
         } else return new AdminDetails(input);
     }
 }
