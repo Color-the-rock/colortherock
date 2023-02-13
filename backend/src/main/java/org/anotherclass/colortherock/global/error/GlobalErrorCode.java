@@ -2,6 +2,9 @@ package org.anotherclass.colortherock.global.error;
 
 import lombok.Getter;
 
+/**
+ * 프로젝트 내 사용되는 에러 코드
+ */
 @Getter
 public enum GlobalErrorCode {
     /**
