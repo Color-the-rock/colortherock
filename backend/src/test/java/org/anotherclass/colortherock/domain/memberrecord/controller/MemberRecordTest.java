@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils.BEARER_PREFIX;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -41,7 +42,7 @@ public class MemberRecordTest extends IntegrationTest {
     RefreshTokenRepository refreshTokenRepository;
     @Autowired
     RedisTemplate<String, String> redisTemplate;
-    public static final String AUTHORIZATION_HEADER = "Bearer ";
+    public static final String AUTHORIZATION_HEADER = BEARER_PREFIX;
     @Autowired
     JwtTokenUtils jwtTokenUtils;
     @Autowired
@@ -62,7 +63,7 @@ public class MemberRecordTest extends IntegrationTest {
         // Member 추가 및 token 설정
         member = new Member("johan@rock.com", "조한", Member.RegistrationId.google);
         Member savedMember = memberRepository.save(member);
-        token = jwtTokenUtils.createTokens(savedMember, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        token = jwtTokenUtils.createTokens(savedMember, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
         // 영상 추가
         for (int i = 1; i <= 9; i++) {
             video = UploadVideoRequest.builder()

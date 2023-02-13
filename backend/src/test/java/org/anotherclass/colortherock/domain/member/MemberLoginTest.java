@@ -30,6 +30,7 @@ import javax.persistence.EntityManager;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils.BEARER_PREFIX;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SuppressWarnings("NonAsciiCharacters")
 public class MemberLoginTest extends IntegrationTest {
 
     @Autowired
@@ -45,7 +47,7 @@ public class MemberLoginTest extends IntegrationTest {
     RefreshTokenRepository refreshTokenRepository;
     @Autowired
     RedisTemplate<String, String> redisTemplate;
-    public static final String AUTHORIZATION_HEADER = "Bearer ";
+    public static final String AUTHORIZATION_HEADER = BEARER_PREFIX;
 
     @Autowired
     JwtTokenUtils jwtTokenUtils;
@@ -58,7 +60,7 @@ public class MemberLoginTest extends IntegrationTest {
     Member member;
 
     @BeforeEach
-    public void setMember() {
+    void setMember() {
         member = new Member("suker800@gmail.com", "태규", Member.RegistrationId.google);
 
         em.persist(member);
@@ -70,7 +72,7 @@ public class MemberLoginTest extends IntegrationTest {
 
     @Test
     @DisplayName("비 로그인 요청시 302 에러")
-    public void 비로그인시_401에러를_반환() throws Exception {
+    void 비로그인시_401에러를_반환() throws Exception {
         mockMvc.perform(
                 get(url + "test")
         ).andExpect(status().is(401));
@@ -78,9 +80,9 @@ public class MemberLoginTest extends IntegrationTest {
 
     @Test
     @DisplayName("정상적인 로그인 요청")
-    public void 정상적인_로그인_요청() throws Exception {
+    void 정상적인_로그인_요청() throws Exception {
 
-        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
 
         mockMvc.perform(
                         get(url + "test")
@@ -91,11 +93,13 @@ public class MemberLoginTest extends IntegrationTest {
 
     @Test
     @DisplayName("Refresh 발급")
-    public void Refresh_발급() {
-        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+    void Refresh_발급() {
+        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
         RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(tokens);
-        System.out.println("refreshToken.getRefreshToken() = " + refreshToken.getRefreshToken());
-        System.out.println("refreshToken.getAccessToken() = " + refreshToken.getAccessToken());
+        System.out.println("refreshToken.getRefreshToken() = " + refreshToken.getRefreshTokenKey());
+        System.out.println("refreshToken.getAccessToken() = " + refreshToken.getAccessTokenValue());
+        Assertions.assertNotNull(refreshToken.getRefreshTokenKey());
+        Assertions.assertNotNull(refreshToken.getAccessTokenValue());
 
     }
 
@@ -111,16 +115,16 @@ public class MemberLoginTest extends IntegrationTest {
 
     @Test
     @DisplayName("Refresh로 다시 토큰 재발급 했는데 아직 만료안되서 실패")
-    public void 토큰재발급실패() throws Exception {
+    void 토큰재발급실패() throws Exception {
 
-        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        String tokens = jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
         RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(tokens);
-        Optional<RefreshToken> validRefreshToken = jwtTokenUtils.isValidRefreshToken(refreshToken.getRefreshToken());
+        Optional<RefreshToken> validRefreshToken = jwtTokenUtils.findRefreshToken(refreshToken.getRefreshTokenKey());
         Assertions.assertDoesNotThrow(() -> {
             validRefreshToken.orElseThrow();
         });
         refreshToken = validRefreshToken.orElseThrow();
-        ReGenerateAccessTokenRequest request = new ReGenerateAccessTokenRequest(tokens, refreshToken.getRefreshToken());
+        ReGenerateAccessTokenRequest request = new ReGenerateAccessTokenRequest(tokens, refreshToken.getRefreshTokenKey());
 
         mockMvc.perform(
                 post("/api/refresh")
@@ -131,7 +135,7 @@ public class MemberLoginTest extends IntegrationTest {
 
     @Test
     @DisplayName("Refresh로 다시 토큰 재발급")
-    public void 토큰재발급성공() throws Exception {
+    void 토큰재발급성공() throws Exception {
 
         Map<String, Object> map = new HashMap<>();
         Claims claims = Jwts.claims(map);
@@ -143,20 +147,19 @@ public class MemberLoginTest extends IntegrationTest {
                 .compact();
 
         RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(tokens);
-        Optional<RefreshToken> validRefreshToken = jwtTokenUtils.isValidRefreshToken(refreshToken.getRefreshToken());
+        Optional<RefreshToken> validRefreshToken = jwtTokenUtils.findRefreshToken(refreshToken.getRefreshTokenKey());
         Assertions.assertDoesNotThrow(() -> {
             validRefreshToken.orElseThrow();
         });
         refreshToken = validRefreshToken.orElseThrow();
-        ReGenerateAccessTokenRequest request = new ReGenerateAccessTokenRequest(tokens, refreshToken.getRefreshToken());
-        Thread.sleep(3000);
+        ReGenerateAccessTokenRequest request = new ReGenerateAccessTokenRequest(tokens, refreshToken.getRefreshTokenKey());
         String contentAsString = mockMvc.perform(
                         post("/api/refresh")
                                 .content(this.objectMapper.writeValueAsBytes(request))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                    .andExpect(status().isOk())
+                .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         ReGenerateAccessTokenResponse response = objectMapper.readValue(contentAsString, ReGenerateAccessTokenResponse.class);
         String accessToken = response.getAccessToken();
@@ -166,7 +169,7 @@ public class MemberLoginTest extends IntegrationTest {
 
     @Test
     @DisplayName("회원 가입 API 테스트")
-    public void 회원가입() throws Exception {
+    void 회원가입() throws Exception {
         MemberSignUpRequest request = new MemberSignUpRequest("a@a.com", Member.RegistrationId.kakao, "이름");
 
         mockMvc.perform(
@@ -179,7 +182,7 @@ public class MemberLoginTest extends IntegrationTest {
 
     @Test
     @DisplayName("이메일 중복검사 API")
-    public void 이메일이_중복일_경우() throws Exception {
+    void 이메일이_중복일_경우() throws Exception {
 
         DuplicateNicknameRequest request = new DuplicateNicknameRequest("태규");
         mockMvc.perform(post(url + "/api/duplicateNickname").content(objectMapper.writeValueAsBytes(request)).contentType(MediaType.APPLICATION_JSON)
@@ -190,7 +193,7 @@ public class MemberLoginTest extends IntegrationTest {
 
     @Test
     @DisplayName("이메일 중복검사 API")
-    public void 이메일이_중복이_아닐_경우() throws Exception {
+    void 이메일이_중복이_아닐_경우() throws Exception {
         DuplicateNicknameRequest request = new DuplicateNicknameRequest("태규123");
         mockMvc.perform(post(url + "/api/duplicateNickname").content(objectMapper.writeValueAsBytes(request)).contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8)

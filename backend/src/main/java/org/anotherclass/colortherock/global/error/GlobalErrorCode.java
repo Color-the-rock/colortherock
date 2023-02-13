@@ -2,6 +2,9 @@ package org.anotherclass.colortherock.global.error;
 
 import lombok.Getter;
 
+/**
+ * 프로젝트 내 사용되는 에러 코드
+ */
 @Getter
 public enum GlobalErrorCode {
     /**
@@ -39,7 +42,7 @@ public enum GlobalErrorCode {
     REPORT_ONESELF(403, "RP100", "본인 스스로를 신고할 수 없습니다."),
 
     VIDEO_HAS_NOT_EXTENSION(400, "V101", "비디오 파일에 확장자가 존재하지 않습니다"),
-    NOT_VIDEO_EXTENSION(400, "V102", "비디오 파일 확장자가 아닙니다");
+    NOT_VIDEO_EXTENSION(400, "V102", "비디오 파일 확장자가 아닙니다"), UNSUPPORTED_INFO(400, "O100", "지원하지 않는 로그인 방식입니다.");
 
     private final String code;
     private final String message;

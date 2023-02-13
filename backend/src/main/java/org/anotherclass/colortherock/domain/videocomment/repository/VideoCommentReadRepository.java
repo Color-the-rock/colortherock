@@ -17,11 +17,9 @@ import java.util.List;
 @Repository
 public class VideoCommentReadRepository {
 
-    private final EntityManager em;
     private final JPAQueryFactory query;
 
     public VideoCommentReadRepository(EntityManager em) {
-        this.em = em;
         this.query = new JPAQueryFactory(em);
     }
 
@@ -39,7 +37,7 @@ public class VideoCommentReadRepository {
                         videoComment.videoBoard.id.eq(videoBoardId)
                 )
                 .orderBy(videoComment.id.desc())
-                .limit(pageable.getPageSize() + 1)
+                .limit(pageable.getPageSize() + 1L)
                 .fetch();
         return checkLastPage(pageable, results);
     }
@@ -53,7 +51,7 @@ public class VideoCommentReadRepository {
                         videoComment.member.id.eq(memberId)
                 )
                 .orderBy(videoComment.id.desc())
-                .limit(pageable.getPageSize() + 1)
+                .limit(pageable.getPageSize() + 1L)
                 .fetch();
         return checkLastPage(pageable, results);
 

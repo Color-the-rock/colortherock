@@ -2,11 +2,8 @@ package org.anotherclass.colortherock.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
-
-import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.exception.AccessDeniedException;
 import org.anotherclass.colortherock.domain.member.exception.IncorrectAdminInfoException;
-import org.anotherclass.colortherock.domain.member.exception.MemberNotFoundException;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.member.request.LoginInfo;
 import org.anotherclass.colortherock.domain.member.request.MemberSignUpRequest;
@@ -17,11 +14,12 @@ import org.anotherclass.colortherock.global.security.jwt.RefreshToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
+
+import static org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils.BEARER_PREFIX;
 
 @Service
 @RequiredArgsConstructor
@@ -41,11 +39,11 @@ public class MemberService {
         if (!adminId.equals(loginInfo.getId()) || !adminPassword.equals(loginInfo.getPassword())) {
             throw new IncorrectAdminInfoException();
         }
-        return "Bearer " + jwtTokenUtils.createTokens(loginInfo.getId(), List.of(() -> "ROLE_ADMIN"));
+        return BEARER_PREFIX + jwtTokenUtils.createTokens(loginInfo.getId(), List.of(() -> "ROLE_ADMIN"));
     }
 
     public String regenerateAccessToken(String refreshToken) {
-        Optional<RefreshToken> findToken = jwtTokenUtils.isValidRefreshToken(refreshToken);
+        Optional<RefreshToken> findToken = jwtTokenUtils.findRefreshToken(refreshToken);
         RefreshToken findRefreshToken = findToken.orElseThrow(() -> new AccessDeniedException(GlobalErrorCode.ACCESS_DENIED));
         return jwtTokenUtils.reCreateTokens(findRefreshToken);
     }
@@ -53,16 +51,9 @@ public class MemberService {
     public MemberSignUpResponse signup(MemberSignUpRequest request) {
         Member member = request.toEntity();
         Member save = memberRepository.save(member);
-        String token = "Bearer " + jwtTokenUtils.createTokens(save, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        String token = BEARER_PREFIX + jwtTokenUtils.createTokens(save, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
         RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(token);
-        return new MemberSignUpResponse(save.getId(), save.getEmail(), save.getRegistrationId(), save.getNickname(), refreshToken.getAccessToken(), refreshToken.getRefreshToken());
-    }
-
-    @Transactional(readOnly = true)
-    public Member getMember(MemberDetails memberDetails) {
-        Member member = memberRepository.findById(memberDetails.getMember().getId())
-                .orElseThrow(() -> new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND));
-        return member;
+        return new MemberSignUpResponse(save.getId(), save.getEmail(), save.getRegistrationId(), save.getNickname(), refreshToken.getAccessTokenValue(), refreshToken.getRefreshTokenKey());
     }
 
     public boolean duplicateNickname(String nickname) {
@@ -83,6 +74,6 @@ public class MemberService {
 
     public String testToken() {
         Member member = memberRepository.findById(memberId).orElseThrow();
-        return jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        return jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
     }
 }

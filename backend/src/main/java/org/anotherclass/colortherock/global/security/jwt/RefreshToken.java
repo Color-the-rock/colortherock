@@ -1,5 +1,6 @@
 package org.anotherclass.colortherock.global.security.jwt;
 
+import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -7,20 +8,17 @@ import org.springframework.data.redis.core.RedisHash;
 @RedisHash(value = "refreshToken")
 public class RefreshToken {
 
+    @Getter
     @Id
-    private final String refreshToken;
-    private final String accessToken;
+    private final String refreshTokenKey;
+    private final String accessTokenValue;
 
-    public RefreshToken(final String refreshToken, final String accessToken) {
-        this.refreshToken = refreshToken;
-        this.accessToken = accessToken;
+    public RefreshToken(final String refreshTokenKey, final String accessTokenValue) {
+        this.refreshTokenKey = refreshTokenKey;
+        this.accessTokenValue = accessTokenValue;
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
+    public String getAccessTokenValue() {
+        return accessTokenValue;
     }
 }
