@@ -26,6 +26,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 @Log4j2
 @Service
@@ -57,19 +58,30 @@ public class S3Service {
     }
 
     // Upload user's local video
-    public String upload(MultipartFile file, String videoName) throws IOException {
-        InputStream inputStream = file.getInputStream();
-        s3Client.putObject(new PutObjectRequest(bucket, videoName, inputStream, null)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
-        inputStream.close();
-        return cloudFrontUrl + videoName;
+    public String upload(MultipartFile file, String videoName) {
+        try (InputStream inputStream = file.getInputStream()) {
+            s3Client.putObject(new PutObjectRequest(bucket, videoName, inputStream, null)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+
+            return cloudFrontUrl + videoName;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     // Upload thumbnail from user's local video
-    public String uploadThumbnail(MultipartFile videoFile, String thumbnailName) throws IOException, JCodecException {
+    public String uploadThumbnail(MultipartFile videoFile, String thumbnailName) {
         File file = convertMultipartFileToFile(videoFile);
         String thumbnailURL = getThumbnailURL(thumbnailName, file);
-        if (!file.delete()) log.info("파일이 삭제되지 않았습니다.");
+        try {
+            Files.delete(Path.of(file.getPath()));
+        } catch (IOException e) {
+            log.info("파일이 삭제되지 않았습니다.");
+            throw new RuntimeException(e);
+        }
+
+
         return thumbnailURL;
     }
 
@@ -80,14 +92,14 @@ public class S3Service {
         try (InputStream inputStream = Files.newInputStream(filePath)) {
             s3Client.putObject(new PutObjectRequest(bucket, videoName, inputStream, null)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
+            return cloudFrontUrl + videoName;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return cloudFrontUrl + videoName;
     }
 
     // Upload thumbnail from Openvidu recording video
-    public String uploadThumbnailFromOV(String dir, String thumbnailName) throws IOException, JCodecException {
+    public String uploadThumbnailFromOV(String dir, String thumbnailName) {
         File file = Paths.get(dir).toFile();
         return getThumbnailURL(thumbnailName, file);
     }
@@ -99,31 +111,34 @@ public class S3Service {
     /**
      * S3에 썸네일 이미지를 저장하고 URL을 가져옴
      */
-    private String getThumbnailURL(String thumbnailName, File file) throws IOException, JCodecException {
+    private String getThumbnailURL(String thumbnailName, File file) {
         // Get image from video
-        FileChannelWrapper fileChannelWrapper = NIOUtils.readableChannel(file);
-        FrameGrab grab = FrameGrab.createFrameGrab(fileChannelWrapper);
-        Picture picture = grab.seekToSecondPrecise(1.0).getNativeFrame();
-        BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
-        fileChannelWrapper.close();
-        // Convert the image to a JPEG and write it to a ByteArrayOutputStream
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(bufferedImage, "JPEG", baos);
-        baos.flush();
-        InputStream is = new ByteArrayInputStream(baos.toByteArray());
-        baos.close();
-        // Upload the object to S3
-        s3Client.putObject(new PutObjectRequest(bucket, thumbnailName, is, null));
-        return cloudFrontUrl + thumbnailName;
+        try (FileChannelWrapper fileChannelWrapper = NIOUtils.readableChannel(file);
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            FrameGrab grab = FrameGrab.createFrameGrab(fileChannelWrapper);
+            Picture picture = grab.seekToSecondPrecise(1.0).getNativeFrame();
+            BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
+            // Convert the image to a JPEG and write it to a ByteArrayOutputStream
+
+            ImageIO.write(bufferedImage, "JPEG", baos);
+            baos.flush();
+            InputStream is = new ByteArrayInputStream(baos.toByteArray());
+            // Upload the object to S3
+            s3Client.putObject(new PutObjectRequest(bucket, thumbnailName, is, null));
+            return cloudFrontUrl + thumbnailName;
+        } catch (JCodecException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     // Convert MultipartFile to File
     private File convertMultipartFileToFile(MultipartFile file) {
-        File convFile = new File(file.getOriginalFilename());
+        File convFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
         try (FileOutputStream fos = new FileOutputStream(convFile)) {
             fos.write(file.getBytes());
-        } catch (Exception e) {
-            throw new RuntimeException();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         return convFile;
