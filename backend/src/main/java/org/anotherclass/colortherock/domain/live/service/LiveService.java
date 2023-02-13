@@ -131,7 +131,10 @@ public class LiveService {
 
         if (role.equals(OpenViduRole.PUBLISHER)) {
             try {
-                Recording recording = openVidu.startRecording(sessionId);
+                RecordingProperties properties = new RecordingProperties.Builder()
+                        .resolution("720x1280")
+                        .frameRate(50).build();
+                Recording recording = openVidu.startRecording(sessionId, properties);
                 String recordingId = recording.getId();
                 List<String> recordings = recordingsForSession.getOrDefault(sessionId, new ArrayList<>());
                 recordings.add(recordingId);
