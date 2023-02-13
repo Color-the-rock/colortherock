@@ -74,6 +74,11 @@ public class InsertMockData {
         // Video
         List<Long> videoNums = new ArrayList<>();
         List<Video> videos = new ArrayList<>();
+        for (int i = 1; i < 20; i++) {
+            videos.add(Video.builder().videoName(videoName1).level(4).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("빨강").build());
+            videos.add(Video.builder().videoName(videoName1).level(2).isSuccess(true).gymName("더클라임 홍대").member(member2).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("노랑").build());
+        }
+
         videos.add(Video.builder().videoName(videoName1).level(2).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("빨강").build());
         for (int i = 1; i < 10; i++) {
             videos.add(Video.builder().videoName(videoName1).level(i).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-1" + (i))).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("노랑").build());
@@ -84,11 +89,9 @@ public class InsertMockData {
             videos.add(Video.builder().videoName(videoName2).level(i).isSuccess(false).gymName("더클라임 홍대").member(member2).shootingDate(LocalDate.parse("2023-01-1" + (i))).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("보라").build());
             videos.add(Video.builder().videoName(videoName2).level(i).isSuccess(true).gymName("더클라임 홍대").member(member2).shootingDate(LocalDate.parse("2023-01-1" + (i))).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("갈색").build());
         }
-        for(int i = 1; i < 10; i++) {
-            videos.add(Video.builder().videoName(videoName2).level(2).isSuccess(true).gymName("더클라임 홍대").member(member1).shootingDate(LocalDate.parse("2023-01-20")).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("빨강").build());
-            videos.add(Video.builder().videoName(videoName2).level(5).isSuccess(true).gymName("더클라임 홍대").member(member1).shootingDate(LocalDate.parse("2023-01-24")).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("초록").build());
-            videos.add(Video.builder().videoName(videoName2).level(3).isSuccess(true).gymName("더클라임 강남").member(member2).shootingDate(LocalDate.parse("2023-01-20")).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("노랑").build());
-        }
+        videos.add(Video.builder().videoName(videoName2).level(2).isSuccess(true).gymName("더클라임 홍대").member(member1).shootingDate(LocalDate.parse("2023-01-20")).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("빨강").build());
+        videos.add(Video.builder().videoName(videoName2).level(5).isSuccess(true).gymName("더클라임 홍대").member(member1).shootingDate(LocalDate.parse("2023-01-24")).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("초록").build());
+        videos.add(Video.builder().videoName(videoName2).level(3).isSuccess(true).gymName("더클라임 강남").member(member2).shootingDate(LocalDate.parse("2023-01-20")).s3URL(cloudFrontUrl + videoName2).thumbnailURL(cloudFrontUrl + thumbnail2).color("노랑").build());
         videoRepository.saveAll(videos);
         for (int i = 0; i < videos.size(); i++) {
             if (videos.get(i).getIsSuccess()) videoNums.add(videos.get(i).getId());
@@ -104,7 +107,7 @@ public class InsertMockData {
         videoBoardRepository.saveAll(videoBoards);
 
         // Report
-        for(int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             Long videoBoardId = videoBoards.get(i).getId();
             PostReportRequest request = new PostReportRequest(videoBoardId, "TYPE_A");
             reportService.reportPost(member2, request);
