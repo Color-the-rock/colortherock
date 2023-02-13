@@ -4,7 +4,7 @@ import { useInput } from "../../hooks/useInput";
 import * as S from "./style";
 
 const Admin = () => {
-  const [isAdmin, setAdmin] = useState(true);
+  const [isAdmin, setAdmin] = useState(false);
   const [result, setResult] = useState([]);
   const [adminId, onChangeAdminId] = useInput("");
   const [adminPw, onChangeAdminPw] = useInput("");

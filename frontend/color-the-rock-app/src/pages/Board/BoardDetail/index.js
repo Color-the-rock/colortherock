@@ -19,6 +19,18 @@ const BoardDetail = () => {
   const [result, setResult] = useState({}); // 게시글 상세 정보 배열
   const [commentList, setCommentList] = useState({}); // 게시글 댓글 정보 배열
   const userNickname = useSelector((state) => state.users.nickName);
+
+  // const updateFuncOnScroll = () => {
+  //   try {
+  //     setData((prev) => [...prev, ...dummy]);
+  //   } catch (error) {
+  //   } finally {
+  //     setIsFetching(false);
+  //   }
+  // };
+
+  // const [isFetching, setIsFetching] = useInfiniteScroll(updateFuncOnScroll);
+
   // 게시글 상세 조회 API
   const getBoardDetail = () => {
     boardApi
