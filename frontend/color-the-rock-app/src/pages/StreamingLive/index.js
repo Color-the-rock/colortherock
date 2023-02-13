@@ -63,6 +63,7 @@ const StreamingLive = () => {
 
   // 이전 영상 보기 관리
   const [recordListModal, setRecordListModal] = useState(false);
+  const [isFrontCamera, setFrontCamera] = useState(false);
 
   // 피드백 설정 관리
   const [picture, setPicture] = useState();
@@ -245,11 +246,15 @@ const StreamingLive = () => {
 
         if (newVideoDevice.length > 0) {
           let newPublisher = ov.initPublisher(undefined, {
-            videoSource: newVideoDevice[0].deviceId,
+            videoSource: isFrontCamera
+              ? videoDevices[1].deviceId
+              : videoDevices[0].deviceId,
             publishAudio: true,
             publishVideo: true,
-            mirror: true,
+            mirror: isFrontCamera,
           });
+
+          setFrontCamera((prev) => !prev);
 
           await session.unpublish(mainStreamManager);
           await session.publish(newPublisher);
@@ -368,13 +373,6 @@ const StreamingLive = () => {
     setRecordStart((prev) => !prev);
   };
 
-  // 비공개방일 경우, 링크 복사를 통해 진입
-  // const handleCopyLink = () => {
-  //   navigator.clipboard.writeText(window.location.href).then(() => {
-  //     alert("링크가 복사되었습니다:)");
-  //     console.log("window.location.href", window.location.href);
-  //   });
-  // };
   return (
     <S.Container>
       {feedbackModal && (
@@ -502,12 +500,6 @@ const StreamingLive = () => {
             녹화 시작
           </S.VideoMenuItem>
         )}
-        {/* <S.VideoMenuItem onClick={handleCopyLink}>
-          <S.IconWrapper>
-            <FiLink size="24px" />
-          </S.IconWrapper>
-          링크 공유
-        </S.VideoMenuItem> */}
       </S.VideoMenu>
     </S.Container>
   );
