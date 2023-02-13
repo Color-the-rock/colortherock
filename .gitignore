@@ -2,3 +2,5 @@
 /backend/.idea
 /backend/build
 .idea
+/backend/out
+/backend/src/main/resources/application-local.yaml
