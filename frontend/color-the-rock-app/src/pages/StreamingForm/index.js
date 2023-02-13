@@ -132,11 +132,7 @@ const StreamingForm = () => {
             screenshotFormat="image/jpeg"
             videoConstraints={videoConstraints}
           />
-          <HiOutlineCamera
-            size="32px"
-            className="camera"
-            onClick={handleCapture}
-          />
+
           {imgSrc && (
             <S.CaptureWrap>
               <img src={imgSrc} alt="capture" />
@@ -186,6 +182,16 @@ const StreamingForm = () => {
                     setLocation={setGymName}
                     opacity="70"
                   />
+                </S.ComponenentWrap>
+                <S.ComponenentWrap>
+                  <S.CameraWrap>
+                    <HiOutlineCamera
+                      size="32px"
+                      className="camera"
+                      onClick={handleCapture}
+                    />
+                    <span>{`    << 썸네일을 찍어주세요.`}</span>
+                  </S.CameraWrap>
                 </S.ComponenentWrap>
               </S.AddPadding>
             )}

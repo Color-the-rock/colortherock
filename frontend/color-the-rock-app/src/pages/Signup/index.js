@@ -50,7 +50,7 @@ const SignUp = () => {
   // 닉네임 정규표현식 적용.
   const handleChange = (e) => {
     setNickname(e.target.value);
-    const regex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/;
+    const regex = /^(?=.*[a-zA-Z0-9가-힣])[a-zA-Z0-9가-힣]{2,16}$/;
     if (regex.test(e.target.value)) {
       setNickNameValid(true);
     } else {
@@ -92,7 +92,7 @@ const SignUp = () => {
             <S.InputWrap>
               <S.InputComp
                 type="text"
-                placeholder="사용하실 닉네임을 입력해주세요."
+                placeholder="닉네임을 입력해주세요."
                 onChange={handleChange}
               />
             </S.InputWrap>
@@ -108,7 +108,7 @@ const SignUp = () => {
               <FiArrowRightCircle className="FiArrowRightCircle" />
             </S.InputButton>
             <S.ErrorMessageWrap>
-              {!nickNameValid && (
+              {!nickNameValid && nickname.length > 0 && (
                 <S.ErrorMessage>
                   <div>!</div> <p>사용할 수 없는 닉네임</p>
                 </S.ErrorMessage>
