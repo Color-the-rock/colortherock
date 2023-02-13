@@ -74,12 +74,12 @@ public class InsertMockData {
         // Video
         List<Long> videoNums = new ArrayList<>();
         List<Video> videos = new ArrayList<>();
+        videos.add(Video.builder().videoName(videoName1).level(2).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("빨강").build());
         for (int i = 1; i < 20; i++) {
             videos.add(Video.builder().videoName(videoName1).level(4).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("빨강").build());
             videos.add(Video.builder().videoName(videoName1).level(2).isSuccess(true).gymName("더클라임 홍대").member(member2).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("노랑").build());
         }
 
-        videos.add(Video.builder().videoName(videoName1).level(2).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("빨강").build());
         for (int i = 1; i < 10; i++) {
             videos.add(Video.builder().videoName(videoName1).level(i).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-1" + (i))).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("노랑").build());
             videos.add(Video.builder().videoName(videoName1).level(i).isSuccess(false).gymName("더클라임 홍대").member(member2).shootingDate(LocalDate.parse("2023-01-1" + (i))).s3URL(cloudFrontUrl + videoName1).thumbnailURL(cloudFrontUrl + thumbnail1).color("주황").build());
