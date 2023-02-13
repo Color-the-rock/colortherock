@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils.BEARER_PREFIX;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 /**
@@ -46,7 +47,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl;
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
-            String tokens = "Bearer " + jwtTokenUtils.createTokens(member, oAuth2User.getAuthorities());
+            String tokens = BEARER_PREFIX + jwtTokenUtils.createTokens(member, oAuth2User.getAuthorities());
             RefreshToken token = jwtTokenUtils.generateRefreshToken(tokens);
             response.setHeader(AUTHORIZATION, tokens);
             targetUrl = UriComponentsBuilder.newInstance()

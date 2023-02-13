@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils.BEARER_PREFIX;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -41,7 +42,7 @@ public class MemberRecordTest extends IntegrationTest {
     RefreshTokenRepository refreshTokenRepository;
     @Autowired
     RedisTemplate<String, String> redisTemplate;
-    public static final String AUTHORIZATION_HEADER = "Bearer ";
+    public static final String AUTHORIZATION_HEADER = BEARER_PREFIX;
     @Autowired
     JwtTokenUtils jwtTokenUtils;
     @Autowired

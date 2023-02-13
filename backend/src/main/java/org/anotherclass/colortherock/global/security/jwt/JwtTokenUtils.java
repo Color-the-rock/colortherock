@@ -14,6 +14,7 @@ import java.util.*;
 public class JwtTokenUtils {
     private static final String KEY = "secret";
     private static final long EXP = 300 * 1000L * 12;
+    public static final String BEARER_PREFIX = "Bearer ";
     private final RefreshTokenRepository refreshTokenRepository;
 
     public JwtTokenUtils(RefreshTokenRepository refreshTokenRepository) {

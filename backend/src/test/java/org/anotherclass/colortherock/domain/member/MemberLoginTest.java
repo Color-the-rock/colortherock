@@ -30,7 +30,7 @@ import javax.persistence.EntityManager;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static java.lang.Thread.sleep;
+import static org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils.BEARER_PREFIX;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,7 +47,7 @@ public class MemberLoginTest extends IntegrationTest {
     RefreshTokenRepository refreshTokenRepository;
     @Autowired
     RedisTemplate<String, String> redisTemplate;
-    public static final String AUTHORIZATION_HEADER = "Bearer ";
+    public static final String AUTHORIZATION_HEADER = BEARER_PREFIX;
 
     @Autowired
     JwtTokenUtils jwtTokenUtils;
@@ -98,6 +98,8 @@ public class MemberLoginTest extends IntegrationTest {
         RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(tokens);
         System.out.println("refreshToken.getRefreshToken() = " + refreshToken.getRefreshTokenKey());
         System.out.println("refreshToken.getAccessToken() = " + refreshToken.getAccessTokenValue());
+        Assertions.assertNotNull(refreshToken.getRefreshTokenKey());
+        Assertions.assertNotNull(refreshToken.getAccessTokenValue());
 
     }
 
@@ -151,7 +153,6 @@ public class MemberLoginTest extends IntegrationTest {
         });
         refreshToken = validRefreshToken.orElseThrow();
         ReGenerateAccessTokenRequest request = new ReGenerateAccessTokenRequest(tokens, refreshToken.getRefreshTokenKey());
-        sleep(3000);
         String contentAsString = mockMvc.perform(
                         post("/api/refresh")
                                 .content(this.objectMapper.writeValueAsBytes(request))

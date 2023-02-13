@@ -19,6 +19,8 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
+import static org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils.BEARER_PREFIX;
+
 @Service
 @RequiredArgsConstructor
 
@@ -37,7 +39,7 @@ public class MemberService {
         if (!adminId.equals(loginInfo.getId()) || !adminPassword.equals(loginInfo.getPassword())) {
             throw new IncorrectAdminInfoException();
         }
-        return "Bearer " + jwtTokenUtils.createTokens(loginInfo.getId(), List.of(() -> "ROLE_ADMIN"));
+        return BEARER_PREFIX + jwtTokenUtils.createTokens(loginInfo.getId(), List.of(() -> "ROLE_ADMIN"));
     }
 
     public String regenerateAccessToken(String refreshToken) {
@@ -49,7 +51,7 @@ public class MemberService {
     public MemberSignUpResponse signup(MemberSignUpRequest request) {
         Member member = request.toEntity();
         Member save = memberRepository.save(member);
-        String token = "Bearer " + jwtTokenUtils.createTokens(save, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
+        String token = BEARER_PREFIX + jwtTokenUtils.createTokens(save, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
         RefreshToken refreshToken = jwtTokenUtils.generateRefreshToken(token);
         return new MemberSignUpResponse(save.getId(), save.getEmail(), save.getRegistrationId(), save.getNickname(), refreshToken.getAccessTokenValue(), refreshToken.getRefreshTokenKey());
     }

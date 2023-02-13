@@ -17,13 +17,14 @@ import java.io.IOException;
 import java.util.Collection;
 
 import static org.anotherclass.colortherock.global.security.jwt.JwtAuthenticationProvider.getGrantedAuthorities;
+import static org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils.BEARER_PREFIX;
 import static org.aspectj.util.LangUtil.isEmpty;
 
 @Slf4j
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
     private final JwtTokenUtils jwtTokenUtils;
-    private static final String BEARER_PREFIX = "Bearer ";
+
 
     private static final String KEY_ROLES = "roles";
 
