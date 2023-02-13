@@ -81,7 +81,7 @@ const VideoClip = ({ sessionId, setModalOpen }) => {
       .catch((err) => {
         console.log("err: ", err);
       });
-  });
+  }, []);
 
   const onClickHandler = () => {
     setModalOpen();
