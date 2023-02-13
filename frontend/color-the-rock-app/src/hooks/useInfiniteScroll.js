@@ -11,33 +11,35 @@
 
 */
 
-
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
 export default function useInfiniteScroll(fatchCallback) {
-  
   const [isFetching, setIsFetching] = useState(false);
 
   const handleScroll = () => {
-    if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight) {
+    if (
+      document.documentElement.scrollHeight -
+        document.documentElement.scrollTop ===
+      document.documentElement.clientHeight
+    ) {
       setIsFetching(true);
     }
-  }
+  };
+  // scrollHeight
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-    }
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   useEffect(() => {
-    if(!isFetching) return;
+    if (!isFetching) return;
 
     fatchCallback();
   }, [isFetching]);
-
 
   return [isFetching, setIsFetching];
 }

@@ -63,13 +63,10 @@ const BoardCommentList = ({
 
           console.log("storeId ??? ", _storId);
           setStoreId(_storId);
-          setIsFetching(false);
         }
       })
       .catch((error) => console.log(error));
   };
-
-  const [isFetching, setIsFetching] = useInfiniteScroll(getAllComments);
 
   return (
     <S.Container onScroll={handleScroll}>
