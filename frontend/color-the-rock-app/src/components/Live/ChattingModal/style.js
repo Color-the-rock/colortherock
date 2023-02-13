@@ -26,6 +26,10 @@ export const ChattingWrapper = styled.div`
   height: 100%;
   overflow-y: scroll;
   background-color: transparent;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const InputWrapper = styled.div`
@@ -81,7 +85,6 @@ export const ChattingList = styled.ul`
   list-style: none;
   width: 100%;
   background-color: transparent;
-  overflow-y: auto;
 `;
 
 export const ChattingContent = styled.div`

@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import UserVideoComponent from "../../components/Live/UserVideo";
@@ -20,7 +19,6 @@ import {
   FiFilm,
   FiDisc,
   FiLink,
-  FiX,
 } from "react-icons/fi";
 import { Desktop, Mobile } from "../../components/layout/Template";
 import streamingApi from "../../api/streaming";
@@ -44,7 +42,7 @@ const StreamingLive = () => {
 
   // 세션 종료 관리
   const navigate = useNavigate();
-  // const { sessionId: _sessionId } = useParams();
+
   // 채팅 관리
   const [isShowChattingModal, setShowChattingModal] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -71,21 +69,41 @@ const StreamingLive = () => {
   const [feedbackModal, setFeedbackModal] = useState(false);
   let testRecordId = "";
 
+  const preventGoBack = () => {
+    window.history.pushState(null, "", window.location.href);
+    alert("방송종료를 눌러주세요:)");
+  };
+
+  const preventClose = (e) => {
+    e.preventDefault();
+    e.returnValue = ""; // 크롬에서 필요함
+
+    // 새로고침 -> 강제 종료
+    // if (session) session.disconnect();
+  };
+
+  // 새로고침 및 뒤로가기시 처리
+  useEffect(() => {
+    (() => {
+      window.addEventListener("beforeunload", preventClose);
+      window.history.pushState(null, "", window.location.href);
+      window.addEventListener("popstate", preventGoBack);
+    })();
+
+    return () => {
+      window.removeEventListener("beforeunload", preventClose);
+      window.removeEventListener("popstate", preventGoBack);
+    };
+  }, []);
+
   useEffect(() => {
     if (ov !== null && ov !== undefined) {
       console.log("ov 있음", ov, token);
 
       setSession(ov.initSession());
+    } else {
+      navigate("/streaming");
     }
-  }, []);
-
-  useEffect(() => {
-    setUserNickName(nickName);
-    console.log("nickName:: ", nickName);
-  }, [nickName]);
-
-  useEffect(() => {
-    window.addEventListener("beforeunload", onbeforeunload);
   }, []);
 
   useEffect(() => {
@@ -95,8 +113,6 @@ const StreamingLive = () => {
       // feedback signal...
       onFeedbackSignal();
 
-      console.log("세션 존재, 세션: ", session);
-      console.log("오픈비두 객체: ", ov);
       session
         .connect(token, { clientData: userNickName })
         .then(() => console.log("success Connect"))
@@ -116,7 +132,7 @@ const StreamingLive = () => {
       // On every Stream destroyed...
       session.on("streamDestroyed", (event) => {
         deleteSubscriber(event.stream.streamManager);
-        leaveSession();
+        leaveSessionPart();
       });
 
       // On every asynchronous exception...
@@ -127,13 +143,8 @@ const StreamingLive = () => {
   }, [session]);
 
   useEffect(() => {
-    console.log("useEffect().....", session);
     if (token !== "" && session !== undefined) {
-      console.log("??????");
       session.connect(token, { clientData: userNickName }).then(async () => {
-        // onSessionCreated();
-
-        // --- 5) Get your own camera stream ---
         let publisher = await ov.initPublisherAsync(undefined, {
           audioSource: undefined, // The source of audio. If undefined default microphone
           videoSource: undefined, // The source of video. If undefined default webcam
@@ -147,10 +158,8 @@ const StreamingLive = () => {
 
         session.publish(publisher); // publisher는 본인의 화면을 송출
 
-        console.log("session???", session.sessionId);
         setSessionId(session.sessionId);
         setConnectionId(session.connection.connectionId);
-        console.log("ov???", ov);
 
         // Obtain the current video device in use
         let devices = await ov.getDevices();
@@ -169,16 +178,14 @@ const StreamingLive = () => {
         setCurrentVideoDevice(CurrentVideoDevice);
         setMainStreamManager(publisher);
         setPublisher(publisher);
+
+        console.log("hello?????");
       });
     }
   }, [token]);
 
   const getToken = async () => {
     return token;
-  };
-
-  const onbeforeunload = (event) => {
-    leaveSession();
   };
 
   const deleteSubscriber = (streamManager) => {
@@ -194,12 +201,10 @@ const StreamingLive = () => {
     streamingApi
       .leaveLiveSession(sessionId)
       .then(() => {
-        console.log("라이브 종료 성공");
         if (session) {
           session.disconnect();
         }
 
-        // dispatch ov를 null로 설정
         dispatch(setOV({}));
         setSession(undefined);
         setSubscribers([]);
@@ -216,7 +221,6 @@ const StreamingLive = () => {
     if (session) {
       session.disconnect();
     }
-
     // dispatch ov를 null로 설정
     dispatch(setOV({}));
     setSession(undefined);
@@ -224,7 +228,6 @@ const StreamingLive = () => {
     setSessionTitle("");
     setMainStreamManager(undefined);
     setPublisher(undefined);
-    alert("방송이 종료되었습니다:)");
     navigate("/streaming");
   };
 
@@ -280,7 +283,6 @@ const StreamingLive = () => {
 
   // 채팅 관리
   const onSessionCreated = () => {
-    console.log("onSessionCreated!");
     session.on(`signal:signal`, (event) => {
       const msg = JSON.parse(event.data).message;
       const userName = JSON.parse(event.from.data).clientData;
@@ -304,8 +306,6 @@ const StreamingLive = () => {
     });
   };
 
-  // 모달 관리 //
-
   // 이전 영상 모달 관리
   const openRecordList = () => {
     setRecordListModal((prev) => !prev);
@@ -320,11 +320,6 @@ const StreamingLive = () => {
   const openFeedback = () => {
     setFeedbackModal((prev) => !prev);
   };
-
-  // test
-  useEffect(() => {
-    console.log("messages::", messages);
-  }, [messages]);
 
   const handleStartVideoRecord = () => {
     // 카메라가 꺼져있다면
@@ -377,8 +372,10 @@ const StreamingLive = () => {
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    alert("링크가 복사되었습니다:)");
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      alert("링크가 복사되었습니다:)");
+      console.log("window.location.href", window.location.href);
+    });
   };
   return (
     <S.Container>

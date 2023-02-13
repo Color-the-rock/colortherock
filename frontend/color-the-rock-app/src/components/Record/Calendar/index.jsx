@@ -86,6 +86,7 @@ const CustomCalendar = ({ isSuccess }) => {
         onClickMonth={handleOnChange}
         onClickYear={handleOnChange}
         onChange={handleOnChange}
+        minDetail="year"
         value={value}
         formatDay={(locale, date) => moment(date).format("DD")}
         tileContent={({ date }) => {

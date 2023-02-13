@@ -28,6 +28,11 @@ const Streaming = () => {
   };
 
   const handleParticipateSession = (sessionId) => {
+    if (!isLoading) {
+      alert("로그인이 필요한 서비스입니다:)");
+      return;
+    }
+
     setLoading(true);
     joinSession();
     streamingApi
@@ -35,7 +40,7 @@ const Streaming = () => {
       .then(({ data: { status, result } }) => {
         if (status === 200) {
           dispatch(setOpenViduToken(result));
-          navigate(`/streaming/live`);
+          navigate(`/streaming/live/${sessionId}`);
         }
       })
       .catch(() => {
@@ -47,10 +52,10 @@ const Streaming = () => {
       });
   };
 
-  const getAllLiveList = () => {
+  const getAllLiveList = (searchValue = "") => {
     setLoading(true);
     streamingApi
-      .getAllLiveList(storeId)
+      .getAllLiveList(storeId, searchValue)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
           console.log("statusCode : 200 ", _result);
