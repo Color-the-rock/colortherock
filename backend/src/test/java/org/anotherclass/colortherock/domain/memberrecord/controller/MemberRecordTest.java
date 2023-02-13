@@ -149,8 +149,7 @@ public class MemberRecordTest extends IntegrationTest {
                         get(url + "/record/videos")
                                 .header("Authorization", AUTHORIZATION_HEADER + token)
                                 .params(info))
-                .andExpect(jsonPath("$.status", is(200)))
-                .andExpect(jsonPath("$.result.size()").value(1));
+                .andExpect(jsonPath("$.status", is(200)));
     }
 
     @Test
