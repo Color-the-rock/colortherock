@@ -4,19 +4,22 @@ export const recordSlice = createSlice({
   initialState: {
     currentDate: new Date(),
     videos: [],
+    isSuccess: true,
   },
   reducers: {
     setCurrentDate: (state, action) => {
-      console.log("setCurrentDate()... ", action);
       state.currentDate = action.payload;
     },
 
     setVideos: (state, action) => {
-      console.log("setVideos()... ", action);
       state.videos = action.payload;
+    },
+
+    setSuccess: (state, action) => {
+      state.isSuccess = action.payload;
     },
   },
 });
 
-export const { setCurrentDate } = recordSlice.actions;
+export const { setCurrentDate, setVideos, setSuccess } = recordSlice.actions;
 export default recordSlice.reducer;

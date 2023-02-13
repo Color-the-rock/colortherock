@@ -22,7 +22,6 @@ const CommentModal = ({ setIsModalOpen, isModalOpen }) => {
         if (status === 200) {
           console.log("statusCode : 200", _result);
           setResult(_result);
-
           // let _storId =
           //   _result.length === 0 ? -1 : _result[_result.length - 1].commentId;
 

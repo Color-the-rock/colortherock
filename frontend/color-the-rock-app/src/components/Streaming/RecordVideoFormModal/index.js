@@ -65,7 +65,7 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
   };
 
   const registVideoToS3 = () => {
-    if (!color || !level || !isSuccess) {
+    if (!color || !level) {
       alert("모든 항목을 채워주세요.");
       return;
     }
