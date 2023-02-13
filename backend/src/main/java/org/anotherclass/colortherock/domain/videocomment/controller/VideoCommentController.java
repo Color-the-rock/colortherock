@@ -48,7 +48,7 @@ public class VideoCommentController {
     @Operation(description = "영상 댓글 작성 API", summary = "영상 댓글 작성 API")
     @ApiResponse(responseCode = "200", description = "댓글 등록 성공")
     @PreAuthorizeMember
-    public BaseResponse<?> addComment(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody NewCommentRequest newCommentRequest) {
+    public BaseResponse<Object> addComment(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody NewCommentRequest newCommentRequest) {
         Member member = memberDetails.getMember();
         videoCommentService.insertComment(member.getId(), newCommentRequest);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
@@ -60,7 +60,7 @@ public class VideoCommentController {
     @ApiResponse(responseCode = "403", description = "유저 정보와 댓글 작성자 일치하지 않음")
     @ApiResponse(responseCode = "404", description = "해당하는 댓글 찾을 수 없음")
     @PreAuthorizeMember
-    public BaseResponse<?> updateComment(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody CommentUpdateRequest commentUpdateRequest) {
+    public BaseResponse<Object> updateComment(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody CommentUpdateRequest commentUpdateRequest) {
         Member member = memberDetails.getMember();
         videoCommentService.updateComment(member.getId(), commentUpdateRequest);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
@@ -72,7 +72,7 @@ public class VideoCommentController {
     @ApiResponse(responseCode = "403", description = "유저 정보와 댓글 작성자 일치하지 않음")
     @ApiResponse(responseCode = "404", description = "해당하는 댓글 찾을 수 없음")
     @PreAuthorizeMember
-    public BaseResponse<?> deleteComment(@AuthenticationPrincipal MemberDetails memberDetails, @NotNull @RequestParam Long commentId) {
+    public BaseResponse<Object> deleteComment(@AuthenticationPrincipal MemberDetails memberDetails, @NotNull @RequestParam Long commentId) {
         Member member = memberDetails.getMember();
         videoCommentService.deleteComment(member.getId(), commentId);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);

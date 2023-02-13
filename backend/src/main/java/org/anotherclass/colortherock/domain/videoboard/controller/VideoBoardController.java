@@ -109,7 +109,7 @@ public class VideoBoardController {
     @PreAuthorizeMember
 
     @PutMapping("/board/detail")
-    public BaseResponse<?> updateSuccessPost(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody SuccessPostUpdateRequest successPostUpdateRequest) {
+    public BaseResponse<Object> updateSuccessPost(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestBody SuccessPostUpdateRequest successPostUpdateRequest) {
         Member member = memberDetails.getMember();
         videoBoardService.updateSuccessPost(member.getId(), successPostUpdateRequest);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
@@ -121,7 +121,7 @@ public class VideoBoardController {
     @ApiResponse(responseCode = "404", description = "작성자와 유저 정보가 일치하지 않음")
     @PreAuthorizeMember
     @DeleteMapping("board/detail")
-    public BaseResponse<?> deleteSuccessPost(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestParam Long videoBoardId) {
+    public BaseResponse<Object> deleteSuccessPost(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestParam Long videoBoardId) {
         Member member = memberDetails.getMember();
         videoBoardService.deleteSuccessPost(member.getId(), videoBoardId);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
