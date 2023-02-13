@@ -1,0 +1,79 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+  security:
+    user:
+      name: ${ADMIN_NAME}
+      password: ${ADMIN_PASSWORD}
+      roles: ADMIN
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_ID}
+            client-secret: ${KAKAO_SECRET}
+            redirect-uri: "https://colortherock.com/login/oauth2/code/kakao"
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+            client-name: kakao
+            scope:
+              - account_email
+          google:
+            client-id: ${GOOGLE_ID}
+            client-secret: ${GOOGLE_SECRET}
+            redirect-uri: "https://colortherock.com/login/oauth2/code/google"
+            scope:
+              - profile
+              - email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    s3:
+      bucket: ${BUCKET_NAME}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+notification:
+  mattermost:
+    enabled: true # mmSender를 사용할 지 여부, false면 알림이 오지 않는다
+    webhook-url: ${MM_WEBHOOK_URL} # 위의 Webhook URL을 기입
+report:
+  mattermost:
+    enabled: true
+    webhook-url: ${MM_REPORT_URL}
+    pretext: 신고 누적 발생 알림!
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /api/swagger-ui.html
+  api-docs:
+    path: /api/post-docs
+OPENVIDU_URL: ${OPENVIDU_URL}
+OPENVIDU_SECRET: ${OPENVIDU_SECRET}
+RECORDING_PATH: ${RECORDING_PATH}
+CLOUDFRONT_URL: ${CLOUDFRONT_URL}
