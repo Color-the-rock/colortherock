@@ -17,32 +17,21 @@ const streamingApi = {
   participateLiveSession: (liveId) => api.get(`/live/${liveId}`),
 
   // 라이브 목록 조회 API
-  getAllLiveList: (liveId = -1) => api.get(`/live/list?liveId=${liveId}`),
+  getAllLiveList: (liveId = -1, gymName) =>
+    api.get(`/live/list?liveId=${liveId}&gymName=${gymName}`),
 
   // 라이브 기록 시작 API
-  startRecordVideo: (sessionId, token) => {
-    console.log(
-      "[startRecordVideo] sessionId > ",
-      sessionId,
-      " token ? ",
-      token
-    );
-    return api.post(`/live/${sessionId}/recording/start`, token);
-  },
+  startRecordVideo: (sessionId, token) =>
+    api.post(`/live/${sessionId}/recording/start`, token),
 
   // 라이브 기록 종료 API
-  quitRecordVideo: (sessionId, recordObject) => {
-    console.log(
-      "[quitRecordVideo] sessionId > ",
-      sessionId,
-      " recordObject ? ",
-      recordObject
-    );
-    return api.post(`/live/${sessionId}/recording/stop`, recordObject);
-  },
-
+  quitRecordVideo: (sessionId, recordObject) =>
+    api.post(`/live/${sessionId}/recording/stop`, recordObject),
   // 라이브 기록 저장 API
-  saveRecordVideo: (sessionId) => api.post(`/live/${sessionId}/recording/save`),
+  saveRecordVideo: (sessionId, data) =>
+    api.post(`/live/${sessionId}/recording/save`, data),
+  // 라이브 이전 녹화 목록 반환 API
+  getRecordList: (sessionId) => api.get(`/live/${sessionId}/recording/list`),
 };
 
 export default streamingApi;

@@ -19,9 +19,11 @@ const Thumbnail = ({
       onClick={() => onClick(isLive ? sessionId : id)}
     >
       <S.ThumbnailImg src={!imgUrl ? TestImg : imgUrl} />
-      <S.VideoText isLive={true}>
-        {title.length < 13 ? title : title.substring(0, 12) + "..."}
-      </S.VideoText>
+      {title && (
+        <S.VideoText isLive={true}>
+          {title.length < 13 ? title : title.substring(0, 12) + "..."}
+        </S.VideoText>
+      )}
       <S.VideoText isLive={isLive}>
         <S.LiveBadge />
         {userNickname}

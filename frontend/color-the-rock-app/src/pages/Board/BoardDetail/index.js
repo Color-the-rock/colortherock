@@ -17,7 +17,6 @@ const BoardDetail = () => {
   const [isOpenBoardSettingModal, setOpenBoardSettingModal] = useState(false);
   const [isOpenBoardReportModal, setOpenBoardReportModal] = useState(false);
   const [result, setResult] = useState({}); // 게시글 상세 정보 배열
-  const [commentList, setCommentList] = useState({}); // 게시글 댓글 정보 배열
   const userNickname = useSelector((state) => state.users.nickName);
 
   // 게시글 상세 조회 API
@@ -33,24 +32,29 @@ const BoardDetail = () => {
       .catch((error) => console.log(error));
   };
 
-  // 게시글 댓글 조회 API
-  const getBoardCommentList = () => {
-    console.log("param id: ", id);
+  // // 게시글 댓글 조회 API
+  // const getBoardCommentList = () => {
+  //   console.log("param id: ", id);
 
-    boardApi
-      .getVideoBoardCommentList(0, id)
-      .then(({ data: { status, result: _result } }) => {
-        if (status === 200) {
-          console.log("statusCode : 200", _result);
-          setCommentList(_result);
-        }
-      })
-      .catch((error) => console.log(error));
-  };
+  //   boardApi
+  //     .getVideoBoardCommentList(storeId, id)
+  //     .then(({ data: { status, result: _result } }) => {
+  //       if (status === 200) {
+  //         console.log("statusCode : 200", _result);
+  //         setCommentList(_result);
+  //         let commentId =
+  //           _result[_result.length - 1].commentId === undefined
+  //             ? -1
+  //             : _result[_result.length - 1].commentId;
+  //         setStoreId(commentId);
+  //       }
+  //     })
+  //     .catch((error) => console.log(error));
+  // };
 
   useEffect(() => {
     getBoardDetail();
-    getBoardCommentList();
+    // getBoardCommentList();
   }, []);
 
   const handleModal = () => {

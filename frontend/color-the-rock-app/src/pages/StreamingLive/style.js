@@ -20,7 +20,7 @@ export const Container = styled.div`
   display: flex;
   width: 100%;
   height: calc(var(--vh, 1vh) * 100);
-  background-color: #fff;
+  background-color: transparent;
   overflow: hidden;
 
   // web
@@ -32,7 +32,6 @@ export const Container = styled.div`
     position: relative;
     flex-direction: column;
   }
-  // mobile
 `;
 export const OwnerVideoWrapper = styled.div`
   position: absolute;
@@ -49,9 +48,12 @@ export const OwnerVideoWrapper = styled.div`
 export const VideoMenu = styled.div`
   position: absolute;
   bottom: 84px;
-  right: 16px;
+  right: 51%;
   min-height: 200px;
   background-color: transparent;
+  @media (max-width: 992px) {
+    right: 16px;
+  }
 `;
 
 export const VideoMenuItem = styled.div`
@@ -106,17 +108,28 @@ export const SettingMenuItem = styled.div`
 
 export const DragModal = styled(motion.div)`
   position: absolute;
-  bottom: 0px;
-  width: 100%;
-  height: 60vh;
+  width: 50%;
+  height: 100vh;
+  @media (min-width: 992px) {
+    top: 0px;
+    right: 0px;
+  }
+  @media (max-width: 992px) {
+    width: 100%;
+    height: 60vh;
+    bottom: 0px;
+  }
 `;
 
 export const CommentModalWrap = styled(motion.div)`
-  position: absolute;
-  bottom: 0px;
   width: 100%;
-  padding-top: 2rem;
-  z-index: 100;
+  @media (max-width: 992px) {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    padding-top: 2rem;
+    z-index: 100;
+  }
 `;
 
 export const StreamTitle = styled.h1`

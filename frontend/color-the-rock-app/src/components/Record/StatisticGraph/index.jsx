@@ -4,29 +4,21 @@ import * as S from "./style";
 
 const StatisticGraph = () => {
   const [gymData, setGymData] = useState([]);
+  const [gymTotal, setGymTotal] = useState(0);
   const [totalRecords, setTotalRecords] = useState({
     videoCount: 0,
     successCount: 0,
   });
-  // const [totalCount, setTotalCount] = useState(0);
 
-  // const getTotalCount = (_result) => {
-  //   if (_result.length === 0) return;
-  //   let tmp = 0;
-  //   for (let item of _result) {
-  //     tmp += Number(item.count);
-  //   }
-  //   setTotalCount(tmp);
-  // };
-
+  // 방문한 홈장 데이터 조회
   const handleGetGymData = () => {
     recordApi
       .getVisitedGymData()
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
           console.log("[getVisitedGymData] statusCode : 200 ", _result);
-          setGymData(_result);
-          //getTotalCount(_result);
+          setGymData(_result.data);
+          setGymTotal(_result.totalCount);
         }
       })
       .catch((error) => console.log("error", error));
@@ -67,17 +59,19 @@ const StatisticGraph = () => {
       </S.ChallengeBar>
 
       <S.GraphTitle>방문한 홈짐</S.GraphTitle>
-      <S.HomeGymGraph length={totalRecords.visitCount}>
+
+      <S.HomeGymGraph length={gymTotal}>
         {gymData && gymData.length > 0
           ? gymData.map((gym, index) => (
               <S.VisitedState
                 className="visited_state"
                 key={index}
-                percent={(gym.count / totalRecords.visitCount) * 100}
-                count={
-                  0.01 * (100 / gymData.length) * (gymData.length - (index + 1))
-                }
-              />
+                percent={(gym.count / gymTotal) * 100}
+                count={0.01 * (100 / gymTotal) * (gymTotal - (index + 1))}
+                value={gym.gymName}
+              >
+                <S.GraphText>{gym.gymName}</S.GraphText>
+              </S.VisitedState>
             ))
           : null}
       </S.HomeGymGraph>

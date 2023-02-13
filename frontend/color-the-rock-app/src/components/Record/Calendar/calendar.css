@@ -17,7 +17,7 @@
 
 /* Calendar Header */
 .react-calendar__navigation .react-calendar__navigation__arrow {
-  display: none;
+  display: inline;
 }
 .react-calendar__navigation__label__labelText {
   font-size: 1.4rem;

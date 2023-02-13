@@ -9,7 +9,7 @@ export const Container = styled.div`
   max-width: 600px;
   color: var(--color-secondary);
   border-radius: 40px;
-  height: 50px;
+  height: ${(props) => props.size};
   position: relative;
   background-image: linear-gradient(
       var(--color-background),

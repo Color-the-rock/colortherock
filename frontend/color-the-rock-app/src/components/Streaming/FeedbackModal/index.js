@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  createRef,
-  useEffect,
-  useRef,
-  useCallback,
-} from "react";
+import React, { useState, createRef, useEffect, useRef } from "react";
 import * as S from "./style";
 
 const chunkSize = 1024 * 1024;
@@ -91,6 +85,7 @@ const FeedbackModal = ({ closeFeedback, session, picture = null }) => {
     ctx.strokeStyle = "#8ED6FF";
     ctx.lineWidth = 2;
     ctx.stroke();
+
     sendDrawing();
   };
 
