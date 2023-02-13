@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UserVideoComponent from "../../components/Live/UserVideo";
 import * as S from "./style";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,6 @@ import {
   FiEdit,
   FiFilm,
   FiDisc,
-  FiLink,
 } from "react-icons/fi";
 import { Desktop, Mobile } from "../../components/layout/Template";
 import streamingApi from "../../api/streaming";
@@ -33,7 +32,6 @@ const StreamingLive = () => {
   const nickName = useSelector((state) => state.users.nickName);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [sessionTitle, setSessionTitle] = useState("");
-  const [userNickName, setUserNickName] = useState("");
   const [connectionId, setConnectionId] = useState("");
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -78,9 +76,6 @@ const StreamingLive = () => {
   const preventClose = (e) => {
     e.preventDefault();
     e.returnValue = ""; // 크롬에서 필요함
-
-    // 새로고침 -> 강제 종료
-    // if (session) session.disconnect();
   };
 
   // 새로고침 및 뒤로가기시 처리
@@ -231,6 +226,7 @@ const StreamingLive = () => {
   };
 
   const switchCamera = async () => {
+    setShowSettingModal(false);
     try {
       const devices = await ov.getDevices();
       let videoDevices = devices.filter(
@@ -269,6 +265,7 @@ const StreamingLive = () => {
 
   // video 설정
   const handleSetVideo = () => {
+    setShowSettingModal(false);
     if (isRecordStart) {
       alert("녹화를 중지해주세요!");
       return;
@@ -280,6 +277,7 @@ const StreamingLive = () => {
 
   // audio 설정
   const handleSetAudio = () => {
+    setShowSettingModal(false);
     publisher.publishAudio(!isOnMic);
     setOnMic((prev) => !prev);
   };

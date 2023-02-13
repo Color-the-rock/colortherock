@@ -21,6 +21,8 @@ const levelValues = [
   { key: "LEVEL5", value: "5" },
   { key: "LEVEL6", value: "6" },
   { key: "LEVEL7", value: "7" },
+  { key: "LEVEL8", value: "8" },
+  { key: "LEVEL9", value: "9" },
 ];
 const colorValues = [
   { key: "난이도 색상", value: "" },
