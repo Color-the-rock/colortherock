@@ -253,6 +253,7 @@ public class LiveService {
                 .thumbnailURL(thumbnailURL)
                 .thumbnailName(thumbnailName)
                 .color(request.getColor())
+                .isPosted(false)
                 .member(member)
                 .build());
         // 영상 누적 통계에서 영상 갯수 올리기
