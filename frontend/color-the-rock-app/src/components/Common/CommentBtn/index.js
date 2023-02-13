@@ -1,28 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as S from "./style";
 import { HiDotsHorizontal, HiOutlineArrowSmUp } from "react-icons/hi";
 import boardApi from "../../../api/board";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const CommentBtn = ({ isReadOnly, onClick, getAllComments }) => {
-  const [value, setValue] = useState("");
+const CommentBtn = ({ setReset, setStoreId, onClick, isReadOnly }) => {
   const { id } = useParams();
+  const [value, setValue] = useState("");
+
   const handleRegisterComment = () => {
+    if (value === "") return;
     const requestBody = {
       videoBoardId: id,
       content: value,
     };
-
-    console.log("re", requestBody);
 
     boardApi
       .postVideoBoardComment(requestBody)
       .then(({ data: { status } }) => {
         if (status === 200) {
           console.log("[postVideoBoardComment] statusCode : 200");
-          getAllComments();
+          // getAllComments();
           setValue("");
+          setStoreId(-1);
+          setReset(true);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+  const handleRegisterComment2 = (e) => {
+    if (e.keyCode !== 13) return;
+    if (e.target.value === "") return;
+    const requestBody = {
+      videoBoardId: id,
+      content: value,
+    };
+
+    boardApi
+      .postVideoBoardComment(requestBody)
+      .then(({ data: { status } }) => {
+        if (status === 200) {
+          console.log("[postVideoBoardComment] statusCode : 200");
+          // getAllComments();
+          setValue("");
+          setStoreId(-1);
+          setReset((prev) => !prev);
         }
       })
       .catch((error) => console.log(error));
@@ -35,6 +58,7 @@ const CommentBtn = ({ isReadOnly, onClick, getAllComments }) => {
         onChange={(e) => setValue(e.target.value)}
         value={value}
         readOnly={isReadOnly}
+        onKeyDown={handleRegisterComment2}
       />
       {isReadOnly ? (
         <S.Ornament>
@@ -53,5 +77,6 @@ export default CommentBtn;
 CommentBtn.propTypes = {
   isReadOnly: PropTypes.bool,
   onClick: PropTypes.func,
-  getAllComments: PropTypes.func,
+  setStoreId: PropTypes.func,
+  setReset: PropTypes.func,
 };

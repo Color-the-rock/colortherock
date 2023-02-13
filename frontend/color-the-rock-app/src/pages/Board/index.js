@@ -8,6 +8,7 @@ import boardApi from "../../api/board";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Loading from "../../components/Common/Loading";
+import useInfiniteScroll from "../../hooks/useInfiniteScroll";
 
 const Board = () => {
   const navigate = useNavigate();
@@ -17,9 +18,14 @@ const Board = () => {
   const [isShowRegisterModal, setShowRegisterModal] = useState(false);
   const currentOption = useSelector((state) => state.board.searchColorValue);
   const searchGymName = useSelector((state) => state.board.searchGymName);
-  const [isLoading, setLoading] = useState(false);
-  const getBoardList = () => {
-    setLoading(true);
+  const [isLoading, setIsLoading] = useState(false);
+  console.log("확인좀 할게요: ", result);
+  useEffect(() => {
+    getBoardList();
+  }, [currentOption]);
+
+  const getBoardList = async () => {
+    setIsLoading(true);
     const requestData = {
       storeId: storeId,
       color: currentOption === "색상" ? "" : currentOption,
@@ -28,12 +34,20 @@ const Board = () => {
 
     console.log("getBoardList....", requestData);
 
-    boardApi
+    await boardApi
       .getAllVideo(requestData)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
           console.log("statusCode : 200", _result);
-          setResult(_result);
+          if (storeId === -1) {
+            setResult([..._result]);
+          } else {
+            if (_result.length === 0) {
+            } else {
+              setResult((prev) => [...prev, ..._result]);
+            }
+          }
+
           let lastId =
             _result[_result.length - 1].videoBoardId === undefined
               ? -1
@@ -43,7 +57,8 @@ const Board = () => {
       })
       .catch((error) => console.log(error))
       .finally(() => {
-        setTimeout(() => setLoading(false), 200);
+        setTimeout(() => setIsLoading(false), 200);
+        setIsFetching(false);
       });
   };
 
@@ -71,10 +86,6 @@ const Board = () => {
     }
   };
 
-  useEffect(() => {
-    getBoardList();
-  }, [currentOption]);
-
   const handleOnClickItem = (id) => {
     if (!isLogin) {
       alert("로그인 후, 이용해주세요!");
@@ -83,6 +94,8 @@ const Board = () => {
 
     navigate(`/board/detail/${id}`);
   };
+
+  const [isFetching, setIsFetching] = useInfiniteScroll(getBoardList);
 
   return (
     <S.Container id="board-container">
