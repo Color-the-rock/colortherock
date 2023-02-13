@@ -63,7 +63,7 @@ class VideoCommentControllerTest extends IntegrationTest {
         member = Member.builder()
                 .nickname("이름")
                 .email("이메일")
-                .registrationId(Member.RegistrationId.google).build();
+                .registrationId(Member.RegistrationId.GOOGLE).build();
         em.persist(member);
 
 

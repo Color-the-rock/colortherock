@@ -59,7 +59,7 @@ class VideoBoardControllerTest extends IntegrationTest {
         member = Member.builder()
                 .nickname("yeji")
                 .email("yeji@email.com")
-                .registrationId(Member.RegistrationId.kakao).build();
+                .registrationId(Member.RegistrationId.KAKAO).build();
         em.persist(member);
         videoBoardIds = new ArrayList<>();
 

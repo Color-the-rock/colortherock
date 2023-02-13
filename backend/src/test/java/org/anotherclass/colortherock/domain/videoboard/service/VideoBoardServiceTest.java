@@ -17,7 +17,10 @@ import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetail
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,8 +56,8 @@ class VideoBoardServiceTest {
         videoIds = new ArrayList<>();
         videoBoardIds = new ArrayList<>();
         // Member 생성
-        Member memberA = new Member("yeji@rock.com", "yezi", Member.RegistrationId.kakao);
-        Member memberB = new Member("johan@rock.com", "johan", Member.RegistrationId.google);
+        Member memberA = new Member("yeji@rock.com", "yezi", Member.RegistrationId.KAKAO);
+        Member memberB = new Member("johan@rock.com", "johan", Member.RegistrationId.GOOGLE);
         Member saveA = memberRepository.save(memberA);
         Member saveB = memberRepository.save(memberB);
         memberIds.add(saveA.getId());

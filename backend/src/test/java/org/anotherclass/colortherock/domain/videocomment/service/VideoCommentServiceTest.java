@@ -56,8 +56,8 @@ class VideoCommentServiceTest {
         videoBoardIds = new ArrayList<>();
         videoCommentIds = new ArrayList<>();
         // Member 생성
-        Member memberA = new Member("yeji@rock.com", "yezi", Member.RegistrationId.kakao);
-        Member memberB = new Member("johan@rock.com", "johan", Member.RegistrationId.google);
+        Member memberA = new Member("yeji@rock.com", "yezi", Member.RegistrationId.KAKAO);
+        Member memberB = new Member("johan@rock.com", "johan", Member.RegistrationId.GOOGLE);
         Member saveA = memberRepository.save(memberA);
         Member saveB = memberRepository.save(memberB);
         memberIds.add(saveA.getId());

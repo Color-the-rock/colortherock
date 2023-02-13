@@ -15,12 +15,11 @@ import java.util.List;
 
 @Repository
 public class LiveReadRepository {
-    private final EntityManager entityManager;
+
 
     private final JPAQueryFactory queryFactory;
 
     public LiveReadRepository(EntityManager entityManager) {
-        this.entityManager = entityManager;
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
@@ -36,7 +35,7 @@ public class LiveReadRepository {
                         checkGymName(liveListRequest.getGymName())
                 )
                 .orderBy(live.id.desc())
-                .limit(pageable.getPageSize() + 1)
+                .limit(pageable.getPageSize() + 1L)
                 .fetch();
         return checkLastPage(pageable, results);
     }
