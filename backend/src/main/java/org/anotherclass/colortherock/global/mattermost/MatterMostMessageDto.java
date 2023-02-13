@@ -77,15 +77,16 @@ public class MatterMostMessageDto {
         }
 
         public void addReportInfo(String title) {
-            this.title = "신고 누적 발생";
+            this.title = "## :warning: 신고 5회 누적 게시물 발생 :warning:";
 
-            this.text = text + "**title**" + '\n' + '\n' + title + '\n' + '\n';
+            this.text = text + "**게시물 제목**" + '\n' + '\n' + title + '\n' + '\n';
         }
 
         public void addReportInfo(String title, Long id) {
             this.addReportInfo(title);
 
-            this.text = text + "**videoBoardId**" + '\n' + '\n' + id + "번 videoBoard" + '\n' + '\n';
+            this.text = text + "**videoBoardId**" + '\n' + '\n' + id + "번 videoBoard" + '\n' + '\n'
+                    + "[**[🛠 관리자 페이지로 이동하기]**](https://colortherock.com/admin)";
         }
 
     }
