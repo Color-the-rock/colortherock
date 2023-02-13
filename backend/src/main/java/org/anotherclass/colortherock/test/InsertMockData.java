@@ -5,6 +5,8 @@ import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.memberrecord.entity.MemberRecord;
 import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
+import org.anotherclass.colortherock.domain.report.request.PostReportRequest;
+import org.anotherclass.colortherock.domain.report.service.ReportService;
 import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.videoboard.entity.VideoBoard;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 @RestController
@@ -72,10 +76,10 @@ public class InsertMockData {
         String testGymGangNam = "더클라임 강남";
         videos.add(Video.builder().videoName(VIDEO_NAME_1).level(2).isSuccess(true).gymName(testGymGangNam).member(member1).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + VIDEO_NAME_1).thumbnailURL(cloudFrontUrl + THUMBNAIL_1).color("빨강").build());
         String testGymHongDae = "더클라임 홍대";
-        videos.add(Video.builder().videoName(VIDEO_NAME_1).level(2).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + THUMBNAIL_1).thumbnailURL(cloudFrontUrl + thumbnail1).color("빨강").build());
+        videos.add(Video.builder().videoName(VIDEO_NAME_1).level(2).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + THUMBNAIL_1).thumbnailURL(cloudFrontUrl + THUMBNAIL_1).color("빨강").build());
         for (int i = 1; i < 20; i++) {
-            videos.add(Video.builder().videoName(VIDEO_NAME_1).level(4).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + THUMBNAIL_1).thumbnailURL(cloudFrontUrl + thumbnail1).color("빨강").build());
-            videos.add(Video.builder().videoName(VIDEO_NAME_1).level(2).isSuccess(true).gymName("더클라임 홍대").member(member2).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + THUMBNAIL_1).thumbnailURL(cloudFrontUrl + thumbnail1).color("노랑").build());
+            videos.add(Video.builder().videoName(VIDEO_NAME_1).level(4).isSuccess(true).gymName("더클라임 강남").member(member1).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + THUMBNAIL_1).thumbnailURL(cloudFrontUrl + THUMBNAIL_1).color("빨강").build());
+            videos.add(Video.builder().videoName(VIDEO_NAME_1).level(2).isSuccess(true).gymName("더클라임 홍대").member(member2).shootingDate(LocalDate.parse("2023-01-08")).s3URL(cloudFrontUrl + THUMBNAIL_1).thumbnailURL(cloudFrontUrl + THUMBNAIL_1).color("노랑").build());
         }
 
         for (int i = 1; i < 10; i++) {
