@@ -22,7 +22,7 @@ export const Container = styled.div`
 export const ContentBox = styled.span`
   width: calc(100% - 32px);
   width: 70%;
-  height: 40%;
+  height: 45%;
   padding: 2rem 1rem 1rem 1rem;
   /* border: 1px solid white; */
   border-radius: 20px;

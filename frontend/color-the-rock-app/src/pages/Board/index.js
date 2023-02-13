@@ -18,6 +18,7 @@ const Board = () => {
   const currentOption = useSelector((state) => state.board.searchColorValue);
   const searchGymName = useSelector((state) => state.board.searchGymName);
   const [isLoading, setLoading] = useState(false);
+
   const getBoardList = () => {
     setLoading(true);
     const requestData = {
