@@ -231,7 +231,7 @@ public class LiveService {
     }
 
     @Transactional
-    public void uplooadAtOpenviduServer(RecordingUploadAtOpenviduServerRequest request) {
+    public void uploadAtOpenviduServer(RecordingUploadAtOpenviduServerRequest request) {
         String newDir = recordingPath + "/" + request.getRecordingId() + "/" + request.getRecordingId() + ".mp4";
         String videoName = System.currentTimeMillis() + request.getRecordingId() + ".mp4";
         String s3Url = s3Service.uploadFromOV(newDir, videoName);

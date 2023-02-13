@@ -90,7 +90,7 @@ public class LiveController {
     @ApiResponse(responseCode = "200", description = "업로드 성공")
     public BaseResponse<Object> uploadAtOpenviduServer(@RequestBody RecordingUploadAtOpenviduServerRequest request) throws JCodecException, IOException {
 
-        liveService.uplooadAtOpenviduServer(request);
+        liveService.uploadAtOpenviduServer(request);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 
