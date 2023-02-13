@@ -12,8 +12,11 @@ const BoardRadioBtn = ({
 }) => {
   const onChangeRadioButton = (e) => {
     const { value } = e.target;
-    console.log(value);
-    setIsPublic(value === "true");
+    if (value === "false") {
+      alert("비공개 설정은 업데이트 예정입니다:)");
+      return;
+    }
+    setIsPublic(true);
   };
 
   return (

@@ -342,8 +342,6 @@ const StreamingLive = () => {
           console.log("[녹화 시작] statusCode : 200 ", _result);
           setRecordId(_result);
           testRecordId = _result;
-          console.log("녹화 시작 후 결과 [testRecordId] ", testRecordId);
-          console.log("녹화 시작 후 결과 [recordId] ", recordId);
         }
       })
       .catch((error) => console.log(error));
@@ -351,9 +349,6 @@ const StreamingLive = () => {
   };
 
   const handleQuitRecord = () => {
-    console.log("녹화 종료 전 결과 [testRecordId] ", testRecordId);
-    console.log("녹화 종료 전 결과 [recordId] ", recordId);
-
     console.log("recordId : ", testRecordId);
     const requestBody = {
       token: token,
@@ -373,12 +368,13 @@ const StreamingLive = () => {
     setRecordStart((prev) => !prev);
   };
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      alert("링크가 복사되었습니다:)");
-      console.log("window.location.href", window.location.href);
-    });
-  };
+  // 비공개방일 경우, 링크 복사를 통해 진입
+  // const handleCopyLink = () => {
+  //   navigator.clipboard.writeText(window.location.href).then(() => {
+  //     alert("링크가 복사되었습니다:)");
+  //     console.log("window.location.href", window.location.href);
+  //   });
+  // };
   return (
     <S.Container>
       {feedbackModal && (
@@ -506,13 +502,12 @@ const StreamingLive = () => {
             녹화 시작
           </S.VideoMenuItem>
         )}
-
-        <S.VideoMenuItem onClick={handleCopyLink}>
+        {/* <S.VideoMenuItem onClick={handleCopyLink}>
           <S.IconWrapper>
             <FiLink size="24px" />
           </S.IconWrapper>
           링크 공유
-        </S.VideoMenuItem>
+        </S.VideoMenuItem> */}
       </S.VideoMenu>
     </S.Container>
   );

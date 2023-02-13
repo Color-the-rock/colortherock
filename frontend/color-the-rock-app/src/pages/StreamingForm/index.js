@@ -31,9 +31,6 @@ const videoConstraints = {
 const StreamingForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const nickName = useSelector((state) => state.users.nickName);
-
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [onSetting, setOnSetting] = useState(true);
@@ -53,8 +50,11 @@ const StreamingForm = () => {
   };
 
   const submitHandler = () => {
-    if (!isPublic || !title || !gymName || !imgSrc) {
+    if (!isPublic || !title || !gymName) {
       alert("모든 항목을 채워주세요.");
+      return;
+    } else if (!imgSrc) {
+      alert("방송시작을 위한 썸네일을 촬영해주세요!");
       return;
     }
     joinSession();
@@ -183,19 +183,12 @@ const StreamingForm = () => {
                     opacity="70"
                   />
                 </S.ComponenentWrap>
-                <S.ComponenentWrap>
-                  <S.CameraWrap>
-                    <HiOutlineCamera
-                      size="32px"
-                      className="camera"
-                      onClick={handleCapture}
-                    />
-                    <span>{`    << 썸네일을 찍어주세요.`}</span>
-                  </S.CameraWrap>
-                </S.ComponenentWrap>
               </S.AddPadding>
             )}
           </S.OverlapContent>
+          <S.CameraWrap>
+            <HiOutlineCamera className="camera" onClick={handleCapture} />
+          </S.CameraWrap>
         </S.Content>
       </S.ContentWrap>
     </S.Container>
