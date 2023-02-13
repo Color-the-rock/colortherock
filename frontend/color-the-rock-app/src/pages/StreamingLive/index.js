@@ -179,8 +179,6 @@ const StreamingLive = () => {
         setCurrentVideoDevice(CurrentVideoDevice);
         setMainStreamManager(publisher);
         setPublisher(publisher);
-
-        console.log("hello?????");
       });
     }
   }, [token]);
@@ -247,11 +245,11 @@ const StreamingLive = () => {
         if (newVideoDevice.length > 0) {
           let newPublisher = ov.initPublisher(undefined, {
             videoSource: isFrontCamera
-              ? videoDevices[1].deviceId
-              : videoDevices[0].deviceId,
+              ? videoDevices[0].deviceId
+              : videoDevices[videoDevices.length - 1].deviceId,
             publishAudio: true,
             publishVideo: true,
-            mirror: isFrontCamera,
+            mirror: false,
           });
 
           setFrontCamera((prev) => !prev);
