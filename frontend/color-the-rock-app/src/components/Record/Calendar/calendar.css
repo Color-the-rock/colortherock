@@ -52,20 +52,16 @@
 
 .react-calendar__tile--active {
   background-color: var(--color-border);
-  /* background-color: var(--color-background); */
 }
 
 /* 오늘 날짜 */
 .react-calendar__tile--now {
   background-color: var(--color-background) !important;
-  /* background-color: var(--color-border) !important; */
   color: var(--color-white) !important;
 }
 
 .react-calendar__tile--active:enabled:hover,
 .react-calendar__tile--active:enabled:focus {
-  /* background-color: var(--color-background); */
-  background-color: var(--color-border);
   font-weight: bold;
   border-radius: 50%;
 }
@@ -96,4 +92,8 @@
   display: flex;
   justify-content: space-evenly;
   margin: 2px auto;
+}
+
+.react-calendar__navigation button:disabled {
+  background-color: var(--color-dark);
 }
