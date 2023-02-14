@@ -8,24 +8,21 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MatterMostMessageDto {
 
     @Getter
     public static class Attachments {
         private Props props;
-        private final List<Attachment> attachments;
+        private final List<Attachment> attachmentList;
 
         public Attachments() {
-            attachments = new ArrayList<>();
-        }
-
-        public Attachments(List<Attachment> attachments) {
-            this.attachments = attachments;
+            attachmentList = new ArrayList<>();
         }
 
         public Attachments(Attachment attachment) {
             this();
-            this.attachments.add(attachment);
+            this.attachmentList.add(attachment);
         }
 
         public void addProps(Exception e) {
@@ -102,7 +99,6 @@ public class MatterMostMessageDto {
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
             text.append("**Stack Trace**").append("\n").append('\n').append("```");
-//            text.append(sw.toString(), 0, Math.min(5500, sw.toString().length())).append("\n...").append('\n').append('\n');
             text.append(sw).append("\n...").append('\n').append('\n');
 
             this.card = text.toString();

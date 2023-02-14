@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Objects;
+
+/**
+ * 로컬에서 처리하는 핸들링하기 위한 ContollerAdvide
+ */
 @RestControllerAdvice(annotations = RestController.class)
 @Slf4j
 @Profile("local")
@@ -23,9 +28,9 @@ public class GlobalExControllerAdvice {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public BaseResponse<?> InvalidArgumentValidResponse(MethodArgumentNotValidException e) {
+    public BaseResponse<Object> invalidArgumentValidResponse(MethodArgumentNotValidException e) {
         log.error("Exception : {}, 입력값 : {}", e.getBindingResult().getFieldError(), e.getBindingResult().getFieldError());
-        return new BaseResponse<>(GlobalErrorCode.VALID_EXCEPTION, e.getBindingResult().getFieldError().getDefaultMessage());
+        return new BaseResponse<>(GlobalErrorCode.VALID_EXCEPTION, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
     }
 
 
@@ -34,9 +39,9 @@ public class GlobalExControllerAdvice {
      **/
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public BaseResponse<?> InvalidArgumentBindResponse(BindException e) {
+    public BaseResponse<Object> invalidArgumentBindResponse(BindException e) {
         log.error("Exception : {}, 입력값 : {}", e.getBindingResult().getFieldError(), e.getBindingResult().getFieldError());
-        return new BaseResponse<>(GlobalErrorCode.VALID_EXCEPTION, e.getBindingResult().getFieldError().getDefaultMessage());
+        return new BaseResponse<>(GlobalErrorCode.VALID_EXCEPTION, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
     }
 
 
@@ -45,23 +50,33 @@ public class GlobalExControllerAdvice {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected BaseResponse<?> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+    protected BaseResponse<Object> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error("handleHttpRequestMethodNotSupportedException", e);
 
         return new BaseResponse<>(GlobalErrorCode.METHOD_NOT_ALLOWED);
     }
 
+    /**
+     * 프로젝트내 설정한 예외가 발생할때 처리하는 부분
+     * @param e 발생한 예외
+     * @return 예외를 처리해서 반환한다.
+     */
     @ExceptionHandler(GlobalBaseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected BaseResponse<?> handleGlobalBaseException(final GlobalBaseException e) {
+    protected BaseResponse<Object> handleGlobalBaseException(final GlobalBaseException e) {
         log.error("{} Exception {}: {}", e.getErrorCode(), e.getErrorCode().getCode(), e.getErrorCode().getMessage());
         return new BaseResponse<>(e.getErrorCode());
     }
 
 
+    /**
+     * 처리되지 않은 에러를 여기서 처리 한다.
+     * @param e 발생한 에러
+     * @return BaseResponse로 메시지를 감춰서 반환한다.
+     */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected BaseResponse<?> handleException(Exception e) {
+    protected BaseResponse<Object> handleException(Exception e) {
         log.error("Exception : {}", GlobalErrorCode.OTHER.getMessage(), e);
         return new BaseResponse<>(GlobalErrorCode.OTHER);
     }

@@ -5,14 +5,13 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 @Getter @Setter
 @NoArgsConstructor
 @Schema(description = "내 영상 요청 ")
 public class MyVideoRequest {
-    @Positive
+
     @NotNull
     @Schema(description = "페이지네이션용 video id")
     private Long videoId;

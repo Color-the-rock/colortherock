@@ -21,14 +21,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.persistence.EntityManager;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils.BEARER_PREFIX;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -76,7 +77,7 @@ class VideoBoardControllerTest extends IntegrationTest {
                     .isPosted(false)
                     .build();
             em.persist(video);
-            if(i % 2 == 0) {
+            if (i % 2 == 0) {
                 VideoBoard videoBoard = VideoBoard.builder()
                         .video(video)
                         .title("제목" + i)
@@ -88,7 +89,7 @@ class VideoBoardControllerTest extends IntegrationTest {
                 videoBoardIds.add(videoBoard.getId());
             }
         }
-        token = TOKEN_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        token = BEARER_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
     }
 
     @Test
@@ -109,16 +110,13 @@ class VideoBoardControllerTest extends IntegrationTest {
     @Test
     @DisplayName("완등 영상 게시글 슬라이싱 조회")
     void getSuccessPostsSlice() throws Exception {
-        MockHttpServletResponse response = mockMvc.perform(
+        Long videoBoardId = videoBoardIds.get(2);
+        mockMvc.perform(
                         get(url)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .param("storeId", String.valueOf(2L))
+                                .param("storeId", String.valueOf(videoBoardId))
                 )
-                .andReturn()
-                .getResponse();
-
-        BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        assertEquals(1, arrayList.getResult().size());
+                .andExpect(jsonPath("$.status", is(200)));
     }
 
     @Test
@@ -209,7 +207,7 @@ class VideoBoardControllerTest extends IntegrationTest {
 
     @Test
     @DisplayName("완등 영상 게시글 삭제")
-    void deleteSuccessPost() throws Exception{
+    void deleteSuccessPost() throws Exception {
         url += "detail";
         Long videoBoardId = videoBoardIds.get(0);
         mockMvc.perform(

@@ -8,10 +8,10 @@ import org.anotherclass.colortherock.domain.memberrecord.exception.UserNotFoundE
 import org.anotherclass.colortherock.domain.memberrecord.repository.RecordRepository;
 import org.anotherclass.colortherock.domain.memberrecord.response.*;
 import org.anotherclass.colortherock.domain.video.dto.DateLevelDto;
+import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundException;
 import org.anotherclass.colortherock.domain.video.repository.VideoReadRepository;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
-import org.anotherclass.colortherock.domain.video.entity.Video;
 import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +47,7 @@ public class RecordService {
             Integer videoLevel = video.getLevel();
             LevelStatResponse dto = list.get(videoLevel - 1);
             dto.totalIncrement();
-            if(video.getIsSuccess()) dto.successIncrement();
+            if (Boolean.TRUE.equals(video.getIsSuccess())) dto.successIncrement();
         });
         return list;
     }
@@ -63,7 +63,7 @@ public class RecordService {
             Integer videoLevel = video.getLevel();
             LevelStatResponse dto = list.get(videoLevel - 1);
             dto.totalIncrement();
-            if(video.getIsSuccess()) dto.successIncrement();
+            if (Boolean.TRUE.equals(video.getIsSuccess())) dto.successIncrement();
         });
         return list;
     }
@@ -84,16 +84,16 @@ public class RecordService {
 
         Slice<Video> slices = videoReadRepository.searchBySlice(pageable, request, member);
 
-        if(slices.isEmpty()) return new ArrayList<>();
+        if (slices.isEmpty()) return new ArrayList<>();
 
         return slices.toList().stream()
                 .map(video ->
-                    VideoListResponse.builder()
-                            .thumbnailURL(video.getThumbnailURL())
-                            .id(video.getId())
-                            .color(video.getColor())
-                            .gymName(video.getGymName())
-                            .level(video.getLevel()).build())
+                        VideoListResponse.builder()
+                                .thumbnailURL(video.getThumbnailURL())
+                                .id(video.getId())
+                                .color(video.getColor())
+                                .gymName(video.getGymName())
+                                .level(video.getLevel()).build())
                 .collect(Collectors.toList());
     }
 
@@ -114,22 +114,22 @@ public class RecordService {
 
     @Transactional
     public void addVideoCount(Member member, Boolean isSuccess) {
-        MemberRecord record = recordRepository.findByMember(member);
-        record.addVideoCount();
-        if(isSuccess) {
-            record.addSuccessCount();
+        MemberRecord memberRecord = recordRepository.findByMember(member);
+        memberRecord.addVideoCount();
+        if (Boolean.TRUE.equals(isSuccess)) {
+            memberRecord.addSuccessCount();
         }
-        recordRepository.save(record);
+        recordRepository.save(memberRecord);
     }
 
     @Transactional
     public void subVideoCount(Member member, Boolean isSuccess) {
-        MemberRecord record = recordRepository.findByMember(member);
-        record.subVideoCount();
-        if(isSuccess) {
-            record.subSuccessCount();
+        MemberRecord memberRecord = recordRepository.findByMember(member);
+        memberRecord.subVideoCount();
+        if (Boolean.TRUE.equals(isSuccess)) {
+            memberRecord.subSuccessCount();
         }
-        recordRepository.save(record);
+        recordRepository.save(memberRecord);
     }
 
     @Transactional
@@ -143,11 +143,11 @@ public class RecordService {
     public VisitResponse getVisitList(Member member) {
         List<VisitListDto> visitListResponse = videoReadRepository.searchVisitCount(member);
         Long totalCount = 0L;
-        for (VisitListDto dto:
-             visitListResponse) {
+        for (VisitListDto dto :
+                visitListResponse) {
             totalCount += dto.getCount();
         }
-        visitListResponse.sort((r1, r2) -> (int)(r2.getCount() - r1.getCount()));
+        visitListResponse.sort((r1, r2) -> (int) (r2.getCount() - r1.getCount()));
         return VisitResponse.builder().totalCount(totalCount).data(visitListResponse).build();
     }
 
@@ -161,14 +161,16 @@ public class RecordService {
         Set<Integer> levels = new HashSet<>();
         List<DateLevelDto> dtos = videoReadRepository.searchDailyColor(member, firstDate, lastDate);
         for (DateLevelDto dto : dtos) {
-            if(currentDate == null) currentDate = dto.getDate();
-            if(currentDate != null && !dto.getDate().isEqual(currentDate)) {
+            if (currentDate == null) currentDate = dto.getDate();
+            if (currentDate != null && !dto.getDate().isEqual(currentDate)) {
                 dailyColors.add(dtoToResponse(currentDate, levels));
                 levels = new HashSet<>();
                 currentDate = dto.getDate();
             }
-            if(levels.size() == 3) continue;
-            else levels.add(dto.getLevel());
+            if (levels.size() != 3) {
+                levels.add(dto.getLevel());
+            }
+
         }
         dailyColors.add(dtoToResponse(currentDate, levels));
         return dailyColors;

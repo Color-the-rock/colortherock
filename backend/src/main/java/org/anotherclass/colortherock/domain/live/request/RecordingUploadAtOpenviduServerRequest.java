@@ -52,7 +52,6 @@ public class RecordingUploadAtOpenviduServerRequest {
         this.gymName = request.getGymName();
         this.level = request.getLevel();
         this.isSuccess = request.getIsSuccess();
-        this.title = request.getTitle();
     }
 
     public Video toEntity(String s3Url, String thumbnailUrl, Member member,String videoName) {

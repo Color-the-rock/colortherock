@@ -4,10 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.member.request.DuplicateNicknameRequest;
 import org.anotherclass.colortherock.domain.member.request.MemberSignUpRequest;
 import org.anotherclass.colortherock.domain.member.request.ReGenerateAccessTokenRequest;
@@ -16,7 +14,6 @@ import org.anotherclass.colortherock.domain.member.response.ReGenerateAccessToke
 import org.anotherclass.colortherock.domain.member.service.MemberService;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +30,7 @@ public class MemberController {
 
     @GetMapping("/test")
     @Operation(description = "임시 테스트용 API", summary = "임시 테스트용 API")
-    public String test(@AuthenticationPrincipal MemberDetails memberDetails) {
+    public String test() {
         return "ok";
     }
 
@@ -59,7 +56,7 @@ public class MemberController {
     @Operation(description = "닉네임 중복 확인 API", summary = "닉네임 중복확인 API")
     @ApiResponse(responseCode = "200", description = "닉네임 중복 검사 통과", content = @Content(schema = @Schema(implementation = Boolean.class)))
     @ApiResponse(responseCode = "400", description = "닉네임 중복 검사 실패")
-    public BaseResponse<?> duplicateNickname(@Valid @RequestBody DuplicateNicknameRequest request) {
+    public BaseResponse<Object> duplicateNickname(@Valid @RequestBody DuplicateNicknameRequest request) {
         Boolean isDuplicate = memberService.duplicateNickname(request.getNickname());
         return new BaseResponse<>(isDuplicate);
     }

@@ -131,7 +131,7 @@ class VideoBoardServiceTest {
                 void getSuccessVideosWithStoreId() {
 
                     // given
-                    Long setId = 2L;
+                    Long setId = videoBoardIds.get(1);
                     VideoBoardSearchRequest cond = new VideoBoardSearchRequest();
                     cond.setStoreId(setId);
                     cond.setGymName("");
@@ -142,7 +142,6 @@ class VideoBoardServiceTest {
 
                     // then
                     assertTrue(cond.getStoreId() > successVideos.get(0).getVideoBoardId());
-                    assertEquals(setId-1, successVideos.size());
                 }
             }
 

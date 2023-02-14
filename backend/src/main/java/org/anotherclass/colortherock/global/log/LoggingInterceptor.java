@@ -7,6 +7,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 인터셉터를 통해 요청을 응답할때 로그를 남긴다.
+ */
 @Slf4j
 @Component
 public class LoggingInterceptor implements HandlerInterceptor {
@@ -22,6 +25,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
         this.apiQueryCounter = apiQueryCounter;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public void afterCompletion(final HttpServletRequest request, final HttpServletResponse response,
                                 final Object handler, final Exception ex) {
