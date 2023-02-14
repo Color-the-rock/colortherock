@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.member.entity.AdminDetails;
+import org.anotherclass.colortherock.domain.report.request.PostUnhiddenRequest;
 import org.anotherclass.colortherock.domain.report.response.AdminReportDetailResponse;
 import org.anotherclass.colortherock.domain.report.response.AdminReportedPostResponse;
 import org.anotherclass.colortherock.domain.report.service.AdminReportService;
@@ -51,11 +52,11 @@ public class AdminReportController {
     @Operation(description = "관리자 - 영상 숨김 해제 API", summary = "관리자 - 영상 숨김 해제 API")
     @ApiResponse(responseCode = "200", description = "영상 숨김 해제 성공")
     @PutMapping("list/detail/unhidden")
-    public BaseResponse<Object> cancelHiddenStatus(@AuthenticationPrincipal AdminDetails adminDetails, @RequestBody Long videoBoardId) {
+    public BaseResponse<Object> cancelHiddenStatus(@AuthenticationPrincipal AdminDetails adminDetails, @RequestBody PostUnhiddenRequest request) {
         if (adminDetails == null) {
             throw new GlobalBaseException(GlobalErrorCode.ACCESS_DENIED);
         }
-        adminReportService.cancelHiddenStatus(videoBoardId);
+        adminReportService.cancelHiddenStatus(request);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
     }
 

@@ -4,6 +4,7 @@ import org.anotherclass.colortherock.IntegrationTest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.report.request.PostReportRequest;
+import org.anotherclass.colortherock.domain.report.request.PostUnhiddenRequest;
 import org.anotherclass.colortherock.domain.report.response.AdminReportDetailResponse;
 import org.anotherclass.colortherock.domain.report.response.AdminReportedPostResponse;
 import org.anotherclass.colortherock.domain.report.service.ReportService;
@@ -169,7 +170,7 @@ class AdminReportControllerTest extends IntegrationTest {
     @DisplayName("영상 숨김 해제하기")
     void cancelHiddenStatus() throws Exception {
         token = BEARER_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
-        Long request = videoBoardIds.get(0);
+        PostUnhiddenRequest request = new PostUnhiddenRequest(videoBoardIds.get(0));
         mockMvc.perform(
                         put(url + "/detail/unhidden")
                                 .contentType(MediaType.APPLICATION_JSON)
