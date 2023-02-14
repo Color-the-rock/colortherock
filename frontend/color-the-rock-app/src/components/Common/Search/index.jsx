@@ -1,6 +1,8 @@
 import React from "react";
 import { useInput } from "../../../hooks/useInput";
 import * as S from "./style";
+import PropTypes from "prop-types";
+
 const SearchBar = ({ getAllLiveList }) => {
   const [searchValue, onChangeSearchValue] = useInput("");
 
@@ -28,3 +30,6 @@ const SearchBar = ({ getAllLiveList }) => {
 };
 
 export default SearchBar;
+SearchBar.propTypes = {
+  getAllLiveList: PropTypes.func,
+};
