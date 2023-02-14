@@ -35,6 +35,12 @@ public class MemberService {
     @Value("${spring.security.user.password}")
     private String adminPassword;
 
+    /**
+     * 관리자 계정 로그인
+     *
+     * @param loginInfo 로그인 정보
+     * @return 관리자 계정 토큰
+     */
     public String adminLogin(LoginInfo loginInfo) {
         if (!adminId.equals(loginInfo.getId()) || !adminPassword.equals(loginInfo.getPassword())) {
             throw new IncorrectAdminInfoException();
@@ -42,11 +48,24 @@ public class MemberService {
         return BEARER_PREFIX + jwtTokenUtils.createTokens(loginInfo.getId(), List.of(() -> "ROLE_ADMIN"));
     }
 
+    /**
+     * 리프레시 토큰으로 액세스 토큰을 다시 만듬
+     *
+     * @param refreshToken 리프레시 토큰
+     * @return 다시 만든 액세스 토큰
+     */
     public String regenerateAccessToken(String refreshToken) {
         Optional<RefreshToken> findToken = jwtTokenUtils.findRefreshToken(refreshToken);
         RefreshToken findRefreshToken = findToken.orElseThrow(() -> new AccessDeniedException(GlobalErrorCode.ACCESS_DENIED));
         return jwtTokenUtils.reCreateTokens(findRefreshToken);
     }
+
+    /**
+     * 회원 가입 로직
+     *
+     * @param request {@link MemberSignUpRequest} 회원가입 요청
+     * @return {@link MemberSignUpResponse} 회원 가입 응답
+     */
 
     public MemberSignUpResponse signup(MemberSignUpRequest request) {
         Member member = request.toEntity();
@@ -56,6 +75,12 @@ public class MemberService {
         return new MemberSignUpResponse(save.getId(), save.getEmail(), save.getRegistrationId(), save.getNickname(), refreshToken.getAccessTokenValue(), refreshToken.getRefreshTokenKey());
     }
 
+    /**
+     * 닉네임 중복체크 검사
+     *
+     * @param nickname 검사할 닉네임
+     * @return true 면 중복이 아님
+     */
     public boolean duplicateNickname(String nickname) {
         return !memberRepository.existsByNickname(nickname);
     }
