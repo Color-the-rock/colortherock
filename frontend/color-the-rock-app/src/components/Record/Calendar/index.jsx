@@ -31,7 +31,6 @@ const CustomCalendar = () => {
       getCalendarData(e);
       dispatch(setCurrentDate(e));
     }
-
     getVideoListByCalendar(e);
   };
 
@@ -48,7 +47,6 @@ const CustomCalendar = () => {
   };
 
   const getVideoListByCalendar = (e) => {
-    // requestBody
     const data = {
       videoId: -1,
       shootingDate: moment(e).format("YYYY-MM-DD"),
@@ -56,7 +54,6 @@ const CustomCalendar = () => {
     };
 
     console.log("[requestBody] : ", data);
-    // call API
     recordApi
       .getAllRecordVideo(data)
       .then(({ data: { status, result } }) => {
