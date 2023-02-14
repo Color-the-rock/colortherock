@@ -50,24 +50,16 @@ const boardApi = {
       `/videoboard/comment?storeId=${storeId}&videoBoardId=${videoBoardId}`
     ),
   // 영상 댓글 수정 요청
-  putVideoBoardComment: ({ commentId, content }) =>
-    defaultInstance.put("/videoboard/comment", {
-      commentId,
-      content,
-    }),
+  putVideoBoardComment: (requestBody) =>
+    defaultInstance.put("/videoboard/comment", requestBody),
 
   // 영상 댓글 작성 요청
   postVideoBoardComment: (requestBody) =>
     defaultInstance.post("/videoboard/comment", requestBody),
 
   // 영상 댓글 삭제 요청
-  // value 수정
-  deleteVideoBoardComment: ({ value }) =>
-    defaultInstance.delete("videoboard/comment", {
-      params: {
-        value,
-      },
-    }),
+  deleteVideoBoardComment: (commentId) =>
+    defaultInstance.delete(`videoboard/comment?commentId=${commentId}`),
 
   // 내 영상 댓글 조회 요청
   getVideoBoardmyComment: ({ storeId }) =>

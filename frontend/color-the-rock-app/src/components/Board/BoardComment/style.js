@@ -9,7 +9,7 @@ export const Container = styled.div`
   padding: 0.5rem;
   border-radius: 10px;
 `;
-export const Title = styled.h1`
+export const Title = styled.label`
   font-style: normal;
   font-weight: 500;
   font-size: 1rem;
@@ -22,8 +22,21 @@ export const ContentWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: transparent;
 `;
-export const Content = styled.label`
+export const Content = styled.input`
+  width: 100%;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  letter-spacing: -0.01em;
+  color: var(--color-secondary);
+  background-color: transparent;
+  border: none;
+`;
+
+export const UserNickName = styled.label`
   font-style: normal;
   font-weight: 400;
   font-size: 0.75rem;
@@ -38,4 +51,13 @@ export const createdDate = styled.label`
   line-height: 16px;
   letter-spacing: -0.005em;
   color: var(--color-tertiary);
+`;
+
+export const ButtonWrapper = styled.span`
+  background-color: #fff;
+`;
+
+export const Button = styled.button`
+  min-width: 64px;
+  color: var(--color-white);
 `;
