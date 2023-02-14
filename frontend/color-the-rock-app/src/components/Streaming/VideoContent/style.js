@@ -52,7 +52,7 @@ export const PlayButton = styled(FiPlay)`
 `;
 
 export const DurationWrap = styled.div`
-  width: 50px;
+  width: 60px;
   text-align: center;
   height: 100%;
   border-radius: 5px;
