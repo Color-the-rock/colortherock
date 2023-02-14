@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.report.entity.Report;
 import org.anotherclass.colortherock.domain.report.repository.ReportRepository;
+import org.anotherclass.colortherock.domain.report.request.PostUnhiddenRequest;
 import org.anotherclass.colortherock.domain.report.response.AdminReportDetailResponse;
 import org.anotherclass.colortherock.domain.report.response.AdminReportedPostResponse;
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
@@ -50,11 +51,11 @@ public class AdminReportService {
 
     // 영상게시글 숨김 처리 해제 및 신고 내용 삭제
     @Transactional
-    public void cancelHiddenStatus(Long videoBoardId) {
-        VideoBoard videoBoard = videoBoardRepository.findById(videoBoardId)
+    public void cancelHiddenStatus(PostUnhiddenRequest request) {
+        VideoBoard videoBoard = videoBoardRepository.findById(request.getVideoBoardId())
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
         videoBoard.changeToPublic();
-        reportRepository.deleteAllByVideoBoardId(videoBoardId);
+        reportRepository.deleteAllByVideoBoardId(request.getVideoBoardId());
     }
 
     // 영상게시글 삭제(영상 자체를 삭제)

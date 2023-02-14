@@ -3,6 +3,7 @@ package org.anotherclass.colortherock.domain.report.service;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.report.request.PostReportRequest;
+import org.anotherclass.colortherock.domain.report.request.PostUnhiddenRequest;
 import org.anotherclass.colortherock.domain.report.response.AdminReportDetailResponse;
 import org.anotherclass.colortherock.domain.report.response.AdminReportedPostResponse;
 import org.anotherclass.colortherock.domain.video.entity.Video;
@@ -113,7 +114,8 @@ class AdminReportServiceTest {
         // 신고 개수와 숨김상태 확인
         assertEquals(true, videoBoard.getIsHidden());
         // when
-        adminReportService.cancelHiddenStatus(videoBoard.getId());
+        PostUnhiddenRequest request = new PostUnhiddenRequest(videoBoard.getId());
+        adminReportService.cancelHiddenStatus(request);
         List<AdminReportDetailResponse> reportList = adminReportService.getReportDetail(videoBoard.getId());
         // then
         assertEquals(false, videoBoard.getIsHidden());
