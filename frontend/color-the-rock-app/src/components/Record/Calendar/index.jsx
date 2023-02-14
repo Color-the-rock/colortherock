@@ -5,14 +5,14 @@ import * as S from "./style";
 import "./calendar.css";
 import { recordApi } from "../../../api/record";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentDate } from "../../../stores/record/recordSlice";
+import { setCurrentDate, setVideos } from "../../../stores/record/recordSlice";
 
-const CustomCalendar = ({ isSuccess }) => {
+const CustomCalendar = () => {
   const dispatch = useDispatch();
   const date = useSelector((state) => state.record.currentDate);
+  const radioValue = useSelector((state) => state.record.isSuccess);
   const [markers, setMarkers] = useState([]); // 컬러 마커 데이터
   const [prevYearMonth, setPrevYearMonth] = useState(new Date()); // 이전 호출 값 저장
-  const [videos, setVideos] = useState([]);
   const [value, setValue] = useState(date);
 
   // 달력의 날짜가 변경된 경우 처리
@@ -31,13 +31,10 @@ const CustomCalendar = ({ isSuccess }) => {
       getCalendarData(e);
       dispatch(setCurrentDate(e));
     }
-
     getVideoListByCalendar(e);
   };
 
   const getCalendarData = (e) => {
-    console.log("[getCalendarData] : e >> ", moment(e).format("YYYY-MM-DD"));
-
     recordApi
       .getCalendarData(moment(e).format("YYYY-MM"))
       .then(({ data: { status, result } }) => {
@@ -50,21 +47,19 @@ const CustomCalendar = ({ isSuccess }) => {
   };
 
   const getVideoListByCalendar = (e) => {
-    // requestBody
     const data = {
-      videoId: videos.length > 0 ? videos[videos.length - 1].videoId : 1,
+      videoId: -1,
       shootingDate: moment(e).format("YYYY-MM-DD"),
-      isSuccess: isSuccess === "success" ? true : false,
+      isSuccess: radioValue ? true : false,
     };
 
-    console.log("[getVideoListByCalendar] : ", e, " ", data);
-    // call API
+    console.log("[requestBody] : ", data);
     recordApi
       .getAllRecordVideo(data)
       .then(({ data: { status, result } }) => {
         if (status === 200) {
-          console.log("[getRecordVideo()] statusCode : 200 ", result);
-          setVideos(result);
+          console.log("[getAllRecordVideo()] statusCode : 200 ", result);
+          dispatch(setVideos(result));
         }
       })
       .catch((error) => console.log("error :", error));
@@ -72,11 +67,11 @@ const CustomCalendar = ({ isSuccess }) => {
 
   useEffect(() => {
     getCalendarData();
-  }, []);
+  }, [date]);
 
   useEffect(() => {
-    console.log("currentDate:: ", date);
-  }, [date]);
+    getVideoListByCalendar(date);
+  }, [radioValue]);
 
   return (
     <S.Container>

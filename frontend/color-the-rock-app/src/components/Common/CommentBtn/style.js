@@ -34,6 +34,7 @@ export const SendButton = styled.button`
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 50%;
+  margin-right: 0.25rem;
   border: none;
   color: var(--color-white);
   background: linear-gradient(135deg, #ff6cab 0%, #8533ff 100%);

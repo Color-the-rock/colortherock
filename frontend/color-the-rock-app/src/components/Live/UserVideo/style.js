@@ -5,7 +5,3 @@ export const VideoWrapper = styled.div`
   height: 100%;
   background-color: var(--color-dark);
 `;
-
-export const GuideText = styled.p`
-  
-`;

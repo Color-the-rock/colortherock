@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import Webcam from "react-webcam";
 import * as S from "./style";
 import { FiArrowLeft } from "react-icons/fi";
@@ -13,7 +13,7 @@ import { FiChevronDown } from "react-icons/fi";
 import { FiChevronUp } from "react-icons/fi";
 import { HiOutlineCamera } from "react-icons/hi2";
 import { OpenVidu } from "openvidu-browser";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setOV,
   setOpenViduToken,
@@ -31,9 +31,6 @@ const videoConstraints = {
 const StreamingForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const nickName = useSelector((state) => state.users.nickName);
-
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [onSetting, setOnSetting] = useState(true);
@@ -53,13 +50,15 @@ const StreamingForm = () => {
   };
 
   const submitHandler = () => {
-    if (!isPublic || !title || !gymName || !imgSrc) {
+    if (!isPublic || !title || !gymName) {
       alert("모든 항목을 채워주세요.");
+      return;
+    } else if (!imgSrc) {
+      alert("방송시작을 위한 썸네일을 촬영해주세요!");
       return;
     }
     joinSession();
-
-    navigate(`/streaming/live/1`);
+    navigate(`/streaming/live`);
   };
 
   // openVidu 설정
@@ -102,13 +101,10 @@ const StreamingForm = () => {
       .createLiveSession(formData)
       .then(({ data: { status, result } }) => {
         if (status === 200) {
-          console.log("stausCode : 200 ", result);
           dispatch(setOpenViduToken(result));
           dispatch(setStreamingInfo(requestBody));
           const params = new URL(result).searchParams;
-          console.log("params,", params);
           const sessionId = params.get("sessionId");
-          console.log("params sessionId,", sessionId);
           dispatch(setSessionId(sessionId));
         }
       })
@@ -183,19 +179,12 @@ const StreamingForm = () => {
                     opacity="70"
                   />
                 </S.ComponenentWrap>
-                <S.ComponenentWrap>
-                  <S.CameraWrap>
-                    <HiOutlineCamera
-                      size="32px"
-                      className="camera"
-                      onClick={handleCapture}
-                    />
-                    <span>{`    << 썸네일을 찍어주세요.`}</span>
-                  </S.CameraWrap>
-                </S.ComponenentWrap>
               </S.AddPadding>
             )}
           </S.OverlapContent>
+          <S.CameraWrap>
+            <HiOutlineCamera className="camera" onClick={handleCapture} />
+          </S.CameraWrap>
         </S.Content>
       </S.ContentWrap>
     </S.Container>

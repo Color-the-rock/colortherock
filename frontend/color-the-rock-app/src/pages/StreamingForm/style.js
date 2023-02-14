@@ -1,21 +1,10 @@
-import styled, { keyframes } from "styled-components";
-
-const clickAnimation = keyframes`
-  0% {
-    font-size: 32px;
-    color: red;
-  }
-  100% {
-    font-size: 50px;
-    color: white;
-  }
-`;
+import styled from "styled-components";
 
 export const Container = styled.div`
-  width: 100vw;
+  width: 100%;
   height: calc(var(--vh, 1vh) * 100);
   background-color: transparent;
-
+  padding-bottom: 1rem;
   overflow-y: scroll;
   -ms-overflow-style: none;
   ::-webkit-scrollbar {
@@ -51,14 +40,18 @@ export const Content = styled.div`
     height: calc(100% - 80px);
   }
 
-  /* .camera {
+  .camera {
     position: absolute;
     right: 1rem;
-    top: calc(100% - 148px);
+    bottom: 6rem;
     z-index: 1;
-    animation-duration: 1s;
-    animation-name: ${clickAnimation};
-  } */
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    padding: 0.4rem;
+    text-align: center;
+  }
 `;
 
 export const CaptureWrap = styled.div`
@@ -84,9 +77,6 @@ export const OverlapContent = styled.div`
 `;
 
 export const ArrowLeftBtnWrap = styled.span`
-  /* position: absolute; */
-  /* left: 16px; */
-  /* top: 16px; */
   z-index: 1;
   font-size: 2rem;
 `;
@@ -108,7 +98,6 @@ export const AddPadding = styled.div`
 `;
 
 export const IconWrap = styled.span`
-  /* display: flex; */
   align-items: center;
 `;
 
@@ -122,13 +111,4 @@ export const CameraWrap = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-
-  .camera {
-    /* position: absolute;
-    right: 1rem;
-    top: calc(100% - 148px);
-    z-index: 1;
-    animation-duration: 1s;
-    animation-name: ${clickAnimation}; */
-  }
 `;

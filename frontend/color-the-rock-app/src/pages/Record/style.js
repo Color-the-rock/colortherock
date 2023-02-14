@@ -9,6 +9,7 @@ export const Container = styled.div`
   padding: 0 16px;
   margin-top: 5rem;
   margin-bottom: 1rem;
+  padding-bottom: 2rem;
   overflow-x: hidden;
   overflow-y: scroll;
   -ms-overflow-style: none;

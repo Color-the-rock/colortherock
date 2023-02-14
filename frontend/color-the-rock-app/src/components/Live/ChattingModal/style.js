@@ -85,6 +85,7 @@ export const ChattingList = styled.ul`
   list-style: none;
   width: 100%;
   background-color: transparent;
+  margin-bottom: 1rem;
 `;
 
 export const ChattingContent = styled.div`

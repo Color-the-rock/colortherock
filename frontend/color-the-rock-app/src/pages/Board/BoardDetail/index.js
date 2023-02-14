@@ -5,7 +5,6 @@ import CommentModal from "../../../components/Common/CommentModal";
 import CommentBtn from "../../../components/Common/CommentBtn";
 import { useNavigate, useParams } from "react-router";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import boardApi from "../../../api/board";
 import ReportModal from "../../../components/Board/ReportModal";
@@ -32,29 +31,8 @@ const BoardDetail = () => {
       .catch((error) => console.log(error));
   };
 
-  // // 게시글 댓글 조회 API
-  // const getBoardCommentList = () => {
-  //   console.log("param id: ", id);
-
-  //   boardApi
-  //     .getVideoBoardCommentList(storeId, id)
-  //     .then(({ data: { status, result: _result } }) => {
-  //       if (status === 200) {
-  //         console.log("statusCode : 200", _result);
-  //         setCommentList(_result);
-  //         let commentId =
-  //           _result[_result.length - 1].commentId === undefined
-  //             ? -1
-  //             : _result[_result.length - 1].commentId;
-  //         setStoreId(commentId);
-  //       }
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
-
   useEffect(() => {
     getBoardDetail();
-    // getBoardCommentList();
   }, []);
 
   const handleModal = () => {
@@ -94,11 +72,6 @@ const BoardDetail = () => {
 
         {isOpenBoardSettingModal && (
           <S.SettingModal>
-            <S.SettingModalItem isSameAuthor={userNickname === result.nickname}>
-              <S.SLink to={`/board/modify/${result.videoBoardId}`}>
-                수정
-              </S.SLink>
-            </S.SettingModalItem>
             <S.SettingModalItem
               onClick={handleOnclickDelete}
               isSameAuthor={userNickname === result.nickname}

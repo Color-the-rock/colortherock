@@ -10,9 +10,6 @@ import { useCookies } from "react-cookie";
 
 const SignUp = () => {
   const users = useSelector((state) => state.users);
-  console.log("users: ", users.registrationId);
-  console.log(typeof users.registrationId);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [nickname, setNickname] = useState("");
@@ -30,8 +27,7 @@ const SignUp = () => {
 
       UserApi.SignUp(data)
         .then((res) => {
-          alert("성공입니다.");
-          console.log(res);
+          alert("회원가입에 성공했습니다:)");
           dispatch(setfulfilledLogin({ nickname }));
           const accessToken = res.data.result.accessToken;
           sessionStorage.setItem("accessToken", accessToken);
@@ -57,8 +53,6 @@ const SignUp = () => {
       setNickNameValid(false);
     }
   };
-
-  // 여기서 닉네임 중복체크
 
   // 중복확인을 하고, 중복확인되면
   const onClickConfirmButton = () => {

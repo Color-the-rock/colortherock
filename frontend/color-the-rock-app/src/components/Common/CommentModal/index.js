@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as S from "./style";
 import CommentBtn from "../CommentBtn";
 import BoardCommentList from "../../Board/BoardCommentList";
 import { FiX } from "react-icons/fi";
 import PropTypes from "prop-types";
-import boardApi from "../../../api/board";
 import { useParams } from "react-router-dom";
-import useInfiniteScroll from "../../../hooks/useInfiniteScroll";
 
 const CommentModal = ({ setIsModalOpen, isModalOpen }) => {
   const { id } = useParams();

@@ -15,7 +15,6 @@ import useInfiniteScroll from "../../hooks/useInfiniteScroll";
 const Streaming = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = useSelector((state) => state.streaming.userOpenViduToken);
   const isLogin = useSelector((state) => state.users.isLogin);
   const [result, setResult] = useState([]);
   const [isLoading, setLoading] = useState(false);
@@ -42,7 +41,7 @@ const Streaming = () => {
       .then(({ data: { status, result } }) => {
         if (status === 200) {
           dispatch(setOpenViduToken(result));
-          navigate(`/streaming/live/${sessionId}`);
+          navigate(`/streaming/live`);
         }
       })
       .catch(() => {
@@ -55,13 +54,11 @@ const Streaming = () => {
   };
 
   const getAllLiveList = async () => {
-    console.log("확인용: ", storeId);
     setLoading(true);
     await streamingApi
       .getAllLiveList(storeId, searchValue)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("statusCode : 200 ", _result);
           if (storeId === -1) {
             setResult([..._result]);
           } else {
@@ -98,10 +95,6 @@ const Streaming = () => {
     setStoreId(-1);
     getAllLiveList();
   }, [searchValue]);
-
-  useEffect(() => {
-    console.log("참여자 토큰: ", token);
-  }, [token]);
 
   const [isFetching, setIsFetching] = useInfiniteScroll(getAllLiveList);
 

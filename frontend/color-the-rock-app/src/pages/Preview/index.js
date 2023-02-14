@@ -7,7 +7,6 @@ const Preview = () => {
   const videoId = searchParams.get("videoId");
   const [result, setResult] = useState([]);
 
-  // CALL API
   useEffect(() => {
     recordApi
       .getOneRecordVideo(videoId)
@@ -18,21 +17,9 @@ const Preview = () => {
       });
   }, []);
 
-  // {
-  //   "id": 0,
-  //   "shootingDate": "string",
-  //   "level": 0,
-  //   "gymName": "string",
-  //   "s3URL": "string",
-  //   "isSuccess": true,
-  //   "color": "string"
-  // }
-
   return (
     <S.Container controls>
-      <S.Video autoPlay controls>
-        <source src={result.s3URL} type="video/mp4" />
-      </S.Video>
+      <S.Video src={result.s3URL} type="video/mp4" autoPlay controls></S.Video>
     </S.Container>
   );
 };

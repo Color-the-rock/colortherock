@@ -3,6 +3,7 @@ import * as S from "./style";
 import { HiOutlineArrowSmUp } from "react-icons/hi";
 import { useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import PropTypes from "prop-types";
 
 const ChattingModal = ({
   setShowChattingModal,
@@ -123,3 +124,11 @@ const ChattingModal = ({
   );
 };
 export default ChattingModal;
+
+ChattingModal.propTypes = {
+  setShowChattingModal: PropTypes.func,
+  getToken: PropTypes.func,
+  session: PropTypes.object,
+  messages: PropTypes.array,
+  onSessionCreated: PropTypes.func,
+};

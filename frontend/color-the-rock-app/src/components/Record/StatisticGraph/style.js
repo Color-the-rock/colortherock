@@ -76,6 +76,8 @@ export const HomeGymGraph = styled.div`
 `;
 
 export const VisitedState = styled.div`
+  position: relative;
+
   display: inline-block;
   background-color: ${(props) =>
     props.count ? `rgba(194, 80, 214, ${props.count})` : "rgb(194, 80, 214)"};
@@ -90,4 +92,18 @@ export const VisitedState = styled.div`
     border-top-right-radius: 2rem;
     border-bottom-right-radius: 2rem;
   }
+`;
+
+export const GraphText = styled.label`
+  position: absolute;
+  top: 28px;
+  background-color: transparent;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  letter-spacing: -0.01em;
+  color: var(--color-tertiary);
+  padding-left: 0.25rem;
+  z-index: 100;
 `;

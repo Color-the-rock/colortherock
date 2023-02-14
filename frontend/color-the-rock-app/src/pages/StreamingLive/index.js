@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UserVideoComponent from "../../components/Live/UserVideo";
 import * as S from "./style";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,6 @@ import {
   FiEdit,
   FiFilm,
   FiDisc,
-  FiLink,
 } from "react-icons/fi";
 import { Desktop, Mobile } from "../../components/layout/Template";
 import streamingApi from "../../api/streaming";
@@ -33,7 +32,6 @@ const StreamingLive = () => {
   const nickName = useSelector((state) => state.users.nickName);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [sessionTitle, setSessionTitle] = useState("");
-  const [userNickName, setUserNickName] = useState("");
   const [connectionId, setConnectionId] = useState("");
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -63,6 +61,7 @@ const StreamingLive = () => {
 
   // 이전 영상 보기 관리
   const [recordListModal, setRecordListModal] = useState(false);
+  const [isFrontCamera, setFrontCamera] = useState(false);
 
   // 피드백 설정 관리
   const [picture, setPicture] = useState([]);
@@ -77,9 +76,6 @@ const StreamingLive = () => {
   const preventClose = (e) => {
     e.preventDefault();
     e.returnValue = ""; // 크롬에서 필요함
-
-    // 새로고침 -> 강제 종료
-    // if (session) session.disconnect();
   };
 
   // 새로고침 및 뒤로가기시 처리
@@ -114,7 +110,7 @@ const StreamingLive = () => {
       onFeedbackSignal();
       onFeedBackReset();
       session
-        .connect(token, { clientData: userNickName })
+        .connect(token, { clientData: nickName })
         .then(() => console.log("success Connect"))
         .catch((error) => console.log("error: ", error));
 
@@ -144,7 +140,7 @@ const StreamingLive = () => {
 
   useEffect(() => {
     if (token !== "" && session !== undefined) {
-      session.connect(token, { clientData: userNickName }).then(async () => {
+      session.connect(token, { clientData: nickName }).then(async () => {
         let publisher = await ov.initPublisherAsync(undefined, {
           audioSource: undefined, // The source of audio. If undefined default microphone
           videoSource: undefined, // The source of video. If undefined default webcam
@@ -178,8 +174,6 @@ const StreamingLive = () => {
         setCurrentVideoDevice(CurrentVideoDevice);
         setMainStreamManager(publisher);
         setPublisher(publisher);
-
-        console.log("hello?????");
       });
     }
   }, [token]);
@@ -232,6 +226,7 @@ const StreamingLive = () => {
   };
 
   const switchCamera = async () => {
+    setShowSettingModal(false);
     try {
       const devices = await ov.getDevices();
       let videoDevices = devices.filter(
@@ -245,11 +240,15 @@ const StreamingLive = () => {
 
         if (newVideoDevice.length > 0) {
           let newPublisher = ov.initPublisher(undefined, {
-            videoSource: newVideoDevice[0].deviceId,
+            videoSource: isFrontCamera
+              ? videoDevices[0].deviceId
+              : videoDevices[videoDevices.length - 1].deviceId,
             publishAudio: true,
             publishVideo: true,
-            mirror: true,
+            mirror: false,
           });
+
+          setFrontCamera((prev) => !prev);
 
           await session.unpublish(mainStreamManager);
           await session.publish(newPublisher);
@@ -266,6 +265,7 @@ const StreamingLive = () => {
 
   // video 설정
   const handleSetVideo = () => {
+    setShowSettingModal(false);
     if (isRecordStart) {
       alert("녹화를 중지해주세요!");
       return;
@@ -277,6 +277,7 @@ const StreamingLive = () => {
 
   // audio 설정
   const handleSetAudio = () => {
+    setShowSettingModal(false);
     publisher.publishAudio(!isOnMic);
     setOnMic((prev) => !prev);
   };
@@ -286,6 +287,8 @@ const StreamingLive = () => {
     session.on(`signal:signal`, (event) => {
       const msg = JSON.parse(event.data).message;
       const userName = JSON.parse(event.from.data).clientData;
+
+      console.log("userName:", nickName, "", event);
 
       // test
       setMessages((prev) =>
@@ -350,8 +353,6 @@ const StreamingLive = () => {
           console.log("[녹화 시작] statusCode : 200 ", _result);
           setRecordId(_result);
           testRecordId = _result;
-          console.log("녹화 시작 후 결과 [testRecordId] ", testRecordId);
-          console.log("녹화 시작 후 결과 [recordId] ", recordId);
         }
       })
       .catch((error) => console.log(error));
@@ -359,9 +360,6 @@ const StreamingLive = () => {
   };
 
   const handleQuitRecord = () => {
-    console.log("녹화 종료 전 결과 [testRecordId] ", testRecordId);
-    console.log("녹화 종료 전 결과 [recordId] ", recordId);
-
     console.log("recordId : ", testRecordId);
     const requestBody = {
       token: token,
@@ -381,12 +379,6 @@ const StreamingLive = () => {
     setRecordStart((prev) => !prev);
   };
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      alert("링크가 복사되었습니다:)");
-      console.log("window.location.href", window.location.href);
-    });
-  };
   return (
     <S.Container>
       {feedbackModal && (
@@ -517,13 +509,6 @@ const StreamingLive = () => {
               녹화 시작
             </S.VideoMenuItem>
           )}
-
-          <S.VideoMenuItem onClick={handleCopyLink}>
-            <S.IconWrapper>
-              <FiLink size="24px" />
-            </S.IconWrapper>
-            링크 공유
-          </S.VideoMenuItem>
         </S.VideoMenu>
       ) : null}
     </S.Container>

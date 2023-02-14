@@ -4,13 +4,14 @@ export const Container = styled.div`
   max-width: 6.75rem;
   min-height: 10.75rem;
   border-radius: 10px;
-  background-color: var(--color-background);
+  background-color: transparent;
 `;
 
 export const ThumbnailImg = styled.img`
   width: 100%;
   min-height: 10.188rem;
   border-radius: 10px;
+  margin-bottom: 0.25rem;
 `;
 
 export const Text = styled.label`
@@ -22,6 +23,7 @@ export const Text = styled.label`
   letter-spacing: -0.005em;
   margin: 0.5rem 0px;
 `;
+
 export const Tag = styled.label`
   font-style: normal;
   font-weight: 400;
@@ -30,4 +32,5 @@ export const Tag = styled.label`
   border-radius: 10px;
   padding: 0.15rem 0.75rem;
   background-color: var(--color-background);
+  margin: 0 0.25rem 0 0;
 `;

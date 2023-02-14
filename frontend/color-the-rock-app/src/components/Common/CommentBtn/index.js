@@ -20,8 +20,6 @@ const CommentBtn = ({ setReset, setStoreId, onClick, isReadOnly }) => {
       .postVideoBoardComment(requestBody)
       .then(({ data: { status } }) => {
         if (status === 200) {
-          console.log("[postVideoBoardComment] statusCode : 200");
-          // getAllComments();
           setValue("");
           setStoreId(-1);
           setReset(true);
@@ -41,8 +39,6 @@ const CommentBtn = ({ setReset, setStoreId, onClick, isReadOnly }) => {
       .postVideoBoardComment(requestBody)
       .then(({ data: { status } }) => {
         if (status === 200) {
-          console.log("[postVideoBoardComment] statusCode : 200");
-          // getAllComments();
           setValue("");
           setStoreId(-1);
           setReset((prev) => !prev);

@@ -1,25 +1,22 @@
-import React, { useEffect } from "react";
+import React from "react";
 import OpenViduVideoComponent from "../OpemViduVideo";
 import * as S from "./style";
+import PropTypes from "prop-types";
 
-function UserVideoComponent({ streamManager }) {
-  useEffect(() => {
-    console.log("streamer ", streamManager);
-  }, [streamManager]);
-
-  const getNicknameTag = () => {
-    return JSON.parse(streamManager.stream.connection.data).clientData;
-  };
-
+const UserVideoComponent = ({ streamManager }) => {
   return (
     <S.VideoWrapper>
       {streamManager !== undefined ? (
         <OpenViduVideoComponent streamManager={streamManager} />
       ) : (
-        <S.GuideText>streamManager is undefined</S.GuideText>
+        <p>스트리머가 존재하지 않아요!</p>
       )}
     </S.VideoWrapper>
   );
-}
+};
 
 export default UserVideoComponent;
+
+UserVideoComponent.propTypes = {
+  streamManager: PropTypes.object,
+};
