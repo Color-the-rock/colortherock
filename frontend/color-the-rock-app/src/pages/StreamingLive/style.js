@@ -3,18 +3,6 @@ import { motion } from "framer-motion";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { FiX } from "react-icons/fi";
 
-export const InputWrapper = styled.div`
-  display: flex;
-  position: absolute;
-  bottom: 80px;
-  right: 16px;
-`;
-
-export const Input = styled.input`
-  width: 400px;
-  height: 40px;
-`;
-
 export const Container = styled.div`
   // common
   display: flex;

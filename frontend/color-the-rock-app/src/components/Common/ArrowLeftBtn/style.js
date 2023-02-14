@@ -13,5 +13,5 @@ export const IconWrap = styled.div`
   justify-content: flex-start;
   align-items: center;
   background-color: transparent;
-  font-size: 2rem;
+  font-size: 1.6rem;
 `;

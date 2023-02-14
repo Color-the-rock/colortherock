@@ -79,7 +79,7 @@ export const ArrowLeftBtnWrap = styled.div`
 
 export const BoardSettingBtn = styled(FiMoreVertical)`
   margin-top: 1rem;
-  font-size: 2rem;
+  font-size: 1.6rem;
   background-color: transparent;
   @media (max-width: 992px) {
     margin-right: 1rem;
