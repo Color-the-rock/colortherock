@@ -66,7 +66,6 @@ const StreamingLive = () => {
   // 피드백 설정 관리
   const [picture, setPicture] = useState([]);
   const [feedbackModal, setFeedbackModal] = useState(false);
-  let testRecordId = "";
 
   const preventGoBack = () => {
     window.history.pushState(null, "", window.location.href);
@@ -307,9 +306,6 @@ const StreamingLive = () => {
       const data = JSON.parse(event.data);
       console.log("data: ", data);
       setPicture((prev) => [...prev, data]);
-      // const data = JSON.parse(event.data);
-      // console.log("onFeedbackSignal - data.image :", data.image);
-      // setPicture(data.image);
     });
   };
 
@@ -350,9 +346,7 @@ const StreamingLive = () => {
       .startRecordVideo(sessionId, requestBody)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("[녹화 시작] statusCode : 200 ", _result);
           setRecordId(_result);
-          testRecordId = _result;
         }
       })
       .catch((error) => console.log(error));
@@ -360,7 +354,6 @@ const StreamingLive = () => {
   };
 
   const handleQuitRecord = () => {
-    console.log("recordId : ", testRecordId);
     const requestBody = {
       token: token,
       recordingId: recordId,
@@ -370,7 +363,6 @@ const StreamingLive = () => {
       .quitRecordVideo(sessionId, requestBody)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("[quitRecordVideo] statusCode : 200 ", _result);
           setRecordModal(true);
         }
       })
@@ -506,7 +498,7 @@ const StreamingLive = () => {
               <S.IconWrapper>
                 <FiDisc size="24px" color={isRecordStart ? "red" : "#ffffff"} />
               </S.IconWrapper>
-              녹화 시작
+              {isRecordStart ? "녹화 중지" : "녹화 시작"}
             </S.VideoMenuItem>
           )}
         </S.VideoMenu>

@@ -112,10 +112,13 @@ const Record = () => {
       <Desktop>
         <S.ContentWrapper>
           <S.RecordWrapper>
-            <div>
-              <SubTitle text="레벨별 도전 현황" />
+            <S.InfoWrapper>
+              <SubTitle text="레벨별 도전 현황">
+                <S.InfoButton id="record-info-guide" />
+              </SubTitle>
               <StackedGraph />
-            </div>
+              {isShowGuide && <S.InfoGuideImg src={GuideImg} alt="guide" />}
+            </S.InfoWrapper>
             <div>
               <SubTitle text="활동 통계" />
               <StatisticGraph />
