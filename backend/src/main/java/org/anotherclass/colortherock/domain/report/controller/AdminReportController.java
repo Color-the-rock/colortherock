@@ -50,8 +50,8 @@ public class AdminReportController {
 
     @Operation(description = "관리자 - 영상 숨김 해제 API", summary = "관리자 - 영상 숨김 해제 API")
     @ApiResponse(responseCode = "200", description = "영상 숨김 해제 성공")
-    @GetMapping("list/detail/unhidden")
-    public BaseResponse<Object> cancelHiddenStatus(@AuthenticationPrincipal AdminDetails adminDetails, @RequestParam Long videoBoardId) {
+    @PutMapping("list/detail/unhidden")
+    public BaseResponse<Object> cancelHiddenStatus(@AuthenticationPrincipal AdminDetails adminDetails, @RequestBody Long videoBoardId) {
         if (adminDetails == null) {
             throw new GlobalBaseException(GlobalErrorCode.ACCESS_DENIED);
         }

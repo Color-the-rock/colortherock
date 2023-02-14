@@ -12,6 +12,7 @@ import org.anotherclass.colortherock.domain.videoboard.exception.PostNotFoundExc
 import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepository;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class AdminReportService {
     private final VideoRepository videoRepository;
 
     // 숨김처리된 영상 불러오기
+    @Transactional(readOnly = true)
     public List<AdminReportedPostResponse> getReportedVideoBoard() {
         List<VideoBoard> videoBoardList = videoBoardRepository.findAllByIsHiddenTrue();
         return videoBoardList.stream()
@@ -36,6 +38,7 @@ public class AdminReportService {
     }
 
     // 영상게시글의 신고 내용 불러오기
+    @Transactional(readOnly = true)
     public List<AdminReportDetailResponse> getReportDetail(Long videoBoardId) {
         List<Report> reportList = reportRepository.findAllByVideoBoardId(videoBoardId);
         return reportList.stream()
@@ -46,6 +49,7 @@ public class AdminReportService {
     }
 
     // 영상게시글 숨김 처리 해제 및 신고 내용 삭제
+    @Transactional
     public void cancelHiddenStatus(Long videoBoardId) {
         VideoBoard videoBoard = videoBoardRepository.findById(videoBoardId)
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
@@ -54,6 +58,7 @@ public class AdminReportService {
     }
 
     // 영상게시글 삭제(영상 자체를 삭제)
+    @Transactional
     public void deleteReportedVideo(Long videoBoardId) {
         VideoBoard videoBoard = videoBoardRepository.findById(videoBoardId)
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
