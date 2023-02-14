@@ -44,4 +44,6 @@ Video.propTypes = {
   level: PropTypes.number,
   color: PropTypes.string,
   isMyPage: PropTypes.bool,
+  title: PropTypes.string,
+  onClick: PropTypes.func,
 };

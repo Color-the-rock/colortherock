@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { myPageApi } from "../../../api/mypage";
+import Loading from "../../Common/Loading";
 import Video from "../Video";
 import * as S from "./style";
 
 const MyPost = () => {
   const [result, setResult] = useState([]);
+  const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
+    setLoading(true);
     myPageApi
       .getMyBoardList()
       .then(({ data: { status, result: _result } }) => {
@@ -16,14 +19,17 @@ const MyPost = () => {
           setResult(_result);
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => setLoading(false));
   }, []);
 
   const handleOnClickVideo = (id) => {
     navigate(`/board/detail/${id}`);
   };
 
-  return result && result.length > 0 ? (
+  return isLoading ? (
+    <Loading />
+  ) : result && result.length > 0 ? (
     <S.VideoList>
       {result.map((item, index) => (
         <Video
