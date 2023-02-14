@@ -9,14 +9,7 @@ export const Container = styled.div`
   padding: 0.5rem;
   border-radius: 10px;
 `;
-export const Title = styled.label`
-  font-style: normal;
-  font-weight: 500;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  letter-spacing: -0.01em;
-  color: var(--color-secondary);
-`;
+
 export const ContentWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -54,10 +47,16 @@ export const createdDate = styled.label`
 `;
 
 export const ButtonWrapper = styled.span`
-  background-color: #fff;
+  display: flex;
+  align-self: center;
+  background-color: transparent;
 `;
 
 export const Button = styled.button`
-  min-width: 64px;
+  min-width: 35px;
+  text-align: end;
   color: var(--color-white);
+  &:first-child {
+    margin-right: 0.25rem;
+  }
 `;

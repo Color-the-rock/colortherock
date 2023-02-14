@@ -65,9 +65,11 @@ const BoardCommentList = ({
         result.map((item) => (
           <BoardComment
             key={item.commentId}
+            commentId={item.commentId}
             nickname={item.nickname}
             content={item.content}
             createdDate={item.createdDate}
+            getAllComments={getAllComments}
           />
         ))
       ) : (
