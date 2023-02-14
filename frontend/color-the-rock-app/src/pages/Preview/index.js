@@ -7,7 +7,6 @@ const Preview = () => {
   const videoId = searchParams.get("videoId");
   const [result, setResult] = useState([]);
 
-  // CALL API
   useEffect(() => {
     recordApi
       .getOneRecordVideo(videoId)
@@ -17,10 +16,6 @@ const Preview = () => {
         }
       });
   }, []);
-
-  useEffect(() => {
-    console.log("preview result ? ", result);
-  }, [result]);
 
   return (
     <S.Container controls>

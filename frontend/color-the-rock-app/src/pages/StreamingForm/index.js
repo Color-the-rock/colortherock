@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import Webcam from "react-webcam";
 import * as S from "./style";
 import { FiArrowLeft } from "react-icons/fi";
@@ -13,7 +13,7 @@ import { FiChevronDown } from "react-icons/fi";
 import { FiChevronUp } from "react-icons/fi";
 import { HiOutlineCamera } from "react-icons/hi2";
 import { OpenVidu } from "openvidu-browser";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setOV,
   setOpenViduToken,
@@ -58,7 +58,6 @@ const StreamingForm = () => {
       return;
     }
     joinSession();
-
     navigate(`/streaming/live`);
   };
 
@@ -102,13 +101,10 @@ const StreamingForm = () => {
       .createLiveSession(formData)
       .then(({ data: { status, result } }) => {
         if (status === 200) {
-          console.log("stausCode : 200 ", result);
           dispatch(setOpenViduToken(result));
           dispatch(setStreamingInfo(requestBody));
           const params = new URL(result).searchParams;
-          console.log("params,", params);
           const sessionId = params.get("sessionId");
-          console.log("params sessionId,", sessionId);
           dispatch(setSessionId(sessionId));
         }
       })

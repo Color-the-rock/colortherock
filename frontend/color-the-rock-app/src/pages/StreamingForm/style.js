@@ -77,9 +77,6 @@ export const OverlapContent = styled.div`
 `;
 
 export const ArrowLeftBtnWrap = styled.span`
-  /* position: absolute; */
-  /* left: 16px; */
-  /* top: 16px; */
   z-index: 1;
   font-size: 2rem;
 `;
@@ -101,7 +98,6 @@ export const AddPadding = styled.div`
 `;
 
 export const IconWrap = styled.span`
-  /* display: flex; */
   align-items: center;
 `;
 

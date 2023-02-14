@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import * as S from "./style";
 import { useNavigate } from "react-router-dom";
-
 import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
 import UploadForm from "../../../components/Board/UploadForm";
@@ -124,7 +123,6 @@ const RecordForm = () => {
             </S.SelectButtonWrap>
 
             <S.ComponenentWrap>
-              {/* 라디오 버튼 만들어보자 */}
               <BoardRadioBtn
                 isPublic={isSuccess}
                 setIsPublic={setIsSuccess}

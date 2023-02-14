@@ -58,7 +58,6 @@ const Streaming = () => {
       .getAllLiveList(storeId, searchValue)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("statusCode : 200 ", _result);
           setResult(_result);
           let lastId =
             _result[_result.length - 1].videoBoardId === undefined
@@ -84,10 +83,6 @@ const Streaming = () => {
   useEffect(() => {
     getAllLiveList();
   }, []);
-
-  useEffect(() => {
-    console.log("참여자 토큰: ", token);
-  }, [token]);
 
   return (
     <S.Container>

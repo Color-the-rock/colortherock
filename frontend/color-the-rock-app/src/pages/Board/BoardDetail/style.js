@@ -170,7 +170,6 @@ export const SettingModal = styled.ul`
   z-index: 1000;
   padding: 0.25rem;
   width: 160px;
-  /* height: 140px; */
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
 `;

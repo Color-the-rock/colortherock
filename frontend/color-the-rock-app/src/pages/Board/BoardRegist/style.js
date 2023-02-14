@@ -42,8 +42,6 @@ export const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* background-color: red; */
-
   padding: 0 1rem;
   @media (min-width: 992px) {
     width: 600px;

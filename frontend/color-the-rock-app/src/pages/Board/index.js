@@ -19,7 +19,7 @@ const Board = () => {
   const currentOption = useSelector((state) => state.board.searchColorValue);
   const searchGymName = useSelector((state) => state.board.searchGymName);
   const [isLoading, setIsLoading] = useState(false);
-  console.log("확인좀 할게요: ", result);
+
   useEffect(() => {
     getBoardList();
   }, [currentOption]);
@@ -32,13 +32,10 @@ const Board = () => {
       gymName: searchGymName,
     };
 
-    console.log("getBoardList....", requestData);
-
     await boardApi
       .getAllVideo(requestData)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("statusCode : 200", _result);
           if (storeId === -1) {
             setResult([..._result]);
           } else {
@@ -68,12 +65,6 @@ const Board = () => {
     if (target.nodeName === "DIV") {
       setShowRegisterModal(false);
       return;
-    }
-
-    if (target.value === "local") {
-      console.log("로컬에서 가져오기 ");
-    } else {
-      console.log("클라우드에서 가져오기 ");
     }
     setShowRegisterModal(false);
   };

@@ -35,11 +35,9 @@ const Record = () => {
   };
 
   // 성공 및 실패 영상
-
   useEffect(() => {
     getUserRecordInfo();
 
-    // show info guide
     const infoGuide = document.getElementById("record-info-guide");
 
     if (infoGuide !== null) {
@@ -71,14 +69,12 @@ const Record = () => {
       </S.TextWrapper>
       <Mobile>
         <S.InfoWrapper>
-          {/* 레벨별 도전 현황 */}
           <SubTitle text="레벨별 도전 현황">
             <S.InfoButton id="record-info-guide" />
           </SubTitle>
           {isShowGuide && <S.InfoGuideImg src={GuideImg} alt="guide" />}
         </S.InfoWrapper>
         <StackedGraph />
-        {/* 활동 통계 */}
         <SubTitle text="활동 통계" />
         <StatisticGraph />
         <SubTitle text="일별 도전 기록" />
@@ -120,7 +116,6 @@ const Record = () => {
               <SubTitle text="레벨별 도전 현황" />
               <StackedGraph />
             </div>
-            {/* 활동 통계 */}
             <div>
               <SubTitle text="활동 통계" />
               <StatisticGraph />
