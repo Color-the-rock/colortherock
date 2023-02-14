@@ -1,16 +1,18 @@
 import React from "react";
 import { useInput } from "../../../hooks/useInput";
 import * as S from "./style";
-const SearchBar = ({ getAllLiveList }) => {
+const SearchBar = ({ setSearchValue, getAllLiveList }) => {
   const [searchValue, onChangeSearchValue] = useInput("");
 
   const handleOnClickSearch = () => {
-    getAllLiveList();
+    // getAllLiveList();
+    setSearchValue(searchValue);
   };
 
   const handleKeyPressEnter = (e) => {
     if (e.keyCode === 13) {
-      getAllLiveList(searchValue);
+      setSearchValue(searchValue);
+      // getAllLiveList(searchValue);
     }
   };
   return (

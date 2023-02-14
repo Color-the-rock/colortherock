@@ -65,7 +65,7 @@ const StreamingLive = () => {
   const [recordListModal, setRecordListModal] = useState(false);
 
   // 피드백 설정 관리
-  const [picture, setPicture] = useState();
+  const [picture, setPicture] = useState([]);
   const [feedbackModal, setFeedbackModal] = useState(false);
   let testRecordId = "";
 
@@ -112,7 +112,7 @@ const StreamingLive = () => {
 
       // feedback signal...
       onFeedbackSignal();
-
+      onFeedBackReset();
       session
         .connect(token, { clientData: userNickName })
         .then(() => console.log("success Connect"))
@@ -300,9 +300,19 @@ const StreamingLive = () => {
   // 피드백 관리
   const onFeedbackSignal = () => {
     session.on(`signal:drawingSignal`, (event) => {
+      console.log("onFeedbackSignal: ", event);
       const data = JSON.parse(event.data);
-      console.log("onFeedbackSignal - data.image :", data.image);
-      setPicture(data.image);
+      console.log("data: ", data);
+      setPicture((prev) => [...prev, data]);
+      // const data = JSON.parse(event.data);
+      // console.log("onFeedbackSignal - data.image :", data.image);
+      // setPicture(data.image);
+    });
+  };
+
+  const onFeedBackReset = () => {
+    session.on(`signal:reset`, (event) => {
+      setPicture([]);
     });
   };
 
@@ -481,37 +491,41 @@ const StreamingLive = () => {
           </S.CommentWrapper>
         </S.SettingWrapper>
       </Mobile>
-      <S.VideoMenu position="bottom">
-        <S.VideoMenuItem onClick={openFeedback}>
-          <S.IconWrapper>
-            <FiEdit size="24px" />
-          </S.IconWrapper>
-          피드백
-        </S.VideoMenuItem>
-        <S.VideoMenuItem onClick={openRecordList}>
-          <S.IconWrapper>
-            <FiFilm size="24px" />
-          </S.IconWrapper>
-          이전 영상
-        </S.VideoMenuItem>
-        {mainStreamManager !== undefined && (
-          <S.VideoMenuItem
-            onClick={!isRecordStart ? handleStartVideoRecord : handleQuitRecord}
-          >
+      {!feedbackModal ? (
+        <S.VideoMenu position="bottom">
+          <S.VideoMenuItem onClick={openFeedback}>
             <S.IconWrapper>
-              <FiDisc size="24px" color={isRecordStart ? "red" : "#ffffff"} />
+              <FiEdit size="24px" />
             </S.IconWrapper>
-            녹화 시작
+            피드백
           </S.VideoMenuItem>
-        )}
+          <S.VideoMenuItem onClick={openRecordList}>
+            <S.IconWrapper>
+              <FiFilm size="24px" />
+            </S.IconWrapper>
+            이전 영상
+          </S.VideoMenuItem>
+          {mainStreamManager !== undefined && (
+            <S.VideoMenuItem
+              onClick={
+                !isRecordStart ? handleStartVideoRecord : handleQuitRecord
+              }
+            >
+              <S.IconWrapper>
+                <FiDisc size="24px" color={isRecordStart ? "red" : "#ffffff"} />
+              </S.IconWrapper>
+              녹화 시작
+            </S.VideoMenuItem>
+          )}
 
-        <S.VideoMenuItem onClick={handleCopyLink}>
-          <S.IconWrapper>
-            <FiLink size="24px" />
-          </S.IconWrapper>
-          링크 공유
-        </S.VideoMenuItem>
-      </S.VideoMenu>
+          <S.VideoMenuItem onClick={handleCopyLink}>
+            <S.IconWrapper>
+              <FiLink size="24px" />
+            </S.IconWrapper>
+            링크 공유
+          </S.VideoMenuItem>
+        </S.VideoMenu>
+      ) : null}
     </S.Container>
   );
 };

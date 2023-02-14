@@ -10,44 +10,12 @@ import useInfiniteScroll from "../../../hooks/useInfiniteScroll";
 
 const CommentModal = ({ setIsModalOpen, isModalOpen }) => {
   const { id } = useParams();
-  // const [result, setResult] = useState([]);
   const [storeId, setStoreId] = useState(-1);
   const [reset, setReset] = useState(false);
 
   const closeModalHandler = () => {
     setIsModalOpen(false);
   };
-
-  // const getAllComments = () => {
-  //   console.log("그렇군요.");
-
-  //   return boardApi
-  //     .getVideoBoardCommentList(storeId, id)
-  //     .then(({ data: { status, result: _result } }) => {
-  //       if (status === 200) {
-  //         console.log("statusCode : 200", _result);
-  //         if (storeId === -1) {
-  //           setResult([..._result]);
-  //         } else {
-  //           setResult((prev) => [...prev, ..._result]);
-  //         }
-
-  //         let _storId =
-  //           _result.length === 0 ? -1 : _result[_result.length - 1].commentId;
-
-  //         console.log("storeId ??? ", _storId);
-  //         setStoreId(_storId);
-  //         setIsFetching(false);
-  //       }
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
-
-  // useEffect(() => {
-  //   getAllComments();
-  // }, [reset]);
-
-  // const [isFetching, setIsFetching] = useInfiniteScroll(getAllComments);
 
   return (
     <S.Container>

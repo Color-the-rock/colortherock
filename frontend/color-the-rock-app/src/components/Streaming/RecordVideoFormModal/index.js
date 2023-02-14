@@ -47,7 +47,7 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
   const saveTitle = useSelector((state) => state.streaming.info.title);
   const saveGymName = useSelector((state) => state.streaming.info.gymName);
   const [isSuccess, setIsSuccess] = useState(true);
-  const [title, setTitle] = useState(saveTitle);
+  // const [title, setTitle] = useState(saveTitle);
   const [level, setLevel] = useState("");
   const [color, setColor] = useState("");
 
@@ -69,7 +69,7 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
       recordingId,
       isSaved: true,
       level,
-      title,
+      // title,
       gymName: saveGymName,
       isSuccess,
       color,
@@ -99,13 +99,13 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
               <S.TitleWrap>영상 등록</S.TitleWrap>
             </S.TitleWrap>
           </S.ComponentWrap>
-          <S.ComponentWrap>
+          {/* <S.ComponentWrap>
             <InputComp
               title={title}
               handleChange={setTitle}
               placeholder="제목을 입력해주세요."
             />
-          </S.ComponentWrap>
+          </S.ComponentWrap> */}
           <S.SelectButtonWrap>
             <S.selectBtnContent>
               <CustomSelect setter={setLevel} optionValues={levelValues} />
