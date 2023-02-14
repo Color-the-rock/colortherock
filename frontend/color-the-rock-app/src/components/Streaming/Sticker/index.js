@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 export const Sticker = ({ x, y, imoji }) => {
   return (
@@ -15,4 +16,12 @@ export const Sticker = ({ x, y, imoji }) => {
       {imoji}
     </span>
   );
+};
+
+export default Sticker;
+
+Sticker.propTypes = {
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  imoji: PropTypes.string.isRequired,
 };

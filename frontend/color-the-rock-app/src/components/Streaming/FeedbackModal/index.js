@@ -1,47 +1,25 @@
 import React, { useState, createRef, useEffect, useRef } from "react";
-import { Sticker } from "../Sticker";
+import Sticker from "../Sticker";
 import * as S from "./style";
+import PropTypes from "prop-types";
 
 let width;
 let height;
 
 const FeedbackModal = ({ closeFeedback, session, picture }) => {
+  const [imoji, setImoji] = useState("✋🏻");
+
   const canvasRef = createRef(null);
   const parentRef = useRef(null);
 
-  const [imoji, setImoji] = useState("❤");
-  console.log("width: ", width);
-  console.log("height: ", height);
-  // const [ctx, setCtx] = useState();
   useEffect(() => {
     const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
     const parent = parentRef.current;
     canvas.width = parent.offsetWidth;
     canvas.height = parent.offsetHeight;
     width = canvas.width;
     height = canvas.height;
-    // setCtx(context);
   }, []);
-
-  // useEffect(() => {
-  //   if (ctx) {
-  //     const canvas = canvasRef.current;
-  //     const parent = parentRef.current;
-
-  //     const resizeCanvas = () => {
-  //       canvas.width = parent.offsetWidth;
-  //       canvas.height = parent.offsetHeight;
-  //       ctx.fillRect(0, 0, canvas.width, canvas.height);
-  //     };
-
-  //     resizeCanvas();
-  //     window.addEventListener("resize", resizeCanvas);
-  //     return () => {
-  //       window.removeEventListener("resize", resizeCanvas);
-  //     };
-  //   }
-  // }, [ctx]);
 
   const sendDrawing = (e) => {
     const data = {
@@ -104,21 +82,12 @@ const FeedbackModal = ({ closeFeedback, session, picture }) => {
             ? picture.map((item, idx) => (
                 <Sticker
                   key={idx}
-                  // x={(item.x / item.width + (width - item.width) / 2) * width}
-                  // y={
-                  //   (item.y / item.height + (height - item.height) / 2) * height
-                  // }
                   x={(item.x * width) / item.width}
                   y={(item.y * height) / item.height}
                   imoji={item.imoji}
                 />
               ))
             : null}
-          {/* {picture !== [] && picture.length > 0
-            ? picture.map((item, idx) => (
-                <Sticker key={idx} x={item.x} y={item.y} imoji={item.imoji} />
-              ))
-            : null} */}
         </S.ContentBox>
       </S.Container>
     </S.ContainerWrap>
@@ -126,3 +95,9 @@ const FeedbackModal = ({ closeFeedback, session, picture }) => {
 };
 
 export default FeedbackModal;
+
+FeedbackModal.propTypes = {
+  closeFeedback: PropTypes.func.isRequired,
+  session: PropTypes.object.isRequired,
+  picture: PropTypes.object.isRequired,
+};

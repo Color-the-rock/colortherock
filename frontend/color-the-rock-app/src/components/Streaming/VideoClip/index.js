@@ -1,82 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Desktop, Mobile } from "../../layout/Template";
 import * as S from "./style";
 import streamingApi from "../../../api/streaming";
 import VideoContent from "../VideoContent";
-
-const dummy = [
-  {
-    recordingId: "bandicam 2023-01-18 14-09-52-616",
-    createdAt: "1111",
-    duration: "12s",
-  },
-  {
-    recordingId: "bandicam 2023-01-18 14-09-52-616",
-    createdAt: "2222",
-    duration: "12s",
-  },
-  {
-    recordingId: "bandicam 2023-01-18 14-09-52-616",
-    createdAt: "3333",
-    duration: "12s",
-  },
-  {
-    recordingId: "bandicam 2023-01-18 14-09-52-616",
-    createdAt: "3333",
-    duration: "12s",
-  },
-  {
-    recordingId: "bandicam 2023-01-18 14-09-52-616",
-    createdAt: "1111",
-    duration: "12s",
-  },
-  {
-    recordingId: "bandicam 2023-01-18 14-09-52-616",
-    createdAt: "2222",
-    duration: "12s",
-  },
-  {
-    recordingId: "bandicam 2023-01-18 14-09-52-616",
-    createdAt: "3333",
-    duration: "12s",
-  },
-  {
-    recordingId: "bandicam 2023-01-18 14-09-52-616",
-    createdAt: "3333",
-    duration: "12s",
-  },
-  {
-    recordingId: "bandicam 2023-01-18 14-09-52-616",
-    createdAt: "1111",
-    duration: "12s",
-  },
-  {
-    recordingId: "bandicam 2023-01-18 14-09-52-616",
-    createdAt: "2222",
-    duration: "12s",
-  },
-  {
-    recordingId: "bandicam 2023-01-18 14-09-52-616",
-    createdAt: "3333",
-    duration: "12s",
-  },
-  {
-    recordingId: "bandicam 2023-01-18 14-09-52-616",
-    createdAt: "3333",
-    duration: "12s",
-  },
-];
+import PropTypes from "prop-types";
 
 const VideoClip = ({ sessionId, setModalOpen }) => {
-  const [isPublisher, setIsPublisher] = useState(true);
-  const [result, setResult] = useState(dummy);
+  const [result, setResult] = useState([]);
+  const [playVideo, setPlayVideo] = useState(false);
+  const [URL, setURL] = useState();
 
   useEffect(() => {
     streamingApi
       .getRecordList(sessionId)
       .then((res) => {
-        console.log("res: ", res);
-        setResult(res);
+        setResult((prev) => [...prev, ...res.data.result]);
       })
       .catch((err) => {
         console.log("err: ", err);
@@ -87,30 +24,45 @@ const VideoClip = ({ sessionId, setModalOpen }) => {
     setModalOpen();
   };
 
+  const handleVideo = (url) => {
+    console.log("클릭!");
+    setPlayVideo((prev) => !prev);
+    setURL(url);
+  };
+
   return (
     <>
       <S.ContainerWrap>
         <S.Container>
-          <S.ContentBox>
-            <S.ChromeClose onClick={onClickHandler} />
-            <S.Title>Recodings</S.Title>
-            {result && result.length > 0 ? (
-              <S.VideoList>
-                {result.map((item) => (
-                  <S.VideoWrap>
-                    <VideoContent
-                      key={item.createdAt}
-                      createdAt={item.createdAt}
-                      recordingId={item.recordingId}
-                      duration={item.duration}
-                    />
-                  </S.VideoWrap>
-                ))}
-              </S.VideoList>
-            ) : (
-              <div>영상 정보가 없습니다.</div>
-            )}
-          </S.ContentBox>
+          {!playVideo ? (
+            <S.ContentBox>
+              <S.ChromeClose onClick={onClickHandler} />
+              <S.Title>Recodings</S.Title>
+              {result && result.length > 0 ? (
+                <S.VideoList>
+                  {result.map((item, idx) => (
+                    <S.VideoWrap>
+                      <VideoContent
+                        key={idx}
+                        createdAt={item.createdAt}
+                        recordingId={item.recordingId}
+                        duration={item.duration}
+                        url={item.url}
+                        handleVideo={handleVideo}
+                      />
+                    </S.VideoWrap>
+                  ))}
+                </S.VideoList>
+              ) : (
+                <div>영상 정보가 없습니다.</div>
+              )}
+            </S.ContentBox>
+          ) : (
+            <S.ContentBox>
+              <S.ChromeClose onClick={() => handleVideo("")} />
+              <video src={URL}></video>
+            </S.ContentBox>
+          )}
         </S.Container>
       </S.ContainerWrap>
     </>
@@ -118,3 +70,8 @@ const VideoClip = ({ sessionId, setModalOpen }) => {
 };
 
 export default VideoClip;
+
+VideoClip.propTypes = {
+  sessionId: PropTypes.string.isRequired,
+  setModalOpen: PropTypes.func.isRequired,
+};

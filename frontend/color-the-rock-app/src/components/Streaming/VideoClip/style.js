@@ -28,7 +28,7 @@ export const ContentBox = styled.div`
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   /* background-color: var(--color-background); */
   background-color: white;
@@ -42,8 +42,8 @@ export const VideoList = styled.ul`
   color: black;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  /* overflow: scroll; */
+  justify-content: flex-start;
+  /* align-items: flex-start; */
   margin-top: 2rem;
   overflow-y: scroll;
   -ms-overflow-style: none;

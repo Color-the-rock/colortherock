@@ -18,8 +18,8 @@ import BoardRadioBtn from "../../Board/BoardRadioBtn";
 import CustomSelect from "../../Common/CustomSelect";
 import RegistBtn from "../../Board/RegistBtn";
 import streamingApi from "../../../api/streaming";
-import InputComp from "../../../components/Board/InputComp";
 import { useSelector } from "react-redux";
+import PropTypes from "prop-types";
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
@@ -44,10 +44,8 @@ const colorValues = [
   { key: "갈색", value: "갈색" },
 ];
 const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
-  const saveTitle = useSelector((state) => state.streaming.info.title);
   const saveGymName = useSelector((state) => state.streaming.info.gymName);
   const [isSuccess, setIsSuccess] = useState(true);
-  // const [title, setTitle] = useState(saveTitle);
   const [level, setLevel] = useState("");
   const [color, setColor] = useState("");
 
@@ -69,19 +67,14 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
       recordingId,
       isSaved: true,
       level,
-      // title,
       gymName: saveGymName,
       isSuccess,
       color,
     };
-    console.log("---------------------------------");
-    console.log(data);
-    console.log("---------------------------------");
 
     streamingApi
       .saveRecordVideo(sessionId, data)
       .then(({ data }) => {
-        console.log("성공", data);
         setModalOpen();
       })
       .catch((err) => {
@@ -137,3 +130,9 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
 };
 
 export default React.memo(RecordVideoFormModal);
+
+RecordVideoFormModal.propTypes = {
+  sessionId: PropTypes.string.isRequired,
+  recordingId: PropTypes.string.isRequired,
+  setModalOpen: PropTypes.func.isRequired,
+};
