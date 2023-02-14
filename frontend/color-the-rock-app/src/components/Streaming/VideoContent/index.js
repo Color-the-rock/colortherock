@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import * as S from "./style";
 import PropTypes from "prop-types";
-
-const now = Math.floor(new Date().getTime());
 
 const VideoContent = ({
   recordingId,
@@ -11,6 +9,18 @@ const VideoContent = ({
   url,
   handleVideo,
 }) => {
+  const now = Math.floor(new Date().getTime());
+  const onDownLoadHandler = (e) => {
+    e.preventDefault();
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", recordingId);
+    document.body.appendChild(link);
+    link.click(function (event) {
+      event.preventDefault();
+    });
+    document.body.removeChild(link);
+  };
   return (
     <S.Container>
       <S.PlayButtonWrap>
@@ -24,17 +34,20 @@ const VideoContent = ({
               : recordingId.substring(0, 16) + "..."}
           </S.RowContent>
           <S.RowContent>
-            <S.DurationWrap>{duration + "s"}</S.DurationWrap>
+            <S.DurationWrap>
+              <span>{duration + "초"}</span>
+            </S.DurationWrap>
           </S.RowContent>
 
-          <S.RowContent>
+          <S.RowContent color="var(--color-tertiary)">
             {parseInt((now - createdAt) / 60000)}분 전
           </S.RowContent>
         </S.Content>
       </S.ContentWrap>
       <S.ContentWrap>
         <S.PlayButton onClick={() => handleVideo(url)} />
-        <S.DownLoadButton />
+
+        <S.DownLoadButton onClick={onDownLoadHandler} />
       </S.ContentWrap>
     </S.Container>
   );
