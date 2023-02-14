@@ -58,7 +58,7 @@ const Record = () => {
       <S.TextWrapper>
         <S.Text>
           {userNickName === "" ? "사용자" : userNickName}님은
-          <S.GradientText> {userRecordInfo.videoCount}일</S.GradientText>동안
+          <S.GradientText> {userRecordInfo.visitCount}일</S.GradientText>동안
         </S.Text>
         <S.Text>
           <S.GradientText>

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const VideoList = styled.div`
   width: 100%;
-  margin: 0 auto;
+  margin: 1rem auto;
   max-width: 358px;
   display: grid;
   gap: 1rem;
@@ -18,4 +18,11 @@ export const Description = styled.div`
   line-height: 1.25rem;
   letter-spacing: -0.01em;
   color: var(--color-tertiary);
+`;
+
+export const Label = styled.label`
+  margin-left: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--color-tertiary);
+  margin-bottom: 10rem;
 `;

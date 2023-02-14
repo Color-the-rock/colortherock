@@ -7,7 +7,6 @@ import InputComp from "../../components/Board/InputComp";
 import BoardSubTitle from "../../components/Board/BoardSubTitle";
 import SearchBar from "../../components/Common/KakaoKeywordSearch/SearchBar";
 import RegistBtn from "../../components/Board/RegistBtn";
-import BoardRadioBtn from "../../components/Board/BoardRadioBtn";
 import streamingApi from "../../api/streaming";
 import { FiChevronDown } from "react-icons/fi";
 import { FiChevronUp } from "react-icons/fi";
@@ -155,15 +154,6 @@ const StreamingForm = () => {
             </S.ComponenentWrap>
             {onSetting && (
               <S.AddPadding>
-                <S.ComponenentWrap>
-                  <BoardRadioBtn
-                    isPublic={isPublic}
-                    setIsPublic={setIsPublic}
-                    firstText="공개"
-                    SecondText="비공개"
-                    opacity="70"
-                  />
-                </S.ComponenentWrap>
                 <S.ComponenentWrap>
                   <InputComp
                     title={title}
