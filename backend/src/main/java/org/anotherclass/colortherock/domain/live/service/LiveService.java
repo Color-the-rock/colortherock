@@ -49,6 +49,7 @@ public class LiveService {
     private final MemberRepository memberRepository;
     private final VideoRepository videoRepository;
     private static final ConcurrentMap<String, List<String>> recordingsForSession = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<String, String> urlsForRecordings = new ConcurrentHashMap<>();
     private final OpenVidu openVidu;
     private static final Integer PAGE_SIZE = 15;
 
@@ -196,7 +197,9 @@ public class LiveService {
             try {
                 Recording recording = openVidu.getRecording(recordingId);
                 if (recording.getStatus() == Recording.Status.ready) {
-                    response.add(new PrevRecordingListResponse(recording));
+                    PrevRecordingListResponse recordingListResponse = new PrevRecordingListResponse(recording);
+                    recordingListResponse.setUrl(urlsForRecordings.get(recordingId));
+                    response.add(recordingListResponse);
                 }
             } catch (OpenViduJavaClientException | OpenViduHttpException e) {
                 throw new RuntimeException(e);
@@ -239,6 +242,7 @@ public class LiveService {
         String newDir = recordingPath + "/" + request.getRecordingId() + "/" + request.getRecordingId() + videoExtension;
         String videoName = System.currentTimeMillis() + request.getRecordingId() + videoExtension;
         String s3Url = s3Service.uploadFromOV(newDir, videoName);
+        urlsForRecordings.put(request.getRecordingId(), s3Url);
         Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> {
             throw new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND);
         });
