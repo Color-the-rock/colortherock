@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import * as S from "./style";
 import PropTypes from "prop-types";
 import "./calendar.css";
 
