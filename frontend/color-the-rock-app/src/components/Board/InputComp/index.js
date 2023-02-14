@@ -16,10 +16,10 @@ const InputComp = ({ title, placeholder, handleChange, opacity = "100" }) => {
   );
 };
 
+export default React.memo(InputComp);
+
 InputComp.propTypes = {
   placeholder: PropTypes.string.isRequired,
   setTitle: PropTypes.func,
   opacity: PropTypes.string,
 };
-
-export default React.memo(InputComp);

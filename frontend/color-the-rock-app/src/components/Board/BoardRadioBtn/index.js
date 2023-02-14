@@ -1,5 +1,4 @@
 import React from "react";
-// import { useInput } from "../../../hooks/useInput"
 import * as S from "./style";
 import PropTypes from "prop-types";
 

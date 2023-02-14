@@ -83,4 +83,9 @@ export default BoardCommentList;
 BoardCommentList.propTypes = {
   result: PropTypes.array,
   getAllComments: PropTypes.func,
+  videoId: PropTypes.number,
+  reset: PropTypes.bool,
+  setReset: PropTypes.func,
+  storeId: PropTypes.number,
+  setStoreId: PropTypes.func,
 };
