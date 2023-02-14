@@ -35,6 +35,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -168,10 +169,11 @@ class AdminReportControllerTest extends IntegrationTest {
     @DisplayName("영상 숨김 해제하기")
     void cancelHiddenStatus() throws Exception {
         token = BEARER_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        Long request = videoBoardIds.get(0);
         mockMvc.perform(
-                        get(url + "/detail/unhidden")
+                        put(url + "/detail/unhidden")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .param("videoBoardId", String.valueOf(videoBoardIds.get(0)))
+                                .content(objectMapper.writeValueAsBytes(request))
                                 .header(HttpHeaders.AUTHORIZATION, token)
                 ).andDo(print())
                 .andExpect(jsonPath("$.status", is(200)));
