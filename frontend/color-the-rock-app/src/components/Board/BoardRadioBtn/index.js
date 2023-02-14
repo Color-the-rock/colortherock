@@ -12,6 +12,7 @@ const BoardRadioBtn = ({
 }) => {
   const onChangeRadioButton = (e) => {
     const { value } = e.target;
+
     console.log(value);
     setIsPublic(value === "true");
   };

@@ -99,5 +99,5 @@ export default FeedbackModal;
 FeedbackModal.propTypes = {
   closeFeedback: PropTypes.func.isRequired,
   session: PropTypes.object.isRequired,
-  picture: PropTypes.object.isRequired,
+  picture: PropTypes.array.isRequired,
 };

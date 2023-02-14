@@ -54,13 +54,15 @@ const VideoClip = ({ sessionId, setModalOpen }) => {
                   ))}
                 </S.VideoList>
               ) : (
-                <div>영상 정보가 없습니다.</div>
+                <S.VideoList>
+                  <div>영상 정보가 없습니다.</div>
+                </S.VideoList>
               )}
             </S.ContentBox>
           ) : (
             <S.ContentBox>
               <S.ChromeClose onClick={() => handleVideo("")} />
-              <video src={URL}></video>
+              <S.Video src={URL} controls muted />
             </S.ContentBox>
           )}
         </S.Container>
