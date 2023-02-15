@@ -25,8 +25,9 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-
   padding: 0 1rem;
+  background-color: transparent;
+
   @media (min-width: 992px) {
     width: 600px;
   }
@@ -87,7 +88,7 @@ export const OverlapContent = styled.div`
   left: 0;
   right: 0;
   top: 0;
-  padding: 1rem;
+  padding: 2rem;
 `;
 
 export const ArrowLeftBtnWrap = styled.span`
@@ -107,8 +108,8 @@ export const ComponenentWrap = styled.div`
 `;
 
 export const AddPadding = styled.div`
-  padding-left: 1rem;
-  padding-right: 1rem;
+  /* padding-left: 1rem;
+  padding-right: 1rem; */
 `;
 
 export const IconWrap = styled.span`

@@ -223,43 +223,16 @@ const StreamingLive = () => {
     setShowSettingModal(false);
     try {
       const devices = await ov.getDevices();
-      let videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
+
+      let currentVideoDeviceId = publisher.stream
+        .getMediaStream()
+        .getVideoTracks()[0]
+        .getSettings().deviceId;
+      let CurrentVideoDevice = devices.find(
+        (device) => device.deviceId === currentVideoDeviceId
       );
-      console.log("publisher?? ", publisher);
-      console.log("ov ?? ", ov);
-      if (videoDevices && videoDevices.length > 1) {
-        let newVideoDevice = videoDevices.filter(
-          (device) => device.deviceId !== currentVideoDevice.deviceId
-        );
 
-        if (newVideoDevice.length > 0) {
-          publisher.videoDevice = isFrontCamera
-            ? videoDevices[0].deviceId
-            : videoDevices[videoDevices.length - 1].deviceId;
-          // let newPublisher = ov.initPublisher(undefined, {
-          //   videoSource: isFrontCamera
-          //     ? videoDevices[0].deviceId
-          //     : videoDevices[videoDevices.length - 1].deviceId,
-          //   publishAudio: true,
-          //   publishVideo: true,
-          //   mirror: false,
-          // });
-
-          setFrontCamera((prev) => !prev);
-
-          // await session.unpublish(mainStreamManager);
-          // await session.publish(newPublisher);
-
-          setCurrentVideoDevice(
-            isFrontCamera
-              ? videoDevices[0].deviceId
-              : videoDevices[videoDevices.length - 1].deviceId
-          );
-          //setMainStreamManager(newPublisher);
-          //setPublisher(newPublisher);
-        }
-      }
+      setCurrentVideoDevice(CurrentVideoDevice);
     } catch (e) {
       console.error(e);
     }

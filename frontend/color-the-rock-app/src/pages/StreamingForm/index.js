@@ -119,7 +119,7 @@ const StreamingForm = () => {
             ref={webcamRef}
             screenshotFormat="image/jpeg"
             videoConstraints={{
-              width: { min: 280, max: 600 },
+              width: { min: 280, max: 561 },
               height: { min: 720 },
               facingMode: isSwitchingCamera ? "environment" : "user",
             }}
