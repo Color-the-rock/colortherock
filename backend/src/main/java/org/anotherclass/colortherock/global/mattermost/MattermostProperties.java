@@ -13,8 +13,6 @@ import java.time.format.DateTimeFormatter;
 @Setter
 @Profile("prod")
 public class MattermostProperties {
-
-    private String channel;
     private String pretext;
     private String color = "#ff5d52";
     private String authorName = "에러 봇";
