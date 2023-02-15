@@ -93,8 +93,6 @@ const StreamingLive = () => {
 
   useEffect(() => {
     if (ov !== null && ov !== undefined) {
-      console.log("ov 있음", ov, token);
-
       setSession(ov.initSession());
     } else {
       navigate("/streaming");
@@ -103,10 +101,8 @@ const StreamingLive = () => {
 
   useEffect(() => {
     if (session !== undefined) {
-      onSessionCreated();
-
-      // feedback signal...
-      onFeedbackSignal();
+      onSessionCreated(); // chatting signal
+      onFeedbackSignal(); // feedback signal
       onFeedBackReset();
       session
         .connect(token, { clientData: nickName })
@@ -249,8 +245,8 @@ const StreamingLive = () => {
 
           setFrontCamera((prev) => !prev);
 
-          await session.unpublish(mainStreamManager);
-          await session.publish(newPublisher);
+          // await session.unpublish(mainStreamManager);
+          // await session.publish(newPublisher);
 
           setCurrentVideoDevice(newVideoDevice[0]);
           setMainStreamManager(newPublisher);
@@ -468,10 +464,12 @@ const StreamingLive = () => {
       <Mobile>
         <S.SettingWrapper>
           <S.CommentWrapper>
-            <CommentBtn
-              isReadOnly={true}
-              onClick={() => setShowChattingModal(true)}
-            />
+            {!isShowSettingModal && (
+              <CommentBtn
+                isReadOnly={true}
+                onClick={() => setShowChattingModal(true)}
+              />
+            )}
           </S.CommentWrapper>
         </S.SettingWrapper>
       </Mobile>

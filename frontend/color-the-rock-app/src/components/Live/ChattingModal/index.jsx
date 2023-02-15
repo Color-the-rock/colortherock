@@ -20,6 +20,7 @@ const ChattingModal = ({
 
   // 채팅 전송
   const sendMessage = () => {
+    if (message === "") return;
     if (session !== undefined && message !== undefined) {
       const signalOptions = {
         data: JSON.stringify({ message: message }),
@@ -32,9 +33,8 @@ const ChattingModal = ({
   };
 
   const handlePressEnter = () => {
-    if (message === "") return;
-
     if (window.event.keyCode === 13) {
+      if (message === "") return;
       sendMessage();
     }
   };
