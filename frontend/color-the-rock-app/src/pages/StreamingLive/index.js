@@ -157,11 +157,10 @@ const StreamingLive = () => {
           (device) => device.kind === "videoinput"
         );
 
-        console.log("devices 개수 : ", devices, videoDevices);
         let currentVideoDeviceId = publisher.stream
           .getMediaStream()
-          .getVideoTracks()[0]
-          .getSettings().deviceId;
+          .getVideoTracks()
+          [videoDevices.length - 1].getSettings().deviceId;
         let CurrentVideoDevice = videoDevices.find(
           (device) => device.deviceId === currentVideoDeviceId
         );
@@ -223,26 +222,25 @@ const StreamingLive = () => {
 
   const switchCamera = async () => {
     setShowSettingModal(false);
-    try {
-      const devices = await ov.getDevices();
-      let videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
-      );
+    let devices = await ov.getDevices();
+    // Getting only the video devices
+    let videoDevices = devices.filter((device) => device.kind === "videoinput");
 
-      console.log("devices 개수 : ", devices, videoDevices);
+    if (videoDevices && videoDevices.length > 1) {
+      const testVideo = document.getElementById("test-video");
+      let newPublisher = ov.initPublisher(testVideo, {
+        videoSource: isFrontCamera
+          ? videoDevices[1].deviceId
+          : videoDevices[0].deviceId,
+        publishAudio: true,
+        publishVideo: true,
+        mirror: isFrontCamera, // Setting mirror enable if front camera is selected
+      });
 
-      let currentVideoDeviceId = publisher.stream
-        .getMediaStream()
-        .getVideoTracks()
-        [videoDevices.length - 1].getSettings().deviceId;
-
-      let CurrentVideoDevice = videoDevices.find(
-        (device) => device.deviceId === currentVideoDeviceId
-      );
-
-      setCurrentVideoDevice(CurrentVideoDevice);
-    } catch (e) {
-      console.error(e);
+      // Changing isFrontCamera value
+      setFrontCamera((prev) => !prev);
+      session.publish(newPublisher);
+      setPublisher(newPublisher);
     }
   };
 
@@ -456,7 +454,7 @@ const StreamingLive = () => {
       </S.OwnerVideoWrapper>
       <Mobile>
         <S.SettingWrapper>
-          {isShowChattingModal && (
+          {!isShowChattingModal && (
             <S.CommentWrapper>
               <CommentBtn
                 isReadOnly={true}
