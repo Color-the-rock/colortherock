@@ -27,7 +27,6 @@ const Record = () => {
       .getTotalStatistics()
       .then(({ data: { status, result } }) => {
         if (status === 200) {
-          console.log("success : 200", result);
           setUserRecordInfo(result);
         }
       })

@@ -105,5 +105,4 @@ export const GraphText = styled.label`
   letter-spacing: -0.01em;
   color: var(--color-tertiary);
   padding-left: 0.25rem;
-  z-index: 100;
 `;

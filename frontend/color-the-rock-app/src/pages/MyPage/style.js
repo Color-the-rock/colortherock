@@ -10,6 +10,13 @@ export const Container = styled.div`
   margin-top: 5rem;
   display: flex;
   flex-direction: column;
+  @media (max-width: 992px) {
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
 `;
 
 export const Title = styled.h1`

@@ -103,7 +103,6 @@ const StackedGraph = () => {
       .getColorStatistics()
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("statusCode : 200 ", _result);
           setResult(_result);
         }
       });

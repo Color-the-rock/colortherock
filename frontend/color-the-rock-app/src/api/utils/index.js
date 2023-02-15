@@ -37,8 +37,6 @@ instance.interceptors.response.use(
       response: { status },
     } = error;
 
-    console.log("[api] util >> status : ", status);
-
     // statusCode 401 : 만료된 토큰
     if (status === 401) {
       const [cookies, setCookie] = useCookies(["refreshToken"]);
