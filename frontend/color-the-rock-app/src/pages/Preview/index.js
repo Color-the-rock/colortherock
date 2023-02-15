@@ -32,6 +32,12 @@ const Preview = () => {
         if (status === 200) {
           setResult(_result);
         }
+      })
+      .catch((data) => {
+        if (data.response.data.status === 404) {
+          alert("해당 영상을 찾을 수 없습니다.");
+          navigate("/record");
+        }
       });
   }, []);
 
