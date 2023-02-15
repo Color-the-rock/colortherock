@@ -245,7 +245,7 @@ const StreamingLive = () => {
 
           setFrontCamera((prev) => !prev);
 
-          // await session.unpublish(mainStreamManager);
+          await session.unpublish(mainStreamManager);
           await session.publish(newPublisher);
 
           setCurrentVideoDevice(newVideoDevice[0]);
