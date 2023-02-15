@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.report.service;
 
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.report.entity.Report;
 import org.anotherclass.colortherock.domain.report.request.PostReportRequest;
 import org.anotherclass.colortherock.domain.report.request.PostUnhiddenRequest;
 import org.anotherclass.colortherock.domain.report.response.AdminReportDetailResponse;
@@ -102,7 +103,7 @@ class AdminReportServiceTest {
         List<AdminReportDetailResponse> result = adminReportService.getReportDetail(videoBoardId);
         // then
         assertEquals(10, result.size());
-        assertEquals("TYPE_A", String.valueOf(result.get(0).getCategory()));
+        assertEquals(Report.Category.TYPE_A.getValue(), String.valueOf(result.get(0).getReportContent()));
     }
 
     @Test

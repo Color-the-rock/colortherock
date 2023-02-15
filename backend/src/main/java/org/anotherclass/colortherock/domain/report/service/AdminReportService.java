@@ -45,7 +45,7 @@ public class AdminReportService {
         return reportList.stream()
                 .map(rp -> AdminReportDetailResponse.builder()
                         .memberId(rp.getMember().getId())
-                        .category(rp.getCategory())
+                        .reportContent(rp.getCategory().getValue())
                         .build()).collect(Collectors.toList());
     }
 
