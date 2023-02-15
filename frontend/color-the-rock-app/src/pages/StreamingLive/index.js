@@ -132,7 +132,6 @@ const StreamingLive = () => {
       });
     }
   }, [session]);
-
   useEffect(() => {
     if (token !== "" && session !== undefined) {
       session.connect(token, { clientData: nickName }).then(async () => {
@@ -227,25 +226,29 @@ const StreamingLive = () => {
       let videoDevices = devices.filter(
         (device) => device.kind === "videoinput"
       );
-
+      console.log("publisher?? ", publisher);
+      console.log("ov ?? ", ov);
       if (videoDevices && videoDevices.length > 1) {
         let newVideoDevice = videoDevices.filter(
           (device) => device.deviceId !== currentVideoDevice.deviceId
         );
 
         if (newVideoDevice.length > 0) {
-          let newPublisher = ov.initPublisher(undefined, {
-            videoSource: isFrontCamera
-              ? videoDevices[0].deviceId
-              : videoDevices[videoDevices.length - 1].deviceId,
-            publishAudio: true,
-            publishVideo: true,
-            mirror: false,
-          });
+          publisher.videoDevice = isFrontCamera
+            ? videoDevices[0].deviceId
+            : videoDevices[videoDevices.length - 1].deviceId;
+          // let newPublisher = ov.initPublisher(undefined, {
+          //   videoSource: isFrontCamera
+          //     ? videoDevices[0].deviceId
+          //     : videoDevices[videoDevices.length - 1].deviceId,
+          //   publishAudio: true,
+          //   publishVideo: true,
+          //   mirror: false,
+          // });
 
           setFrontCamera((prev) => !prev);
 
-          await session.unpublish(mainStreamManager);
+          // await session.unpublish(mainStreamManager);
           // await session.publish(newPublisher);
 
           setCurrentVideoDevice(
@@ -253,8 +256,8 @@ const StreamingLive = () => {
               ? videoDevices[0].deviceId
               : videoDevices[videoDevices.length - 1].deviceId
           );
-          setMainStreamManager(newPublisher);
-          setPublisher(newPublisher);
+          //setMainStreamManager(newPublisher);
+          //setPublisher(newPublisher);
         }
       }
     } catch (e) {
