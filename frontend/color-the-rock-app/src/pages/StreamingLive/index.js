@@ -350,6 +350,11 @@ const StreamingLive = () => {
   };
 
   const handleQuitRecord = () => {
+    if (recordId === "") {
+      alert("녹화 시작 3초후에 중지 가능합니다:)");
+      return;
+    }
+
     const requestBody = {
       token: token,
       recordingId: recordId,
@@ -489,6 +494,7 @@ const StreamingLive = () => {
           </S.VideoMenuItem>
           {mainStreamManager !== undefined && (
             <S.VideoMenuItem
+              id="toggle-record-btn"
               onClick={
                 !isRecordStart ? handleStartVideoRecord : handleQuitRecord
               }
