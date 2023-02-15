@@ -159,8 +159,8 @@ const StreamingLive = () => {
 
         let currentVideoDeviceId = publisher.stream
           .getMediaStream()
-          .getVideoTracks()
-          [videoDevices.length - 1].getSettings().deviceId;
+          .getVideoTracks()[0]
+          .getSettings().deviceId;
         let CurrentVideoDevice = videoDevices.find(
           (device) => device.deviceId === currentVideoDeviceId
         );
@@ -222,26 +222,64 @@ const StreamingLive = () => {
 
   const switchCamera = async () => {
     setShowSettingModal(false);
-    let devices = await ov.getDevices();
-    // Getting only the video devices
+
+    const devices = await ov.getDevices();
     let videoDevices = devices.filter((device) => device.kind === "videoinput");
+    console.log("isFrontCamera ?? ", isFrontCamera);
+    var mediaStream = await ov.getUserMedia({
+      videoSource: isFrontCamera
+        ? videoDevices[0].deviceId
+        : videoDevices[videoDevices.length - 1].deviceId,
+      publishAudio: true,
+      publishVideo: true,
+      mirror: false,
+    });
 
-    if (videoDevices && videoDevices.length > 1) {
-      const testVideo = document.getElementById("test-video");
-      let newPublisher = ov.initPublisher(testVideo, {
-        videoSource: isFrontCamera
-          ? videoDevices[1].deviceId
-          : videoDevices[0].deviceId,
-        publishAudio: true,
-        publishVideo: true,
-        mirror: isFrontCamera, // Setting mirror enable if front camera is selected
-      });
+    // Getting the video track from mediaStream
+    var myTrack = mediaStream.getVideoTracks()[0];
 
-      // Changing isFrontCamera value
-      setFrontCamera((prev) => !prev);
-      session.publish(newPublisher);
-      setPublisher(newPublisher);
-    }
+    // Replacing video track
+    publisher
+      .replaceTrack(myTrack)
+      .then(() => console.log("New track has been published"))
+      .catch((error) => console.error("Error replacing track", error));
+
+    setFrontCamera((prev) => !prev);
+
+    // try {
+    //   const devices = await ov.getDevices();
+    //   let videoDevices = devices.filter(
+    //     (device) => device.kind === "videoinput"
+    //   );
+
+    //   if (videoDevices && videoDevices.length > 1) {
+    //     let newVideoDevice = videoDevices.filter(
+    //       (device) => device.deviceId !== currentVideoDevice.deviceId
+    //     );
+
+    //     if (newVideoDevice.length > 0) {
+    //       let newPublisher = ov.initPublisher(undefined, {
+    //         videoSource: isFrontCamera
+    //           ? videoDevices[0].deviceId
+    //           : videoDevices[videoDevices.length - 1].deviceId,
+    //         publishAudio: true,
+    //         publishVideo: true,
+    //         mirror: false,
+    //       });
+
+    //       setFrontCamera((prev) => !prev);
+
+    //       await session.unpublish(mainStreamManager);
+    //       await session.publish(newPublisher);
+
+    //       setCurrentVideoDevice(newVideoDevice[0]);
+    //       setMainStreamManager(newPublisher);
+    //       setPublisher(newPublisher);
+    //     }
+    //   }
+    // } catch (e) {
+    //   console.error(e);
+    // }
   };
 
   // video 설정
