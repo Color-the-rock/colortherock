@@ -56,7 +56,7 @@ const StatisticGraph = () => {
         </S.BarLabel>
       </S.ChallengeBar>
 
-      <S.GraphTitle>방문한 홈짐</S.GraphTitle>
+      <S.GraphTitle>방문한 암장</S.GraphTitle>
 
       <S.HomeGymGraph length={gymTotal}>
         {gymData && gymData.length > 0

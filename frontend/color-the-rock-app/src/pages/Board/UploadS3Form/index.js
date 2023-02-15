@@ -6,6 +6,7 @@ import Thumbnail from "../../../components/Common/Thumbnail";
 import CustomCalendar from "../../../components/Board/CustomCalendar";
 import { recordApi } from "../../../api/record";
 import Title from "../../../components/Common/Title";
+import moment from "moment";
 
 const UploadS3Form = () => {
   const [result, setResult] = useState([]);
@@ -55,7 +56,7 @@ const UploadS3Form = () => {
         <Title>완등 영상 등록</Title>
         <S.CalendarWrap>
           <CustomCalendar
-            placeholder="원하시는 날짜를 선택해주세요."
+            placeholder={moment(new Date()).format("YYYY.MM.DD.")}
             selectDate={selectDate}
             setSelectDate={setSelectDate}
           />

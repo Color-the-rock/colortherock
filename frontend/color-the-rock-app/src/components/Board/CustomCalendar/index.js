@@ -31,7 +31,7 @@ const CustomCalendar = ({
         defaultValue={selectDate}
         max={maxDate}
         onChange={(e) => setSelectDate(e.target.value)}
-      ></input>
+      />
     </div>
   );
 };

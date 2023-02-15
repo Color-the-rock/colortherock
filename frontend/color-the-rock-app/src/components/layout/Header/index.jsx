@@ -46,7 +46,7 @@ const Header = () => {
                 to="/streaming"
                 current={"/streaming" === location.pathname ? "true" : "false"}
               >
-                실시간 라이브
+                실시간 도전
               </S.SLink>
             </S.MenuItem>
             <S.MenuItem isLogin={true}>
@@ -97,7 +97,7 @@ const Header = () => {
                     "/streaming" === location.pathname ? "true" : "false"
                   }
                 >
-                  실시간 라이브
+                  실시간 도전
                 </S.SLink>
               </S.SideMenuItem>
               <S.SideMenuItem isLogin={true} onClick={handleSetShowNav}>
