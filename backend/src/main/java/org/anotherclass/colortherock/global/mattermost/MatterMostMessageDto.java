@@ -8,35 +8,28 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MatterMostMessageDto {
 
-    @Getter
-    public static class Attachments {
         private Props props;
-        private final List<Attachment> attachmentList;
-
-        public Attachments() {
-            attachmentList = new ArrayList<>();
+        private List<Attachment> attachments;
+        public MatterMostMessageDto() {
+            attachments = new ArrayList<>();
         }
 
-        public Attachments(Attachment attachment) {
+        public MatterMostMessageDto(Attachment attachment) {
             this();
-            this.attachmentList.add(attachment);
+            this.attachments.add(attachment);
         }
 
         public void addProps(Exception e) {
             props = new Props(e);
         }
 
-    }
-
     @Getter
     @AllArgsConstructor
     @Builder
     @ToString
     public static class Attachment {
-        private String channel;
 
         private String pretext;
 
@@ -74,7 +67,7 @@ public class MatterMostMessageDto {
         }
 
         public void addReportInfo(String title) {
-            this.title = "## :warning: 신고 5회 누적 게시물 발생 :warning:";
+            this.title = "## :warning: 신고 5회 누적 게시물 발생 :warning:" + '\n' + '\n';
 
             this.text = text + "**게시물 제목**" + '\n' + '\n' + title + '\n' + '\n';
         }
