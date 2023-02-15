@@ -10,7 +10,7 @@ import RegistBtn from "../../../components/Board/RegistBtn";
 import { useNavigate } from "react-router-dom";
 import CustomSelect from "../../../components/Common/CustomSelect";
 import CustomCalendar from "../../../components/Board/CustomCalendar";
-
+import Loading from "../../../components/Common/Loading";
 import boardApi from "../../../api/board";
 import { recordApi } from "../../../api/record";
 
@@ -52,6 +52,7 @@ const BoardForm = () => {
   const [color, setColor] = useState();
   const [selectDate, setSelectDate] = useState("");
   const [video, setVideo] = useState(null);
+  const [isLoading, setLoading] = useState(false);
 
   // 라우터로부터 내려받은  props 데이터
   const propData = useLocation().state;
@@ -83,6 +84,9 @@ const BoardForm = () => {
       alert("모든 항목을 채워주세요.");
       return;
     }
+
+    setLoading(true);
+
     if (propData) {
       boardApi
         .postRegisterRecordVideo({ videoId: propData.id, title })
@@ -92,7 +96,8 @@ const BoardForm = () => {
         .catch((err) => {
           alert("영상등록에 실패했습니다.");
           console.log("err: ", err);
-        });
+        })
+        .finally(() => setLoading(false));
       return;
     }
 
@@ -111,6 +116,7 @@ const BoardForm = () => {
 
     formData.append("localSuccessVideoUploadRequest", blob);
     formData.append("newVideo", video);
+
     boardApi
       .postRegisterLocalVideo(formData)
       .then(() => {
@@ -119,7 +125,8 @@ const BoardForm = () => {
       .catch((err) => {
         console.log("err: ", err);
         console.log("실패");
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const clickHandler = () => {
@@ -193,6 +200,7 @@ const BoardForm = () => {
             </S.ComponentWrap>
           </S.Content>
         </S.ContentWrap>
+        {isLoading && <Loading />}
       </S.Container>
     </S.ContainerWrap>
   );
