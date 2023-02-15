@@ -8,8 +8,7 @@ import BoardSubTitle from "../../components/Board/BoardSubTitle";
 import SearchBar from "../../components/Common/KakaoKeywordSearch/SearchBar";
 import RegistBtn from "../../components/Board/RegistBtn";
 import streamingApi from "../../api/streaming";
-import { FiChevronDown } from "react-icons/fi";
-import { FiChevronUp } from "react-icons/fi";
+import { FiChevronUp, FiChevronDown, FiRefreshCcw } from "react-icons/fi";
 import { HiOutlineCamera } from "react-icons/hi2";
 import { OpenVidu } from "openvidu-browser";
 import { useDispatch } from "react-redux";
@@ -20,19 +19,13 @@ import {
   setSessionId,
 } from "../../stores/streaming/streamingSlice";
 
-const videoConstraints = {
-  width: { min: 480 },
-  heigth: { min: 720 },
-  appectRatio: 0.6666666667,
-  facingMode: "user",
-};
-
 const StreamingForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [onSetting, setOnSetting] = useState(true);
+  const [isSwitchingCamera, setSwitchingCamera] = useState(false);
 
   // live 생성시 보내줘야 하는 데이터
   const [isPublic, setIsPublic] = useState(true);
@@ -125,7 +118,12 @@ const StreamingForm = () => {
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
-            videoConstraints={videoConstraints}
+            videoConstraints={{
+              width: { min: 480 },
+              height: { min: 720 },
+              aspectRatio: 0.6666666667,
+              facingMode: isSwitchingCamera ? "environment" : "user",
+            }}
           />
 
           {imgSrc && (
@@ -172,6 +170,12 @@ const StreamingForm = () => {
               </S.AddPadding>
             )}
           </S.OverlapContent>
+          <S.CameraWrap>
+            <FiRefreshCcw
+              className="switching-camera"
+              onClick={() => setSwitchingCamera((prev) => !prev)}
+            />
+          </S.CameraWrap>
           <S.CameraWrap>
             <HiOutlineCamera className="camera" onClick={handleCapture} />
           </S.CameraWrap>

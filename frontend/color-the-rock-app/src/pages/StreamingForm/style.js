@@ -52,6 +52,19 @@ export const Content = styled.div`
     padding: 0.4rem;
     text-align: center;
   }
+
+  .switching-camera {
+    position: absolute;
+    right: 1rem;
+    bottom: 9.5rem;
+    z-index: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    padding: 0.5rem;
+    text-align: center;
+  }
 `;
 
 export const CaptureWrap = styled.div`
