@@ -16,16 +16,22 @@ const Header = () => {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);
   };
 
+  const handleSetShowNav = () => {
+    setShowNav((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (scrollPosition > 72 && isShowNav) {
+      setShowNav(false);
+    }
+  }, [scrollPosition, isShowNav]);
+
   useEffect(() => {
     window.addEventListener("scroll", updateScrollPosition);
     if (sessionStorage.getItem("accessToken") === null) {
       dispatch(logOut());
     }
   }, []);
-
-  const handleSetShowNav = () => {
-    setShowNav((prev) => !prev);
-  };
 
   return (
     <S.Container scrollPosition={scrollPosition}>

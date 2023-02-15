@@ -88,7 +88,7 @@ export const NavBar = styled.div`
   top: 0px;
   right: 0px;
   width: 48%;
-  height: 100vh;
+  height: calc(100vh + 72px);
   z-index: 100;
   filter: drop-shadow(-4px 4px 4px rgba(0, 0, 0, 0.25));
   background-color: var(--color-background);
