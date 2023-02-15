@@ -246,9 +246,13 @@ const StreamingLive = () => {
           setFrontCamera((prev) => !prev);
 
           await session.unpublish(mainStreamManager);
-          await session.publish(newPublisher);
+          // await session.publish(newPublisher);
 
-          setCurrentVideoDevice(newVideoDevice[0]);
+          setCurrentVideoDevice(
+            isFrontCamera
+              ? videoDevices[0].deviceId
+              : videoDevices[videoDevices.length - 1].deviceId
+          );
           setMainStreamManager(newPublisher);
           setPublisher(newPublisher);
         }
