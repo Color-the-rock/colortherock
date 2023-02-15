@@ -470,14 +470,14 @@ const StreamingLive = () => {
       </S.OwnerVideoWrapper>
       <Mobile>
         <S.SettingWrapper>
-          <S.CommentWrapper>
-            {!isShowSettingModal && (
+          {!isShowSettingModal && (
+            <S.CommentWrapper>
               <CommentBtn
                 isReadOnly={true}
                 onClick={() => setShowChattingModal(true)}
               />
-            )}
-          </S.CommentWrapper>
+            </S.CommentWrapper>
+          )}
         </S.SettingWrapper>
       </Mobile>
       {!feedbackModal ? (

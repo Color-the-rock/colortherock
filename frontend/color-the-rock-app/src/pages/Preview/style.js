@@ -16,8 +16,8 @@ export const Video = styled.video`
   height: 100%;
   object-fit: contain;
   @media (max-width: 992px) {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 90%;
     object-fit: contain;
   }
 `;
