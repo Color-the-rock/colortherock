@@ -246,7 +246,7 @@ const StreamingLive = () => {
           setFrontCamera((prev) => !prev);
 
           // await session.unpublish(mainStreamManager);
-          // await session.publish(newPublisher);
+          await session.publish(newPublisher);
 
           setCurrentVideoDevice(newVideoDevice[0]);
           setMainStreamManager(newPublisher);
@@ -334,10 +334,12 @@ const StreamingLive = () => {
     }
 
     if (sessionId === null || sessionId === undefined) return;
-
+    const toggleButton = document.getElementById("toggle-record-btn");
+    toggleButton.disabled = true;
     const requestBody = {
       connectionId: connectionId,
     };
+
     streamingApi
       .startRecordVideo(sessionId, requestBody)
       .then(({ data: { status, result: _result } }) => {

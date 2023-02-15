@@ -1,6 +1,7 @@
 import styled from "styled-components";
 export const Container = styled.div`
   width: 100%;
+  width: 10.75rem;
   max-width: 10.75rem;
   min-height: 20.375rem;
   background-color: transparent;
@@ -11,6 +12,7 @@ export const ThumbnailImg = styled.img`
   height: 16rem;
   border-radius: 0.625rem;
   margin-bottom: 0.5rem;
+  object-fit: cover;
 `;
 
 export const VideoText = styled.div`
