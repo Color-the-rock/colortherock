@@ -62,10 +62,10 @@ const FeedbackModal = ({ closeFeedback, session, picture }) => {
           />
 
           <S.ButtonWrap>
-            <S.Button onClick={() => changeImoji("✋🏻")}>✋🏻</S.Button>
             <S.Button onClick={() => changeImoji("🤚🏻")}>🤚🏻</S.Button>
-            <S.Button onClick={() => changeImoji("👣")}>👣</S.Button>
-            <S.Button onClick={() => changeImoji("🐾")}>🐾</S.Button>
+            <S.Button onClick={() => changeImoji("🦶🏻")}>🦶🏻</S.Button>
+            <S.Button onClick={() => changeImoji("❌")}>❌</S.Button>
+            <S.Button onClick={() => changeImoji("📌")}>📌</S.Button>
             <S.RotateCcw onClick={onClickReset} />
           </S.ButtonWrap>
 
