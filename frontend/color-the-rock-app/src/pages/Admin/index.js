@@ -37,8 +37,11 @@ const Admin = () => {
 
   // 관리자 영상 숨김 해제
   const handleToggleBoard = (id) => {
+    const data = {
+      videoBoardId: id,
+    };
     adminApi
-      .toggleHiddenVideoBoard(id)
+      .toggleHiddenVideoBoard(data)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
           getAllHiddenBoardList();
@@ -63,7 +66,7 @@ const Admin = () => {
   };
 
   useEffect(() => {
-    if (!isAdmin) return;
+    if (!isAdmin && sessionStorage.getItem("adminToken")) return;
     getAllHiddenBoardList();
   }, [isAdmin]);
 
@@ -86,8 +89,8 @@ const Admin = () => {
 
       <S.HiddenVideoBoardList>
         {result && result.length > 0 ? (
-          result.map((item) => (
-            <S.BoardItem key={item.videoBoardId} id={item.videoBoardId}>
+          result.map((item, index) => (
+            <S.BoardItem key={item.videoBoardId + index} id={item.videoBoardId}>
               <S.BoardTitle onClick={() => getReportDetail(item.videoBoardId)}>
                 {item.title}
               </S.BoardTitle>

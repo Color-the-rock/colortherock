@@ -14,12 +14,14 @@ export const adminApi = {
   // 관리자 - 로그인 API
   loginAdmin: (admin) => api.post(`/login/admin`, admin),
   // 관리자 - 숨김처리된 영상 게시글 보기 API
-  getHiddenVideoBoardList: () =>
-    api.get(`/admin/list`, {
+  getHiddenVideoBoardList: () => {
+    console.log("getList().... auth: ", adminToken);
+    return api.get(`/admin/list`, {
       headers: {
         Authorization: `${adminToken}`,
       },
-    }),
+    });
+  },
 
   // 관리자 - 신고 내용 확인하기 API
   getReportDetail: (videoBoardId) =>
@@ -37,8 +39,8 @@ export const adminApi = {
     }),
 
   // 관리자 - 영상 숨김 해제 API
-  toggleHiddenVideoBoard: (videoBoardId) =>
-    api.get(`/admin/list/detail/unhidden?videoBoardId=${videoBoardId}`, {
+  toggleHiddenVideoBoard: (requestBody) =>
+    api.put(`/admin/list/detail/unhidden`, requestBody, {
       headers: {
         Authorization: `${adminToken}`,
       },
