@@ -156,6 +156,8 @@ const StreamingLive = () => {
         let videoDevices = devices.filter(
           (device) => device.kind === "videoinput"
         );
+
+        console.log("devices 개수 : ", devices, videoDevices);
         let currentVideoDeviceId = publisher.stream
           .getMediaStream()
           .getVideoTracks()[0]
@@ -223,12 +225,18 @@ const StreamingLive = () => {
     setShowSettingModal(false);
     try {
       const devices = await ov.getDevices();
+      let videoDevices = devices.filter(
+        (device) => device.kind === "videoinput"
+      );
+
+      console.log("devices 개수 : ", devices, videoDevices);
 
       let currentVideoDeviceId = publisher.stream
         .getMediaStream()
-        .getVideoTracks()[0]
+        .getVideoTracks()[1]
         .getSettings().deviceId;
-      let CurrentVideoDevice = devices.find(
+
+      let CurrentVideoDevice = videoDevices.find(
         (device) => device.deviceId === currentVideoDeviceId
       );
 
@@ -278,9 +286,7 @@ const StreamingLive = () => {
   // 피드백 관리
   const onFeedbackSignal = () => {
     session.on(`signal:drawingSignal`, (event) => {
-      console.log("onFeedbackSignal: ", event);
       const data = JSON.parse(event.data);
-      console.log("data: ", data);
       setPicture((prev) => [...prev, data]);
     });
   };
@@ -450,7 +456,7 @@ const StreamingLive = () => {
       </S.OwnerVideoWrapper>
       <Mobile>
         <S.SettingWrapper>
-          {!isShowSettingModal && (
+          {isShowChattingModal && (
             <S.CommentWrapper>
               <CommentBtn
                 isReadOnly={true}
