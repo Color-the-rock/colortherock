@@ -18,6 +18,7 @@ export const Description = styled.div`
   line-height: 1.25rem;
   letter-spacing: -0.01em;
   color: var(--color-tertiary);
+  margin-bottom: 100px;
 `;
 
 export const Label = styled.label`

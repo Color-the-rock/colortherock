@@ -1,5 +1,6 @@
 input[type="date"] {
   position: relative;
+  width: 100%;
   min-height: 30px;
   padding: 10px 12px;
   font-size: 14px;
@@ -8,16 +9,7 @@ input[type="date"] {
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  color: transparent;
-  cursor: pointer;
-  border: none;
-  z-index: 1;
+  display: none;
 }
 
 input[type="date"]::-webkit-clear-button,

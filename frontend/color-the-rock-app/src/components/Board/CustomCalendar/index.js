@@ -18,8 +18,6 @@ const CustomCalendar = ({
     setMaxDate(year + "-" + month + "-" + day);
   }, []);
 
-  console.log("selectDate", selectDate);
-
   return (
     <div className="input_date_box">
       <input
