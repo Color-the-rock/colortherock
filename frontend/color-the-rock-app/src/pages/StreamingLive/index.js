@@ -233,8 +233,8 @@ const StreamingLive = () => {
 
       let currentVideoDeviceId = publisher.stream
         .getMediaStream()
-        .getVideoTracks()[1]
-        .getSettings().deviceId;
+        .getVideoTracks()
+        [videoDevices.length - 1].getSettings().deviceId;
 
       let CurrentVideoDevice = videoDevices.find(
         (device) => device.deviceId === currentVideoDeviceId
