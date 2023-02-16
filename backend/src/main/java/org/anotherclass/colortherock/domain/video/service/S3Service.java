@@ -151,11 +151,14 @@ public class S3Service {
      */
     private String getThumbnailURL(String thumbnailName, File file) {
         String name = file.getName();
+        log.info("name : {}", name);
         int index = name.lastIndexOf(".");
         String extension = name.substring(index + 1).toLowerCase();
         String newName = name.substring(0, index + 1) + extension;
+        log.info("new name : {}", newName);
         boolean b = file.renameTo(new File(newName));
-        log.info(file.getAbsolutePath());
+        log.info("is rename {}", b);
+        log.info(file.getName());
         // Get image from video
         try (FileChannelWrapper fileChannelWrapper = NIOUtils.readableChannel(file);
              ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
@@ -190,6 +193,7 @@ public class S3Service {
 
     /**
      * MultiparFile -> File 변환
+     *
      * @param file 변환할 MultipartFile
      * @return 변환된 file
      */
