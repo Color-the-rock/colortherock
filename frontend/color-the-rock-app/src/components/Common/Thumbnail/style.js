@@ -16,7 +16,7 @@ export const ThumbnailImg = styled.img`
 `;
 
 export const VideoText = styled.div`
-  display: ${(props) => (props.isLive ? "flex" : "none")};
+  display: flex;
   font-style: normal;
   font-weight: 700;
   font-size: 0.9rem;

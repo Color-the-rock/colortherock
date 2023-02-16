@@ -25,12 +25,11 @@ const Thumbnail = ({
           {title.length < 13 ? title : title.substring(0, 12) + "..."}
         </S.VideoText>
       )}
-      <S.VideoText isLive={isLive}>
+      <S.VideoText>
         <S.LiveBadge colorCode={colorCode} />
-        {userNickname}
+        {isLive ? userNickname : color}
       </S.VideoText>
-      {!isLive && <S.LiveBadge colorCode={colorCode} />}
-      {color && <S.Tag>{color}</S.Tag>}
+      {isLive && color && <S.Tag>{color}</S.Tag>}
       <S.Tag>{gymName}</S.Tag>
     </S.Container>
   );
