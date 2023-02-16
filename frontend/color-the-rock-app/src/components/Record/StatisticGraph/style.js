@@ -77,7 +77,6 @@ export const HomeGymGraph = styled.div`
 
 export const VisitedState = styled.div`
   position: relative;
-
   display: inline-block;
   background-color: ${(props) =>
     props.count ? `rgba(194, 80, 214, ${props.count})` : "rgb(194, 80, 214)"};

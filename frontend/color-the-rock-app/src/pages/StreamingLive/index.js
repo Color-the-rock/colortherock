@@ -411,20 +411,21 @@ const StreamingLive = () => {
         </S.DragModal>
       </Desktop>
       <S.OwnerVideoWrapper>
-        <S.StreamTitle>{roomInfo.title}</S.StreamTitle>
-        {mainStreamManager !== undefined ? (
+        {!feedbackModal && <S.StreamTitle>{roomInfo.title}</S.StreamTitle>}
+
+        {!feedbackModal && mainStreamManager !== undefined ? (
           <S.VideoSettingsIcon
             color="#ffffff"
             size="24px"
             onClick={() => setShowSettingModal((prev) => !prev)}
           />
-        ) : (
+        ) : !feedbackModal ? (
           <S.LeaveSessionButton
             color="#ffffff"
             size="24px"
             onClick={leaveSessionPart}
           />
-        )}
+        ) : null}
 
         {mainStreamManager !== undefined && isShowSettingModal && (
           <S.VideoSettingsMenu>
