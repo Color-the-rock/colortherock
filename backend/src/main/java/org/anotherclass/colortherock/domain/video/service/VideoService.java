@@ -158,7 +158,7 @@ public class VideoService {
             throw new VideoFileNameHasNotExtensionException(GlobalErrorCode.VIDEO_HAS_NOT_EXTENSION);
         }
         String[] split = fileName.split("\\.");
-        String extension = split[split.length - 1];
+        String extension = split[split.length - 1].toLowerCase();
         if (!extension.matches("(mp4|mov|avi|wmv|flv|mkv|webm)$")) {
             throw new NotVideoExtensionException(GlobalErrorCode.NOT_VIDEO_EXTENSION);
         }
