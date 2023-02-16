@@ -89,9 +89,20 @@ public class S3Service {
      */
     public String uploadThumbnail(MultipartFile videoFile, String thumbnailName) {
         File file = convertMultipartFileToFile(videoFile);
-        String thumbnailURL = getThumbnailURL(thumbnailName, file);
+        String name = file.getName();
+        log.info("name : {}", name);
+        int index = name.lastIndexOf(".");
+        String extension = name.substring(index + 1).toLowerCase();
+        String newName = name.substring(0, index + 1) + extension;
+        log.info("new name : {}", newName);
+        File dest = new File(newName);
+        boolean b = file.renameTo(dest);
+        log.info("is rename {}", b);
+        log.info(file.getName());
+        log.info(dest.getName());
+        String thumbnailURL = getThumbnailURL(thumbnailName, dest);
         try {
-            Files.delete(Path.of(file.getPath()));
+            Files.delete(Path.of(dest.getPath()));
         } catch (IOException e) {
             log.info("파일이 삭제되지 않았습니다.");
             throw new RuntimeException(e);
@@ -150,19 +161,8 @@ public class S3Service {
      * @return 썸네일이 저장된 cloudfront url
      */
     private String getThumbnailURL(String thumbnailName, File file) {
-        String name = file.getName();
-        log.info("name : {}", name);
-        int index = name.lastIndexOf(".");
-        String extension = name.substring(index + 1).toLowerCase();
-        String newName = name.substring(0, index + 1) + extension;
-        log.info("new name : {}", newName);
-        File dest = new File(newName);
-        boolean b = file.renameTo(dest);
-        log.info("is rename {}", b);
-        log.info(file.getName());
-        log.info(dest.getName());
         // Get image from video
-        try (FileChannelWrapper fileChannelWrapper = NIOUtils.readableChannel(dest);
+        try (FileChannelWrapper fileChannelWrapper = NIOUtils.readableChannel(file);
              ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             FrameGrab grab = FrameGrab.createFrameGrab(fileChannelWrapper);
             Picture picture = grab.seekToSecondPrecise(1.0).getNativeFrame();
