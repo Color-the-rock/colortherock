@@ -108,6 +108,7 @@ const Board = () => {
               gymName={item.gymName}
               imgUrl={item.thumbnailURL}
               isLive={false}
+              colorCode={item.colorCode}
               color={item.color}
               createdDate={item.createdDate}
               onClick={handleOnClickItem}

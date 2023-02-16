@@ -11,6 +11,7 @@ const Thumbnail = ({
   imgUrl,
   isLive,
   color,
+  colorCode,
   onClick,
 }) => {
   return (
@@ -25,9 +26,10 @@ const Thumbnail = ({
         </S.VideoText>
       )}
       <S.VideoText isLive={isLive}>
-        <S.LiveBadge />
+        <S.LiveBadge colorCode={colorCode} />
         {userNickname}
       </S.VideoText>
+      {!isLive && <S.LiveBadge colorCode={colorCode} />}
       {color && <S.Tag>{color}</S.Tag>}
       <S.Tag>{gymName}</S.Tag>
     </S.Container>

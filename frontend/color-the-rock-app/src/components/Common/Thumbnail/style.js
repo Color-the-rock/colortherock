@@ -34,7 +34,8 @@ export const VideoText = styled.div`
 export const LiveBadge = styled.div`
   width: 6px;
   height: 6px;
-  background: var(--color-badge-live);
+  background-color: ${(props) =>
+    props.colorCode ? props.colorCode : "var(--color-badge-live)"};
   border-radius: 6px;
   margin-right: 4px;
 `;
