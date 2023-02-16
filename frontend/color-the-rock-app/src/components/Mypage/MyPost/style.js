@@ -7,6 +7,10 @@ export const VideoList = styled.div`
   align-self: center;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   background-color: transparent;
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 1rem;
+  }
 `;
 
 export const Message = styled.p`

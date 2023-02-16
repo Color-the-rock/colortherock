@@ -23,7 +23,7 @@ export const Video = styled.video`
 `;
 
 export const Button = styled.button`
-  width: 64px;
+  width: 72px;
   font-size: 1rem;
   color: var(--color-white);
   align-self: center;
