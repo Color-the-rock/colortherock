@@ -16,7 +16,8 @@ const StatisticGraph = () => {
       .getVisitedGymData()
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          setGymData(_result.data);
+          const top3Data = [_result.data[0], _result.data[1], _result.data[2]];
+          setGymData(top3Data);
           setGymTotal(_result.totalCount);
         }
       })
@@ -32,6 +33,10 @@ const StatisticGraph = () => {
         }
       })
       .catch((error) => console.log("error", error));
+  };
+
+  const handleShowTooltip = (e) => {
+    console.log("[handleShowTooltip] : e", e);
   };
 
   useEffect(() => {
@@ -56,7 +61,7 @@ const StatisticGraph = () => {
         </S.BarLabel>
       </S.ChallengeBar>
 
-      <S.GraphTitle>방문한 암장</S.GraphTitle>
+      <S.GraphTitle>방문 암장 TOP3</S.GraphTitle>
 
       <S.HomeGymGraph length={gymTotal}>
         {gymData && gymData.length > 0
@@ -64,9 +69,10 @@ const StatisticGraph = () => {
               <S.VisitedState
                 className="visited_state"
                 key={index}
-                percent={(gym.count / gymTotal) * 100}
-                count={0.01 * (100 / gymTotal) * (gymTotal - (index + 1))}
+                percent={(gym.count / 3) * 100}
+                count={0.01 * (100 / 3) * (3 - (index + 1))}
                 value={gym.gymName}
+                onMouseEnter={handleShowTooltip(gym.gymName)}
               >
                 <S.GraphText>{gym.gymName}</S.GraphText>
               </S.VisitedState>
