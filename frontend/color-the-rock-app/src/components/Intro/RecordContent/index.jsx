@@ -2,7 +2,8 @@ import React from "react";
 import IntroTitle from "../IntroTitle";
 import * as S from "./style";
 import { Mobile, Desktop } from "../../layout/Template";
-
+import Record1 from "../../../assets/img/intro/intro-record1.png";
+import Record2 from "../../../assets/img/intro/intro-record2.png";
 const RecordContent = () => {
   const imgVariants = {
     offscreen: {
@@ -36,7 +37,7 @@ const RecordContent = () => {
     <S.Container
       initial="offscreen"
       whileInView="onscreen"
-      viewport={{ once: false, amount: 0.8 }}
+      viewport={{ once: true, amount: 0.8 }}
     >
       <S.Wrapper>
         <IntroTitle text="클라이밍 기록" />
@@ -47,9 +48,8 @@ const RecordContent = () => {
       <S.ImgWrapper>
         <Desktop>
           <S.ImgAnimation variants={imgVariants}>
-            <S.ImgBox left="60" depth="1" bg="#dddddd" />
-            <S.ImgBox bottom="100" left="240" depth="10" />
-            <S.ImgBox left="420" depth="100" bg="#e4e4e4" />
+            <S.ImgBox left="10" bg={Record1} />
+            <S.ImgBox left="360" bg={Record2} />
           </S.ImgAnimation>
         </Desktop>
         <Mobile>

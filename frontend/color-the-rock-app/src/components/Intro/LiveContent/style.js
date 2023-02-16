@@ -31,7 +31,7 @@ export const ImgWrapper = styled.div`
   max-width: 794px;
   height: 800px;
   margin-left: 2rem;
-  background-color: var(--color-background);
+  background-color: transparent;
   overflow: hidden;
 
   @media (max-width: 992px) {
@@ -59,9 +59,12 @@ export const ImgAnimation = styled(motion.div)`
 `;
 
 export const ImgBox = styled(motion.div)`
-  width: 300px;
-  height: 500px;
-  background-color: ${(props) => (props.bg ? props.bg : "#ffffff")};
+  width: 441px;
+  height: 600px;
+  background-image: ${(props) => (props.bg ? `url(${props.bg})` : "#ffffff")};
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
   border-radius: 20px;
   position: absolute;
   left: ${(props) => (props.left ? `${props.left}px` : "0")};
