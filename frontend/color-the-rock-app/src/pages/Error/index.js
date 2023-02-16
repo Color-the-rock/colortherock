@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import * as S from "./style";
-import Logo from "../../assets/img/common/app-logo.png";
+import Logo from "../../assets/img/common/app-logo.svg";
 const ErrorPage = () => {
   const location = useLocation();
 

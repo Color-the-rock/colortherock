@@ -5,6 +5,7 @@ export const Container = styled.div`
   min-height: 10.75rem;
   border-radius: 10px;
   background-color: transparent;
+  cursor: pointer;
 `;
 
 export const ThumbnailImg = styled.img`

@@ -3,7 +3,7 @@ import * as S from "./style";
 import KakaoBtn from "../../assets/img/LogIn/kakao-login.png";
 import GoogleBtn from "../../assets/img/LogIn/google-login.png";
 import { Mobile, Desktop } from "../../components/layout/Template";
-import WebLogo from "../../assets/img/common/web-logo.png";
+import WebLogo from "../../assets/img/common/web-logo.svg";
 import JoinUs from "../../assets/img/LogIn/img-signup-join-us.png";
 import Header from "../../components/layout/Header";
 import { useNavigate } from "react-router-dom";
