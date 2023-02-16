@@ -156,11 +156,13 @@ public class S3Service {
         String extension = name.substring(index + 1).toLowerCase();
         String newName = name.substring(0, index + 1) + extension;
         log.info("new name : {}", newName);
-        boolean b = file.renameTo(new File(newName));
+        File dest = new File(newName);
+        boolean b = file.renameTo(dest);
         log.info("is rename {}", b);
         log.info(file.getName());
+        log.info(dest.getName());
         // Get image from video
-        try (FileChannelWrapper fileChannelWrapper = NIOUtils.readableChannel(file);
+        try (FileChannelWrapper fileChannelWrapper = NIOUtils.readableChannel(dest);
              ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             FrameGrab grab = FrameGrab.createFrameGrab(fileChannelWrapper);
             Picture picture = grab.seekToSecondPrecise(1.0).getNativeFrame();
