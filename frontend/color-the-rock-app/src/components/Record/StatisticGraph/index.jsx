@@ -21,12 +21,12 @@ const StatisticGraph = () => {
 
           for (let i = 0; i < _result.length; i++) {
             if (i > 2) return;
-            top3Data[i] = _result.data[i];
+            top3Data.push(_result.data[i]);
           }
 
           console.log("top3Data?? ", top3Data);
 
-          setGymData([...top3Data]);
+          setGymData(top3Data);
           setGymTotal(_result.totalCount);
         }
       })
