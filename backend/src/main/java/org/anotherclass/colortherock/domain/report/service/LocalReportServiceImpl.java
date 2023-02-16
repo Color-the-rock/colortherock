@@ -19,15 +19,16 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Profile("local")
-public class ReportServiceImpl implements ReportService {
+public class LocalReportServiceImpl implements ReportService {
     private final ReportRepository reportRepository;
     private final ReportReadRepository reportReadRepository;
     private final VideoBoardRepository videoBoardRepository;
+
     public void reportPost(Member member, PostReportRequest request) {
         VideoBoard videoBoard = videoBoardRepository.findById(request.getVideoBoardId())
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
         // 해당 게시글의 작성자가 member일 경우 오류 발생
-        if(videoBoard.getMember().getId().equals(member.getId())) {
+        if (videoBoard.getMember().getId().equals(member.getId())) {
             throw new ReportOneselfException();
         }
         // 모든 조건을 통과할 경우 새로운 신고 객체를 생성하여 저장

@@ -21,12 +21,10 @@ import java.util.List;
 
 @Repository
 public class VideoReadRepository {
-    private final EntityManager entityManager;
 
     private final JPAQueryFactory queryFactory;
 
     public VideoReadRepository(EntityManager entityManager) {
-        this.entityManager = entityManager;
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
@@ -44,7 +42,7 @@ public class VideoReadRepository {
                         video.isSuccess.eq(request.getIsSuccess())
                 )
                 .orderBy(video.id.desc())
-                .limit(pageable.getPageSize() + 1)
+                .limit(pageable.getPageSize() + 1L)
                 .fetch();
         return checkLastPage(pageable, results);
     }
@@ -62,7 +60,7 @@ public class VideoReadRepository {
                         video.isPosted.isFalse()
                 )
                 .orderBy(video.id.desc())
-                .limit(pageable.getPageSize() + 1)
+                .limit(pageable.getPageSize() + 1L)
                 .fetch();
         return checkLastPage(pageable, results);
     }

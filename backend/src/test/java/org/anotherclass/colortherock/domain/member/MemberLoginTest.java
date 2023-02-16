@@ -61,7 +61,7 @@ public class MemberLoginTest extends IntegrationTest {
 
     @BeforeEach
     void setMember() {
-        member = new Member("suker800@gmail.com", "태규", Member.RegistrationId.google);
+        member = new Member("suker800@gmail.com", "태규", Member.RegistrationId.GOOGLE);
 
         em.persist(member);
 
@@ -170,7 +170,7 @@ public class MemberLoginTest extends IntegrationTest {
     @Test
     @DisplayName("회원 가입 API 테스트")
     void 회원가입() throws Exception {
-        MemberSignUpRequest request = new MemberSignUpRequest("a@a.com", Member.RegistrationId.kakao, "이름");
+        MemberSignUpRequest request = new MemberSignUpRequest("a@a.com", Member.RegistrationId.KAKAO, "이름");
 
         mockMvc.perform(
                         post(url + "/api/member/signup")

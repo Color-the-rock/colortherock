@@ -20,6 +20,6 @@ public class GoogleMemberInfo implements MemberInfo {
 
     @Override
     public RegistrationId getRegistrationId() {
-        return RegistrationId.google;
+        return RegistrationId.GOOGLE;
     }
 }

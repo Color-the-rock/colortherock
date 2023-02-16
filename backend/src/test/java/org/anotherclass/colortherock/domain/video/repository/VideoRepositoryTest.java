@@ -31,7 +31,7 @@ public class VideoRepositoryTest {
         // given
         member = Member.builder()
                 .email("johan@rock.com")
-                .registrationId(Member.RegistrationId.kakao)
+                .registrationId(Member.RegistrationId.KAKAO)
                 .nickname("nickname").build();
         memberRepository.save(member);
         for (int i = 0; i < 10; i++) {

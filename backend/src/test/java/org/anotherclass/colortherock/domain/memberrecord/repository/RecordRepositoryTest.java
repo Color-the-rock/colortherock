@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @DisplayName("member record repository test")
@@ -23,7 +23,7 @@ class RecordRepositoryTest {
     @Transactional
     public void 검색_성공() {
         // given
-        Member testMember = Member.builder().email("test@colortherock.com").nickname("test_name").registrationId(Member.RegistrationId.kakao).build();
+        Member testMember = Member.builder().email("test@colortherock.com").nickname("test_name").registrationId(Member.RegistrationId.KAKAO).build();
         MemberRecord testRecord = MemberRecord.builder().member(testMember).successCount(20).videoCount(40).build();
         entityManager.persist(testMember);
         entityManager.persist(testRecord);

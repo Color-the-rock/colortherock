@@ -39,6 +39,12 @@ public class VideoCommentService {
     private final VideoCommentRepository videoCommentRepository;
 
 
+    /**
+     * 댓글 목록 요청 로직 구현
+     *
+     * @param condition @see {@link CommentListRequest}
+     * @return @see {@link CommentListResponse} 리스트 형태로 반환
+     */
     @Transactional(readOnly = true)
     public List<CommentListResponse> getCommentList(CommentListRequest condition) {
         Pageable pageable = Pageable.ofSize(15);
@@ -56,6 +62,13 @@ public class VideoCommentService {
                         .build()).collect(Collectors.toList());
     }
 
+    /**
+     * 새로운 댓글을 생성하는 로직
+     *
+     * @param memberId          댓글 생성하는 멤버 id
+     * @param newCommentRequest 새로운 댓글 내용 , 게시글 id 포함 {@inheritDoc}
+     * @return 작성한 댓글의 id 반환
+     */
     @Transactional
     public Long insertComment(Long memberId, NewCommentRequest newCommentRequest) {
         Member member = memberRepository.findById(memberId)
@@ -71,6 +84,13 @@ public class VideoCommentService {
         return videoComment.getId();
     }
 
+    /**
+     * 댓글 수정 로직
+     *
+     * @param memberId             사용자 id
+     * @param commentUpdateRequest {@link CommentUpdateRequest} 새로운 댓글 내용, 댓글 id
+     */
+
     @Transactional
     public void updateComment(Long memberId, CommentUpdateRequest commentUpdateRequest) {
         VideoComment comment = videoCommentRepository.findById(commentUpdateRequest.getCommentId())
@@ -79,6 +99,12 @@ public class VideoCommentService {
         comment.update(commentUpdateRequest.getContent());
     }
 
+    /**
+     * 댓글 삭제 로직
+     *
+     * @param memberId  사용자 id
+     * @param commentId 삭제하려는 댓글 id
+     */
     @Transactional
     public void deleteComment(Long memberId, Long commentId) {
         VideoComment comment = videoCommentRepository.findById(commentId)
@@ -87,6 +113,13 @@ public class VideoCommentService {
         videoCommentRepository.delete(comment);
     }
 
+    /**
+     * 내 댓글만 조회하는 로직
+     *
+     * @param memberId 인증된 사용자 id
+     * @param storeId 마지막으로 본 댓글 id
+     * @return {@link MyCommentListResponse} 내 댓글 list 형태로 반환
+     */
     @Transactional(readOnly = true)
     public List<MyCommentListResponse> getMyCommentList(Long memberId, Long storeId) {
         Pageable pageable = Pageable.ofSize(15);
@@ -105,7 +138,11 @@ public class VideoCommentService {
                         .build()).collect(Collectors.toList());
     }
 
-    // 받은 멤버가 수정권한이 있는지 확인하는 메서드
+    /**
+     * 사용자와 댓글을 쓴 사용자가 일치하는지 체크하는 로직
+     * @param memberId 사용자 id
+     * @param comment 댓글 id
+     */
     private void checkAuth(Long memberId, VideoComment comment) {
         if (!comment.getMember().getId().equals(memberId)) {
             throw new NotWriterException(GlobalErrorCode.NOT_WRITER);

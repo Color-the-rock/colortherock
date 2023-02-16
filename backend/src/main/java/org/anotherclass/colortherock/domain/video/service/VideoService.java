@@ -38,9 +38,18 @@ public class VideoService {
 
     private static final Integer PAGE_SIZE = 15;
 
-    // 로컬에서 영상게시판 통해 동영상 올리기
+    /**
+     * 로컬에 있는 성공 영상 올리기
+     *
+     * @param memberDetails 인증된 멤버 객체
+     * @param newVideo      저장할 새로운 비디오
+     * @param request       {@link LocalSuccessVideoUploadRequest}
+     * @return 저장한 비디오 id
+     */
     @Transactional
-    public Long uploadSuccessVideo(MemberDetails memberDetails, MultipartFile newVideo, LocalSuccessVideoUploadRequest request) {
+    public Long uploadSuccessVideo(MemberDetails memberDetails,
+                                   MultipartFile newVideo,
+                                   LocalSuccessVideoUploadRequest request) {
         Member member = memberRepository.findById(memberDetails.getMember().getId())
                 .orElseThrow(() -> new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND));
         // S3 영상 저장 후 URL 얻어오기
@@ -53,7 +62,12 @@ public class VideoService {
         return saveSuccessVideo(member, videoName, s3URL, thumbnailName, thumbnailURL, request);
     }
 
-    // 마이페이지에서 동영상 올리기
+    /**
+     * 로컬 영상 개인 기록용 업로드
+     * @param memberDetails 인증된 사용자 객체
+     * @param newVideo 업로드할 내 영상
+     * @param request {@link UploadVideoRequest}
+     */
     @Transactional
     public void uploadMyVideo(MemberDetails memberDetails, MultipartFile newVideo, UploadVideoRequest request) {
         Member member = memberRepository.findById(memberDetails.getMember().getId())
@@ -88,6 +102,12 @@ public class VideoService {
         return saveVideo.getId();
     }
 
+    /**
+     * 내 성공 영상 조회하기
+     * @param member 사용자
+     * @param request {@link MySuccessVideoRequest}
+     * @return {@link VideoListResponse} 리스트 형태로 반환
+     */
     @Transactional(readOnly = true)
     public List<VideoListResponse> getMySuccessVideoList(Member member, MySuccessVideoRequest request) {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
@@ -106,6 +126,12 @@ public class VideoService {
 
     }
 
+    /**
+     * 내 영상 삭제하기
+     * @param member 사용자
+     * @param videoId 영상 id
+     * @return {@link DeletedVideoDto}
+     */
     @Transactional
     public DeletedVideoDto deleteVideo(Member member, Long videoId) {
         // 현재 로그인한 member와 영상의 주인이 일치하는 지 확인
@@ -119,6 +145,12 @@ public class VideoService {
         return new DeletedVideoDto(videoName, isVideoSuccess);
     }
 
+    /**
+     * 영상 파일 확장자 validation
+     * @param member 사용자
+     * @param newVideo 새로운 비디오
+     * @return 현재시간을 붙여 새로운 이름을 만든다.
+     */
     public String extractValidVideoName(Member member, MultipartFile newVideo) {
         String fileName = newVideo.getOriginalFilename();
         assert fileName != null;
@@ -133,6 +165,11 @@ public class VideoService {
         return System.currentTimeMillis() + member.getNickname() + "." + extension;
     }
 
+    /**
+     * 섬네일용 파일 이름 만들기
+     * @param member 사용
+     * @return 만든 파일 이름
+     */
     public String extractValidThumbName(Member member) {
         return "Thumb" + System.currentTimeMillis() + member.getNickname() + ".JPEG";
     }

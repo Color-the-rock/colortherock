@@ -63,7 +63,7 @@ public class Member {
     }
 
     public enum RegistrationId {
-        kakao, google
+        KAKAO, GOOGLE
 
     }
 
