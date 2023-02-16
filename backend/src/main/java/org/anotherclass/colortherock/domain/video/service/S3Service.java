@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
@@ -111,7 +113,7 @@ public class S3Service {
     /**
      * S3에 썸네일 이미지를 저장하고 URL을 가져옴
      */
-    private String getThumbnailURL(String thumbnailName, File file) {
+    public String getThumbnailURL(String thumbnailName, File file) {
         // Get image from video
         try (FileChannelWrapper fileChannelWrapper = NIOUtils.readableChannel(file);
              ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
@@ -119,8 +121,21 @@ public class S3Service {
             Picture picture = grab.seekToSecondPrecise(1.0).getNativeFrame();
             BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
             // Convert the image to a JPEG and write it to a ByteArrayOutputStream
+            // Fix the orientation of the image
 
-            ImageIO.write(bufferedImage, "JPEG", baos);
+            int width = bufferedImage.getWidth();
+            int height = bufferedImage.getHeight();
+            BufferedImage outputImage = new BufferedImage(height, width, bufferedImage.getType());
+
+            Graphics2D g2d = outputImage.createGraphics();
+            AffineTransform at = new AffineTransform();
+            at.translate(height, 0);
+            at.rotate(Math.PI / 2);
+            g2d.setTransform(at);
+            g2d.drawImage(bufferedImage, 0, 0, null);
+            g2d.dispose();
+
+            ImageIO.write(outputImage, "JPEG", baos);
             baos.flush();
             InputStream is = new ByteArrayInputStream(baos.toByteArray());
             // Upload the object to S3
