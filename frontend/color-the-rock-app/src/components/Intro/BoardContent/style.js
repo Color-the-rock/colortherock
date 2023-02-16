@@ -32,6 +32,7 @@ export const BoardImg = styled.img`
   opacity: 0.6;
   @media (max-width: 768px) {
     width: 320vw;
+    height: 40vh;
   }
 `;
 

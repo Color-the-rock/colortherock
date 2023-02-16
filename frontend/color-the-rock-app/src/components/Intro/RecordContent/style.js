@@ -33,6 +33,7 @@ export const ImgWrapper = styled.div`
   @media (max-width: 992px) {
     margin-left: 0;
     margin-top: 2rem;
+    height: 500px;
   }
 `;
 
@@ -52,6 +53,9 @@ export const ImgAnimation = styled(motion.div)`
   position: relative;
   background-color: transparent;
   bottom: 0px;
+  @media (max-width: 992px) {
+    height: 70%;
+  }
 `;
 
 export const ImgBox = styled(motion.div)`
@@ -73,7 +77,10 @@ export const ImgBoxMobile = styled(motion.div)`
   width: 36%;
   min-width: 200px;
   height: 500px;
-  background-color: ${(props) => (props.bg ? props.bg : "#ffffff")};
+  background-image: ${(props) => (props.bg ? `url(${props.bg})` : "#ffffff")};
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
   border-radius: 20px;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;

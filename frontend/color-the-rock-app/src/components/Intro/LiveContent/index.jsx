@@ -51,16 +51,14 @@ const LiveContent = () => {
       <S.ImgWrapper>
         <Desktop>
           <S.ImgAnimation variants={imgVariants}>
-            <S.ImgBox left="-20" depth="1" bg={LiveImg1} />
-            <S.ImgBox bottom="100" left="200" depth="10" bg={LiveImg2} />
-            <S.ImgBox left="390" depth="100" bg={LiveImg3} />
+            <S.ImgBox left="-20" depth="1" bg={LiveImg2} />
+            <S.ImgBox left="390" depth="100" bg={LiveImg1} />
           </S.ImgAnimation>
         </Desktop>
         <Mobile>
           <S.ImgAnimation variants={imgMobileVariants}>
-            <S.ImgBoxMobile right="50" bg="#dddddd" />
-            <S.ImgBoxMobile right="25" />
-            <S.ImgBoxMobile right="0" bg="#e4e4e4" />
+            <S.ImgBoxMobile right="45" bg={LiveImg2} />
+            <S.ImgBoxMobile right="0" bg={LiveImg1} />
           </S.ImgAnimation>
         </Mobile>
       </S.ImgWrapper>

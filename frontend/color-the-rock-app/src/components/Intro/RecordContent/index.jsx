@@ -54,9 +54,8 @@ const RecordContent = () => {
         </Desktop>
         <Mobile>
           <S.ImgAnimation variants={imgMobileVariants}>
-            <S.ImgBoxMobile right="50" bg="#dddddd" />
-            <S.ImgBoxMobile right="25" />
-            <S.ImgBoxMobile right="0" bg="#e4e4e4" />
+            <S.ImgBoxMobile right="45" bg={Record1} />
+            <S.ImgBoxMobile right="0" bg={Record2} />
           </S.ImgAnimation>
         </Mobile>
       </S.ImgWrapper>
