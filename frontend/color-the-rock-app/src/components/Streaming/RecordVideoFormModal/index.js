@@ -1,25 +1,12 @@
-/*
-  RecordVideoFormModal
-  : 실시간 스트리밍 중에 영상을 녹화한 후 띄워지는 Modal
-  
-  props
-  : video => 녹화한 영상
-  : handleModalStateChange => Modal on/off
-
-  할 일
-  : 등록요청
-  : video validation check
-  : 상태 관리
-*/
-
 import * as S from "./style";
 import React, { useState } from "react";
 import BoardRadioBtn from "../../Board/BoardRadioBtn";
 import CustomSelect from "../../Common/CustomSelect";
 import RegistBtn from "../../Board/RegistBtn";
 import streamingApi from "../../../api/streaming";
-import InputComp from "../../../components/Board/InputComp";
 import { useSelector } from "react-redux";
+import PropTypes from "prop-types";
+import Loading from "../../Common/Loading";
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
@@ -30,6 +17,8 @@ const levelValues = [
   { key: "LEVEL5", value: "5" },
   { key: "LEVEL6", value: "6" },
   { key: "LEVEL7", value: "7" },
+  { key: "LEVEL8", value: "8" },
+  { key: "LEVEL9", value: "9" },
 ];
 const colorValues = [
   { key: "난이도 색상", value: "" },
@@ -38,21 +27,23 @@ const colorValues = [
   { key: "주황", value: "주황" },
   { key: "노랑", value: "노랑" },
   { key: "연두", value: "연두" },
+  { key: "초록", value: "초록" },
   { key: "하늘", value: "하늘" },
+  { key: "파랑", value: "파랑" },
   { key: "남색", value: "남색" },
   { key: "보라", value: "보라" },
+  { key: "핑크", value: "핑크" },
+  { key: "검정", value: "검정" },
   { key: "갈색", value: "갈색" },
+  { key: "회색", value: "회색" },
 ];
 const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
-  const saveTitle = useSelector((state) => state.streaming.info.title);
   const saveGymName = useSelector((state) => state.streaming.info.gymName);
   const [isSuccess, setIsSuccess] = useState(true);
-  const [title, setTitle] = useState(saveTitle);
   const [level, setLevel] = useState("");
   const [color, setColor] = useState("");
-
-  // test 용 : video는 props로 받아와야함.
-
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const handleModalStateChange = () => {
     if (window.confirm("정말로 취소하시겠습니까?")) {
       setModalOpen();
@@ -69,28 +60,32 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
       recordingId,
       isSaved: true,
       level,
-      title,
       gymName: saveGymName,
       isSuccess,
       color,
     };
-    console.log("---------------------------------");
-    console.log(data);
-    console.log("---------------------------------");
 
-    streamingApi
-      .saveRecordVideo(sessionId, data)
-      .then(({ data }) => {
-        console.log("성공", data);
-        setModalOpen();
-      })
-      .catch((err) => {
-        console.log("실패");
-        console.log("err: ", err);
-      });
+    setLoading(true);
+    setIsDisabled(true);
+    const api = async () =>
+      streamingApi
+        .saveRecordVideo(sessionId, data)
+        .then(() => {
+          setModalOpen();
+          setIsDisabled(false);
+        })
+        .catch((err) => {
+          console.log("err: ", err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    api();
   };
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <S.ContainerWrap>
       <S.Container>
         <S.ContentBox>
@@ -98,13 +93,6 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
             <S.TitleWrap>
               <S.TitleWrap>영상 등록</S.TitleWrap>
             </S.TitleWrap>
-          </S.ComponentWrap>
-          <S.ComponentWrap>
-            <InputComp
-              title={title}
-              handleChange={setTitle}
-              placeholder="제목을 입력해주세요."
-            />
           </S.ComponentWrap>
           <S.SelectButtonWrap>
             <S.selectBtnContent>
@@ -121,6 +109,7 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
               btnName="등록"
               size="40px"
               clickHandler={registVideoToS3}
+              disabled={isDisabled}
             />
           </S.ComponentWrap>
           <S.ComponentWrap>
@@ -137,3 +126,9 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
 };
 
 export default React.memo(RecordVideoFormModal);
+
+RecordVideoFormModal.propTypes = {
+  sessionId: PropTypes.string.isRequired,
+  recordingId: PropTypes.string.isRequired,
+  setModalOpen: PropTypes.func.isRequired,
+};

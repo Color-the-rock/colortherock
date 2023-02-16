@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import * as S from "./style";
+
 const MyComment = ({ title, content, createdDate, videoBoardId }) => {
   return (
     <S.Container to={`/board/detail/${videoBoardId}`}>

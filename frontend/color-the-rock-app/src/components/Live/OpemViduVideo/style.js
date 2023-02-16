@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Video = styled.video`
   object-fit: cover;
   width: 100%;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   color: #fff;
   margin: 0;
   padding: 0;

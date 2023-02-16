@@ -31,12 +31,13 @@ export const ImgWrapper = styled.div`
   max-width: 794px;
   height: 800px;
   margin-left: 2rem;
-  background-color: var(--color-background);
+  background-color: transparent;
   overflow: hidden;
 
   @media (max-width: 992px) {
     margin-left: 0;
     margin-top: 2rem;
+    height: 500px;
   }
 `;
 
@@ -56,12 +57,18 @@ export const ImgAnimation = styled(motion.div)`
   position: relative;
   background-color: transparent;
   bottom: 0px;
+  @media (max-width: 992px) {
+    height: 70%;
+  }
 `;
 
 export const ImgBox = styled(motion.div)`
-  width: 300px;
-  height: 500px;
-  background-color: ${(props) => (props.bg ? props.bg : "#ffffff")};
+  width: 441px;
+  height: 600px;
+  background-image: ${(props) => (props.bg ? `url(${props.bg})` : "#ffffff")};
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
   border-radius: 20px;
   position: absolute;
   left: ${(props) => (props.left ? `${props.left}px` : "0")};
@@ -74,7 +81,10 @@ export const ImgBoxMobile = styled(motion.div)`
   width: 36%;
   min-width: 200px;
   height: 500px;
-  background-color: ${(props) => (props.bg ? props.bg : "#ffffff")};
+  background-image: ${(props) => (props.bg ? `url(${props.bg})` : "#ffffff")};
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
   border-radius: 20px;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;

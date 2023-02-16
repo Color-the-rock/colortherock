@@ -27,7 +27,6 @@ const Record = () => {
       .getTotalStatistics()
       .then(({ data: { status, result } }) => {
         if (status === 200) {
-          console.log("success : 200", result);
           setUserRecordInfo(result);
         }
       })
@@ -35,11 +34,9 @@ const Record = () => {
   };
 
   // 성공 및 실패 영상
-
   useEffect(() => {
     getUserRecordInfo();
 
-    // show info guide
     const infoGuide = document.getElementById("record-info-guide");
 
     if (infoGuide !== null) {
@@ -60,7 +57,7 @@ const Record = () => {
       <S.TextWrapper>
         <S.Text>
           {userNickName === "" ? "사용자" : userNickName}님은
-          <S.GradientText> {userRecordInfo.videoCount}일</S.GradientText>동안
+          <S.GradientText> {userRecordInfo.visitCount}일</S.GradientText>동안
         </S.Text>
         <S.Text>
           <S.GradientText>
@@ -71,14 +68,12 @@ const Record = () => {
       </S.TextWrapper>
       <Mobile>
         <S.InfoWrapper>
-          {/* 레벨별 도전 현황 */}
           <SubTitle text="레벨별 도전 현황">
             <S.InfoButton id="record-info-guide" />
           </SubTitle>
           {isShowGuide && <S.InfoGuideImg src={GuideImg} alt="guide" />}
         </S.InfoWrapper>
         <StackedGraph />
-        {/* 활동 통계 */}
         <SubTitle text="활동 통계" />
         <StatisticGraph />
         <SubTitle text="일별 도전 기록" />
@@ -116,11 +111,13 @@ const Record = () => {
       <Desktop>
         <S.ContentWrapper>
           <S.RecordWrapper>
-            <div>
-              <SubTitle text="레벨별 도전 현황" />
+            <S.InfoWrapper>
+              <SubTitle text="레벨별 도전 현황">
+                <S.InfoButton id="record-info-guide" />
+              </SubTitle>
               <StackedGraph />
-            </div>
-            {/* 활동 통계 */}
+              {isShowGuide && <S.InfoGuideImg src={GuideImg} alt="guide" />}
+            </S.InfoWrapper>
             <div>
               <SubTitle text="활동 통계" />
               <StatisticGraph />

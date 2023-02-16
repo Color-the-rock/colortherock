@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { useInput } from "../../../hooks/useInput";
 import boardApi from "../../../api/board";
 import { useParams } from "react-router-dom";
+
 const ReportModal = ({ setOpenBoardReportModal }) => {
   const { id } = useParams();
   const [selectedRadioValue, onChangeSelectedRadioValue] = useInput(undefined);

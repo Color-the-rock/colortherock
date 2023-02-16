@@ -79,7 +79,7 @@ export const ArrowLeftBtnWrap = styled.div`
 
 export const BoardSettingBtn = styled(FiMoreVertical)`
   margin-top: 1rem;
-  font-size: 2rem;
+  font-size: 1.6rem;
   background-color: transparent;
   @media (max-width: 992px) {
     margin-right: 1rem;
@@ -170,7 +170,6 @@ export const SettingModal = styled.ul`
   z-index: 1000;
   padding: 0.25rem;
   width: 160px;
-  /* height: 140px; */
   border-radius: 20px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
 `;

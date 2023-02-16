@@ -1,5 +1,6 @@
 input[type="date"] {
   position: relative;
+  width: 100%;
   min-height: 30px;
   padding: 10px 12px;
   font-size: 14px;
@@ -41,15 +42,7 @@ input[type="date"]::-webkit-inner-spin-button {
 }
 
 .input_date_box input:after {
-  position: absolute;
-  color: var(--color-secondary);
-  top: 50%;
-  left: 80%;
-  content: "";
-  width: 20px;
-  height: 22px;
-  transform: translateY(-50%);
-  z-index: 0;
+  display: none;
 }
 
 /* 버튼 클릭시 input 나옴 */

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UserVideoComponent from "../../components/Live/UserVideo";
 import * as S from "./style";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,6 @@ import {
   FiEdit,
   FiFilm,
   FiDisc,
-  FiLink,
 } from "react-icons/fi";
 import { Desktop, Mobile } from "../../components/layout/Template";
 import streamingApi from "../../api/streaming";
@@ -33,7 +32,6 @@ const StreamingLive = () => {
   const nickName = useSelector((state) => state.users.nickName);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [sessionTitle, setSessionTitle] = useState("");
-  const [userNickName, setUserNickName] = useState("");
   const [connectionId, setConnectionId] = useState("");
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -66,9 +64,8 @@ const StreamingLive = () => {
   const [isFrontCamera, setFrontCamera] = useState(false);
 
   // 피드백 설정 관리
-  const [picture, setPicture] = useState();
+  const [picture, setPicture] = useState([]);
   const [feedbackModal, setFeedbackModal] = useState(false);
-  let testRecordId = "";
 
   const preventGoBack = () => {
     window.history.pushState(null, "", window.location.href);
@@ -78,9 +75,6 @@ const StreamingLive = () => {
   const preventClose = (e) => {
     e.preventDefault();
     e.returnValue = ""; // 크롬에서 필요함
-
-    // 새로고침 -> 강제 종료
-    // if (session) session.disconnect();
   };
 
   // 새로고침 및 뒤로가기시 처리
@@ -99,8 +93,6 @@ const StreamingLive = () => {
 
   useEffect(() => {
     if (ov !== null && ov !== undefined) {
-      console.log("ov 있음", ov, token);
-
       setSession(ov.initSession());
     } else {
       navigate("/streaming");
@@ -109,11 +101,9 @@ const StreamingLive = () => {
 
   useEffect(() => {
     if (session !== undefined) {
-      onSessionCreated();
-
-      // feedback signal...
-      onFeedbackSignal();
-
+      onSessionCreated(); // chatting signal
+      onFeedbackSignal(); // feedback signal
+      onFeedBackReset();
       session
         .connect(token, { clientData: nickName })
         .then(() => console.log("success Connect"))
@@ -142,7 +132,6 @@ const StreamingLive = () => {
       });
     }
   }, [session]);
-
   useEffect(() => {
     if (token !== "" && session !== undefined) {
       session.connect(token, { clientData: nickName }).then(async () => {
@@ -167,6 +156,7 @@ const StreamingLive = () => {
         let videoDevices = devices.filter(
           (device) => device.kind === "videoinput"
         );
+
         let currentVideoDeviceId = publisher.stream
           .getMediaStream()
           .getVideoTracks()[0]
@@ -179,8 +169,6 @@ const StreamingLive = () => {
         setCurrentVideoDevice(CurrentVideoDevice);
         setMainStreamManager(publisher);
         setPublisher(publisher);
-
-        console.log("hello?????");
       });
     }
   }, [token]);
@@ -233,44 +221,35 @@ const StreamingLive = () => {
   };
 
   const switchCamera = async () => {
-    try {
-      const devices = await ov.getDevices();
-      let videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
-      );
+    setShowSettingModal(false);
 
-      if (videoDevices && videoDevices.length > 1) {
-        let newVideoDevice = videoDevices.filter(
-          (device) => device.deviceId !== currentVideoDevice.deviceId
-        );
+    const devices = await ov.getDevices();
+    let videoDevices = devices.filter((device) => device.kind === "videoinput");
+    console.log("isFrontCamera ?? ", isFrontCamera);
+    var mediaStream = await ov.getUserMedia({
+      videoSource: isFrontCamera
+        ? videoDevices[0].deviceId
+        : videoDevices[videoDevices.length - 1].deviceId,
+      publishAudio: true,
+      publishVideo: true,
+      mirror: false,
+    });
 
-        if (newVideoDevice.length > 0) {
-          let newPublisher = ov.initPublisher(undefined, {
-            videoSource: isFrontCamera
-              ? videoDevices[1].deviceId
-              : videoDevices[0].deviceId,
-            publishAudio: true,
-            publishVideo: true,
-            mirror: isFrontCamera,
-          });
+    // Getting the video track from mediaStream
+    var myTrack = mediaStream.getVideoTracks()[0];
 
-          setFrontCamera((prev) => !prev);
+    // Replacing video track
+    publisher
+      .replaceTrack(myTrack)
+      .then(() => console.log("New track has been published"))
+      .catch((error) => console.error("Error replacing track", error));
 
-          await session.unpublish(mainStreamManager);
-          await session.publish(newPublisher);
-
-          setCurrentVideoDevice(newVideoDevice[0]);
-          setMainStreamManager(newPublisher);
-          setPublisher(newPublisher);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
+    setFrontCamera((prev) => !prev);
   };
 
   // video 설정
   const handleSetVideo = () => {
+    setShowSettingModal(false);
     if (isRecordStart) {
       alert("녹화를 중지해주세요!");
       return;
@@ -282,6 +261,7 @@ const StreamingLive = () => {
 
   // audio 설정
   const handleSetAudio = () => {
+    setShowSettingModal(false);
     publisher.publishAudio(!isOnMic);
     setOnMic((prev) => !prev);
   };
@@ -308,8 +288,13 @@ const StreamingLive = () => {
   const onFeedbackSignal = () => {
     session.on(`signal:drawingSignal`, (event) => {
       const data = JSON.parse(event.data);
-      console.log("onFeedbackSignal - data.image :", data.image);
-      setPicture(data.image);
+      setPicture((prev) => [...prev, data]);
+    });
+  };
+
+  const onFeedBackReset = () => {
+    session.on(`signal:reset`, (event) => {
+      setPicture([]);
     });
   };
 
@@ -336,17 +321,17 @@ const StreamingLive = () => {
     }
 
     if (sessionId === null || sessionId === undefined) return;
-
+    const toggleButton = document.getElementById("toggle-record-btn");
+    toggleButton.disabled = true;
     const requestBody = {
       connectionId: connectionId,
     };
+
     streamingApi
       .startRecordVideo(sessionId, requestBody)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("[녹화 시작] statusCode : 200 ", _result);
           setRecordId(_result);
-          testRecordId = _result;
         }
       })
       .catch((error) => console.log(error));
@@ -354,7 +339,11 @@ const StreamingLive = () => {
   };
 
   const handleQuitRecord = () => {
-    console.log("recordId : ", testRecordId);
+    if (recordId === "") {
+      alert("녹화 시작 3초후에 중지 가능합니다:)");
+      return;
+    }
+
     const requestBody = {
       token: token,
       recordingId: recordId,
@@ -364,7 +353,6 @@ const StreamingLive = () => {
       .quitRecordVideo(sessionId, requestBody)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("[quitRecordVideo] statusCode : 200 ", _result);
           setRecordModal(true);
         }
       })
@@ -423,20 +411,21 @@ const StreamingLive = () => {
         </S.DragModal>
       </Desktop>
       <S.OwnerVideoWrapper>
-        <S.StreamTitle>{roomInfo.title}</S.StreamTitle>
-        {mainStreamManager !== undefined ? (
+        {!feedbackModal && <S.StreamTitle>{roomInfo.title}</S.StreamTitle>}
+
+        {!feedbackModal && mainStreamManager !== undefined ? (
           <S.VideoSettingsIcon
             color="#ffffff"
             size="24px"
             onClick={() => setShowSettingModal((prev) => !prev)}
           />
-        ) : (
+        ) : !feedbackModal ? (
           <S.LeaveSessionButton
             color="#ffffff"
             size="24px"
             onClick={leaveSessionPart}
           />
-        )}
+        ) : null}
 
         {mainStreamManager !== undefined && isShowSettingModal && (
           <S.VideoSettingsMenu>
@@ -469,38 +458,46 @@ const StreamingLive = () => {
       </S.OwnerVideoWrapper>
       <Mobile>
         <S.SettingWrapper>
-          <S.CommentWrapper>
-            <CommentBtn
-              isReadOnly={true}
-              onClick={() => setShowChattingModal(true)}
-            />
-          </S.CommentWrapper>
+          {!isShowChattingModal && (
+            <S.CommentWrapper>
+              <CommentBtn
+                isLive={true}
+                isReadOnly={true}
+                onClick={() => setShowChattingModal(true)}
+              />
+            </S.CommentWrapper>
+          )}
         </S.SettingWrapper>
       </Mobile>
-      <S.VideoMenu position="bottom">
-        <S.VideoMenuItem onClick={openFeedback}>
-          <S.IconWrapper>
-            <FiEdit size="24px" />
-          </S.IconWrapper>
-          피드백
-        </S.VideoMenuItem>
-        <S.VideoMenuItem onClick={openRecordList}>
-          <S.IconWrapper>
-            <FiFilm size="24px" />
-          </S.IconWrapper>
-          이전 영상
-        </S.VideoMenuItem>
-        {mainStreamManager !== undefined && (
-          <S.VideoMenuItem
-            onClick={!isRecordStart ? handleStartVideoRecord : handleQuitRecord}
-          >
+      {!feedbackModal ? (
+        <S.VideoMenu position="bottom">
+          <S.VideoMenuItem onClick={openFeedback}>
             <S.IconWrapper>
-              <FiDisc size="24px" color={isRecordStart ? "red" : "#ffffff"} />
+              <FiEdit size="24px" />
             </S.IconWrapper>
-            녹화 시작
+            피드백
           </S.VideoMenuItem>
-        )}
-      </S.VideoMenu>
+          <S.VideoMenuItem onClick={openRecordList}>
+            <S.IconWrapper>
+              <FiFilm size="24px" />
+            </S.IconWrapper>
+            이전 영상
+          </S.VideoMenuItem>
+          {mainStreamManager !== undefined && (
+            <S.VideoMenuItem
+              id="toggle-record-btn"
+              onClick={
+                !isRecordStart ? handleStartVideoRecord : handleQuitRecord
+              }
+            >
+              <S.IconWrapper>
+                <FiDisc size="24px" color={isRecordStart ? "red" : "#ffffff"} />
+              </S.IconWrapper>
+              {isRecordStart ? "녹화 중지" : "녹화 시작"}
+            </S.VideoMenuItem>
+          )}
+        </S.VideoMenu>
+      ) : null}
     </S.Container>
   );
 };
