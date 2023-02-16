@@ -53,11 +53,7 @@ export const SelectOption = styled.ul`
   ::-webkit-scrollbar {
     display: none;
   }
-
-  /* 추가 */
   z-index: 1;
-  /* margin-top: 2px; */
-  /* border: 1px solid var(--color-border); */
 `;
 
 export const OptionItem = styled.li`

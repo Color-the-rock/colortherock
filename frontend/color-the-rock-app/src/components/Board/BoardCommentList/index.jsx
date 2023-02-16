@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import BoardComment from "../BoardComment";
 import PropTypes from "prop-types";
 import * as S from "./style";
 import boardApi from "../../../api/board";
-import useInfiniteScroll from "../../../hooks/useInfiniteScroll";
 
 const BoardCommentList = ({
   videoId,
@@ -13,8 +12,6 @@ const BoardCommentList = ({
   setStoreId,
 }) => {
   const [result, setResult] = useState([]);
-
-  //////////////////////////////////////////////////////////
 
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -26,14 +23,8 @@ const BoardCommentList = ({
     }
     if (loading) return;
     setLoading(true);
-    // Make a request to load more items
     getAllComments();
   }, [loading, page, reset]);
-
-  // useEffect(() => {
-  //   getAllComments();
-  // }, [reset]);
-  //////////////////////////////////////////////////////////
 
   const handleScroll = (e) => {
     const bottom =
@@ -74,15 +65,16 @@ const BoardCommentList = ({
         result.map((item) => (
           <BoardComment
             key={item.commentId}
+            commentId={item.commentId}
             nickname={item.nickname}
             content={item.content}
             createdDate={item.createdDate}
+            getAllComments={getAllComments}
           />
         ))
       ) : (
         <S.Message>아직 등록한 댓글이 없어요:!</S.Message>
       )}
-      {/* {loading && <div>Loading...</div>} */}
     </S.Container>
   );
 };
@@ -91,4 +83,9 @@ export default BoardCommentList;
 BoardCommentList.propTypes = {
   result: PropTypes.array,
   getAllComments: PropTypes.func,
+  videoId: PropTypes.number,
+  reset: PropTypes.bool,
+  setReset: PropTypes.func,
+  storeId: PropTypes.number,
+  setStoreId: PropTypes.func,
 };

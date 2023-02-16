@@ -42,17 +42,7 @@ const options = {
   },
 };
 
-const labels = [
-  "white",
-  "red",
-  "orange",
-  "yellow",
-  "green",
-  "skyblue",
-  "indigo",
-  "purple",
-  "brown",
-];
+const labels = ["LV1", "LV2", "LV3", "LV4", "LV5", "LV6", "LV7", "LV8", "LV9"];
 
 const StackedGraph = () => {
   const [result, setResult] = useState([]);
@@ -103,7 +93,6 @@ const StackedGraph = () => {
       .getColorStatistics()
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("statusCode : 200 ", _result);
           setResult(_result);
         }
       });

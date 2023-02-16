@@ -53,6 +53,11 @@ export const CommentListWrap = styled.div`
   padding: 0 1rem;
   background: var(--color-background);
   overflow-y: scroll;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const CloseButton = styled.div`

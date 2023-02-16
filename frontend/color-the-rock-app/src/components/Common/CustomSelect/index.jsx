@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import * as S from "./style";
+import PropTypes from "prop-types";
 
 const CustomSelect = ({ setter, optionValues, defaultValue = 0 }) => {
   const [showOption, setShowOption] = useState(false);
@@ -45,3 +46,9 @@ const CustomSelect = ({ setter, optionValues, defaultValue = 0 }) => {
 };
 
 export default CustomSelect;
+
+CustomSelect.propTypes = {
+  setter: PropTypes.func,
+  optionValues: PropTypes.array,
+  defaultValue: PropTypes.number,
+};

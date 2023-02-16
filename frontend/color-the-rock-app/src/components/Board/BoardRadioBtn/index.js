@@ -1,5 +1,4 @@
 import React from "react";
-// import { useInput } from "../../../hooks/useInput"
 import * as S from "./style";
 import PropTypes from "prop-types";
 
@@ -12,11 +11,7 @@ const BoardRadioBtn = ({
 }) => {
   const onChangeRadioButton = (e) => {
     const { value } = e.target;
-    if (value === "false") {
-      alert("비공개 설정은 업데이트 예정입니다:)");
-      return;
-    }
-    setIsPublic(true);
+    setIsPublic(value === "true");
   };
 
   return (

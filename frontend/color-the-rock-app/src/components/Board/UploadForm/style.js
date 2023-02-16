@@ -31,11 +31,11 @@ export const VideoWrap = styled.div`
   flex-direction: row-reverse;
 
   .cancelVideo {
-    z-index: 1200;
     position: absolute;
     right: 16px;
     top: 16px;
     font-size: 1.5rem;
+    z-index: 1;
   }
 
   video {

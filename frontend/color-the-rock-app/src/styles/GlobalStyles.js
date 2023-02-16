@@ -37,7 +37,6 @@ html {
   --color-level-v8-start: #695F54;
   --color-level-v8-end: #403121;
   --color-badge-live:#FF4E36
-  /* font-size: 62.5%;  */
 }
 
 body {
