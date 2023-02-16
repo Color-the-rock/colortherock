@@ -155,7 +155,7 @@ const StreamingForm = () => {
                   <InputComp
                     title={title}
                     handleChange={setTitle}
-                    placeholder="제목을 입력해주세요."
+                    placeholder="방송 제목을 입력해주세요."
                     opacity="70"
                   />
                 </S.ComponenentWrap>

@@ -92,6 +92,7 @@ export const RadioLabel = styled.label`
   font-size: 1.125rem;
   line-height: 1.625rem;
   margin-bottom: 1rem;
+  cursor: pointer;
   color: ${(props) =>
     props.checked ? "var(--color-white)" : "var(--color-tertiary)"};
 

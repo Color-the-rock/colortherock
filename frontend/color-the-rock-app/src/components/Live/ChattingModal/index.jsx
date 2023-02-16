@@ -73,7 +73,7 @@ const ChattingModal = ({
           >
             <S.CommentInput
               type="text"
-              placeholder="댓글을 입력하세요."
+              placeholder="내용을 입력하세요."
               onChange={(e) => setMessage(e.target.value)}
               value={message}
               onKeyUp={handlePressEnter}
@@ -109,7 +109,7 @@ const ChattingModal = ({
           >
             <S.CommentInput
               type="text"
-              placeholder="댓글을 입력하세요."
+              placeholder="내용을 입력하세요."
               onChange={(e) => setMessage(e.target.value)}
               value={message}
               onKeyUp={handlePressEnter}

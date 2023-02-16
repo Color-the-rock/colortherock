@@ -10,6 +10,7 @@ export const Container = styled.div`
   flex-direction: column;
   position: relative;
   margin-top: 5rem;
+  overflow-anchor: none;
 `;
 
 export const Title = styled.h1`
