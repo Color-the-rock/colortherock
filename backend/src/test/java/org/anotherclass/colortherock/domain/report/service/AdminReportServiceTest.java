@@ -24,7 +24,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
@@ -50,7 +51,7 @@ class AdminReportServiceTest {
         videoBoardIds = new ArrayList<>();
         // Member, Video, VideoBoard 생성
         for (int i = 0; i < 10; i++) {
-            Member member = new Member(i + "@rock.com", i + "user", Member.RegistrationId.kakao);
+            Member member = new Member(i + "@rock.com", i + "user", Member.RegistrationId.KAKAO);
             memberRepository.save(member);
             memberIds.add(member.getId());
             Video video = Video.builder()

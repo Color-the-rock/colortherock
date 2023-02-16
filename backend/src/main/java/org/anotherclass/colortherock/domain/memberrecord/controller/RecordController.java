@@ -19,7 +19,6 @@ import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.anotherclass.colortherock.global.security.annotation.PreAuthorizeMember;
-import org.jcodec.api.JCodecException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +28,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -124,7 +122,7 @@ public class RecordController {
     @ApiResponse(responseCode = "200", description = "영상 업로드 성공")
     @PreAuthorizeMember
     public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails
-            , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
+            , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) {
         videoService.uploadMyVideo(memberDetails, newVideo, uploadVideoRequest);
         // 영상 누적 통계에서 영상 갯수 올리기
         Member member = memberDetails.getMember();

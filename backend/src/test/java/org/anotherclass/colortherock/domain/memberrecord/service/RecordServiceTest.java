@@ -10,7 +10,10 @@ import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundExcepti
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +40,7 @@ class RecordServiceTest {
 
     @BeforeEach
     public void setMember() {
-        member = new Member("johan@rock.com", "조한", Member.RegistrationId.kakao);
+        member = new Member("johan@rock.com", "조한", Member.RegistrationId.KAKAO);
         em.persist(member);
         for (int i = 1; i <= 9; i++) {
             UploadVideoRequest saveDto = UploadVideoRequest.builder()

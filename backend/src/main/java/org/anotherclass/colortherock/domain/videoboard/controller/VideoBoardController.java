@@ -11,7 +11,6 @@ import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.memberrecord.response.VideoListResponse;
 import org.anotherclass.colortherock.domain.memberrecord.service.RecordService;
 import org.anotherclass.colortherock.domain.video.request.MySuccessVideoRequest;
-import org.anotherclass.colortherock.domain.video.service.S3Service;
 import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.domain.videoboard.request.LocalSuccessVideoUploadRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessPostUpdateRequest;
@@ -23,7 +22,6 @@ import org.anotherclass.colortherock.domain.videoboard.service.VideoBoardService
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.anotherclass.colortherock.global.security.annotation.PreAuthorizeMember;
-import org.jcodec.api.JCodecException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -42,7 +39,6 @@ public class VideoBoardController {
     private final VideoBoardService videoBoardService;
     private final VideoService videoService;
     private final RecordService recordService;
-    private final S3Service s3Service;
 
     @Operation(description = "완등 영상 전체 리스트 조회 API", summary = "완등 영상 전체 리스트 조회 API")
     @ApiResponse(responseCode = "200", description = "완등 영상 목록 조회 성공", content = @Content(schema = @Schema(implementation = VideoBoardSummaryResponse.class)))
@@ -57,7 +53,7 @@ public class VideoBoardController {
     @ApiResponse(responseCode = "200", description = "운동 영상 올리기 성공", content = @Content(schema = @Schema(implementation = Long.class)))
     @PreAuthorizeMember
     @PostMapping(value = "/board/local", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public BaseResponse<Long> uploadSuccessPostFromLocalVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestPart LocalSuccessVideoUploadRequest localSuccessVideoUploadRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
+    public BaseResponse<Long> uploadSuccessPostFromLocalVideo(@AuthenticationPrincipal MemberDetails memberDetails, @Valid @RequestPart LocalSuccessVideoUploadRequest localSuccessVideoUploadRequest, @RequestPart MultipartFile newVideo) {
         Long videoId = videoService.uploadSuccessVideo(memberDetails, newVideo, localSuccessVideoUploadRequest);
         // 운동 게시글 업로드
         SuccessVideoUploadRequest request = SuccessVideoUploadRequest.builder()

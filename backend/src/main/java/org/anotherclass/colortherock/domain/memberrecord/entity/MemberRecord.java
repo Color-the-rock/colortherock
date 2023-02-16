@@ -1,9 +1,9 @@
 package org.anotherclass.colortherock.domain.memberrecord.entity;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member;
-import lombok.Getter;
 
 import javax.persistence.*;
 

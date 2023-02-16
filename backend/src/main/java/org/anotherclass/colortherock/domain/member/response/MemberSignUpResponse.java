@@ -3,11 +3,9 @@ package org.anotherclass.colortherock.domain.member.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.anotherclass.colortherock.domain.member.entity.Member.RegistrationId;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "가입 요청 응답")
 public class MemberSignUpResponse {
