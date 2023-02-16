@@ -91,7 +91,9 @@ const Board = () => {
   return (
     <S.Container id="board-container">
       <Title>완등 영상 보기</Title>
-      <S.Description>완등 영상을 게시하고 피드백을 받아보세요!</S.Description>
+      <S.Description>
+        원하는 색상과 암장의 완등 영상을 검색해보세요!
+      </S.Description>
       <BoardSearchBar getBoardList={getBoardList} setStoreId={setStoreId} />
       {isLoading && <Loading />}
       {result && result.length > 0 ? (
@@ -122,7 +124,7 @@ const Board = () => {
         <S.RegisterModal onClick={handleProcessRegister}>
           <S.ModalButtonWrapper>
             <S.ModalButton value="local" to="/board/form">
-              <S.GradientText>로컬에서 가져오기</S.GradientText>
+              <S.GradientText>내 기기에서 가져오기</S.GradientText>
             </S.ModalButton>
             <S.ModalButton value="cloud" to="/board/s3form">
               <S.GradientText>내 운동기록에서 가져오기</S.GradientText>

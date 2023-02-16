@@ -11,6 +11,7 @@ export const Sticker = ({ x, y, imoji }) => {
         width: 50,
         height: 50,
         fontSize: "2.5rem",
+        color: "",
       }}
     >
       {imoji}

@@ -20,6 +20,7 @@ const ChattingModal = ({
 
   // 채팅 전송
   const sendMessage = () => {
+    if (message === "") return;
     if (session !== undefined && message !== undefined) {
       const signalOptions = {
         data: JSON.stringify({ message: message }),
@@ -32,9 +33,8 @@ const ChattingModal = ({
   };
 
   const handlePressEnter = () => {
-    if (message === "") return;
-
     if (window.event.keyCode === 13) {
+      if (message === "") return;
       sendMessage();
     }
   };
@@ -73,7 +73,7 @@ const ChattingModal = ({
           >
             <S.CommentInput
               type="text"
-              placeholder="댓글을 입력하세요."
+              placeholder="내용을 입력하세요."
               onChange={(e) => setMessage(e.target.value)}
               value={message}
               onKeyUp={handlePressEnter}
@@ -109,7 +109,7 @@ const ChattingModal = ({
           >
             <S.CommentInput
               type="text"
-              placeholder="댓글을 입력하세요."
+              placeholder="내용을 입력하세요."
               onChange={(e) => setMessage(e.target.value)}
               value={message}
               onKeyUp={handlePressEnter}

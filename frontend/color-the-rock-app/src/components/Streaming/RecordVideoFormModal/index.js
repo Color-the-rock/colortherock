@@ -90,6 +90,7 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
           console.log("실패");
           console.log("err: ", err);
         });
+    api();
   };
 
   return (

@@ -5,6 +5,7 @@ export const Container = styled.div`
   height: calc(var(--vh, 1vh) * 100);
   background-color: transparent;
   padding-bottom: 1rem;
+  overflow-x: hidden;
   overflow-y: scroll;
   -ms-overflow-style: none;
   ::-webkit-scrollbar {
@@ -24,8 +25,9 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-
   padding: 0 1rem;
+  background-color: transparent;
+
   @media (min-width: 992px) {
     width: 600px;
   }
@@ -42,14 +44,27 @@ export const Content = styled.div`
 
   .camera {
     position: absolute;
-    right: 1rem;
-    bottom: 6rem;
+    right: 1.4rem;
+    bottom: 9.5rem;
     z-index: 1;
     width: 2.5rem;
     height: 2.5rem;
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     padding: 0.4rem;
+    text-align: center;
+  }
+
+  .switching-camera {
+    position: absolute;
+    right: 1.4rem;
+    bottom: 6rem;
+    z-index: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    padding: 0.5rem;
     text-align: center;
   }
 `;
@@ -73,7 +88,7 @@ export const OverlapContent = styled.div`
   left: 0;
   right: 0;
   top: 0;
-  padding: 1rem;
+  padding: 2rem;
 `;
 
 export const ArrowLeftBtnWrap = styled.span`
@@ -93,8 +108,8 @@ export const ComponenentWrap = styled.div`
 `;
 
 export const AddPadding = styled.div`
-  padding-left: 1rem;
-  padding-right: 1rem;
+  /* padding-left: 1rem;
+  padding-right: 1rem; */
 `;
 
 export const IconWrap = styled.span`

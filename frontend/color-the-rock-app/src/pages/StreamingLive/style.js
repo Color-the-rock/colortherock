@@ -8,7 +8,7 @@ export const Container = styled.div`
   display: flex;
   width: 100%;
   height: calc(var(--vh, 1vh) * 100);
-  background-color: transparent;
+  background-color: var(--color-background);
   overflow: hidden;
 
   // web

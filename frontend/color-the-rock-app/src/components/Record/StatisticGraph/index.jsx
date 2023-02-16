@@ -16,7 +16,6 @@ const StatisticGraph = () => {
       .getVisitedGymData()
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("[getVisitedGymData] statusCode : 200 ", _result);
           setGymData(_result.data);
           setGymTotal(_result.totalCount);
         }
@@ -29,7 +28,6 @@ const StatisticGraph = () => {
       .getTotalStatistics()
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("[getTotalStatistics] statusCode : 200 ", _result);
           setTotalRecords(_result);
         }
       })
@@ -58,7 +56,7 @@ const StatisticGraph = () => {
         </S.BarLabel>
       </S.ChallengeBar>
 
-      <S.GraphTitle>방문한 홈짐</S.GraphTitle>
+      <S.GraphTitle>방문한 암장</S.GraphTitle>
 
       <S.HomeGymGraph length={gymTotal}>
         {gymData && gymData.length > 0

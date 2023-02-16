@@ -25,6 +25,13 @@ const BoardDetail = () => {
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
           console.log("statusCode : 200", _result);
+
+          if (_result.length === 0) {
+            alert("해당 게시물은 신고로 인해 더 이상 접근할 수 없습니다:)");
+            navigate("/board");
+            return;
+          }
+
           setResult(_result);
         }
       })

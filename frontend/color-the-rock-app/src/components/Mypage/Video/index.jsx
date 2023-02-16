@@ -28,7 +28,7 @@ const Video = ({
         <>
           <S.Text>{gymName}</S.Text>
           <S.Tag>{color}</S.Tag>
-          <S.Tag>{level}</S.Tag>
+          <S.Tag>Lv.{level}</S.Tag>
         </>
       )}
     </S.Container>

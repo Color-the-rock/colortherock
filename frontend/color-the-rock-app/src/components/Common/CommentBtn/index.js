@@ -5,7 +5,13 @@ import boardApi from "../../../api/board";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const CommentBtn = ({ setReset, setStoreId, onClick, isReadOnly }) => {
+const CommentBtn = ({
+  setReset,
+  setStoreId,
+  onClick,
+  isReadOnly,
+  isLive = false,
+}) => {
   const { id } = useParams();
   const [value, setValue] = useState("");
 
@@ -50,7 +56,7 @@ const CommentBtn = ({ setReset, setStoreId, onClick, isReadOnly }) => {
   return (
     <S.Container onClick={onClick}>
       <S.InputBtn
-        placeholder="댓글 달기"
+        placeholder={isLive ? "채팅하기" : "댓글달기"}
         onChange={(e) => setValue(e.target.value)}
         value={value}
         readOnly={isReadOnly}
@@ -75,4 +81,5 @@ CommentBtn.propTypes = {
   onClick: PropTypes.func,
   setStoreId: PropTypes.func,
   setReset: PropTypes.func,
+  isLive: PropTypes.bool,
 };

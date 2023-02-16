@@ -58,7 +58,6 @@ const CustomCalendar = () => {
       .getAllRecordVideo(data)
       .then(({ data: { status, result } }) => {
         if (status === 200) {
-          console.log("[getAllRecordVideo()] statusCode : 200 ", result);
           dispatch(setVideos(result));
         }
       })

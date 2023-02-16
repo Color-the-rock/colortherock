@@ -7,7 +7,7 @@ export const ContainerWrap = styled.div`
   left: 0px;
   right: 0px;
   bottom: 0px;
-  z-index: 1000;
+  z-index: 2000;
 `;
 
 export const Container = styled.div`
@@ -55,7 +55,7 @@ export const ChromeClose = styled(VscChromeClose)`
   position: absolute;
   right: 1.5rem;
   top: 1.5rem;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   z-index: 5000;
 `;
 
@@ -63,7 +63,7 @@ export const Title = styled.div`
   position: absolute;
   left: 1.5rem;
   top: 1.5rem;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   z-index: 5000;
   text-decoration: underline;
 `;
@@ -74,4 +74,9 @@ export const Video = styled.video`
   height: 90%;
   object-fit: cover;
   border-radius: 10px;
+`;
+
+export const Message = styled.label`
+  font-size: 1rem;
+  color: var(--color-tertiary);
 `;

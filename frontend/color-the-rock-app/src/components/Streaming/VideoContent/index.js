@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import * as S from "./style";
-import PropTypes, { func } from "prop-types";
+import PropTypes from "prop-types";
 
 const VideoContent = ({
   recordingId,
@@ -35,11 +35,11 @@ const VideoContent = ({
           </S.RowContent>
           <S.RowContent>
             <S.DurationWrap>
-              <span>{duration + "s"}</span>
+              <span>{duration + "초"}</span>
             </S.DurationWrap>
           </S.RowContent>
 
-          <S.RowContent>
+          <S.RowContent color="var(--color-tertiary)">
             {parseInt((now - createdAt) / 60000)}분 전
           </S.RowContent>
         </S.Content>

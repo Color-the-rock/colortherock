@@ -37,13 +37,12 @@ const VideoClip = ({ sessionId, setModalOpen }) => {
           {!playVideo ? (
             <S.ContentBox>
               <S.ChromeClose onClick={onClickHandler} />
-              <S.Title>Recodings</S.Title>
+              <S.Title>녹화영상목록</S.Title>
               {result && result.length > 0 ? (
                 <S.VideoList>
                   {result.map((item, idx) => (
-                    <S.VideoWrap>
+                    <S.VideoWrap key={idx}>
                       <VideoContent
-                        key={idx}
                         createdAt={item.createdAt}
                         recordingId={item.recordingId}
                         duration={item.duration}
@@ -55,7 +54,7 @@ const VideoClip = ({ sessionId, setModalOpen }) => {
                 </S.VideoList>
               ) : (
                 <S.VideoList>
-                  <div>영상 정보가 없습니다.</div>
+                  <S.Message>영상 정보가 없습니다.</S.Message>
                 </S.VideoList>
               )}
             </S.ContentBox>

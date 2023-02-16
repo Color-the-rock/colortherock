@@ -18,8 +18,6 @@ const CustomCalendar = ({
     setMaxDate(year + "-" + month + "-" + day);
   }, []);
 
-  console.log("selectDate", selectDate);
-
   return (
     <div className="input_date_box">
       <input
@@ -31,8 +29,9 @@ const CustomCalendar = ({
           fontFamily: "Noto Sans KR",
         }}
         defaultValue={selectDate}
+        max={maxDate}
         onChange={(e) => setSelectDate(e.target.value)}
-      ></input>
+      />
     </div>
   );
 };

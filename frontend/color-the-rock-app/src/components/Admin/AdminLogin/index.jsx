@@ -25,7 +25,7 @@ const AdminLogin = ({ setAdmin }) => {
         sessionStorage.setItem("adminToken", data.result);
         setAdmin(true);
       })
-      .catch((error) => console.log("관리자 로그인 실패"));
+      .catch(() => console.log("관리자 로그인 실패"));
   };
   return (
     <>

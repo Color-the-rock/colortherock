@@ -27,7 +27,6 @@ const Record = () => {
       .getTotalStatistics()
       .then(({ data: { status, result } }) => {
         if (status === 200) {
-          console.log("success : 200", result);
           setUserRecordInfo(result);
         }
       })
@@ -58,7 +57,7 @@ const Record = () => {
       <S.TextWrapper>
         <S.Text>
           {userNickName === "" ? "사용자" : userNickName}님은
-          <S.GradientText> {userRecordInfo.videoCount}일</S.GradientText>동안
+          <S.GradientText> {userRecordInfo.visitCount}일</S.GradientText>동안
         </S.Text>
         <S.Text>
           <S.GradientText>
@@ -112,10 +111,13 @@ const Record = () => {
       <Desktop>
         <S.ContentWrapper>
           <S.RecordWrapper>
-            <div>
-              <SubTitle text="레벨별 도전 현황" />
+            <S.InfoWrapper>
+              <SubTitle text="레벨별 도전 현황">
+                <S.InfoButton id="record-info-guide" />
+              </SubTitle>
               <StackedGraph />
-            </div>
+              {isShowGuide && <S.InfoGuideImg src={GuideImg} alt="guide" />}
+            </S.InfoWrapper>
             <div>
               <SubTitle text="활동 통계" />
               <StatisticGraph />

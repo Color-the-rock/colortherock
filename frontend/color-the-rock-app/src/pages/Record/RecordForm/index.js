@@ -10,6 +10,7 @@ import CustomSelect from "../../../components/Common/CustomSelect";
 import CustomCalendar from "../../../components/Board/CustomCalendar";
 import BoardRadioBtn from "../../../components/Board/BoardRadioBtn/index";
 import { recordApi } from "../../../api/record";
+import Loading from "../../../components/Common/Loading";
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
@@ -50,16 +51,19 @@ const RecordForm = () => {
   const [location, setLocation] = useState("");
   const [selectDate, setSelectDate] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
+  const [isLoading, setLoading] = useState(false);
 
   const clickHandler = () => {
     navigate("/record");
   };
 
   const submitHandler = () => {
-    if (!video || !level || !color || !location || !selectDate || !isSuccess) {
+    if (!video || !level || !color || !location || !selectDate) {
       alert("모든 항목을 채워주세요.");
       return;
     }
+
+    setLoading(true);
 
     const data = {
       shootingDate: selectDate,
@@ -78,14 +82,12 @@ const RecordForm = () => {
     recordApi
       .uploadLocalVideo(formData)
       .then((res) => {
-        console.log("res", res);
-        console.log("성공");
         navigate("/record");
       })
       .catch((err) => {
         console.log("err: ", err);
-        console.log("실패");
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -140,6 +142,7 @@ const RecordForm = () => {
               <RegistBtn btnName="등록하기" clickHandler={submitHandler} />
             </S.ComponenentWrap>
           </S.Content>
+          {isLoading && <Loading />}
         </S.ContentWrap>
       </S.Container>
     </S.ContainerWrap>
