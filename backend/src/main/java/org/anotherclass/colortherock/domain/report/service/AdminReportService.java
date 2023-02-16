@@ -67,12 +67,11 @@ public class AdminReportService {
     /**
      * 숨김처리 취소
      *
-     * @param videoBoardId 영상 id
+     * @param request 영상 숨김처리 요청 {@link PostUnhiddenRequest}
      */
-    public void cancelHiddenStatus(Long videoBoardId) {
-        VideoBoard videoBoard = videoBoardRepository.findById(videoBoardId)
     // 영상게시글 숨김 처리 해제 및 신고 내용 삭제
     @Transactional
+
     public void cancelHiddenStatus(PostUnhiddenRequest request) {
         VideoBoard videoBoard = videoBoardRepository.findById(request.getVideoBoardId())
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
