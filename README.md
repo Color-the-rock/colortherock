@@ -111,7 +111,7 @@ SSAFY 8기 2학기 공통 프로젝트
 
 ## Design
 
-![Untitled (1)](./assets/Untitled (1).png)
+![Untitled (1)](./assets/design.png)
 
 
 
