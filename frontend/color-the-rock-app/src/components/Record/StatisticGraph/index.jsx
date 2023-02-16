@@ -16,7 +16,15 @@ const StatisticGraph = () => {
       .getVisitedGymData()
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          const top3Data = [_result.data[0], _result.data[1], _result.data[2]];
+          let top3Data = [];
+          if (_result.length > 3) {
+            top3Data = [_result.data[0], _result.data[1], _result.data[2]];
+          } else {
+            for (let i = 0; i < _result.length; i++) {
+              top3Data[i] = _result.data[i];
+            }
+          }
+          console.log("top3Data", top3Data);
           setGymData(top3Data);
           setGymTotal(_result.totalCount);
         }
