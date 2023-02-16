@@ -55,7 +55,7 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
   const [isSuccess, setIsSuccess] = useState(true);
   const [level, setLevel] = useState("");
   const [color, setColor] = useState("");
-
+  const [isDisabled, setIsDisabled] = useState(false);
   // test 용 : video는 props로 받아와야함.
 
   const handleModalStateChange = () => {
@@ -78,16 +78,18 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
       isSuccess,
       color,
     };
-
-    streamingApi
-      .saveRecordVideo(sessionId, data)
-      .then(({ data }) => {
-        setModalOpen();
-      })
-      .catch((err) => {
-        console.log("실패");
-        console.log("err: ", err);
-      });
+    setIsDisabled(true);
+    const api = async () =>
+      streamingApi
+        .saveRecordVideo(sessionId, data)
+        .then(({ data }) => {
+          setModalOpen();
+          setIsDisabled(false);
+        })
+        .catch((err) => {
+          console.log("실패");
+          console.log("err: ", err);
+        });
   };
 
   return (
@@ -121,6 +123,7 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
               btnName="등록"
               size="40px"
               clickHandler={registVideoToS3}
+              disabled={isDisabled}
             />
           </S.ComponentWrap>
           <S.ComponentWrap>
