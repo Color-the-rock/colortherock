@@ -86,7 +86,6 @@ const BoardForm = () => {
     }
 
     setLoading(true);
-
     if (propData) {
       boardApi
         .postRegisterRecordVideo({ videoId: propData.id, title })

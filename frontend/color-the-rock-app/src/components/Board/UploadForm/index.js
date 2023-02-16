@@ -9,8 +9,9 @@ const UploadForm = ({ video, setVideo, isLoading }) => {
   const [isSelected, setIsSelected] = useState(false);
 
   const handleFileChange = (e) => {
+    let files;
     if (e.target.files) {
-      const files = e.target.files[0];
+      files = e.target.files[0];
       // 파일 확장자 체크
       if (!fileExtensionValid(files.name)) {
         alert(
@@ -24,8 +25,8 @@ const UploadForm = ({ video, setVideo, isLoading }) => {
         alert("업로드 가능한 최대 용량은 10MB입니다.");
         return;
       }
-      console.log("video: ", e.target.files[0]);
-      setVideo(e.target.files[0]);
+
+      setVideo(files);
       setIsSelected(true);
     }
   };
@@ -41,11 +42,7 @@ const UploadForm = ({ video, setVideo, isLoading }) => {
         {isSelected ? (
           <S.VideoWrap>
             {isLoading ? null : (
-              <FiX
-                isLoading={isLoading}
-                className="cancelVideo"
-                onClick={handleDeleteFile}
-              />
+              <FiX className="cancelVideo" onClick={handleDeleteFile} />
             )}
             <video
               src={window.URL.createObjectURL(video)}
