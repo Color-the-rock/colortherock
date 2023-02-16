@@ -150,6 +150,11 @@ public class S3Service {
      * @return 썸네일이 저장된 cloudfront url
      */
     private String getThumbnailURL(String thumbnailName, File file) {
+        String name = file.getAbsolutePath();
+        int index = name.lastIndexOf(".");
+        String extension = name.substring(index + 1).toLowerCase();
+        String newName = name.substring(0, index + 1) + extension;
+        boolean b = file.renameTo(new File(newName));
         // Get image from video
         try (FileChannelWrapper fileChannelWrapper = NIOUtils.readableChannel(file);
              ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
