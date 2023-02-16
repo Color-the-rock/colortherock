@@ -37,10 +37,10 @@ public class LogAspect {
         stopWatch.stop();
 
         //Log method execution time
-        log.info("Execution time of "
-                + methodSignature.getDeclaringType().getSimpleName() // Class Name
-                + "." + methodSignature.getName() + " " // Method Name
-                + ":: " + stopWatch.getTotalTimeMillis() + " ms");
+//        log.info("Execution time of "
+//                + methodSignature.getDeclaringType().getSimpleName() // Class Name
+//                + "." + methodSignature.getName() + " " // Method Name
+//                + ":: " + stopWatch.getTotalTimeMillis() + " ms");
 
         return result;
     }
