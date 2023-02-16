@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,20 +84,20 @@ public class MemberService {
         return !memberRepository.existsByNickname(nickname);
     }
 
-    @PostConstruct
-    public void initTestUser() {
-        Member member = Member.builder()
-                .registrationId(Member.RegistrationId.kakao)
-                .email("suker80@naver.com")
-                .nickname("닉네임")
-                .build();
-
-        Member save = memberRepository.save(member);
-        memberId = save.getId();
-    }
-
-    public String testToken() {
-        Member member = memberRepository.findById(memberId).orElseThrow();
-        return jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
-    }
+//    @PostConstruct
+//    public void initTestUser() {
+//        Member member = Member.builder()
+//                .registrationId(Member.RegistrationId.kakao)
+//                .email("suker80@naver.com")
+//                .nickname("닉네임")
+//                .build();
+//
+//        Member save = memberRepository.save(member);
+//        memberId = save.getId();
+//    }
+//
+//    public String testToken() {
+//        Member member = memberRepository.findById(memberId).orElseThrow();
+//        return jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
+//    }
 }
