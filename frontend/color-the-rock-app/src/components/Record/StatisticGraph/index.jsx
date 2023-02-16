@@ -20,6 +20,7 @@ const StatisticGraph = () => {
           let top3Data = [];
 
           for (let i = 0; i < _result.length; i++) {
+            console.log("data?>>> ", i, " ", _result.data[i]);
             if (i > 2) return;
             top3Data.push(_result.data[i]);
           }
