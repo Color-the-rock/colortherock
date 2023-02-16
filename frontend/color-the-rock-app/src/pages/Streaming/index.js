@@ -10,15 +10,16 @@ import { setOpenViduToken, setOV } from "../../stores/streaming/streamingSlice";
 import { useNavigate } from "react-router";
 import { OpenVidu } from "openvidu-browser";
 import Loading from "../../components/Common/Loading";
+import useInfiniteScroll from "../../hooks/useInfiniteScroll";
 
 const Streaming = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = useSelector((state) => state.streaming.userOpenViduToken);
   const isLogin = useSelector((state) => state.users.isLogin);
   const [result, setResult] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [storeId, setStoreId] = useState(-1);
+  const [searchValue, setSearchValue] = useState("");
 
   // openVidu 설정
   const joinSession = () => {
@@ -52,24 +53,33 @@ const Streaming = () => {
       });
   };
 
-  const getAllLiveList = (searchValue = "") => {
+  const getAllLiveList = async () => {
     setLoading(true);
-    streamingApi
+    await streamingApi
       .getAllLiveList(storeId, searchValue)
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
-          console.log("statusCode : 200 ", _result);
-          setResult(_result);
-          let lastId =
-            _result[_result.length - 1].videoBoardId === undefined
-              ? -1
-              : _result[_result.length - 1].videoBoardId;
-          setStoreId(lastId);
+          if (storeId === -1) {
+            setResult([..._result]);
+          } else {
+            if (_result.length === 0) {
+            } else {
+              setResult((prev) => [...prev, ..._result]);
+            }
+          }
+          if (_result.length !== 0) {
+            let lastId =
+              _result[_result.length - 1].id === undefined
+                ? -1
+                : _result[_result.length - 1].id;
+            setStoreId(lastId);
+          }
         }
       })
       .catch((error) => console.log(error))
       .finally(() => {
         setTimeout(() => setLoading(false), 200);
+        setIsFetching(false);
       });
   };
 
@@ -82,12 +92,11 @@ const Streaming = () => {
   };
 
   useEffect(() => {
+    setStoreId(-1);
     getAllLiveList();
-  }, []);
+  }, [searchValue]);
 
-  useEffect(() => {
-    console.log("참여자 토큰: ", token);
-  }, [token]);
+  const [isFetching, setIsFetching] = useInfiniteScroll(getAllLiveList);
 
   return (
     <S.Container>
@@ -97,7 +106,10 @@ const Streaming = () => {
       <S.Description>
         도전 중인 등반을 보고 실시간으로 피드백해줘요!
       </S.Description>
-      <SearchBar getAllLiveList={getAllLiveList} />
+      <SearchBar
+        setSearchValue={setSearchValue}
+        getAllLiveList={getAllLiveList}
+      />
       {isLoading && <Loading />}
       {result && result.length > 0 ? (
         <S.ThumbnailList>

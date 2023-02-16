@@ -13,7 +13,6 @@ const SearchBar = ({ location, setLocation, opacity = "100" }) => {
   };
 
   const handleOnKeyPress = (e) => {
-    // Enter event 발생시
     if (e.key === "Enter") {
       setLocation(location);
       setOpenList(true);

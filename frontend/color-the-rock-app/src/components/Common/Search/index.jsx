@@ -1,16 +1,17 @@
 import React from "react";
 import { useInput } from "../../../hooks/useInput";
 import * as S from "./style";
-const SearchBar = ({ getAllLiveList }) => {
+import PropTypes from "prop-types";
+const SearchBar = ({ setSearchValue }) => {
   const [searchValue, onChangeSearchValue] = useInput("");
 
   const handleOnClickSearch = () => {
-    getAllLiveList();
+    setSearchValue(searchValue);
   };
 
   const handleKeyPressEnter = (e) => {
     if (e.keyCode === 13) {
-      getAllLiveList(searchValue);
+      setSearchValue(searchValue);
     }
   };
   return (
@@ -28,3 +29,6 @@ const SearchBar = ({ getAllLiveList }) => {
 };
 
 export default SearchBar;
+SearchBar.propTypes = {
+  setSearchValue: PropTypes.func,
+};

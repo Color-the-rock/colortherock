@@ -1,12 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// info 객체 내용
-// info: {
-//   title: "",
-//   gymName: "",
-//   drawingBackground: null,
-// },
-
 export const streamingSlice = createSlice({
   name: "streaming",
   initialState: {

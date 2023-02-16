@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import * as S from "./style";
-import { VscChromeClose } from "react-icons/vsc";
+import { FiX } from "react-icons/fi";
 
-const ALLOW_FILE_EXTENSION = "mp4,avi,wmv,webm";
+const ALLOW_FILE_EXTENSION = "mp4,avi,wmv,webm,mov,flv,mkv";
 const FILE_SIZE_MAX_LIMIT = 100 * 1024 * 1024; // 100MB
 
-const UploadForm = ({ video, setVideo }) => {
+const UploadForm = ({ video, setVideo, isLoading }) => {
   const [isSelected, setIsSelected] = useState(false);
 
   const handleFileChange = (e) => {
+    let files;
     if (e.target.files) {
-      const files = e.target.files[0];
+      files = e.target.files[0];
       // 파일 확장자 체크
       if (!fileExtensionValid(files.name)) {
         alert(
@@ -24,7 +25,8 @@ const UploadForm = ({ video, setVideo }) => {
         alert("업로드 가능한 최대 용량은 10MB입니다.");
         return;
       }
-      setVideo(e.target.files[0]);
+
+      setVideo(files);
       setIsSelected(true);
     }
   };
@@ -39,10 +41,9 @@ const UploadForm = ({ video, setVideo }) => {
       <S.UploadArea>
         {isSelected ? (
           <S.VideoWrap>
-            <VscChromeClose
-              className="cancelVideo"
-              onClick={handleDeleteFile}
-            />
+            {isLoading ? null : (
+              <FiX className="cancelVideo" onClick={handleDeleteFile} />
+            )}
             <video
               src={window.URL.createObjectURL(video)}
               muted
@@ -86,6 +87,7 @@ const fileExtensionValid = (files) => {
     // 2. 확장자가 없는 경우
     return false;
   }
+
   return true;
 };
 

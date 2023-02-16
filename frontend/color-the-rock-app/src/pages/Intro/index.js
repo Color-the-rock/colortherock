@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import * as S from "./style";
 import useScrollFadeIn from "../../hooks/useScroll";
 import RecordContent from "../../components/Intro/RecordContent";
 import LiveContent from "../../components/Intro/LiveContent";
 import BoardContent from "../../components/Intro/BoardContent";
 import Content from "../../components/Intro/Content";
+
 const Intro = () => {
   const fadeInRecord = useScrollFadeIn();
   const fadeInLive = useScrollFadeIn();

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import * as S from "./style";
 import PropTypes from "prop-types";
 import "./calendar.css";
 
@@ -19,8 +18,6 @@ const CustomCalendar = ({
     setMaxDate(year + "-" + month + "-" + day);
   }, []);
 
-  console.log("selectDate", selectDate);
-
   return (
     <div className="input_date_box">
       <input
@@ -32,16 +29,16 @@ const CustomCalendar = ({
           fontFamily: "Noto Sans KR",
         }}
         defaultValue={selectDate}
-        // value="날짜를 선택해주세요."
+        max={maxDate}
         onChange={(e) => setSelectDate(e.target.value)}
-      ></input>
+      />
     </div>
   );
 };
+
+export default React.memo(CustomCalendar);
 
 CustomCalendar.propTypes = {
   selectDate: PropTypes.string.isRequired,
   setSelectDate: PropTypes.func.isRequired,
 };
-
-export default React.memo(CustomCalendar);
