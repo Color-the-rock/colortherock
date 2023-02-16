@@ -28,7 +28,7 @@ export const Container = styled.div`
 export const ThumbnailList = styled.div`
   align-self: center;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
   margin-top: 20px;
   @media (max-width: 992px) {

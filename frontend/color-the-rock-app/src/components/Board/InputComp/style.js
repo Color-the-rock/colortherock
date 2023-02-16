@@ -10,7 +10,6 @@ export const Container = styled.div`
   background-color: var(--color-background);
   border: 1px solid var(--color-border);
   border-radius: 20px;
-  /* min-width: 328px; */
   max-width: 600px;
   opacity: ${(props) =>
     props.opacity !== "100" ? `${props.opacity}%` : "100%"};
@@ -21,7 +20,6 @@ export const InputContent = styled.input`
   height: 100%;
   padding: 0 1rem;
   border-radius: 20px;
-  /* min-width: 280px; */
   background-color: var(--color-background);
   color: var(--color-tertiary);
   letter-spacing: -0.01em;

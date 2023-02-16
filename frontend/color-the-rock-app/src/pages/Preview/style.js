@@ -2,20 +2,33 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   background-color: transparent;
-  padding: 0 16px;
-  margin-top: 5rem;
-  margin-bottom: 1rem;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  -ms-overflow-style: none;
-  ::-webkit-scrollbar {
-    display: none;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Video = styled.video`
+  height: 100%;
+  object-fit: contain;
+  @media (max-width: 992px) {
+    width: 90%;
+    height: auto;
+  }
+`;
+
+export const Button = styled.button`
+  width: 72px;
+  font-size: 1rem;
+  color: var(--color-white);
+  align-self: center;
+  margin-top: 1rem;
+`;
+
+export const Wrapper = styled.div`
+  display: flex;
   width: 100%;
-  height: 100vh;
+  padding: 0 1rem;
 `;

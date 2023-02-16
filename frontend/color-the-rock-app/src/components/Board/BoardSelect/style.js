@@ -63,3 +63,12 @@ export const OptionItem = styled.li`
     background-color: #667bf3;
   }
 `;
+
+export const Dot = styled.div`
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: ${(props) => (props.color ? props.color : "transparent")};
+  margin-right: 0.25rem;
+`;

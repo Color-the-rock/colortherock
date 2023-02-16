@@ -3,17 +3,20 @@ import * as S from "./style";
 import IntroTitle from "../IntroTitle";
 import IntroButton from "../IntroButton";
 import { Desktop, Mobile } from "../../layout/Template";
+import LiveImg1 from "../../../assets/img/intro/intro-live1.png";
+import LiveImg2 from "../../../assets/img/intro/intro-live2.png";
+import LiveImg3 from "../../../assets/img/intro/intro-live3.png";
 const LiveContent = () => {
   const imgVariants = {
     offscreen: {
-      y: 600,
+      y: 700,
     },
     onscreen: {
       y: 80,
       transition: {
         type: "spring",
         bounce: 0.4,
-        duration: 0.8,
+        duration: 1,
       },
     },
   };
@@ -36,7 +39,7 @@ const LiveContent = () => {
     <S.Container
       initial="offscreen"
       whileInView="onscreen"
-      viewport={{ once: false, amount: 0.8 }}
+      viewport={{ once: true, amount: 0.8 }}
     >
       <S.Wrapper>
         <IntroTitle text="실시간 도전" />
@@ -48,16 +51,14 @@ const LiveContent = () => {
       <S.ImgWrapper>
         <Desktop>
           <S.ImgAnimation variants={imgVariants}>
-            <S.ImgBox left="60" depth="1" bg="#dddddd" />
-            <S.ImgBox bottom="100" left="240" depth="10" />
-            <S.ImgBox left="420" depth="100" bg="#e4e4e4" />
+            <S.ImgBox left="-20" depth="1" bg={LiveImg2} />
+            <S.ImgBox left="390" depth="100" bg={LiveImg1} />
           </S.ImgAnimation>
         </Desktop>
         <Mobile>
           <S.ImgAnimation variants={imgMobileVariants}>
-            <S.ImgBoxMobile right="50" bg="#dddddd" />
-            <S.ImgBoxMobile right="25" />
-            <S.ImgBoxMobile right="0" bg="#e4e4e4" />
+            <S.ImgBoxMobile right="45" bg={LiveImg2} />
+            <S.ImgBoxMobile right="0" bg={LiveImg1} />
           </S.ImgAnimation>
         </Mobile>
       </S.ImgWrapper>

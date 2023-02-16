@@ -24,6 +24,7 @@ export const Container = styled.div`
 export const ArrowLeftBtnWrap = styled.div`
   width: 100%;
   display: flex;
+  margin-top: 1rem;
 `;
 
 export const ContentWrap = styled.div`

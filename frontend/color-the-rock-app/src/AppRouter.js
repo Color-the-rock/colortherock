@@ -16,7 +16,6 @@ import Header from "./components/layout/Header";
 import Oauth from "./components/LogIn/index";
 import Signup from "./pages/Signup/index";
 import BoardRegist from "./pages/Board/BoardRegist/index";
-import BoardModify from "./pages/Board/BoardModify/index";
 import StreamingForm from "./pages/StreamingForm";
 import Preview from "./pages/Preview/index";
 import RecordForm from "./pages/Record/RecordForm";
@@ -70,7 +69,6 @@ const AppRouter = () => {
         <Route path="/oauth" element={<Oauth />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/board/form" element={<BoardRegist />} />
-        <Route path="/board/modify/:id" element={<BoardModify />} />
         <Route path="/board/detail/:id" element={<BoardDetail />} />
         <Route path="/streaming" element={<Streaming />} />
         <Route path="/streaming/form" element={<StreamingForm />} />
