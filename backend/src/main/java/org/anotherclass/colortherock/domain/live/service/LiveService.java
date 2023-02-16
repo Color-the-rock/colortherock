@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.live.service;
 
 import io.openvidu.java.client.*;
 import lombok.extern.slf4j.Slf4j;
+import org.anotherclass.colortherock.domain.exception.OpenviduException;
 import org.anotherclass.colortherock.domain.live.entity.Live;
 import org.anotherclass.colortherock.domain.live.exception.RecordingDeleteException;
 import org.anotherclass.colortherock.domain.live.exception.RecordingStartBadRequestException;
@@ -90,7 +91,7 @@ public class LiveService {
         try {
             session = openVidu.createSession();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException(e);
+            throw new OpenviduException(e);
         }
         String thumbnailName = System.currentTimeMillis() + session.getSessionId();
         String uploadedURL;
@@ -101,7 +102,7 @@ public class LiveService {
             Connection connection = session.createConnection(new ConnectionProperties.Builder().role(OpenViduRole.PUBLISHER).build());
             return connection.getToken();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException(e);
+            throw new OpenviduException(e);
         }
     }
 
@@ -115,7 +116,7 @@ public class LiveService {
         try {
             openVidu.fetch();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException(e);
+            throw new OpenviduException(e);
         }
         Session activeSession = openVidu.getActiveSession(sessionId);
         if (activeSession == null) {
@@ -125,7 +126,7 @@ public class LiveService {
             Connection connection = activeSession.createConnection(new ConnectionProperties.Builder().role(OpenViduRole.SUBSCRIBER).build());
             return connection.getToken();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException(e);
+            throw new OpenviduException(e);
         }
     }
 
@@ -141,7 +142,7 @@ public class LiveService {
         try {
             openVidu.fetch();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException(e);
+            throw new OpenviduException(e);
         }
         Session activeSession = openVidu.getActiveSession(sessionId);
         if (activeSession == null) {
@@ -163,7 +164,7 @@ public class LiveService {
                 recordingsForSession.put(sessionId, recordings);
                 return recordingId;
             } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-                throw new RuntimeException(e);
+                throw new OpenviduException(e);
             }
         }
         throw new RecordingStartBadRequestException();
@@ -179,7 +180,7 @@ public class LiveService {
         try {
             openVidu.stopRecording(request.getRecordingId());
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException(e);
+            throw new OpenviduException(e);
         }
     }
 
@@ -240,7 +241,7 @@ public class LiveService {
                     response.add(recordingListResponse);
                 }
             } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-                throw new RuntimeException(e);
+                throw new OpenviduException(e);
             }
         });
         return response;

@@ -34,9 +34,7 @@ import java.util.List;
 import static org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils.BEARER_PREFIX;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -68,7 +66,7 @@ class AdminReportControllerTest extends IntegrationTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         memberIds = new ArrayList<>();
         videoBoardIds = new ArrayList<>();
         // Member, Video, VideoBoard 생성
