@@ -6,8 +6,8 @@ spring:
     password: ${DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create
-    show-sql: true
+      ddl-auto: none
+    show-sql: false
     database-platform: org.hibernate.dialect.MySQL8Dialect
   security:
     user:

@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.global.mattermost.MatterMostMessageDto.Attachment;
-import org.anotherclass.colortherock.global.mattermost.MatterMostMessageDto.Attachments;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
@@ -43,7 +42,6 @@ public class MatterMostSender {
 
         try {
             Attachment attachment = Attachment.builder()
-                    .channel(mmProperties.getChannel())
                     .authorIcon(mmProperties.getAuthorIcon())
                     .authorName(mmProperties.getAuthorName())
                     .color(mmProperties.getColor())
@@ -54,9 +52,9 @@ public class MatterMostSender {
                     .build();
 
             attachment.addExceptionInfo(exception, uri, params);
-            Attachments attachments = new Attachments(attachment);
-            attachments.addProps(exception);
-            String payload = new Gson().toJson(attachments);
+            MatterMostMessageDto dto = new MatterMostMessageDto(attachment);
+            dto.addProps(exception);
+            String payload = new Gson().toJson(dto);
 
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-type", MediaType.APPLICATION_JSON_VALUE);
@@ -83,7 +81,6 @@ public class MatterMostSender {
 
         try {
             Attachment attachment = Attachment.builder()
-                    .channel(mmProperties.getChannel())
                     .authorIcon(mmProperties.getAuthorIcon())
                     .authorName(mmProperties.getAuthorName())
                     .color(mmProperties.getColor())
@@ -94,8 +91,8 @@ public class MatterMostSender {
                     .build();
 
             attachment.addReportInfo(title, id);
-            Attachments attachments = new Attachments(attachment);
-            String payload = new Gson().toJson(attachments);
+            MatterMostMessageDto dto = new MatterMostMessageDto(attachment);
+            String payload = new Gson().toJson(dto);
 
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-type", MediaType.APPLICATION_JSON_VALUE);

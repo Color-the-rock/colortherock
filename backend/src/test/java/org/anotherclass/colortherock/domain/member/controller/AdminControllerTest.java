@@ -28,7 +28,7 @@ class AdminControllerTest extends IntegrationTest {
 
     @Test
     @DisplayName("관리자 로그인 성공")
-    public void adminLogin() throws Exception {
+    void adminLogin() throws Exception {
         LoginInfo loginInfo = new LoginInfo(adminId, adminPassword);
         mockMvc.perform(
                         MockMvcRequestBuilders.post(url)
@@ -40,7 +40,7 @@ class AdminControllerTest extends IntegrationTest {
 
     @Test
     @DisplayName("관리자 로그인 실패")
-    public void adminLoginFail() throws Exception {
+    void adminLoginFail() throws Exception {
         LoginInfo loginInfo = new LoginInfo(adminId, "1234");
 
         mockMvc.perform(

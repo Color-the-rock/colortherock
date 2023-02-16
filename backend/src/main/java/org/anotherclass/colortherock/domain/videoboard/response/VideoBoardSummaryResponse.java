@@ -22,6 +22,8 @@ public class VideoBoardSummaryResponse {
     private String thumbnailURL;
     @Schema(description = "색깔")
     private String color;
+    @Schema(description = "색상 코드")
+    private String colorCode;
     @Schema(description = "암장 이름")
     private String gymName;
     @Schema(description = "생성 시간")

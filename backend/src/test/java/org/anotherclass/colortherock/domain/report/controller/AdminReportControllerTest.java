@@ -4,6 +4,7 @@ import org.anotherclass.colortherock.IntegrationTest;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.domain.report.request.PostReportRequest;
+import org.anotherclass.colortherock.domain.report.request.PostUnhiddenRequest;
 import org.anotherclass.colortherock.domain.report.response.AdminReportDetailResponse;
 import org.anotherclass.colortherock.domain.report.response.AdminReportedPostResponse;
 import org.anotherclass.colortherock.domain.report.service.ReportService;
@@ -33,8 +34,7 @@ import java.util.List;
 import static org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils.BEARER_PREFIX;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -66,7 +66,7 @@ class AdminReportControllerTest extends IntegrationTest {
 
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         memberIds = new ArrayList<>();
         videoBoardIds = new ArrayList<>();
         // Member, Video, VideoBoard 생성
@@ -168,10 +168,11 @@ class AdminReportControllerTest extends IntegrationTest {
     @DisplayName("영상 숨김 해제하기")
     void cancelHiddenStatus() throws Exception {
         token = BEARER_PREFIX + jwtTokenUtils.createTokens(adminId, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        PostUnhiddenRequest request = new PostUnhiddenRequest(videoBoardIds.get(0));
         mockMvc.perform(
-                        get(url + "/detail/unhidden")
+                        put(url + "/detail/unhidden")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .param("videoBoardId", String.valueOf(videoBoardIds.get(0)))
+                                .content(objectMapper.writeValueAsBytes(request))
                                 .header(HttpHeaders.AUTHORIZATION, token)
                 ).andDo(print())
                 .andExpect(jsonPath("$.status", is(200)));

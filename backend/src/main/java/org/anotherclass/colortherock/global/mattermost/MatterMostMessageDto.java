@@ -8,35 +8,28 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MatterMostMessageDto {
 
-    @Getter
-    public static class Attachments {
         private Props props;
-        private final List<Attachment> attachmentList;
-
-        public Attachments() {
-            attachmentList = new ArrayList<>();
+        private List<Attachment> attachments;
+        public MatterMostMessageDto() {
+            attachments = new ArrayList<>();
         }
 
-        public Attachments(Attachment attachment) {
+        public MatterMostMessageDto(Attachment attachment) {
             this();
-            this.attachmentList.add(attachment);
+            this.attachments.add(attachment);
         }
 
         public void addProps(Exception e) {
             props = new Props(e);
         }
 
-    }
-
     @Getter
     @AllArgsConstructor
     @Builder
     @ToString
     public static class Attachment {
-        private String channel;
 
         private String pretext;
 
@@ -74,15 +67,16 @@ public class MatterMostMessageDto {
         }
 
         public void addReportInfo(String title) {
-            this.title = "신고 누적 발생";
+            this.title = "## :warning: 신고 5회 누적 게시물 발생 :warning:" + '\n' + '\n';
 
-            this.text = text + "**title**" + '\n' + '\n' + title + '\n' + '\n';
+            this.text = text + "**게시물 제목**" + '\n' + '\n' + title + '\n' + '\n';
         }
 
         public void addReportInfo(String title, Long id) {
             this.addReportInfo(title);
 
-            this.text = text + "**videoBoardId**" + '\n' + '\n' + id + "번 videoBoard" + '\n' + '\n';
+            this.text = text + "**videoBoardId**" + '\n' + '\n' + id + "번 videoBoard" + '\n' + '\n'
+                    + "[**[🛠 관리자 페이지로 이동하기]**](https://colortherock.com/admin)";
         }
 
     }

@@ -17,7 +17,10 @@ import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetail
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +51,7 @@ class VideoBoardServiceTest {
     private final Integer MYPAGE_SIZE = 8;
 
     @BeforeEach
-    public void setMemberAndVideo() {
+    void setMemberAndVideo() {
         memberIds = new ArrayList<>();
         videoIds = new ArrayList<>();
         videoBoardIds = new ArrayList<>();
@@ -61,11 +64,11 @@ class VideoBoardServiceTest {
         memberIds.add(saveB.getId());
 
         // Video, VideoBoard 생성
-        for(int i = 1; i <= 32; i++){
-            Video video = new Video(LocalDate.parse("2023-01-29"), 4, "더클라임 강남점", "s3url", true, "thumbnail", "name","초록", saveA, "videoName", false);
+        for (int i = 1; i <= 32; i++) {
+            Video video = new Video(LocalDate.parse("2023-01-29"), 4, "더클라임 강남점", "s3url", true, "thumbnail", "name", "초록", saveA, "videoName", false);
             Video saveVideo = videoRepository.save(video);
             videoIds.add(saveVideo.getId());
-            if(i % 2 == 0) {
+            if (i % 2 == 0) {
                 VideoBoard videoBoard = VideoBoard.builder()
                         .title("성공했습니다.")
                         .member(memberA)
@@ -76,11 +79,11 @@ class VideoBoardServiceTest {
                 videoBoardIds.add(saveVideoBoard.getId());
             }
         }
-        for(int i = 33; i <= 64; i++){
-            Video video = new Video(LocalDate.parse("2023-01-29"),5, "더클라임 홍대점", "s3url", true, "thumbnail", "name","파랑", saveB, "videoName", false);
+        for (int i = 33; i <= 64; i++) {
+            Video video = new Video(LocalDate.parse("2023-01-29"), 5, "더클라임 홍대점", "s3url", true, "thumbnail", "name", "파랑", saveB, "videoName", false);
             Video saveVideo = videoRepository.save(video);
             videoIds.add(saveVideo.getId());
-            if(i % 2 == 0){
+            if (i % 2 == 0) {
                 VideoBoard videoBoard = VideoBoard.builder()
                         .video(video)
                         .member(memberB)
@@ -188,7 +191,7 @@ class VideoBoardServiceTest {
                     // then
                     assertEquals(successVideos.get(0).getColor(), cond.getColor());
                     assertEquals(successVideos.get(1).getColor(), cond.getColor());
-                    assertEquals(PAGE_SIZE,successVideos.size());
+                    assertEquals(PAGE_SIZE, successVideos.size());
                 }
 
             }
@@ -214,7 +217,7 @@ class VideoBoardServiceTest {
 
                     // then
                     assertTrue(successVideos.get(0).getGymName().contains(cond.getGymName()));
-                    assertEquals(PAGE_SIZE,successVideos.size());
+                    assertEquals(PAGE_SIZE, successVideos.size());
                 }
             }
         }

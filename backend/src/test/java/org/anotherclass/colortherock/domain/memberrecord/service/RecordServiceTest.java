@@ -10,7 +10,10 @@ import org.anotherclass.colortherock.domain.video.exception.VideoNotFoundExcepti
 import org.anotherclass.colortherock.domain.video.repository.VideoRepository;
 import org.anotherclass.colortherock.domain.video.request.MyVideoRequest;
 import org.anotherclass.colortherock.domain.video.request.UploadVideoRequest;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +39,7 @@ class RecordServiceTest {
     private RecordRepository recordRepository;
 
     @BeforeEach
-    public void setMember() {
+    void setMember() {
         member = new Member("johan@rock.com", "조한", Member.RegistrationId.kakao);
         em.persist(member);
         for (int i = 1; i <= 9; i++) {
@@ -63,7 +66,7 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("사용자 레벨별 통계 반환")
-    public void colorRecordsTest() {
+    void colorRecordsTest() {
         // when
         List<LevelStatResponse> list = recordService.getColorRecords(member);
         // then
@@ -75,7 +78,7 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("사용자 날짜별 통계 반환")
-    public void dateRecordsTest() {
+    void dateRecordsTest() {
         // when
         List<LevelStatResponse> dateRecords = recordService.getDateRecords(member, LocalDate.parse("2023-01-17"));
         // then
@@ -86,7 +89,7 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("사용자 운동 통계 반환")
-    public void totalRecordsTest() {
+    void totalRecordsTest() {
         // given
         MemberRecord testRecord = MemberRecord.builder().member(member).videoCount(18).successCount(9).build();
         em.persist(testRecord);
@@ -100,7 +103,7 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("나의 운동 기록 반환")
-    public void getMyVideosTest() {
+    void getMyVideosTest() {
         // given
         LocalDate localDate = LocalDate.parse("2023-01-17");
         MyVideoRequest request = MyVideoRequest.builder().videoId(-1L).isSuccess(true).shootingDate(localDate).build();
@@ -112,7 +115,7 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("영상 상세 조회")
-    public void videoDetailTest() {
+    void videoDetailTest() {
         // given
         LocalDate date = LocalDate.parse("2023-01-19");
         UploadVideoRequest saveDto = UploadVideoRequest.builder()
@@ -131,7 +134,7 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("영상 상세 조회 - 실패")
-    public void videoDetailExceptionTest() {
+    void videoDetailExceptionTest() {
         // given
         LocalDate date = LocalDate.parse("2023-01-19");
         UploadVideoRequest saveDto = UploadVideoRequest.builder()
@@ -148,7 +151,7 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("영상 갯수 증가")
-    public void addVideoCountTest() {
+    void addVideoCountTest() {
         // given
         MemberRecord testRecord = MemberRecord.builder().member(member).videoCount(18).successCount(9).build();
         em.persist(testRecord);
@@ -164,7 +167,7 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("영상 갯수 감소")
-    public void subVideoCountTest() {
+    void subVideoCountTest() {
         // given
         MemberRecord testRecord = MemberRecord.builder().member(member).videoCount(18).successCount(9).build();
         em.persist(testRecord);
@@ -180,7 +183,7 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("새로운 record 생성")
-    public void saveNewRecordTest() {
+    void saveNewRecordTest() {
         // given
         Long memberId = member.getId();
         // when
@@ -193,7 +196,7 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("새로운 record 생성 실패")
-    public void noUserTest() {
+    void noUserTest() {
         // given
         Long memberId = member.getId() * -1;
         // when & then
@@ -202,7 +205,7 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("암장 방문 기록 반환")
-    public void getVisitListTest() {
+    void getVisitListTest() {
         // given
         UploadVideoRequest saveDto = UploadVideoRequest.builder()
                 .shootingDate(LocalDate.parse("2023-01-18"))
@@ -222,8 +225,8 @@ class RecordServiceTest {
 
     @Test
     @DisplayName("달력 색상 반환")
-    public void getCalendarColorTest() {
-         // given
+    void getCalendarColorTest() {
+        // given
         UploadVideoRequest saveDto = UploadVideoRequest.builder()
                 .shootingDate(LocalDate.parse("2023-01-17"))
                 .level(1)

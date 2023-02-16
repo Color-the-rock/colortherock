@@ -13,7 +13,7 @@ import java.util.*;
 @Component
 public class JwtTokenUtils {
     private static final String KEY = "secret";
-    private static final long EXP = 300 * 1000L * 12;
+    private static final long EXP = 1000L * 60 * 60 * 24 * 7;
     public static final String BEARER_PREFIX = "Bearer ";
     private final RefreshTokenRepository refreshTokenRepository;
 

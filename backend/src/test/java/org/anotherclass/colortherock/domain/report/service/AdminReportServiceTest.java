@@ -2,7 +2,9 @@ package org.anotherclass.colortherock.domain.report.service;
 
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
+import org.anotherclass.colortherock.domain.report.entity.Report;
 import org.anotherclass.colortherock.domain.report.request.PostReportRequest;
+import org.anotherclass.colortherock.domain.report.request.PostUnhiddenRequest;
 import org.anotherclass.colortherock.domain.report.response.AdminReportDetailResponse;
 import org.anotherclass.colortherock.domain.report.response.AdminReportedPostResponse;
 import org.anotherclass.colortherock.domain.video.entity.Video;
@@ -23,7 +25,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
@@ -44,7 +47,7 @@ class AdminReportServiceTest {
     private ArrayList<Long> videoBoardIds;
 
     @BeforeEach
-    public void setData() {
+    void setData() {
         memberIds = new ArrayList<>();
         videoBoardIds = new ArrayList<>();
         // Member, Video, VideoBoard 생성
@@ -101,7 +104,7 @@ class AdminReportServiceTest {
         List<AdminReportDetailResponse> result = adminReportService.getReportDetail(videoBoardId);
         // then
         assertEquals(10, result.size());
-        assertEquals("TYPE_A", String.valueOf(result.get(0).getCategory()));
+        assertEquals(Report.Category.TYPE_A.getValue(), String.valueOf(result.get(0).getReportContent()));
     }
 
     @Test
@@ -113,7 +116,8 @@ class AdminReportServiceTest {
         // 신고 개수와 숨김상태 확인
         assertEquals(true, videoBoard.getIsHidden());
         // when
-        adminReportService.cancelHiddenStatus(videoBoard.getId());
+        PostUnhiddenRequest request = new PostUnhiddenRequest(videoBoard.getId());
+        adminReportService.cancelHiddenStatus(request);
         List<AdminReportDetailResponse> reportList = adminReportService.getReportDetail(videoBoard.getId());
         // then
         assertEquals(false, videoBoard.getIsHidden());
