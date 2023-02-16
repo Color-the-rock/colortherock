@@ -1,17 +1,3 @@
-/*
-  RecordVideoFormModal
-  : 실시간 스트리밍 중에 영상을 녹화한 후 띄워지는 Modal
-  
-  props
-  : video => 녹화한 영상
-  : handleModalStateChange => Modal on/off
-
-  할 일
-  : 등록요청
-  : video validation check
-  : 상태 관리
-*/
-
 import * as S from "./style";
 import React, { useState } from "react";
 import BoardRadioBtn from "../../Board/BoardRadioBtn";
@@ -20,6 +6,7 @@ import RegistBtn from "../../Board/RegistBtn";
 import streamingApi from "../../../api/streaming";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import Loading from "../../Common/Loading";
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
@@ -56,8 +43,7 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
   const [level, setLevel] = useState("");
   const [color, setColor] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
-  // test 용 : video는 props로 받아와야함.
-
+  const [isLoading, setLoading] = useState(false);
   const handleModalStateChange = () => {
     if (window.confirm("정말로 취소하시겠습니까?")) {
       setModalOpen();
@@ -78,22 +64,28 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
       isSuccess,
       color,
     };
+
+    setLoading(true);
     setIsDisabled(true);
     const api = async () =>
       streamingApi
         .saveRecordVideo(sessionId, data)
-        .then(({ data }) => {
+        .then(() => {
           setModalOpen();
           setIsDisabled(false);
         })
         .catch((err) => {
-          console.log("실패");
           console.log("err: ", err);
+        })
+        .finally(() => {
+          setLoading(false);
         });
     api();
   };
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <S.ContainerWrap>
       <S.Container>
         <S.ContentBox>
@@ -102,13 +94,6 @@ const RecordVideoFormModal = ({ sessionId, recordingId, setModalOpen }) => {
               <S.TitleWrap>영상 등록</S.TitleWrap>
             </S.TitleWrap>
           </S.ComponentWrap>
-          {/* <S.ComponentWrap>
-            <InputComp
-              title={title}
-              handleChange={setTitle}
-              placeholder="제목을 입력해주세요."
-            />
-          </S.ComponentWrap> */}
           <S.SelectButtonWrap>
             <S.selectBtnContent>
               <CustomSelect setter={setLevel} optionValues={levelValues} />
