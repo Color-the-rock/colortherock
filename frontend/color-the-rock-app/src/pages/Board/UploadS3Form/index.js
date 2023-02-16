@@ -19,7 +19,7 @@ const UploadS3Form = () => {
     if (!selectDate) return;
 
     const params = {
-      videoId: 1,
+      videoId: -1,
       shootingDate: selectDate,
       isSuccess: true,
     };
