@@ -2,6 +2,7 @@ package org.anotherclass.colortherock.domain.live.service;
 
 import io.openvidu.java.client.*;
 import lombok.extern.slf4j.Slf4j;
+import org.anotherclass.colortherock.domain.exception.OpenviduException;
 import org.anotherclass.colortherock.domain.live.entity.Live;
 import org.anotherclass.colortherock.domain.live.exception.RecordingDeleteException;
 import org.anotherclass.colortherock.domain.live.exception.RecordingStartBadRequestException;
@@ -49,6 +50,7 @@ public class LiveService {
     private final MemberRepository memberRepository;
     private final VideoRepository videoRepository;
     private static final ConcurrentMap<String, List<String>> recordingsForSession = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<String, String> urlsForRecordings = new ConcurrentHashMap<>();
     private final OpenVidu openVidu;
     private static final Integer PAGE_SIZE = 15;
 
@@ -74,6 +76,14 @@ public class LiveService {
         this.recordingPath = recordingPath;
     }
 
+    /**
+     * 라이브 방을 만든다.
+     *
+     * @param memberDetails 인증된 멤버
+     * @param request       {@link CreateLiveRequest} 라이브 방 생성 요청
+     * @param thumbnail     썸네일
+     * @return 만들어진 커넥션 토큰을 반환
+     */
     public String createLiveRoom(MemberDetails memberDetails, CreateLiveRequest request, MultipartFile thumbnail) {
         Long id = memberDetails.getMember().getId();
         Member member = memberRepository.findById(id).orElseThrow(UserNotFoundException::new);
@@ -81,27 +91,32 @@ public class LiveService {
         try {
             session = openVidu.createSession();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException(e);
+            throw new OpenviduException(e);
         }
-        String sessionId = session.getSessionId();
-        String thumbnailName = System.currentTimeMillis() + sessionId;
+        String thumbnailName = System.currentTimeMillis() + session.getSessionId();
         String uploadedURL;
         uploadedURL = s3Service.upload(thumbnail, thumbnailName);
-        Live live = request.toEntity(sessionId, member, uploadedURL, thumbnailName);
+        Live live = request.toEntity(session.getSessionId(), member, uploadedURL, thumbnailName);
         liveRepository.save(live);
         try {
             Connection connection = session.createConnection(new ConnectionProperties.Builder().role(OpenViduRole.PUBLISHER).build());
             return connection.getToken();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException(e);
+            throw new OpenviduException(e);
         }
     }
 
+    /**
+     * 라이브 방에 참가
+     *
+     * @param sessionId 세션 id
+     * @return 커넥션 token
+     */
     public String joinLiveRoom(String sessionId) {
         try {
             openVidu.fetch();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException(e);
+            throw new OpenviduException(e);
         }
         Session activeSession = openVidu.getActiveSession(sessionId);
         if (activeSession == null) {
@@ -111,15 +126,23 @@ public class LiveService {
             Connection connection = activeSession.createConnection(new ConnectionProperties.Builder().role(OpenViduRole.SUBSCRIBER).build());
             return connection.getToken();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException(e);
+            throw new OpenviduException(e);
         }
     }
+
+    /**
+     * 녹화 시작 로직
+     *
+     * @param sessionId 방 세션 id
+     * @param request   녹화 요청 {@link RecordingStartRequest}
+     * @return recording id 반환
+     */
 
     public String recordingStart(String sessionId, RecordingStartRequest request) {
         try {
             openVidu.fetch();
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException(e);
+            throw new OpenviduException(e);
         }
         Session activeSession = openVidu.getActiveSession(sessionId);
         if (activeSession == null) {
@@ -131,28 +154,42 @@ public class LiveService {
 
         if (role.equals(OpenViduRole.PUBLISHER)) {
             try {
-                Recording recording = openVidu.startRecording(sessionId);
+                RecordingProperties properties = new RecordingProperties.Builder()
+                        .resolution("720x1280")
+                        .frameRate(50).build();
+                Recording recording = openVidu.startRecording(sessionId, properties);
                 String recordingId = recording.getId();
                 List<String> recordings = recordingsForSession.getOrDefault(sessionId, new ArrayList<>());
                 recordings.add(recordingId);
                 recordingsForSession.put(sessionId, recordings);
                 return recordingId;
             } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-                throw new RuntimeException(e);
+                throw new OpenviduException(e);
             }
         }
         throw new RecordingStartBadRequestException();
     }
 
+    /**
+     * 녹화 중지 로직
+     *
+     * @param request 녹화 중지 요청 {@link RecordingStopRequest}
+     */
     public void recordingStop(RecordingStopRequest request) {
 
         try {
             openVidu.stopRecording(request.getRecordingId());
         } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            throw new RuntimeException(e);
+            throw new OpenviduException(e);
         }
     }
 
+    /**
+     * 라이브 방 목록 반환
+     *
+     * @param liveListRequest {@link LiveListRequest}
+     * @return {@link LiveListResponse} 리스트 형태로 반환
+     */
     @Transactional(readOnly = true)
     public List<LiveListResponse> getLiveList(LiveListRequest liveListRequest) {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
@@ -186,6 +223,12 @@ public class LiveService {
         return responses;
     }
 
+    /**
+     * 이전 녹화 영상들 가져오기 로직
+     *
+     * @param sessionId 세션 id
+     * @return {@link PrevRecordingListResponse} 리스트 형태로 반환
+     */
     public List<PrevRecordingListResponse> getRecordings(String sessionId) {
         List<String> recordingIds = recordingsForSession.get(sessionId);
         List<PrevRecordingListResponse> response = new ArrayList<>();
@@ -193,10 +236,12 @@ public class LiveService {
             try {
                 Recording recording = openVidu.getRecording(recordingId);
                 if (recording.getStatus() == Recording.Status.ready) {
-                    response.add(new PrevRecordingListResponse(recording));
+                    PrevRecordingListResponse recordingListResponse = new PrevRecordingListResponse(recording);
+                    recordingListResponse.setUrl(urlsForRecordings.get(recordingId));
+                    response.add(recordingListResponse);
                 }
             } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-                throw new RuntimeException(e);
+                throw new OpenviduException(e);
             }
         });
         return response;
@@ -211,6 +256,11 @@ public class LiveService {
         }
     }
 
+    /**
+     * 방 제거 로직
+     *
+     * @param sessionId 방 session Id
+     */
     @Transactional
     public void removeSession(String sessionId) {
         Optional<Live> live = liveRepository.findBySessionId(sessionId);
@@ -218,6 +268,12 @@ public class LiveService {
         liveRepository.deleteBySessionId(sessionId);
     }
 
+    /**
+     * 녹화 저장 로직
+     *
+     * @param memberDetails 인증된 사용자
+     * @param request       {@link RecordingSaveRequest} 녹화 저장 요청
+     */
     public void recordingSave(MemberDetails memberDetails, RecordingSaveRequest request) {
 
         WebClient webClient = WebClient.create();
@@ -230,12 +286,19 @@ public class LiveService {
                 .block();
     }
 
+    /**
+     * 오픈비두 서버에서 녹화 영상을 업로드 하는 로직
+     * 오픈비두 서버 로컬 파일시스템에 접근해서 파일을 가져온다.
+     *
+     * @param request {@link RecordingUploadAtOpenviduServerRequest} 오픈비두 서버 업로드 요청
+     */
     @Transactional
     public void uploadAtOpenviduServer(RecordingUploadAtOpenviduServerRequest request) {
         String videoExtension = ".mp4";
         String newDir = recordingPath + "/" + request.getRecordingId() + "/" + request.getRecordingId() + videoExtension;
         String videoName = System.currentTimeMillis() + request.getRecordingId() + videoExtension;
         String s3Url = s3Service.uploadFromOV(newDir, videoName);
+        urlsForRecordings.put(request.getRecordingId(), s3Url);
         Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> {
             throw new MemberNotFoundException(GlobalErrorCode.USER_NOT_FOUND);
         });
@@ -253,6 +316,7 @@ public class LiveService {
                 .thumbnailURL(thumbnailURL)
                 .thumbnailName(thumbnailName)
                 .color(request.getColor())
+                .isPosted(false)
                 .member(member)
                 .build());
         // 영상 누적 통계에서 영상 갯수 올리기

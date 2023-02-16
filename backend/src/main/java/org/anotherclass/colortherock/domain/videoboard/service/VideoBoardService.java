@@ -16,6 +16,7 @@ import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepo
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessPostUpdateRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessVideoUploadRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
+import org.anotherclass.colortherock.domain.videoboard.response.ColorCodeKorean;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetailResponse;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
@@ -39,7 +40,12 @@ public class VideoBoardService {
     private final VideoBoardReadRepository videoBoardReadRepository;
     private static final Integer PAGE_SIZE = 16;
 
-    // 완등 영상 전체 리스트 조회
+
+    /**
+     *
+     * @param condition
+     * @return
+     */
     @Transactional(readOnly = true)
     public List<VideoBoardSummaryResponse> getSuccessVideos(VideoBoardSearchRequest condition) {
         Pageable pageable = Pageable.ofSize(PAGE_SIZE);
@@ -51,15 +57,16 @@ public class VideoBoardService {
         }
 
         return slices.toList().stream()
-                .map(vb -> VideoBoardSummaryResponse.builder()
-                        .videoBoardId(vb.getId())
-                        .title(vb.getTitle())
-                        .thumbnailURL(vb.getVideo().getThumbnailURL())
-                        .color(vb.getVideo().getColor())
-                        .createdDate(vb.getCreatedDate().toLocalDate())
-                        .gymName(vb.getVideo().getGymName())
-                        .build()).collect(Collectors.toList());
-
+                .map(vb ->
+                    VideoBoardSummaryResponse.builder()
+                            .videoBoardId(vb.getId())
+                            .title(vb.getTitle())
+                            .thumbnailURL(vb.getVideo().getThumbnailURL())
+                            .color(vb.getVideo().getColor())
+                            .createdDate(vb.getCreatedDate().toLocalDate())
+                            .gymName(vb.getVideo().getGymName())
+                            .colorCode(ColorCodeKorean.getColor(vb.getVideo().getColor()))
+                            .build()).collect(Collectors.toList());
     }
 
     @Transactional
@@ -87,6 +94,7 @@ public class VideoBoardService {
     public VideoBoardDetailResponse getVideoDetail(Long videoBoardId) {
         VideoBoard vb = videoBoardRepository.findById(videoBoardId)
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
+        if(Boolean.TRUE.equals(vb.getIsHidden())) return null;
         return VideoBoardDetailResponse.builder()
                 .videoBoardId(vb.getId())
                 .nickname(vb.getMember().getNickname())

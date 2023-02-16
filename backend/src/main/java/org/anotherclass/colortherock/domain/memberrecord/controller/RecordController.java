@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
@@ -19,7 +20,6 @@ import org.anotherclass.colortherock.domain.video.service.VideoService;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.anotherclass.colortherock.global.security.annotation.PreAuthorizeMember;
-import org.jcodec.api.JCodecException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -37,6 +36,7 @@ import java.util.List;
 @Tag(name = "member record", description = "Member Record API")
 @RequiredArgsConstructor
 @RequestMapping("/api/record")
+@Slf4j
 public class RecordController {
 
     private final RecordService recordService;
@@ -71,6 +71,7 @@ public class RecordController {
             throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
         }
         LocalDate videoDate = LocalDate.parse(date);
+        log.info("{}", videoDate);
         List<LevelStatResponse> dateRecords = recordService.getDateRecords(member, videoDate);
         return new BaseResponse<>(dateRecords);
     }
@@ -98,6 +99,7 @@ public class RecordController {
     @PreAuthorizeMember
     public BaseResponse<List<VideoListResponse>> MyVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @Valid MyVideoRequest myVideoRequest) {
         Member member = memberDetails.getMember();
+        log.info("{}",myVideoRequest.getShootingDate());
         List<VideoListResponse> videoListResponses = recordService.getMyVideos(member, myVideoRequest);
         return new BaseResponse<>(videoListResponses);
     }
@@ -124,8 +126,9 @@ public class RecordController {
     @ApiResponse(responseCode = "200", description = "영상 업로드 성공")
     @PreAuthorizeMember
     public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails
-            , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) throws IOException, JCodecException {
+            , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) {
         videoService.uploadMyVideo(memberDetails, newVideo, uploadVideoRequest);
+        log.info("{}", uploadVideoRequest.getShootingDate());
         // 영상 누적 통계에서 영상 갯수 올리기
         Member member = memberDetails.getMember();
         recordService.addVideoCount(member, uploadVideoRequest.getIsSuccess());
@@ -186,6 +189,7 @@ public class RecordController {
         if (!yearMonth.matches("\\d{4}-(0[1-9]|1[012])")) {
             throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
         }
+        log.info("{}", yearMonth);
         Member member = memberDetails.getMember();
         List<DailyColorResponse> calendarColor = recordService.getCalendarColor(member, yearMonth);
         return new BaseResponse<>(calendarColor);

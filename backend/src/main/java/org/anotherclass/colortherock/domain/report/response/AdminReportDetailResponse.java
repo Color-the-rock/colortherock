@@ -2,7 +2,6 @@ package org.anotherclass.colortherock.domain.report.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.anotherclass.colortherock.domain.report.entity.Report;
 
 @Builder
 @Getter
@@ -13,7 +12,7 @@ import org.anotherclass.colortherock.domain.report.entity.Report;
 public class AdminReportDetailResponse {
 
     @Schema(description = "신고 종류")
-    private Report.Category category;
+    private String reportContent;
 
     @Schema(description = "멤버 id")
     private Long memberId;

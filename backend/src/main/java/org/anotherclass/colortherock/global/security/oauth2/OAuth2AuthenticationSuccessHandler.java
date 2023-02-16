@@ -7,6 +7,7 @@ import org.anotherclass.colortherock.domain.member.repository.MemberRepository;
 import org.anotherclass.colortherock.global.security.jwt.JwtTokenUtils;
 import org.anotherclass.colortherock.global.security.jwt.RefreshToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,13 +49,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl;
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
-            String tokens = BEARER_PREFIX + jwtTokenUtils.createTokens(member, oAuth2User.getAuthorities());
+            String tokens = BEARER_PREFIX + jwtTokenUtils.createTokens(member, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
             RefreshToken token = jwtTokenUtils.generateRefreshToken(tokens);
             response.setHeader(AUTHORIZATION, tokens);
             targetUrl = UriComponentsBuilder.newInstance()
-                    .scheme("http")
-                    .host("localhost")
-                    .port(3000)
+//                    .scheme("http")
+//                    .host("localhost")
+//                    .port(3000)
                     .path("/oauth")
                     .queryParam("refresh", token.getRefreshTokenKey())
                     .queryParam("access", token.getAccessTokenValue())
@@ -62,9 +64,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     .queryParam("nickname", URLEncoder.encode(member.getNickname(), StandardCharsets.UTF_8)).toUriString();
         } else {
             targetUrl = UriComponentsBuilder.newInstance()
-                    .scheme("http")
-                    .host("localhost")
-                    .port(3000)
+//                    .scheme("http")
+//                    .host("localhost")
+//                    .port(3000)
                     .path("/oauth")
                     .queryParam("email", memberInfo.getEmail())
                     .queryParam("registrationId", memberInfo.getRegistrationId()).toUriString();

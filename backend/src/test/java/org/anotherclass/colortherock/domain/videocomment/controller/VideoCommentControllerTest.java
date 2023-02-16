@@ -57,7 +57,7 @@ class VideoCommentControllerTest extends IntegrationTest {
     private final Integer commentSize = 5;
 
     @BeforeEach()
-    public void setup() {
+    void setup() {
 
         videoComments = new ArrayList<>();
         member = Member.builder()
@@ -162,7 +162,7 @@ class VideoCommentControllerTest extends IntegrationTest {
                 .getResponse();
 
         BaseResponse<List<CommentListResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        Assertions.assertEquals(commentSize+1, arrayList.getResult().size());
+        Assertions.assertEquals(commentSize + 1, arrayList.getResult().size());
     }
 
 
