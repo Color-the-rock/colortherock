@@ -22,6 +22,6 @@ public class KakaoMemberInfo implements MemberInfo {
 
     @Override
     public RegistrationId getRegistrationId() {
-        return RegistrationId.KAKAO;
+        return RegistrationId.kakao;
     }
 }

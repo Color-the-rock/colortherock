@@ -24,7 +24,7 @@ class LiveRepositoryTest {
         Member member = Member.builder()
                 .email("email@colortherock.com")
                 .nickname("test_name")
-                .registrationId(Member.RegistrationId.KAKAO).build();
+                .registrationId(Member.RegistrationId.kakao).build();
 
         memberRepository.save(member);
 

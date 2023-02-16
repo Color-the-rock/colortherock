@@ -88,7 +88,7 @@ public class MemberService {
     @PostConstruct
     public void initTestUser() {
         Member member = Member.builder()
-                .registrationId(Member.RegistrationId.KAKAO)
+                .registrationId(Member.RegistrationId.kakao)
                 .email("suker80@naver.com")
                 .nickname("닉네임")
                 .build();

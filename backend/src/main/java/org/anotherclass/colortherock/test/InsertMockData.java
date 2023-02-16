@@ -52,17 +52,17 @@ public class InsertMockData {
     private void insertData() {
         // Member
         Member member1 = Member.builder().email("example1@colortherock.com")
-                .nickname("닉네임1").registrationId(Member.RegistrationId.KAKAO).build();
+                .nickname("닉네임1").registrationId(Member.RegistrationId.kakao).build();
         Member member2 = Member.builder().email("example2@colortherock.com")
-                .nickname("닉네임2").registrationId(Member.RegistrationId.GOOGLE).build();
+                .nickname("닉네임2").registrationId(Member.RegistrationId.google).build();
         Member member3 = Member.builder().email("example3@colortherock.com")
-                .nickname("닉네임3").registrationId(Member.RegistrationId.GOOGLE).build();
+                .nickname("닉네임3").registrationId(Member.RegistrationId.google).build();
         Member member4 = Member.builder().email("example4@colortherock.com")
-                .nickname("닉네임4").registrationId(Member.RegistrationId.GOOGLE).build();
+                .nickname("닉네임4").registrationId(Member.RegistrationId.google).build();
         Member member5 = Member.builder().email("example5@colortherock.com")
-                .nickname("닉네임5").registrationId(Member.RegistrationId.GOOGLE).build();
+                .nickname("닉네임5").registrationId(Member.RegistrationId.google).build();
         Member member6 = Member.builder().email("example6@colortherock.com")
-                .nickname("닉네임6").registrationId(Member.RegistrationId.GOOGLE).build();
+                .nickname("닉네임6").registrationId(Member.RegistrationId.google).build();
 
         members = Arrays.asList(
                 member1, member2, member3, member4, member5, member6

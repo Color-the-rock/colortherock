@@ -40,7 +40,7 @@ class RecordServiceTest {
 
     @BeforeEach
     void setMember() {
-        member = new Member("johan@rock.com", "조한", Member.RegistrationId.KAKAO);
+        member = new Member("johan@rock.com", "조한", Member.RegistrationId.kakao);
         em.persist(member);
         for (int i = 1; i <= 9; i++) {
             UploadVideoRequest saveDto = UploadVideoRequest.builder()

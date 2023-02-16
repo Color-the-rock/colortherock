@@ -63,7 +63,7 @@ class MemberRecordTest extends IntegrationTest {
     @BeforeEach
     void setMemberAndToken() {
         // Member 추가 및 token 설정
-        member = new Member("johan@rock.com", "조한", Member.RegistrationId.GOOGLE);
+        member = new Member("johan@rock.com", "조한", Member.RegistrationId.google);
         Member savedMember = memberRepository.save(member);
         token = jwtTokenUtils.createTokens(savedMember, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
         // 영상 추가

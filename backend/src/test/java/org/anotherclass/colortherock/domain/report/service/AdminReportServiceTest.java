@@ -51,7 +51,7 @@ class AdminReportServiceTest {
         videoBoardIds = new ArrayList<>();
         // Member, Video, VideoBoard 생성
         for (int i = 0; i < 10; i++) {
-            Member member = new Member(i + "@rock.com", i + "user", Member.RegistrationId.KAKAO);
+            Member member = new Member(i + "@rock.com", i + "user", Member.RegistrationId.kakao);
             memberRepository.save(member);
             memberIds.add(member.getId());
             Video video = Video.builder()
