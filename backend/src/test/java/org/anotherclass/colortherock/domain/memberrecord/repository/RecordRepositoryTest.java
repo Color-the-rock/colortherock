@@ -12,16 +12,20 @@ import javax.persistence.EntityManager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest
 @DisplayName("member record repository test")
 class RecordRepositoryTest {
 
-    @Autowired private RecordRepository recordRepository;
-    @Autowired EntityManager entityManager;
+    @Autowired
+    EntityManager entityManager;
+    @Autowired
+    private RecordRepository recordRepository;
+
     @Test
     @DisplayName("member로 member record 검색")
     @Transactional
-    public void 검색_성공() {
+    void 검색_성공() {
         // given
         Member testMember = Member.builder().email("test@colortherock.com").nickname("test_name").registrationId(Member.RegistrationId.KAKAO).build();
         MemberRecord testRecord = MemberRecord.builder().member(testMember).successCount(20).videoCount(40).build();

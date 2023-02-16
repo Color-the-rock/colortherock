@@ -51,11 +51,11 @@ class VideoBoardControllerTest extends IntegrationTest {
 
     ArrayList<Long> videoBoardIds;
 
-    private final Integer PAGE_SIZE = 16;
-    private final Integer MYPAGE_SIZE = 8;
+    private static final Integer PAGE_SIZE = 16;
+    private static final Integer MY_PAGE_SIZE = 8;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         member = Member.builder()
                 .nickname("yeji")
                 .email("yeji@email.com")
@@ -235,7 +235,7 @@ class VideoBoardControllerTest extends IntegrationTest {
                 .andReturn().getResponse();
 
         BaseResponse<List<VideoBoardSummaryResponse>> arrayList = objectMapper.readValue(response.getContentAsString(), BaseResponse.class);
-        assertEquals(MYPAGE_SIZE, arrayList.getResult().size());
+        assertEquals(MY_PAGE_SIZE, arrayList.getResult().size());
     }
 
 

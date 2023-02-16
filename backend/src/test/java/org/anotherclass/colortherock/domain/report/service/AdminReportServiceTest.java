@@ -46,7 +46,7 @@ class AdminReportServiceTest {
     private ArrayList<Long> videoBoardIds;
 
     @BeforeEach
-    public void setData() {
+    void setData() {
         memberIds = new ArrayList<>();
         videoBoardIds = new ArrayList<>();
         // Member, Video, VideoBoard 생성
