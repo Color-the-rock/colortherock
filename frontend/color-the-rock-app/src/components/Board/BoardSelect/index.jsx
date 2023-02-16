@@ -13,7 +13,7 @@ const OptionValue = [
   { key: "초록", value: "초록", color: "green" },
   { key: "하늘", value: "하늘", color: "skyblue" },
   { key: "파랑", value: "파랑", color: "blue" },
-  { key: "남색", value: "남색", color: "indigo" },
+  { key: "남색", value: "남색", color: "navy" },
   { key: "보라", value: "보라", color: "purple" },
   { key: "핑크", value: "핑크", color: "pink" },
   { key: "검정", value: "검정", color: "black" },
