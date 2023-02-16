@@ -71,6 +71,7 @@ public class RecordController {
             throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
         }
         LocalDate videoDate = LocalDate.parse(date);
+        log.info("{}", videoDate);
         List<LevelStatResponse> dateRecords = recordService.getDateRecords(member, videoDate);
         return new BaseResponse<>(dateRecords);
     }
@@ -98,6 +99,7 @@ public class RecordController {
     @PreAuthorizeMember
     public BaseResponse<List<VideoListResponse>> MyVideosByDate(@AuthenticationPrincipal MemberDetails memberDetails, @Valid MyVideoRequest myVideoRequest) {
         Member member = memberDetails.getMember();
+        log.info("{}",myVideoRequest.getShootingDate());
         List<VideoListResponse> videoListResponses = recordService.getMyVideos(member, myVideoRequest);
         return new BaseResponse<>(videoListResponses);
     }
@@ -187,6 +189,7 @@ public class RecordController {
         if (!yearMonth.matches("\\d{4}-(0[1-9]|1[012])")) {
             throw new MalformedDateException(GlobalErrorCode.MALFORMED_DATE);
         }
+        log.info("{}", yearMonth);
         Member member = memberDetails.getMember();
         List<DailyColorResponse> calendarColor = recordService.getCalendarColor(member, yearMonth);
         return new BaseResponse<>(calendarColor);
