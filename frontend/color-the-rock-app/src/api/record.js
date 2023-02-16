@@ -37,5 +37,5 @@ export const recordApi = {
   getCalendarData: (yearMonth) => api.get(`record/calendar/${yearMonth}`),
 
   // 영상 삭제 API
-  deleteRecordVideo: (videoId) => api.delete(`/record/vodep/${videoId}`),
+  deleteRecordVideo: (videoId) => api.delete(`/record/video/${videoId}`),
 };

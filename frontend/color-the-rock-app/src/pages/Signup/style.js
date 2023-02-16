@@ -1,7 +1,3 @@
-/*
-  Singup Style.js
-*/
-
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -47,7 +43,6 @@ export const InputTitle = styled.div`
   font-size: 1.1rem;
   letter-spacing: -0.01em;
 `;
-// gradation + border가 충동이 나지 않도록 적용하는 법 배우기!!!
 export const InputWrap = styled.div`
   width: 100%;
   display: flex;
@@ -96,7 +91,6 @@ export const InputButtonWrap = styled.div`
     .FiArrowRightCircle {
       font-size: 1.25rem;
       margin: 5px 3px 0.25rem 0.25rem;
-      /* margin-top: 0.05px; */
       color: var(--color-badge-live);
     }
   }

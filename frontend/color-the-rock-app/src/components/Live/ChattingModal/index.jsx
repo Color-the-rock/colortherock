@@ -3,6 +3,7 @@ import * as S from "./style";
 import { HiOutlineArrowSmUp } from "react-icons/hi";
 import { useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import PropTypes from "prop-types";
 
 const ChattingModal = ({
   setShowChattingModal,
@@ -19,6 +20,7 @@ const ChattingModal = ({
 
   // 채팅 전송
   const sendMessage = () => {
+    if (message === "") return;
     if (session !== undefined && message !== undefined) {
       const signalOptions = {
         data: JSON.stringify({ message: message }),
@@ -31,9 +33,8 @@ const ChattingModal = ({
   };
 
   const handlePressEnter = () => {
-    if (message === "") return;
-
     if (window.event.keyCode === 13) {
+      if (message === "") return;
       sendMessage();
     }
   };
@@ -72,7 +73,7 @@ const ChattingModal = ({
           >
             <S.CommentInput
               type="text"
-              placeholder="댓글을 입력하세요."
+              placeholder="내용을 입력하세요."
               onChange={(e) => setMessage(e.target.value)}
               value={message}
               onKeyUp={handlePressEnter}
@@ -108,7 +109,7 @@ const ChattingModal = ({
           >
             <S.CommentInput
               type="text"
-              placeholder="댓글을 입력하세요."
+              placeholder="내용을 입력하세요."
               onChange={(e) => setMessage(e.target.value)}
               value={message}
               onKeyUp={handlePressEnter}
@@ -123,3 +124,11 @@ const ChattingModal = ({
   );
 };
 export default ChattingModal;
+
+ChattingModal.propTypes = {
+  setShowChattingModal: PropTypes.func,
+  getToken: PropTypes.func,
+  session: PropTypes.object,
+  messages: PropTypes.array,
+  onSessionCreated: PropTypes.func,
+};

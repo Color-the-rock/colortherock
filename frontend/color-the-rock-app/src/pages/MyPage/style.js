@@ -10,6 +10,13 @@ export const Container = styled.div`
   margin-top: 5rem;
   display: flex;
   flex-direction: column;
+  @media (max-width: 992px) {
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
 `;
 
 export const Title = styled.h1`
@@ -85,6 +92,7 @@ export const RadioLabel = styled.label`
   font-size: 1.125rem;
   line-height: 1.625rem;
   margin-bottom: 1rem;
+  cursor: pointer;
   color: ${(props) =>
     props.checked ? "var(--color-white)" : "var(--color-tertiary)"};
 

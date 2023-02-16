@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import Webcam from "react-webcam";
 import * as S from "./style";
 import { FiArrowLeft } from "react-icons/fi";
@@ -7,13 +7,11 @@ import InputComp from "../../components/Board/InputComp";
 import BoardSubTitle from "../../components/Board/BoardSubTitle";
 import SearchBar from "../../components/Common/KakaoKeywordSearch/SearchBar";
 import RegistBtn from "../../components/Board/RegistBtn";
-import BoardRadioBtn from "../../components/Board/BoardRadioBtn";
 import streamingApi from "../../api/streaming";
-import { FiChevronDown } from "react-icons/fi";
-import { FiChevronUp } from "react-icons/fi";
+import { FiChevronUp, FiChevronDown, FiRefreshCcw } from "react-icons/fi";
 import { HiOutlineCamera } from "react-icons/hi2";
 import { OpenVidu } from "openvidu-browser";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setOV,
   setOpenViduToken,
@@ -21,19 +19,13 @@ import {
   setSessionId,
 } from "../../stores/streaming/streamingSlice";
 
-const videoConstraints = {
-  width: { min: 480 },
-  heigth: { min: 720 },
-  appectRatio: 0.6666666667,
-  facingMode: "user",
-};
-
 const StreamingForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [onSetting, setOnSetting] = useState(true);
+  const [isSwitchingCamera, setSwitchingCamera] = useState(false);
 
   // live 생성시 보내줘야 하는 데이터
   const [isPublic, setIsPublic] = useState(true);
@@ -58,7 +50,6 @@ const StreamingForm = () => {
       return;
     }
     joinSession();
-
     navigate(`/streaming/live`);
   };
 
@@ -102,13 +93,10 @@ const StreamingForm = () => {
       .createLiveSession(formData)
       .then(({ data: { status, result } }) => {
         if (status === 200) {
-          console.log("stausCode : 200 ", result);
           dispatch(setOpenViduToken(result));
           dispatch(setStreamingInfo(requestBody));
           const params = new URL(result).searchParams;
-          console.log("params,", params);
           const sessionId = params.get("sessionId");
-          console.log("params sessionId,", sessionId);
           dispatch(setSessionId(sessionId));
         }
       })
@@ -130,7 +118,11 @@ const StreamingForm = () => {
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
-            videoConstraints={videoConstraints}
+            videoConstraints={{
+              width: { min: 280, max: 561 },
+              height: { min: 720 },
+              facingMode: isSwitchingCamera ? "environment" : "user",
+            }}
           />
 
           {imgSrc && (
@@ -160,19 +152,10 @@ const StreamingForm = () => {
             {onSetting && (
               <S.AddPadding>
                 <S.ComponenentWrap>
-                  <BoardRadioBtn
-                    isPublic={isPublic}
-                    setIsPublic={setIsPublic}
-                    firstText="공개"
-                    SecondText="비공개"
-                    opacity="70"
-                  />
-                </S.ComponenentWrap>
-                <S.ComponenentWrap>
                   <InputComp
                     title={title}
                     handleChange={setTitle}
-                    placeholder="제목을 입력해주세요."
+                    placeholder="방송 제목을 입력해주세요."
                     opacity="70"
                   />
                 </S.ComponenentWrap>
@@ -186,6 +169,12 @@ const StreamingForm = () => {
               </S.AddPadding>
             )}
           </S.OverlapContent>
+          <S.CameraWrap>
+            <FiRefreshCcw
+              className="switching-camera"
+              onClick={() => setSwitchingCamera((prev) => !prev)}
+            />
+          </S.CameraWrap>
           <S.CameraWrap>
             <HiOutlineCamera className="camera" onClick={handleCapture} />
           </S.CameraWrap>

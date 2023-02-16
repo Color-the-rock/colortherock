@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import * as S from "./style";
 import { useNavigate } from "react-router-dom";
-
 import ArrowLeftBtn from "../../../components/Common/ArrowLeftBtn";
 import BoardSubTitle from "../../../components/Board/BoardSubTitle";
 import UploadForm from "../../../components/Board/UploadForm";
@@ -11,6 +10,7 @@ import CustomSelect from "../../../components/Common/CustomSelect";
 import CustomCalendar from "../../../components/Board/CustomCalendar";
 import BoardRadioBtn from "../../../components/Board/BoardRadioBtn/index";
 import { recordApi } from "../../../api/record";
+import Loading from "../../../components/Common/Loading";
 
 const levelValues = [
   { key: "난이도 레벨", value: "" },
@@ -21,6 +21,8 @@ const levelValues = [
   { key: "LEVEL5", value: "5" },
   { key: "LEVEL6", value: "6" },
   { key: "LEVEL7", value: "7" },
+  { key: "LEVEL8", value: "8" },
+  { key: "LEVEL9", value: "9" },
 ];
 const colorValues = [
   { key: "난이도 색상", value: "" },
@@ -49,16 +51,19 @@ const RecordForm = () => {
   const [location, setLocation] = useState("");
   const [selectDate, setSelectDate] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
+  const [isLoading, setLoading] = useState(false);
 
   const clickHandler = () => {
     navigate("/record");
   };
 
   const submitHandler = () => {
-    if (!video || !level || !color || !location || !selectDate || !isSuccess) {
+    if (!video || !level || !color || !location || !selectDate) {
       alert("모든 항목을 채워주세요.");
       return;
     }
+
+    setLoading(true);
 
     const data = {
       shootingDate: selectDate,
@@ -77,14 +82,12 @@ const RecordForm = () => {
     recordApi
       .uploadLocalVideo(formData)
       .then((res) => {
-        console.log("res", res);
-        console.log("성공");
         navigate("/record");
       })
       .catch((err) => {
         console.log("err: ", err);
-        console.log("실패");
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -100,7 +103,11 @@ const RecordForm = () => {
             </S.ComponenentWrap>
 
             <S.ComponenentWrap>
-              <UploadForm video={video} setVideo={setVideo}></UploadForm>
+              <UploadForm
+                isLoading={isLoading}
+                video={video}
+                setVideo={setVideo}
+              ></UploadForm>
             </S.ComponenentWrap>
 
             <S.ComponenentWrap>
@@ -122,7 +129,6 @@ const RecordForm = () => {
             </S.SelectButtonWrap>
 
             <S.ComponenentWrap>
-              {/* 라디오 버튼 만들어보자 */}
               <BoardRadioBtn
                 isPublic={isSuccess}
                 setIsPublic={setIsSuccess}
@@ -140,6 +146,7 @@ const RecordForm = () => {
               <RegistBtn btnName="등록하기" clickHandler={submitHandler} />
             </S.ComponenentWrap>
           </S.Content>
+          {isLoading && <Loading />}
         </S.ContentWrap>
       </S.Container>
     </S.ContainerWrap>

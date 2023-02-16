@@ -11,6 +11,7 @@ export const LoadingWrapper = styled.div`
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
 `;
 export const Icon = styled.img``;
 export const Text = styled.h1`
