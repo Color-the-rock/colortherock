@@ -25,9 +25,6 @@ public class RecordingSaveRequest {
     private Integer level;
 
     @NotBlank
-    @Schema(description = "녹화 제목")
-    private String title;
-    @NotBlank
     @Schema(description = "녹화 암장 이름")
     private String gymName;
 

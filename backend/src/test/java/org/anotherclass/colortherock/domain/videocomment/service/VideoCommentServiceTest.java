@@ -50,7 +50,7 @@ class VideoCommentServiceTest {
     ArrayList<Long> videoCommentIds;
 
     @BeforeEach
-    public void setVideoCommentData() {
+    void setVideoCommentData() {
         memberIds = new ArrayList<>();
         videoIds = new ArrayList<>();
         videoBoardIds = new ArrayList<>();
@@ -65,7 +65,7 @@ class VideoCommentServiceTest {
 
         // Video, VideoBoard, VideoComment 생성
         for (int i = 1; i <= 4; i++) {
-            Video video = new Video(LocalDate.parse("2023-01-30"), 4, "더클라임 강남점", "s3url", true, "thumbnail","name", "초록", saveA, "videoName", false);
+            Video video = new Video(LocalDate.parse("2023-01-30"), 4, "더클라임 강남점", "s3url", true, "thumbnail", "name", "초록", saveA, "videoName", false);
             Video saveVideo = videoRepository.save(video);
             VideoBoard videoBoard = new VideoBoard("성공했습니다", false, saveVideo, memberA);
             VideoBoard saveVideoBoard = videoBoardRepository.save(videoBoard);
@@ -114,9 +114,8 @@ class VideoCommentServiceTest {
                 NewCommentRequest request = new NewCommentRequest();
                 request.setVideoBoardId(videoBoardIds.get(0));
                 request.setContent("멋있어요!");
-                assertThrows(GlobalBaseException.class, () -> {
-                    videoCommentService.insertComment(memberId, request);
-                });
+                assertThrows(GlobalBaseException.class, () -> videoCommentService.insertComment(memberId, request));
+
             }
 
             @Test
@@ -126,9 +125,7 @@ class VideoCommentServiceTest {
                 NewCommentRequest request = new NewCommentRequest();
                 request.setVideoBoardId(2000000L); // DB에 없는 id
                 request.setContent("멋있어요!");
-                assertThrows(PostNotFoundException.class, () -> {
-                    videoCommentService.insertComment(memberId, request);
-                });
+                assertThrows(PostNotFoundException.class, () -> videoCommentService.insertComment(memberId, request));
             }
         }
 
@@ -167,9 +164,7 @@ class VideoCommentServiceTest {
                 request.setCommentId(100000000L); // DB에 없는 commentId
                 request.setContent("수정했어요");
 
-                assertThrows(CommentNotFoundException.class, () -> {
-                    videoCommentService.updateComment(memberId, request);
-                });
+                assertThrows(CommentNotFoundException.class, () -> videoCommentService.updateComment(memberId, request));
             }
 
             @Test
@@ -180,9 +175,7 @@ class VideoCommentServiceTest {
                 request.setCommentId(videoCommentIds.get(0));
                 request.setContent("수정했어요");
 
-                assertThrows(GlobalBaseException.class, () -> {
-                    videoCommentService.updateComment(memberId, request);
-                });
+                assertThrows(GlobalBaseException.class, () -> videoCommentService.updateComment(memberId, request));
             }
         }
 
@@ -198,7 +191,7 @@ class VideoCommentServiceTest {
                 request.setContent("수정했어요");
 
                 videoCommentService.updateComment(memberId, request);
-                VideoComment comment = videoCommentRepository.findById(request.getCommentId()).get();
+                VideoComment comment = videoCommentRepository.findById(request.getCommentId()).orElseThrow();
 
                 assertEquals(request.getContent(), comment.getContent());
             }
@@ -219,9 +212,8 @@ class VideoCommentServiceTest {
                 Long commentId = videoCommentIds.get(0);
 
                 videoCommentService.deleteComment(memberId, commentId);
-                assertThrows(CommentNotFoundException.class, () -> {
-                    videoCommentService.deleteComment(memberId, commentId);
-                });
+                assertThrows(CommentNotFoundException.class, () -> videoCommentService.deleteComment(memberId, commentId));
+
             }
         }
     }

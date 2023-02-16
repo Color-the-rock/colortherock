@@ -12,18 +12,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
+@SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest
-public class LiveServiceTest {
-    @Autowired private LiveService liveService;
+class LiveServiceTest {
+    @Autowired
+    private LiveService liveService;
     private OpenVidu openVidu;
-    @Value("${OPENVIDU_URL}") private String OPENVIDU_URL;
-    @Value("${OPENVIDU_SECRET}") private String OPENVIDU_SECRET;
+    @Value("${OPENVIDU_URL}")
+    private String OPENVIDU_URL;
+    @Value("${OPENVIDU_SECRET}")
+    private String OPENVIDU_SECRET;
     @Autowired
     private LiveRepository liveRepository;
 
     @Test
     @DisplayName("세션 삭제 요청")
-    public void 세션삭제_성공() throws OpenViduJavaClientException, OpenViduHttpException {
+    void 세션삭제_성공() throws OpenViduJavaClientException, OpenViduHttpException {
         // given
         openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
         Session session = openVidu.createSession();

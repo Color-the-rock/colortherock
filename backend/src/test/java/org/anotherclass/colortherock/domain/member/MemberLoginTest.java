@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class MemberLoginTest extends IntegrationTest {
+class MemberLoginTest extends IntegrationTest {
 
     @Autowired
     MemberRepository memberRepository;

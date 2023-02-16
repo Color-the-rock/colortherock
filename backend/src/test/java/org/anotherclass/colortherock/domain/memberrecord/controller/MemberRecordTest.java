@@ -34,7 +34,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class MemberRecordTest extends IntegrationTest {
+@SuppressWarnings("NonAsciiCharacters")
+class MemberRecordTest extends IntegrationTest {
 
     @Autowired
     MemberRepository memberRepository;
@@ -58,8 +59,9 @@ public class MemberRecordTest extends IntegrationTest {
     String token;
     Video video;
     Long videoId;
+
     @BeforeEach
-    public void setMemberAndToken() {
+    void setMemberAndToken() {
         // Member 추가 및 token 설정
         member = new Member("johan@rock.com", "조한", Member.RegistrationId.google);
         Member savedMember = memberRepository.save(member);
@@ -89,10 +91,10 @@ public class MemberRecordTest extends IntegrationTest {
 
     @Test
     @DisplayName("[GET]전체 영상 색상 별 통계 조회")
-    public void 레벨9개_통계조회() throws Exception {
+    void 레벨9개_통계조회() throws Exception {
         mockMvc.perform(
-            get(url + "/record/color")
-            .header("Authorization", AUTHORIZATION_HEADER + token))
+                        get(url + "/record/color")
+                                .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result").isArray())
                 .andExpect(jsonPath("$.result[0].level").isNumber());
@@ -100,7 +102,7 @@ public class MemberRecordTest extends IntegrationTest {
 
     @Test
     @DisplayName("[GET]날짜별 운동 기록 색상 통계 조회")
-    public void 레벨9개_날짜별_통계조회() throws Exception {
+    void 레벨9개_날짜별_통계조회() throws Exception {
         mockMvc.perform(
                         get(url + "/record/color/2023-01-17")
                                 .header("Authorization", AUTHORIZATION_HEADER + token))
@@ -112,7 +114,7 @@ public class MemberRecordTest extends IntegrationTest {
 
     @Test
     @DisplayName("[GET]날짜별 운동 기록 색상 통계 조회 - 실패")
-    public void 레벨9개_날짜별_통계조회_실패() throws Exception {
+    void 레벨9개_날짜별_통계조회_실패() throws Exception {
         mockMvc.perform(
                         get(url + "/record/color/2023-13-17")
                                 .header("Authorization", AUTHORIZATION_HEADER + token))
@@ -121,7 +123,7 @@ public class MemberRecordTest extends IntegrationTest {
 
     @Test
     @DisplayName("[GET]전체 운동 기록 누적 통계 조회")
-    public void 사용자_누적통계_조회() throws Exception {
+    void 사용자_누적통계_조회() throws Exception {
         MemberRecord record = recordRepository.findByMember(member);
         int originalVideoCount = record.getVideoCount();
         int originalSuccessCount = record.getSuccessCount();
@@ -129,8 +131,8 @@ public class MemberRecordTest extends IntegrationTest {
         recordService.addVideoCount(member, true);
         recordService.addVideoCount(member, false);
         mockMvc.perform(
-                get(url + "/record/total")
-                        .header("Authorization", AUTHORIZATION_HEADER + token))
+                        get(url + "/record/total")
+                                .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(jsonPath("$.status", is(200)))
                 .andExpect(jsonPath("$.result.videoCount").value(originalVideoCount + 3))
                 .andExpect(jsonPath("$.result.successCount").value(originalSuccessCount + 2));
@@ -138,7 +140,7 @@ public class MemberRecordTest extends IntegrationTest {
 
     @Test
     @DisplayName("[GET]사용자 날짜별 성공/실패 영상 조회")
-    public void 날짜별_성공_실패_영상조회() throws Exception {
+    void 날짜별_성공_실패_영상조회() throws Exception {
 
         MultiValueMap<String, String> info = new LinkedMultiValueMap<>();
 
@@ -155,7 +157,7 @@ public class MemberRecordTest extends IntegrationTest {
 
     @Test
     @DisplayName("[GET] 영상 상세 조회")
-    public void 영상_상세_조회() throws Exception {
+    void 영상_상세_조회() throws Exception {
         mockMvc.perform(
                         get(url + "/record/video/" + videoId)
                                 .header("Authorization", AUTHORIZATION_HEADER + token)
@@ -165,7 +167,7 @@ public class MemberRecordTest extends IntegrationTest {
 
     @Test
     @DisplayName("[GET] 영상 상세 조회 - 실패(해당 아이디의 영상 없음)")
-    public void 영상_상세_조회_실패() throws Exception {
+    void 영상_상세_조회_실패() throws Exception {
         mockMvc.perform(
                 get(url + "/record/video/-1")
                         .header("Authorization", AUTHORIZATION_HEADER + token)
@@ -174,7 +176,7 @@ public class MemberRecordTest extends IntegrationTest {
 
     @Test
     @DisplayName("[POST] 로컬 영상 업로드")
-    public void 로컬_영상_업로드_성공() throws Exception {
+    void 로컬_영상_업로드_성공() throws Exception {
         MockMultipartFile newVideo = new MockMultipartFile("newVideo", "video.mp4", "mp4", new FileInputStream("src/test/resources/video/test_recording.mp4"));
         String content = "{" +
                 "\"shootingDate\": \"2023-01-17\"," +
@@ -184,28 +186,28 @@ public class MemberRecordTest extends IntegrationTest {
                 "\"isSuccess\": true }";
         MockMultipartFile json = new MockMultipartFile("uploadVideoRequest", "jsondata", "application/json", content.getBytes(StandardCharsets.UTF_8));
         mockMvc.perform(multipart(url + "/record/video")
-                    .file(newVideo)
-                    .file(json)
-                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .characterEncoding("UTF-8")
-                    .header("Authorization", AUTHORIZATION_HEADER + token))
+                        .file(newVideo)
+                        .file(json)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(jsonPath("$.status", is(200)));
 
     }
 
     @Test
     @DisplayName("[DELETE] 영상 삭제 요청")
-    public void 영상_삭제() throws Exception {
+    void 영상_삭제() throws Exception {
         mockMvc.perform(
-                delete(url + "/record/video/" + videoId)
-                        .header("Authorization", AUTHORIZATION_HEADER + token))
+                        delete(url + "/record/video/" + videoId)
+                                .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(jsonPath("$.status", is(200)));
     }
 
     @Test
     @DisplayName("[GET] 암장 방문 통계 반환")
-    public void 통계반환_성공() throws Exception {
+    void 통계반환_성공() throws Exception {
         video = UploadVideoRequest.builder()
                 .shootingDate(LocalDate.parse("2023-01-18"))
                 .level(1)
@@ -225,7 +227,7 @@ public class MemberRecordTest extends IntegrationTest {
 
     @Test
     @DisplayName("[GET] 날짜별 완등 레벨 색상 반환")
-    public void 레벨색상반환_성공() throws Exception {
+    void 레벨색상반환_성공() throws Exception {
         video = UploadVideoRequest.builder()
                 .shootingDate(LocalDate.parse("2023-01-18"))
                 .level(1)
@@ -234,8 +236,8 @@ public class MemberRecordTest extends IntegrationTest {
                 .color("노랑").build().toEntity(member);
         videoRepository.save(video);
         mockMvc.perform(
-                get(url + "/record/calendar/2023-01")
-                        .header("Authorization", AUTHORIZATION_HEADER + token))
+                        get(url + "/record/calendar/2023-01")
+                                .header("Authorization", AUTHORIZATION_HEADER + token))
                 .andExpect(jsonPath("$.status", is(200)))
                 .andExpect(jsonPath("$.result").isArray())
                 .andExpect(jsonPath("$.result[0].date", is("2023-01-17")));

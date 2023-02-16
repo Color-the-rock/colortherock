@@ -13,13 +13,11 @@ import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.anotherclass.colortherock.global.error.GlobalErrorCode;
 import org.anotherclass.colortherock.global.security.annotation.PreAuthorizeMember;
-import org.jcodec.api.JCodecException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -88,7 +86,7 @@ public class LiveController {
     @PostMapping("/live/uploadRecord")
     @Operation(description = "프론트에서 사용 x",summary = "프론트에서 사용 X ")
     @ApiResponse(responseCode = "200", description = "업로드 성공")
-    public BaseResponse<Object> uploadAtOpenviduServer(@RequestBody RecordingUploadAtOpenviduServerRequest request) throws JCodecException, IOException {
+    public BaseResponse<Object> uploadAtOpenviduServer(@RequestBody RecordingUploadAtOpenviduServerRequest request) {
 
         liveService.uploadAtOpenviduServer(request);
         return new BaseResponse<>(GlobalErrorCode.SUCCESS);
