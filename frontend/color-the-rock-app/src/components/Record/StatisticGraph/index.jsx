@@ -19,7 +19,7 @@ const StatisticGraph = () => {
           console.log("visited!!", _result);
           let top3Data = [];
 
-          for (let i = 0; i < _result.length; i++) {
+          for (let i = 0; i < _result.data.length; i++) {
             console.log("data?>>> ", i, " ", _result.data[i]);
             if (i > 2) return;
             top3Data.push(_result.data[i]);
