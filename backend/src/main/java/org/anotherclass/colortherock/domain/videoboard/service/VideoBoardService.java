@@ -92,7 +92,7 @@ public class VideoBoardService {
     public VideoBoardDetailResponse getVideoDetail(Long videoBoardId) {
         VideoBoard vb = videoBoardRepository.findById(videoBoardId)
                 .orElseThrow(() -> new PostNotFoundException(GlobalErrorCode.POST_NOT_FOUND));
-        if(vb.getIsHidden()) return null;
+        if(Boolean.TRUE.equals(vb.getIsHidden())) return null;
         return VideoBoardDetailResponse.builder()
                 .videoBoardId(vb.getId())
                 .nickname(vb.getMember().getNickname())

@@ -48,7 +48,7 @@ class ReportServiceTest {
     private ArrayList<Long> videoBoardIds;
 
     @BeforeEach
-    public void setData() {
+    void setData() {
         memberIds = new ArrayList<>();
         videoBoardIds = new ArrayList<>();
         // Member, Video, VideoBoard 생성
@@ -159,7 +159,6 @@ class ReportServiceTest {
             // Assert that the exception is the expected exception
             Assertions.assertThat(e.getMessage()).isEqualTo("본인 스스로를 신고할 수 없습니다.");
         }
-
 
 
     }

@@ -16,8 +16,8 @@ import java.io.UnsupportedEncodingException;
 @AutoConfigureMockMvc
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-
-public class IntegrationTest {
+public
+class IntegrationTest {
     @Autowired
     public ObjectMapper objectMapper;
     public static final String TOKEN_PREFIX = "Bearer ";
