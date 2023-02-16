@@ -5,7 +5,7 @@ import { FiX } from "react-icons/fi";
 const ALLOW_FILE_EXTENSION = "mp4,avi,wmv,webm,mov,flv,mkv";
 const FILE_SIZE_MAX_LIMIT = 100 * 1024 * 1024; // 100MB
 
-const UploadForm = ({ video, setVideo }) => {
+const UploadForm = ({ video, setVideo, isLoading }) => {
   const [isSelected, setIsSelected] = useState(false);
 
   const handleFileChange = (e) => {
@@ -24,6 +24,7 @@ const UploadForm = ({ video, setVideo }) => {
         alert("업로드 가능한 최대 용량은 10MB입니다.");
         return;
       }
+      console.log("video: ", e.target.files[0]);
       setVideo(e.target.files[0]);
       setIsSelected(true);
     }
@@ -39,7 +40,13 @@ const UploadForm = ({ video, setVideo }) => {
       <S.UploadArea>
         {isSelected ? (
           <S.VideoWrap>
-            <FiX className="cancelVideo" onClick={handleDeleteFile} />
+            {isLoading ? null : (
+              <FiX
+                isLoading={isLoading}
+                className="cancelVideo"
+                onClick={handleDeleteFile}
+              />
+            )}
             <video
               src={window.URL.createObjectURL(video)}
               muted
@@ -83,6 +90,7 @@ const fileExtensionValid = (files) => {
     // 2. 확장자가 없는 경우
     return false;
   }
+
   return true;
 };
 

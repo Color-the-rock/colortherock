@@ -151,7 +151,11 @@ const BoardForm = () => {
               </S.UploadVideoWrap>
             ) : (
               <S.ComponentWrap>
-                <UploadForm video={video} setVideo={setVideo}></UploadForm>
+                <UploadForm
+                  isLoading={isLoading}
+                  video={video}
+                  setVideo={setVideo}
+                ></UploadForm>
               </S.ComponentWrap>
             )}
 
