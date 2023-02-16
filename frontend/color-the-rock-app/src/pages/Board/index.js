@@ -44,12 +44,13 @@ const Board = () => {
               setResult((prev) => [...prev, ..._result]);
             }
           }
-
-          let lastId =
-            _result[_result.length - 1].videoBoardId === undefined
-              ? -1
-              : _result[_result.length - 1].videoBoardId;
-          setStoreId(lastId);
+          if (_result.length !== 0) {
+            let lastId =
+              _result[_result.length - 1].videoBoardId === undefined
+                ? -1
+                : _result[_result.length - 1].videoBoardId;
+            setStoreId(lastId);
+          }
         }
       })
       .catch((error) => console.log(error))

@@ -57,6 +57,7 @@ export const RotateCcw = styled(HiReply)`
   font-size: 2rem;
   margin: 1rem 0;
   opacity: 100%;
+  cursor: pointer;
 `;
 
 export const Sticker = styled.img`
@@ -86,4 +87,5 @@ export const Button = styled.span`
   font-size: 2rem;
   padding: 1rem 0;
   opacity: 100%;
+  cursor: pointer;
 `;
