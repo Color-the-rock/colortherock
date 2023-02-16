@@ -16,16 +16,18 @@ const UploadS3Form = () => {
 
   // 날짜가 바뀔 때마다 영상이 바뀌도록....
   useEffect(() => {
-    if (!selectDate) return;
+    if (selectDate === "") return;
 
     const params = {
-      videoId: 1,
+      videoId: -1,
       shootingDate: selectDate,
       isSuccess: true,
     };
+
     recordApi
       .getAllRecordVideo(params)
       .then((res) => {
+        console.log("res: ", res.data.result);
         setResult(res.data.result);
       })
       .catch((err) => {

@@ -245,41 +245,6 @@ const StreamingLive = () => {
       .catch((error) => console.error("Error replacing track", error));
 
     setFrontCamera((prev) => !prev);
-
-    // try {
-    //   const devices = await ov.getDevices();
-    //   let videoDevices = devices.filter(
-    //     (device) => device.kind === "videoinput"
-    //   );
-
-    //   if (videoDevices && videoDevices.length > 1) {
-    //     let newVideoDevice = videoDevices.filter(
-    //       (device) => device.deviceId !== currentVideoDevice.deviceId
-    //     );
-
-    //     if (newVideoDevice.length > 0) {
-    //       let newPublisher = ov.initPublisher(undefined, {
-    //         videoSource: isFrontCamera
-    //           ? videoDevices[0].deviceId
-    //           : videoDevices[videoDevices.length - 1].deviceId,
-    //         publishAudio: true,
-    //         publishVideo: true,
-    //         mirror: false,
-    //       });
-
-    //       setFrontCamera((prev) => !prev);
-
-    //       await session.unpublish(mainStreamManager);
-    //       await session.publish(newPublisher);
-
-    //       setCurrentVideoDevice(newVideoDevice[0]);
-    //       setMainStreamManager(newPublisher);
-    //       setPublisher(newPublisher);
-    //     }
-    //   }
-    // } catch (e) {
-    //   console.error(e);
-    // }
   };
 
   // video 설정
@@ -495,6 +460,7 @@ const StreamingLive = () => {
           {!isShowChattingModal && (
             <S.CommentWrapper>
               <CommentBtn
+                isLive={true}
                 isReadOnly={true}
                 onClick={() => setShowChattingModal(true)}
               />

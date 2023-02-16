@@ -44,8 +44,8 @@ export const Content = styled.div`
 
   .camera {
     position: absolute;
-    right: 1rem;
-    bottom: 6rem;
+    right: 1.4rem;
+    bottom: 9.5rem;
     z-index: 1;
     width: 2.5rem;
     height: 2.5rem;
@@ -57,8 +57,8 @@ export const Content = styled.div`
 
   .switching-camera {
     position: absolute;
-    right: 1rem;
-    bottom: 9.5rem;
+    right: 1.4rem;
+    bottom: 6rem;
     z-index: 1;
     width: 2.5rem;
     height: 2.5rem;
