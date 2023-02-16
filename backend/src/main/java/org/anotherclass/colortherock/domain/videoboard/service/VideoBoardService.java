@@ -16,6 +16,7 @@ import org.anotherclass.colortherock.domain.videoboard.repository.VideoBoardRepo
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessPostUpdateRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.SuccessVideoUploadRequest;
 import org.anotherclass.colortherock.domain.videoboard.request.VideoBoardSearchRequest;
+import org.anotherclass.colortherock.domain.videoboard.response.ColorCodeKorean;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardDetailResponse;
 import org.anotherclass.colortherock.domain.videoboard.response.VideoBoardSummaryResponse;
 import org.anotherclass.colortherock.global.error.GlobalBaseException;
@@ -56,15 +57,16 @@ public class VideoBoardService {
         }
 
         return slices.toList().stream()
-                .map(vb -> VideoBoardSummaryResponse.builder()
-                        .videoBoardId(vb.getId())
-                        .title(vb.getTitle())
-                        .thumbnailURL(vb.getVideo().getThumbnailURL())
-                        .color(vb.getVideo().getColor())
-                        .createdDate(vb.getCreatedDate().toLocalDate())
-                        .gymName(vb.getVideo().getGymName())
-                        .build()).collect(Collectors.toList());
-
+                .map(vb ->
+                    VideoBoardSummaryResponse.builder()
+                            .videoBoardId(vb.getId())
+                            .title(vb.getTitle())
+                            .thumbnailURL(vb.getVideo().getThumbnailURL())
+                            .color(vb.getVideo().getColor())
+                            .createdDate(vb.getCreatedDate().toLocalDate())
+                            .gymName(vb.getVideo().getGymName())
+                            .colorCode(ColorCodeKorean.getColor(vb.getVideo().getColor()))
+                            .build()).collect(Collectors.toList());
     }
 
     @Transactional

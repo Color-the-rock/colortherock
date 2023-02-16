@@ -7,8 +7,20 @@ import java.util.Map;
 
 @Schema(description = "한글 색상 코드")
 public enum ColorCodeKorean {
-    WHITE("하양", "#FFFFFF");
-
+    WHITE("흰색", "white"),
+    RED("빨강", "red"),
+    ORANGE("주황", "orange"),
+    YELLOW("노랑", "yellow"),
+    GREENYELLOW("연두", "greenyellow"),
+    GREEN("초록", "green"),
+    SKYBLUE("하늘", "skyblue" ),
+    BLUE("파랑", "blue"),
+    NAVY("남색", "navy"),
+    PURPLE("보라", "purple"),
+    PINK("핑크", "pink"),
+    BLACK("검정", "black"),
+    BROWN("갈색", "brown"),
+    GREY("회색", "grey");
     private final String color;
     private final String code;
 
