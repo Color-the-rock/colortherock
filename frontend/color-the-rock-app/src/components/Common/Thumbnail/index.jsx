@@ -33,7 +33,7 @@ const Thumbnail = ({
     </S.Container>
   );
 };
-export default Thumbnail;
+export default React.memo(Thumbnail);
 
 Thumbnail.propTypes = {
   id: PropTypes.number,
