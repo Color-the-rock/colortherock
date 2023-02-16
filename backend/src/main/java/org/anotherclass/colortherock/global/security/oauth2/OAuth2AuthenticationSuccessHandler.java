@@ -54,7 +54,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 //                    .scheme("http")
 //                    .host("localhost")
 //                    .port(3000)
-//                    .path("/oauth")
+                    .path("/oauth")
                     .queryParam("refresh", token.getRefreshTokenKey())
                     .queryParam("access", token.getAccessTokenValue())
                     .queryParam("email", member.getEmail())
@@ -65,7 +65,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 //                    .scheme("http")
 //                    .host("localhost")
 //                    .port(3000)
-//                    .path("/oauth")
+                    .path("/oauth")
                     .queryParam("email", memberInfo.getEmail())
                     .queryParam("registrationId", memberInfo.getRegistrationId()).toUriString();
         }
