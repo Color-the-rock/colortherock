@@ -49,7 +49,7 @@ const Preview = () => {
         <ArrowLeftBtn clickHandler={() => navigate(`/record`)} />
         <S.Button onClick={handleOnClickDeleteVideo}>영상 삭제</S.Button>
       </S.Wrapper>
-      <S.Video src={result.s3URL} type="video/mp4" autoPlay controls></S.Video>
+      <S.Video src={result.s3URL} type="video/mp4" controls></S.Video>
     </S.Container>
   );
 };
