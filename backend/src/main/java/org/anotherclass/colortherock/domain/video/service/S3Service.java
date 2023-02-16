@@ -23,6 +23,8 @@ import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 //import java.awt.*;
 //import java.awt.geom.AffineTransform;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
@@ -156,21 +158,21 @@ public class S3Service {
             FrameGrab grab = FrameGrab.createFrameGrab(fileChannelWrapper);
             Picture picture = grab.seekToSecondPrecise(1.0).getNativeFrame();
             BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
-//            // Convert the image to a JPEG and write it to a ByteArrayOutputStream
-//
-//            int width = bufferedImage.getWidth();
-//            int height = bufferedImage.getHeight();
-//            BufferedImage outputImage = new BufferedImage(height, width, bufferedImage.getType());
-//
-//            Graphics2D g2d = outputImage.createGraphics();
-//            AffineTransform at = new AffineTransform();
-//            at.translate(height, 0);
-//            at.rotate(Math.PI / 2);
-//            g2d.setTransform(at);
-//            g2d.drawImage(bufferedImage, 0, 0, null);
-//            g2d.dispose();
+            // Convert the image to a JPEG and write it to a ByteArrayOutputStream
 
-            ImageIO.write(bufferedImage, "JPEG", baos);
+            int width = bufferedImage.getWidth();
+            int height = bufferedImage.getHeight();
+            BufferedImage outputImage = new BufferedImage(height, width, bufferedImage.getType());
+
+            Graphics2D g2d = outputImage.createGraphics();
+            AffineTransform at = new AffineTransform();
+            at.translate(height, 0);
+            at.rotate(Math.PI / 2);
+            g2d.setTransform(at);
+            g2d.drawImage(bufferedImage, 0, 0, null);
+            g2d.dispose();
+
+            ImageIO.write(outputImage, "JPEG", baos);
             baos.flush();
             InputStream is = new ByteArrayInputStream(baos.toByteArray());
             // Upload the object to S3
