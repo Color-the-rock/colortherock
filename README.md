@@ -91,8 +91,7 @@ SSAFY 8기 2학기 공통 프로젝트
 
 ## CI / CD 파이프라인
 
-![cicd](./assets/그림1.png)
-
+![](./assets/cicd.png)
 
 
 1. GitLab에서 Push나 PR시 Webhook이 감지해서 Jenkins에 요청을 보낸다.
