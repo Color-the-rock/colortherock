@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.domain.member.entity.Member;
 import org.anotherclass.colortherock.domain.member.entity.MemberDetails;
 import org.anotherclass.colortherock.domain.memberrecord.exception.MalformedDateException;
@@ -35,6 +36,7 @@ import java.util.List;
 @Tag(name = "member record", description = "Member Record API")
 @RequiredArgsConstructor
 @RequestMapping("/api/record")
+@Slf4j
 public class RecordController {
 
     private final RecordService recordService;
@@ -124,6 +126,7 @@ public class RecordController {
     public BaseResponse<Void> uploadVideo(@AuthenticationPrincipal MemberDetails memberDetails
             , @Valid @RequestPart UploadVideoRequest uploadVideoRequest, @RequestPart MultipartFile newVideo) {
         videoService.uploadMyVideo(memberDetails, newVideo, uploadVideoRequest);
+        log.info("{}", uploadVideoRequest.getShootingDate());
         // 영상 누적 통계에서 영상 갯수 올리기
         Member member = memberDetails.getMember();
         recordService.addVideoCount(member, uploadVideoRequest.getIsSuccess());
