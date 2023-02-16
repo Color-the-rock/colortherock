@@ -21,7 +21,7 @@ const StatisticGraph = () => {
 
           for (let i = 0; i < _result.data.length; i++) {
             console.log("data?>>> ", i, " ", _result.data[i]);
-            if (i > 2) return;
+            if (i > 2) break;
             top3Data.push(_result.data[i]);
           }
 
