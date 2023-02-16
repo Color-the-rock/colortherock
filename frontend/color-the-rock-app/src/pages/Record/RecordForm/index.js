@@ -103,7 +103,11 @@ const RecordForm = () => {
             </S.ComponenentWrap>
 
             <S.ComponenentWrap>
-              <UploadForm video={video} setVideo={setVideo}></UploadForm>
+              <UploadForm
+                isLoading={isLoading}
+                video={video}
+                setVideo={setVideo}
+              ></UploadForm>
             </S.ComponenentWrap>
 
             <S.ComponenentWrap>

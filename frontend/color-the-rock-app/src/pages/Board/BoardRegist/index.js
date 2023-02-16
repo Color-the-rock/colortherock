@@ -86,7 +86,6 @@ const BoardForm = () => {
     }
 
     setLoading(true);
-
     if (propData) {
       boardApi
         .postRegisterRecordVideo({ videoId: propData.id, title })
@@ -151,7 +150,11 @@ const BoardForm = () => {
               </S.UploadVideoWrap>
             ) : (
               <S.ComponentWrap>
-                <UploadForm video={video} setVideo={setVideo}></UploadForm>
+                <UploadForm
+                  isLoading={isLoading}
+                  video={video}
+                  setVideo={setVideo}
+                ></UploadForm>
               </S.ComponentWrap>
             )}
 
