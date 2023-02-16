@@ -35,6 +35,7 @@ export const VideoWrap = styled.div`
     right: 16px;
     top: 16px;
     font-size: 1.5rem;
+    z-index: 1;
   }
 
   video {
