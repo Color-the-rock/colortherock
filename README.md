@@ -91,7 +91,7 @@ SSAFY 8기 2학기 공통 프로젝트
 
 ## CI / CD 파이프라인
 
-![Frame 1](./assets/그림1.png)
+![cicd](./assets/그림1.png)
 
 
 
