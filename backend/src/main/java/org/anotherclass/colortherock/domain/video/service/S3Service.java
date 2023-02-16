@@ -153,7 +153,7 @@ public class S3Service {
         String name = file.getAbsolutePath();
         int index = name.lastIndexOf(".");
         String extension = name.substring(index + 1).toLowerCase();
-        String newName = name.substring(0, index + 1) + extension;
+        String newName = name.substring(0, index) + extension;
         boolean b = file.renameTo(new File(newName));
         // Get image from video
         try (FileChannelWrapper fileChannelWrapper = NIOUtils.readableChannel(file);
