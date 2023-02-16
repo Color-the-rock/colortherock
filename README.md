@@ -107,3 +107,16 @@ SSAFY 8기 2학기 공통 프로젝트
 9. Nginx에서 현재 설정되어 있는 포트를 확인한다.
 10. Nginx에서 각 worker서버와 SSH 통신을 해서 현재 설정되어 있는 포트와 반대 포트에 서버가 실행되고 있는지 확인한다.
 11. 모든 서버에 반대 포트가 실행 중일때 NGINX에서 설정을 Blue - > Green ( Green -> Blue)로 포트를 스위칭 하고 리로드한다.
+
+
+
+## Design
+
+![Untitled (1)](./assets/Untitled (1).png)
+
+
+
+
+
+##  사이트 기능 설명
+
