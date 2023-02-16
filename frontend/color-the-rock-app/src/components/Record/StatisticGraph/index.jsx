@@ -16,6 +16,7 @@ const StatisticGraph = () => {
       .getVisitedGymData()
       .then(({ data: { status, result: _result } }) => {
         if (status === 200) {
+          console.log("visited!!", _result);
           let top3Data = [];
           if (_result.length > 3) {
             top3Data = [_result.data[0], _result.data[1], _result.data[2]];
