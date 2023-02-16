@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.anotherclass.colortherock.global.common.BaseResponse;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -54,6 +55,13 @@ public class GlobalExControllerAdvice {
         log.error("handleHttpRequestMethodNotSupportedException", e);
 
         return new BaseResponse<>(GlobalErrorCode.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    protected BaseResponse<Object> handleAccessDeniedException(AccessDeniedException e) {
+        log.info("{}",e.getMessage());
+        return new BaseResponse<>(GlobalErrorCode.ACCESS_DENIED);
     }
 
     /**

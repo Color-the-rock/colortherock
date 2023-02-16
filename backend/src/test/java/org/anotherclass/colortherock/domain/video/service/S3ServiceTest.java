@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
@@ -21,8 +19,9 @@ class S3ServiceTest {
     @Autowired
     private S3Service s3Service;
 
-    @Test @DisplayName("S3 영상 업로드")
-    void upload() throws IOException {
+    @Test
+    @DisplayName("S3 영상 업로드")
+    void upload() {
         // given
         final byte[] content = "hello world".getBytes();
         MockMultipartFile mockFile = new MockMultipartFile("content", "test.jpg", "mutipart/mixed", content);
@@ -32,10 +31,11 @@ class S3ServiceTest {
         Assertions.assertNotNull(s3URL);
     }
 
-    @Test @DisplayName("S3 영상 삭제")
+    @Test
+    @DisplayName("S3 영상 삭제")
     void deleteS3Video() {
         assertDoesNotThrow(() ->
-            s3Service.deleteFile("test.jpg")
+                s3Service.deleteFile("test.jpg")
         );
     }
 }

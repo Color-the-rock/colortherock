@@ -15,4 +15,9 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
+//	@PostConstruct
+//	public void started() {
+//		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+//	}
+
 }

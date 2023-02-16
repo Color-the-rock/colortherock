@@ -21,6 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
+//import java.awt.*;
+//import java.awt.geom.AffineTransform;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
@@ -44,7 +48,9 @@ public class S3Service {
     @Value("${CLOUDFRONT_URL}")
     private String cloudFrontUrl;
 
-    // S3Client 생성
+    /**
+     * 빈 주입이 끝나면 s3Client를 생성한다.
+     */
     @PostConstruct
     public void setS3Client() {
         AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
@@ -57,7 +63,13 @@ public class S3Service {
         log.log(Level.INFO, "s3Client 생성완료");
     }
 
-    // Upload user's local video
+    /**
+     * 파일을 s3에다 업로드 한다.
+     *
+     * @param file      저장할 영상 파일
+     * @param videoName 파일 이름
+     * @return 저장에 성공하면 url을 돌려받는다.
+     */
     public String upload(MultipartFile file, String videoName) {
         try (InputStream inputStream = file.getInputStream()) {
             s3Client.putObject(new PutObjectRequest(bucket, videoName, inputStream, null)
@@ -70,7 +82,13 @@ public class S3Service {
 
     }
 
-    // Upload thumbnail from user's local video
+    /**
+     * 영상 썸네일을 s3에 업로드 한다.
+     *
+     * @param videoFile     영상 파일
+     * @param thumbnailName 저장할 썸네일 제목
+     * @return 썸네일 url
+     */
     public String uploadThumbnail(MultipartFile videoFile, String thumbnailName) {
         File file = convertMultipartFileToFile(videoFile);
         String thumbnailURL = getThumbnailURL(thumbnailName, file);
@@ -85,7 +103,13 @@ public class S3Service {
         return thumbnailURL;
     }
 
-    // Upload video from Openvidu
+    /**
+     * 오픈비두 서버에서 영상을 s3에 업로드 한다.
+     *
+     * @param dir       저장 되어 있는 파일 경로
+     * @param videoName 저장할 영상 이름
+     * @return 저장된 cloudfront url
+     */
     public String uploadFromOV(String dir, String videoName) {
 
         Path filePath = Paths.get(dir);
@@ -98,18 +122,34 @@ public class S3Service {
         }
     }
 
-    // Upload thumbnail from Openvidu recording video
+    /**
+     * 오픈비두 서버에서 영상을 통해 썸네일을 업로드 한다.
+     *
+     * @param dir           파일 경로
+     * @param thumbnailName 썸네일 제목
+     * @return 생성된 썸네일 url
+     */
     public String uploadThumbnailFromOV(String dir, String thumbnailName) {
         File file = Paths.get(dir).toFile();
         return getThumbnailURL(thumbnailName, file);
     }
 
+    /**
+     * s3에서 파일 삭제
+     *
+     * @param videoName 삭제할 파일 제목
+     */
     public void deleteFile(String videoName) {
         s3Client.deleteObject(bucket, videoName);
     }
 
+
     /**
-     * S3에 썸네일 이미지를 저장하고 URL을 가져옴
+     * 영상에서 썸네일을 가져와서 s3에 저장한다.
+     *
+     * @param thumbnailName 썸네일 제목
+     * @param file          파일 경로
+     * @return 썸네일이 저장된 cloudfront url
      */
     private String getThumbnailURL(String thumbnailName, File file) {
         // Get image from video
@@ -120,7 +160,19 @@ public class S3Service {
             BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
             // Convert the image to a JPEG and write it to a ByteArrayOutputStream
 
-            ImageIO.write(bufferedImage, "JPEG", baos);
+            int width = bufferedImage.getWidth();
+            int height = bufferedImage.getHeight();
+            BufferedImage outputImage = new BufferedImage(height, width, bufferedImage.getType());
+
+            Graphics2D g2d = outputImage.createGraphics();
+            AffineTransform at = new AffineTransform();
+            at.translate(height, 0);
+            at.rotate(Math.PI / 2);
+            g2d.setTransform(at);
+            g2d.drawImage(bufferedImage, 0, 0, null);
+            g2d.dispose();
+
+            ImageIO.write(outputImage, "JPEG", baos);
             baos.flush();
             InputStream is = new ByteArrayInputStream(baos.toByteArray());
             // Upload the object to S3
@@ -132,7 +184,11 @@ public class S3Service {
 
     }
 
-    // Convert MultipartFile to File
+    /**
+     * MultiparFile -> File 변환
+     * @param file 변환할 MultipartFile
+     * @return 변환된 file
+     */
     private File convertMultipartFileToFile(MultipartFile file) {
         File convFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
         try (FileOutputStream fos = new FileOutputStream(convFile)) {

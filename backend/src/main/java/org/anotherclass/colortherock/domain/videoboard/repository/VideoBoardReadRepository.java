@@ -78,7 +78,7 @@ public class VideoBoardReadRepository {
 
     // no-offset 방식 처리하는 메서드 (storeId가 없을 경우, 있을 경우)
     private BooleanExpression checkStoreId(Long storeId) {
-        if (storeId == -1L) {
+        if (storeId == null || storeId == -1L) {
             return null;
         }
 

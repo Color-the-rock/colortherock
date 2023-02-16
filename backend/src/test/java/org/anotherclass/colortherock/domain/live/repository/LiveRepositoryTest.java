@@ -9,14 +9,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+@SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest
-public class LiveRepositoryTest {
-    @Autowired private LiveRepository liveRepository;
-    @Autowired private MemberRepository memberRepository;
+class LiveRepositoryTest {
+    @Autowired
+    private LiveRepository liveRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Test
     @DisplayName("sessionId를 통한 session 삭제")
-    public void sessoin삭제() {
+    void sessoin삭제() {
         // given
         Member member = Member.builder()
                 .email("email@colortherock.com")

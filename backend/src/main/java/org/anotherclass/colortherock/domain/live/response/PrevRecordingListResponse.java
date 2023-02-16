@@ -4,9 +4,10 @@ import io.openvidu.java.client.Recording;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Schema(description = "이전 영상 목록 객체")
-@Getter
+@Getter @Setter
 public class PrevRecordingListResponse {
 
     @Schema(description = "녹화 영상 id")

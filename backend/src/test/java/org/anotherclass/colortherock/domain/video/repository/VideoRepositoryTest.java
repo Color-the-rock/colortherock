@@ -16,8 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.List;
 
+@SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest
-public class VideoRepositoryTest {
+class VideoRepositoryTest {
     @Autowired
     private VideoReadRepository videoReadRepository;
     @Autowired
@@ -26,8 +27,9 @@ public class VideoRepositoryTest {
     private VideoRepository videoRepository;
 
     private Member member;
+
     @BeforeEach
-    public void setMemberAndVideos() {
+    void setMemberAndVideos() {
         // given
         member = Member.builder()
                 .email("johan@rock.com")
@@ -53,9 +55,10 @@ public class VideoRepositoryTest {
             videoRepository.save(video);
         }
     }
+
     @Test
     @DisplayName("암장 방문 통계 조회")
-    public void 방문통계_조회_성공() {
+    void 방문통계_조회_성공() {
         // when
         List<VisitListDto> visitList = videoReadRepository.searchVisitCount(member);
         // then
@@ -66,7 +69,7 @@ public class VideoRepositoryTest {
 
     @Test
     @DisplayName("날짜별 완등 레벨 조회")
-    public void 레벨_조회_성공() {
+    void 레벨_조회_성공() {
         // when
         List<DateLevelDto> dtos = videoReadRepository.searchDailyColor(member, LocalDate.parse("2023-01-01"), LocalDate.parse("2023-01-31"));
         // then
@@ -77,7 +80,7 @@ public class VideoRepositoryTest {
 
     @Test
     @DisplayName("사용자별 암장 방문 일수 조회")
-    public void 방문횟수_조회_성공() {
+    void 방문횟수_조회_성공() {
         // when
         Integer visitCount = videoReadRepository.searchTotalVisit(member);
         // then
