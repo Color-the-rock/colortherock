@@ -99,6 +99,7 @@ export const CalendarWrapper = styled.div`
   min-width: 358px;
   max-width: 400px;
   margin: 0 auto;
+  overflow: hidden;
 `;
 
 export const UploadIcon = styled(HiOutlinePlusSm)`
@@ -124,6 +125,7 @@ export const InfoWrapper = styled.div`
   position: relative;
   width: 100%;
   z-index: 100;
+  margin-right: 1rem;
 `;
 export const InfoButton = styled(MdInfo)`
   align-self: center;
@@ -150,6 +152,7 @@ export const ContentWrapper = styled.div`
   max-width: 736px;
   background-color: transparent;
   margin: 0 auto;
+  overflow: hidden;
 `;
 
 export const RecordWrapper = styled.div`

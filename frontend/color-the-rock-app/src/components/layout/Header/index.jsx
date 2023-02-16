@@ -16,16 +16,22 @@ const Header = () => {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);
   };
 
+  const handleSetShowNav = () => {
+    setShowNav((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (scrollPosition > 72 && isShowNav) {
+      setShowNav(false);
+    }
+  }, [scrollPosition, isShowNav]);
+
   useEffect(() => {
     window.addEventListener("scroll", updateScrollPosition);
     if (sessionStorage.getItem("accessToken") === null) {
       dispatch(logOut());
     }
   }, []);
-
-  const handleSetShowNav = () => {
-    setShowNav((prev) => !prev);
-  };
 
   return (
     <S.Container scrollPosition={scrollPosition}>
@@ -40,7 +46,7 @@ const Header = () => {
                 to="/streaming"
                 current={"/streaming" === location.pathname ? "true" : "false"}
               >
-                실시간 라이브
+                실시간 도전
               </S.SLink>
             </S.MenuItem>
             <S.MenuItem isLogin={true}>
@@ -91,7 +97,7 @@ const Header = () => {
                     "/streaming" === location.pathname ? "true" : "false"
                   }
                 >
-                  실시간 라이브
+                  실시간 도전
                 </S.SLink>
               </S.SideMenuItem>
               <S.SideMenuItem isLogin={true} onClick={handleSetShowNav}>

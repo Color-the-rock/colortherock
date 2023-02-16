@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { myPageApi } from "../../../api/mypage";
+import Loading from "../../Common/Loading";
 import MyComment from "../MyComment";
 import * as S from "./style";
+
 const MyCommentList = () => {
   const [result, setResult] = useState([]);
   const [storeId, setStoreId] = useState(-1);
+  const [isLoading, setLoading] = useState(false);
+
   useEffect(() => {
+    setLoading(true);
     myPageApi
       .getMyCommentList(storeId)
       .then(({ data: { status, result: _result } }) => {
@@ -17,10 +22,15 @@ const MyCommentList = () => {
           setStoreId(_storeId);
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <S.Container>
       {result && result.length > 0 ? (
         result.map((item) => (

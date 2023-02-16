@@ -24,6 +24,7 @@ export const Container = styled.div`
 export const ArrowLeftBtnWrap = styled.div`
   width: 100%;
   display: flex;
+  margin-top: 1rem;
 `;
 
 export const ContentWrap = styled.div`
@@ -42,8 +43,6 @@ export const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* background-color: red; */
-
   padding: 0 1rem;
   @media (min-width: 992px) {
     width: 600px;

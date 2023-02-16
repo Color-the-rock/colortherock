@@ -1,6 +1,7 @@
 import styled from "styled-components";
 export const Container = styled.div`
   width: 100%;
+  width: 10.75rem;
   max-width: 10.75rem;
   min-height: 20.375rem;
   background-color: transparent;
@@ -11,10 +12,11 @@ export const ThumbnailImg = styled.img`
   height: 16rem;
   border-radius: 0.625rem;
   margin-bottom: 0.5rem;
+  object-fit: cover;
 `;
 
 export const VideoText = styled.div`
-  display: ${(props) => (props.isLive ? "flex" : "none")};
+  display: flex;
   font-style: normal;
   font-weight: 700;
   font-size: 0.9rem;
@@ -32,7 +34,8 @@ export const VideoText = styled.div`
 export const LiveBadge = styled.div`
   width: 6px;
   height: 6px;
-  background: var(--color-badge-live);
+  background-color: ${(props) =>
+    props.colorCode ? props.colorCode : "var(--color-badge-live)"};
   border-radius: 6px;
   margin-right: 4px;
 `;

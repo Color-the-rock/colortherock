@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
-import AppLogo from "../../../assets/img/common/app-logo.png";
-import WebLogo from "../../../assets/img/common/web-logo.png";
+import AppLogo from "../../../assets/img/common/app-logo.svg";
+import WebLogo from "../../../assets/img/common/web-logo.svg";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { Link } from "react-router-dom";
 const slideIn = keyframes`
@@ -88,7 +88,7 @@ export const NavBar = styled.div`
   top: 0px;
   right: 0px;
   width: 48%;
-  height: 100vh;
+  height: calc(100vh + 72px);
   z-index: 100;
   filter: drop-shadow(-4px 4px 4px rgba(0, 0, 0, 0.25));
   background-color: var(--color-background);

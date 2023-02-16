@@ -11,6 +11,7 @@ const Thumbnail = ({
   imgUrl,
   isLive,
   color,
+  colorCode,
   onClick,
 }) => {
   return (
@@ -24,16 +25,16 @@ const Thumbnail = ({
           {title.length < 13 ? title : title.substring(0, 12) + "..."}
         </S.VideoText>
       )}
-      <S.VideoText isLive={isLive}>
-        <S.LiveBadge />
-        {userNickname}
+      <S.VideoText>
+        <S.LiveBadge colorCode={colorCode} />
+        {isLive ? userNickname : color}
       </S.VideoText>
-      {color && <S.Tag>{color}</S.Tag>}
+      {isLive && color && <S.Tag>{color}</S.Tag>}
       <S.Tag>{gymName}</S.Tag>
     </S.Container>
   );
 };
-export default Thumbnail;
+export default React.memo(Thumbnail);
 
 Thumbnail.propTypes = {
   id: PropTypes.number,
