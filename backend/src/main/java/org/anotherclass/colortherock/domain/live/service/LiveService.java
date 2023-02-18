@@ -172,8 +172,7 @@ public class LiveService {
 
     /**
      * 녹화 중지 로직
-     *
-     * @param request 녹화 중지 요청 {@link RecordingStopRequest}
+     * @param request  녹화 중지 요청
      */
     public void recordingStop(RecordingStopRequest request) {
 
@@ -197,6 +196,11 @@ public class LiveService {
         Slice<Live> slices = liveReadRepository.searchBySlice(liveListRequest, pageable);
 
         if (slices.isEmpty()) return new ArrayList<>();
+        try {
+            openVidu.fetch();
+        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+            throw new OpenviduException(e);
+        }
 
         // list를 받아와서 openvidu의 active session과 비교하여 없으면 DB 삭제하는 방식으로 DB를 최적화
         List<String> activeSessions = openVidu.getActiveSessions().stream().map(Session::getSessionId).collect(Collectors.toList());
