@@ -91,7 +91,7 @@ public class S3Service {
      */
     public String uploadThumbnail(MultipartFile videoFile, String thumbnailName) {
         File file = convertMultipartFileToFile(videoFile);
-        String thumbnailURL = getThumbnailURL(thumbnailName, file);
+        String thumbnailURL = getThumbnailURL(thumbnailName, file, true);
         try {
             Files.delete(Path.of(file.getPath()));
         } catch (IOException e) {
@@ -131,7 +131,7 @@ public class S3Service {
      */
     public String uploadThumbnailFromOV(String dir, String thumbnailName) {
         File file = Paths.get(dir).toFile();
-        return getThumbnailURL(thumbnailName, file);
+        return getThumbnailURL(thumbnailName, file, false);
     }
 
     /**
@@ -151,7 +151,7 @@ public class S3Service {
      * @param file          파일 경로
      * @return 썸네일이 저장된 cloudfront url
      */
-    private String getThumbnailURL(String thumbnailName, File file) {
+    private String getThumbnailURL(String thumbnailName, File file, boolean isLocal) {
         // Get image from video
         try (FileChannelWrapper fileChannelWrapper = NIOUtils.readableChannel(file);
              ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
@@ -159,20 +159,23 @@ public class S3Service {
             Picture picture = grab.seekToSecondPrecise(1.0).getNativeFrame();
             BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
             // Convert the image to a JPEG and write it to a ByteArrayOutputStream
+            if(isLocal) {
+                int width = bufferedImage.getWidth();
+                int height = bufferedImage.getHeight();
+                BufferedImage outputImage = new BufferedImage(height, width, bufferedImage.getType());
 
-            int width = bufferedImage.getWidth();
-            int height = bufferedImage.getHeight();
-            BufferedImage outputImage = new BufferedImage(height, width, bufferedImage.getType());
+                Graphics2D g2d = outputImage.createGraphics();
+                AffineTransform at = new AffineTransform();
+                at.translate(height, 0);
+                at.rotate(Math.PI / 2);
+                g2d.setTransform(at);
+                g2d.drawImage(bufferedImage, 0, 0, null);
+                g2d.dispose();
 
-            Graphics2D g2d = outputImage.createGraphics();
-            AffineTransform at = new AffineTransform();
-            at.translate(height, 0);
-            at.rotate(Math.PI / 2);
-            g2d.setTransform(at);
-            g2d.drawImage(bufferedImage, 0, 0, null);
-            g2d.dispose();
-
-            ImageIO.write(outputImage, "JPEG", baos);
+                ImageIO.write(outputImage, "JPEG", baos);
+            } else {
+                ImageIO.write(bufferedImage, "JPEG", baos);
+            }
             baos.flush();
             InputStream is = new ByteArrayInputStream(baos.toByteArray());
             // Upload the object to S3
