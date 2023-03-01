@@ -1,0 +1,59 @@
+Configutation:
+  name: Default
+  status: info
+
+  Properties:
+    Property:
+      name: log-path
+      value: "logs"
+
+  Appenders:
+    RollingFile:
+      - name: RollingFile_Appender
+        fileName: ${log-path}/rollingfile.log
+        filePattern: "${log-path}/archive/rollingfile.log_%d{yyyy-MM-dd}-%i.gz"
+        PatternLayout:
+          pattern: "%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red,
+            ERROR=red, INFO=green, DEBUG=blue, TRACE=bg_yellow} [%C] %style{[%t]}{yellow}- %m%n"
+        Policies:
+          TimeBasedTriggeringPolicy:
+            Interval: 1
+            modulate: true
+          SizeBasedTriggeringPolicy:
+            size: "10 MB"
+        DefaultRollOverStrategy:
+          max: 10
+          Delete:
+            basePath: "${log-path}/archive"
+            maxDepth: "1"
+            IfLastModified:
+              age: "P14D"
+            IfAccumulatedFileCount:
+              exceeds: 140
+    Console:
+      name: Console_Appender
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red,
+              ERROR=red, INFO=green, DEBUG=blue, TRACE=bg_yellow} [%C] %style{[%t]}{yellow}- %m%n"
+    LogStash:
+      - name : LogStash_Appender
+        host : localhost
+        port : 5000
+        type : tcp
+        PatternLayout:
+          pattern: "%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red,
+            ERROR=red, INFO=green, DEBUG=blue, TRACE=bg_yellow} [%C] %style{[%t]}{yellow}- %m%n"
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+        - ref: RollingFile_Appender
+    Logger:
+      - name: org.anotherclass.colortherock
+        additivity: false
+        level: info
+        AppenderRef:
+          - ref: RollingFile_Appender
+          - ref: Console_Appender
+          - ref: LogStash_Appender
